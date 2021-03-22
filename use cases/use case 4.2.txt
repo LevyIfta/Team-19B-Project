@@ -1,3 +1,8 @@
-precondition: the logged in user is a owner of the store (or a manager with appropriate privilages)
+
+actor: owner
+
+precondition: the member is a owner of the store (or a manager with appropriate privilages)
 post condition: the store discount\purchase policy\types has changed
-description: a owner of a store (or manager with appropriate privilages) is allowed to change the discount and purchase policy and types  of said store.
+description: a owner of a store (or manager with appropriate privilages) is able to change and edit the discount and purchase policy and types  of said store.
+happy: changed to valid policies
+sad: conflicting or invalid policies
