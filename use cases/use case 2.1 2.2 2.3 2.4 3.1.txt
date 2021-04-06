@@ -1,5 +1,11 @@
-precondition: user isnt logged in inorder to register or login. user must be logged in inorder to log out
-post condition: after register: a new user is added to the system. login: the user is now logged in. logout: the user is no longer logged in.
+Actors left : Registered, guest
+Actors Right : authentication system /registration
 
-description: a guest can register inorder to create a new user in the system. a guest is also allowed to log in into a user that exist in the system (that was previously registerd). a logged in user is allowed to log out, and becomes a guest once again.
+precondition: user isnt logged in inorder to register or login. user must be logged in inorder to log out
+post condition: after register: a new user is added to the system.
+		login: the user is now logged in.
+		logout: the user is no longer logged in.
+
+description: a guest can register inorder to create a new user in the system. a guest is also allowed to log in into a user that exist in the system
+(that was previously registerd). a logged in user is allowed to log out, and becomes a guest once again.
 
