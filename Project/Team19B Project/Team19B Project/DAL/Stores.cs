@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Team19B_Project.DAL
 {
-    class Stores
+    public class Stores
     {
         // this class holds data about all the stores in the system
         // it provides all store-related services in terms of data access
