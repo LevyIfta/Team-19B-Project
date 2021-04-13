@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Team19B_Project.DAL
+namespace Team19B_Project.DataAccess
 {
     public class Stores
     {

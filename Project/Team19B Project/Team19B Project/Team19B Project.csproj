@@ -64,6 +64,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Business\Store.cs" />
+    <Compile Include="Business\Stores.cs" />
+    <Compile Include="Business\StoresServices.cs" />
     <Compile Include="DataAccess\ProductInfo.cs" />
     <Compile Include="DataAccess\Products.cs" />
     <Compile Include="DataAccess\Store.cs" />
