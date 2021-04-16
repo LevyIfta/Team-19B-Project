@@ -13,7 +13,6 @@ namespace Team19B_Project.Business
         public string name { get; set; }
         public ConcurrentDictionary<int, int> products { get; } // a dictionary of - <product_id, amount>
         public Dictionary<int, double> prices { get; } // <product_id, price>
-        private Dictionary<int, bool> locks;
         private Object productsLock = new Object();
 
         public Store(string name)
@@ -21,7 +20,6 @@ namespace Team19B_Project.Business
             this.name = name;
             this.products = new ConcurrentDictionary<int, int>();
             this.prices = new Dictionary<int, double>();
-            this.locks = new Dictionary<int, bool>();
         }
 
         public bool addProducts(int productId, int amount)
@@ -54,6 +52,38 @@ namespace Team19B_Project.Business
             return true;
         }
 
+        public bool addProduct(int productId, double price, int amount)
+        {
+            // check for the amount
+            if (amount <= 0)
+                return false;
+            // try to add the product to this.priducts
+            if (!addProduct(productId, price))
+                return false;
+            // the product was added, update the amount
+            if (this.products.TryAdd(productId, amount))
+                return true;
+            // the product amount wasn't added, delete the product
+            removeProduct(productId);
+            return false;
+        }
+
+        public bool removeProduct(int productId)
+        {
+            if (!this.products.ContainsKey(productId))
+            {
+                // check for the product in other data structures - there might be some bug
+                if (this.prices.ContainsKey(productId))
+                    this.prices.Remove(productId);
+                return false;
+            }
+            // remove the product
+            this.products.TryRemove(productId, out int ignored);
+            // remove the price
+            this.prices.Remove(productId);
+            return true;
+        }
+
         public double basketPrice(Dictionary<int, int> basket)
         {
             // returns -2 if there are products in the basket and not in the store
@@ -81,9 +111,23 @@ namespace Team19B_Project.Business
              }
         }
 
-        public bool purchaseBasket(Dictionary<int, int> basket)
+        public bool purchaseBasket(Dictionary<int, int> basket, CreditCardInfo creditCard)
         {
-            return false;
+            // calc the price
+            double price = basketPrice(basket);
+            if (price < 0)
+                return false;
+            // lock the shop
+            lock (this.productsLock)
+            {
+                // check if the account has the money
+                if (!PaymentSystem.pay(creditCard, price))
+                    return false;
+                // remove the products from the store
+                foreach (int pId in basket.Keys)
+                    this.products[pId] = this.products[pId] - basket[pId];
+                return true;
+            }
         }
 
         public bool editPrice(int productId, double price)

@@ -63,6 +63,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Business\CreditCardInfo.cs" />
+    <Compile Include="Business\PaymentSystem.cs" />
     <Compile Include="Business\Store.cs" />
     <Compile Include="Business\Stores.cs" />
     <Compile Include="Business\StoresServices.cs" />
