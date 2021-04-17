@@ -4,7 +4,7 @@ using UnitTests.Bridge;
 namespace UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class UserAccessTests
     {
         private static Bridge.Bridge bridge { get; set; }
         [ClassInitialize]
@@ -15,7 +15,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void testRegister()
+        public void registerTest()
         {
             string username = "gooduser"; 
             string password = "goodpassword";
@@ -33,15 +33,27 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void testLogin()
+        public void loginTest()
         {
-            Assert.IsTrue(bridge.login("user", "password"), "Failed to login as a valid user");
+           
             Assert.IsFalse(bridge.login("falseUser", "password"), "managed to login with wrong username");
             Assert.IsFalse(bridge.login("user", "falsePassword"), "managed to login with wrong password");
             Assert.IsFalse(bridge.login("falseUser", "falsePassword"), "managed to login with non-existing username and password");
+            Assert.IsTrue(bridge.login("user", "password"), "Failed to login as a valid user");
+            bridge.logout();
+        }
+
+        [TestMethod]
+        public void logoutTest()
+        {
+            Assert.IsFalse(bridge.logout(), "managed to log out before login");
+            bridge.login("user", "password");
+            Assert.IsTrue(bridge.logout(), "failed to logout");
+            Assert.IsFalse(bridge.logout(), "managed to logout after a successfull logout");
 
         }
-            
-        
+
+
+
     }
 }
