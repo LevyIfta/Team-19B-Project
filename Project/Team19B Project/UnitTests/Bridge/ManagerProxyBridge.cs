@@ -6,6 +6,10 @@ namespace UnitTests.Bridge
 {
     abstract class ManagerProxyBridge : UserProxyBridge
     {
+        public ManagerProxyBridge(Bridge realBridge) : base(realBridge)
+        {
+
+        }
 
         public override bool editManagerPermissions(object todo)
         {

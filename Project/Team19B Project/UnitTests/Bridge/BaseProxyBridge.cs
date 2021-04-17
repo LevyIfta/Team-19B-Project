@@ -8,9 +8,9 @@ namespace UnitTests.Bridge
     {
         public Bridge RealBridge { protected get; set; }
 
-        public BaseProxyBridge()
+        public BaseProxyBridge(Bridge realBridge)
         {
-            this.RealBridge = null;
+            this.RealBridge = realBridge;
         }
 
         public abstract bool login(string username, string password);
@@ -29,7 +29,7 @@ namespace UnitTests.Bridge
         public abstract bool editManagerPermissions(object todo);
         public abstract double basketPrice(string storeName, object basket);
         public abstract bool addStore(string name);
-        public abstract bool addProducts(int productId, int amount);
+        public abstract bool addProduct(int productId, int amount);
         public abstract bool addProduct(int productId, double price);
         public abstract bool addProduct(int productId, double price, int amount);
         public abstract bool removeProduct(int productId);

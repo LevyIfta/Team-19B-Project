@@ -12,17 +12,24 @@ namespace UnitTests
         {
             bridge = Bridge.Driver.GetBridge();
             bridge.register("userAct", "passwordAct");
+            bridge.login("userAct", "passwordAct");
         }
+        [ClassCleanup]
+        public void classCleanup()
+        {
+            bridge.logout();
+        }
+
 
         [TestInitialize]
         public void testInit()
         {
-            bridge.login("userAct", "passwordAct");
+            
         }
         [TestCleanup]
         public void testCleanup()
         {
-            bridge.logout();
+            
         }
 
 

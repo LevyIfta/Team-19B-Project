@@ -6,7 +6,10 @@ namespace UnitTests.Bridge
 {
     abstract class UserProxyBridge : BaseProxyBridge
     {
-        
+        public UserProxyBridge(Bridge realBridge) : base(realBridge)
+        {
+
+        }
 
         public override bool login(string username, string password)
         {

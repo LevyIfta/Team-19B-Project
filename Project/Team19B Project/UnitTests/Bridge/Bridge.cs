@@ -40,7 +40,7 @@ namespace UnitTests.Bridge
         bool addStore(string name);  //todo //i feel like this is oversimplified. jsut review it to make sure name is everything you need
 
 
-        bool addProducts(int productId, int amount); //add item to store. todo//i guess this is to add stock?  
+        bool addProduct(int productId, int amount); //add item to store. todo//i guess this is to add stock?  
         bool addProduct(int productId, double price); //add item to store. todo// doesnt make sense that this exist. when will this fuc be used? todo
         bool addProduct(int productId, double price, int amount); //add item to store todo //i guess this is to add brand new item to the store
         bool removeProduct(int productId); //remove item from store todo
