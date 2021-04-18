@@ -55,10 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Business\Registered.cs" />
+    <Compile Include="Business\removeStoreManager.cs" />
+    <Compile Include="Business\user.cs" />
+    <Compile Include="Business\userDetails.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Business\Admin.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -68,16 +73,35 @@
     <Compile Include="Business\Store.cs" />
     <Compile Include="Business\Stores.cs" />
     <Compile Include="Business\StoresServices.cs" />
+    <Compile Include="Business\SupplySystem.cs" />
+    <Compile Include="Business\controlManagment.cs" />
     <Compile Include="DataAccess\ProductInfo.cs" />
     <Compile Include="DataAccess\Products.cs" />
+    <Compile Include="DataAccess\PurchaseReceipts.cs" />
+    <Compile Include="DataAccess\ShoppingBasket.cs" />
+    <Compile Include="DataAccess\ShoppingCart.cs" />
+    <Compile Include="DataAccess\ShoppingCarts.cs" />
+    <Compile Include="DataAccess\ShoppingCartsServices.cs" />
     <Compile Include="DataAccess\Store.cs" />
     <Compile Include="DataAccess\Stores.cs" />
+    <Compile Include="Business\DataClass.cs" />
+    <Compile Include="Business\Decorator.cs" />
+    <Compile Include="Business\editManagerPermissions.cs" />
+    <Compile Include="Business\getInfoEmployees.cs" />
+    <Compile Include="Business\getPurchaseHistory.cs" />
+    <Compile Include="Business\Guest.cs" />
+    <Compile Include="Business\hireNewStoreManager.cs" />
+    <Compile Include="Business\hireNewStoreOwner.cs" />
+    <Compile Include="Business\interfaceClass.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\manageSupply.cs" />
+    <Compile Include="Business\Member.cs" />
+    <Compile Include="Business\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

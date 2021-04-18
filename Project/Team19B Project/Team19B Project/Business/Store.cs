@@ -14,12 +14,19 @@ namespace Team19B_Project.Business
         public ConcurrentDictionary<int, int> products { get; } // a dictionary of - <product_id, amount>
         public Dictionary<int, double> prices { get; } // <product_id, price>
         private Object productsLock = new Object();
+        private LinkedList<string> owners;
+        private LinkedList<string> managers;
+        public string founder { get; }
 
-        public Store(string name)
+        public Store(string name, string founder)
         {
             this.name = name;
             this.products = new ConcurrentDictionary<int, int>();
             this.prices = new Dictionary<int, double>();
+            this.founder = founder;
+            this.owners = new LinkedList<string>();
+            this.owners.AddFirst(founder);
+            this.managers = new LinkedList<string>();
         }
 
         public bool addProducts(int productId, int amount)
@@ -84,35 +91,38 @@ namespace Team19B_Project.Business
             return true;
         }
 
-        public double basketPrice(Dictionary<int, int> basket)
+        public double basketPrice(ShoppingBasket basket)
         {
+            Dictionary<int, int> basketProsucts = basket.products;
             // returns -2 if there are products in the basket and not in the store
             //         -3 if one of the wanted amounts in the basket is more than what is in the store
             lock (productsLock) {
-                foreach (int key in basket.Keys)
+                foreach (int key in basketProsucts.Keys)
                 {
                     if (!this.products.ContainsKey(key))
                         return -2;
-                    if (this.products[key] < basket[key])
+                    if (this.products[key] < basketProsucts[key])
                         return -3;
                 }
                 // the basket is ok
                 // calc the total price
                 double totalPrice = 0;
-                foreach (int pId in basket.Keys)
+                foreach (int pId in basketProsucts.Keys)
                 {
                     // add the price of the products in the basket to the total price
-                    totalPrice += this.prices[pId] * basket[pId];
+                    double productsPrice = this.prices[pId] * basketProsucts[pId];
+                    totalPrice += productsPrice;
                     // update the amount in the store
-                    this.products[pId] -= basket[pId];
+                    this.products[pId] -= basketProsucts[pId];
                 }
 
                 return totalPrice;
              }
         }
 
-        public bool purchaseBasket(Dictionary<int, int> basket, CreditCardInfo creditCard)
+        public bool purchaseBasket(ShoppingBasket basket, CreditCardInfo creditCard)
         {
+            Dictionary<int, int> basketProducts = basket.products;
             // calc the price
             double price = basketPrice(basket);
             if (price < 0)
@@ -124,8 +134,14 @@ namespace Team19B_Project.Business
                 if (!PaymentSystem.pay(creditCard, price))
                     return false;
                 // remove the products from the store
-                foreach (int pId in basket.Keys)
-                    this.products[pId] = this.products[pId] - basket[pId];
+                foreach (int pId in basketProducts.Keys)
+                {
+                    this.products[pId] = this.products[pId] - basketProducts[pId];
+                    // add receipt
+                    PurchaseReceipts.Instance.addReceipt(basket.owner, this.name, pId, basketProducts[pId], this.prices[pId] * basketProducts[pId]);
+                }
+                // send a request for the supply system
+                SupplySystem.supply(this.name, basketProducts);
                 return true;
             }
         }
@@ -139,6 +155,46 @@ namespace Team19B_Project.Business
             return true;
         }
 
-        
+        public void addOwner(string username)
+        {
+            if (!this.owners.Contains(username))
+                this.owners.AddFirst(username);
+        }
+
+        public void addManager(string username)
+        {
+            if (!this.managers.Contains(username))
+                this.managers.AddFirst(username);
+        }
+
+        public void removeOwner(string username)
+        {
+            this.owners.Remove(username);
+        }
+
+        public void removeManager(string username)
+        {
+            this.managers.Remove(username);
+        }
+
+        public bool isManager(string userrname)
+        {
+            return this.managers.Contains(userrname);
+        }
+
+        public bool isOwner(string username)
+        {
+            return this.owners.Contains(username);
+        }
+
+        public LinkedList<string> getOwners()
+        {
+            return this.owners;
+        }
+
+        public LinkedList<string> getManagers()
+        {
+            return this.managers;
+        }
     }
 }

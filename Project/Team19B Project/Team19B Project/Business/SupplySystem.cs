@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Team19B_Project.Business
 {
-    public class PaymentSystem
+    public class SupplySystem
     {
-        public static bool pay(CreditCardInfo creditCard, double price)
+        public static bool supply(string store, Dictionary<int, int> basket)
         {
             return true;
         }
