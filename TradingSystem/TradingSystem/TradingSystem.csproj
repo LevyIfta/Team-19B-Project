@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessLayer\DirAppend.cs" />
     <Compile Include="BusinessLayer\Store\CreditCardInfo.cs" />
     <Compile Include="BusinessLayer\Store\manageSupply.cs" />
     <Compile Include="BusinessLayer\Store\PaymentSystem.cs" />

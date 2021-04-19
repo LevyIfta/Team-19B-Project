@@ -10,9 +10,6 @@ namespace TradingSystem
     {
         public static bool addProducts(string username, string storeName, int productId, int amount)
         {
-            ShoppingCart cart = ShoppingCarts.Instance.carts[username];
-            if (!cart.baskets.ContainsKey(storeName))
-                ShoppingCarts.Instance.carts[username].baskets.Add(storeName, new ShoppingBasket(storeName, username));
             return ShoppingCarts.Instance.carts[username].baskets[storeName].addProducts(productId, amount);
         }
 

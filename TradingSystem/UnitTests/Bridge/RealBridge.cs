@@ -38,7 +38,7 @@ namespace UnitTests.Bridge
         public bool createNewItem(string name, string description, string category, string manafacturer)
         {
             ProductInfo item = new ProductInfo(name, description, category, manafacturer);
-            return Products.Instance.addProduct(item);
+            return Products.Instance.addProduct(item) != -1;
         }
 
         public bool editItem(object todo)

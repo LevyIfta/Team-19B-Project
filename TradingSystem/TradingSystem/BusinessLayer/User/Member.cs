@@ -82,7 +82,6 @@ namespace TradingSystem
         {
             return ShoppingCartsServices.purchaseBasket(username, storeName);
         }
-
         public override string getUserName()
         {
             return this.username;
