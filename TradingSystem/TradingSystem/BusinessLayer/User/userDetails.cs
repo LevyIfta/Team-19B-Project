@@ -16,7 +16,13 @@ namespace TradingSystem
             hireManager = new Dictionary<string, LinkedList<string>>();
         }
 
-        public bool haveManagerPremisition(string storeName){ return (ManagerPremistion[storeName].Count != 0);}
+        public bool haveManagerPremisition(string storeName)
+        {
+            if (ManagerPremistion.ContainsKey(storeName))
+                return (ManagerPremistion[storeName].Count != 0);
+            return false;
+
+        }
 
         public iDecorator doManage(string storeName, string functionName){
             foreach (iDecorator temp in ManagerPremistion[storeName]){

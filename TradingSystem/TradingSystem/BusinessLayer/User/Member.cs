@@ -22,6 +22,7 @@ namespace TradingSystem
         {
             this.username = username;
             this.password = password;
+            this.uDetails = new userDetails();
         }
         public Member(string username, string password, userDetails uDetails)
         {
@@ -80,6 +81,11 @@ namespace TradingSystem
         public override bool purchase(string storeName)
         {
             return ShoppingCartsServices.purchaseBasket(username, storeName);
+        }
+
+        public override string getUserName()
+        {
+            return this.username;
         }
     }
 }
