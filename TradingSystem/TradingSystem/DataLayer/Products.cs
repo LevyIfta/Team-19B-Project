@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Team19B_Project.DAL
+namespace TradingSystem
 {
     public class Products
     {
@@ -26,20 +26,22 @@ namespace Team19B_Project.DAL
         {
             get
             {
-                if (Instance == null)
+                if (instance == null)
                     instance = new Products();
                 return instance;
             }
         }
 
-        public bool addProduct(ProductInfo product)
+        public int addProduct(ProductInfo product)
         {
             lock (lockObject)
             {
                 Interlocked.Increment(ref id);
                 // assign the id to product
                 product.id = id;
-                return products.TryAdd(id, product);
+                if (products.TryAdd(id, product))
+                    return id;
+                return -1;
             }
         }
 
