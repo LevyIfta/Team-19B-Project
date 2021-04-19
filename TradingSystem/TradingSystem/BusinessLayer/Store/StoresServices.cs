@@ -26,7 +26,7 @@ namespace TradingSystem
                 return false;
 
             Stores.Instance.stores.Add(name, new Store(name, founder));
-            DirAppend.AddToLogger.AddToLogger("Add a new store, store name: " + name, ", founder: " + founder + ".", "log");
+            DirAppend.AddToLogger("Add a new store, store name: " + name + ", founder: " + founder + ".", Result.LOG);
             return true;
         }
 
@@ -34,9 +34,9 @@ namespace TradingSystem
         {
             bool output = Stores.Instance.stores.Remove(name);
             if (output)
-                DirAppend.AddToLogger.AddToLogger("Remove store: " + name + ".", "log");
+                DirAppend.AddToLogger("Remove store: " + name + ".", Result.LOG);
             else
-                DirAppend.AddToLogger.AddToLogger("Remove store: " + name + ".", "fail");
+                DirAppend.AddToLogger("Remove store: " + name + ".", Result.LOG);
             return output;
         }
 
