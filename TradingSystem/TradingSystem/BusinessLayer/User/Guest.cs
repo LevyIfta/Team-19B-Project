@@ -14,7 +14,6 @@ namespace TradingSystem
         {
            id = "guest";
         }
-        
 
         override
         public bool saveProduct(string storeName, Dictionary<int, int> products)
@@ -66,7 +65,6 @@ namespace TradingSystem
         {
             return null;
         }
-
         public override string getUserName()
         {
             return "";

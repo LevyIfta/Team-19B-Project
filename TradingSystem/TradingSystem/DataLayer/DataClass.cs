@@ -13,7 +13,6 @@ namespace TradingSystem
         public static bool addRegistered(string username, string password)
         {
             registered.Add(username, new Member(username, password));
-            ShoppingCarts.Instance.addCart(username);
             return true;
         }
         public static userDetails confirmPassword(string username, string password)

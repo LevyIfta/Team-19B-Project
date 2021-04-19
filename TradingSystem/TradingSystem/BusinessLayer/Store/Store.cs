@@ -38,52 +38,78 @@ namespace TradingSystem
             {
                 this.products[productId] = this.products[productId] + amount;
             }
-            catch (Exception) { return false; }
+            catch (Exception)
+            {
+                DirAppend.AddToLogger("products added - product: " + Products.Instance.products[productId].name + ", amount: " + amount + ", store: " + this.name + ".", Result.ERROR);
+                return false;
+            }
+
+            DirAppend.AddToLogger("products added - product: " + Products.Instance.products[productId].name + ", amount: " + amount + ", store: " + this.name + ".", Result.LOG);
 
             return true;
         }
 
         public bool addProduct(int productId, double price)
         {
+            string action = "add product to store - product id: " + productId + ", product name: " + Products.Instance.products[productId] + ", price: " + price + ".";
             // check if the product already exists
             if (this.products.ContainsKey(productId))
+            {
+                DirAppend.AddToLogger(action, Result.ERROR);
                 return false;
+            }
 
             this.products.TryAdd(productId, 0);
             this.prices.Add(productId, price);
+
+            DirAppend.AddToLogger(action, Result.LOG);
 
             return true;
         }
 
         public bool addProduct(int productId, double price, int amount)
         {
+            string action = "add product - id: " + productId + ", product name: " + Products.Instance.products[productId] + ", store: " + this.name + ", price: " + price + "amount: " + amount + ".";
             // check for the amount
-            if (amount <= 0)
+            if (amount <= 0 || this.products.ContainsKey(productId))
+            {
+                DirAppend.AddToLogger(action, Result.ERROR);
                 return false;
-            // try to add the product to this.priducts
+            }
+            // try to add the product to this.products
             if (!addProduct(productId, price))
+            {
+                DirAppend.AddToLogger(action, Result.ERROR);
                 return false;
+            }
             // the product was added, update the amount
             if (this.products.TryAdd(productId, amount))
+            {
+                DirAppend.AddToLogger(action, Result.LOG);
                 return true;
+            }
             // the product amount wasn't added, delete the product
             removeProduct(productId);
+            DirAppend.AddToLogger(action, Result.ERROR);
             return false;
         }
 
         public bool removeProduct(int productId)
         {
+            string action = "product remove - product id: " + productId + ", product name: " + Products.Instance.products[productId] + ", store: " + this.name + ".";
             if (!this.products.ContainsKey(productId))
             {
                 // check for the product in other data structures - there might be some bug
                 if (this.prices.ContainsKey(productId))
                     this.prices.Remove(productId);
+                DirAppend.AddToLogger(action, Result.ERROR);
                 return false;
             }
             // remove the product
             this.products.TryRemove(productId, out int ignored);
             // remove the price
             this.prices.Remove(productId);
+            DirAppend.AddToLogger(action, Result.LOG);
             return true;
         }
 
@@ -119,17 +145,25 @@ namespace TradingSystem
 
         public bool purchaseBasket(ShoppingBasket basket, CreditCardInfo creditCard)
         {
+            string action = "basket purchase - basket owner: " + basket.owner + ", store: " + this.name + "total price: ";
             Dictionary<int, int> basketProducts = basket.products;
             // calc the price
             double price = basketPrice(basket);
+            action += price + ".";
             if (price < 0)
+            {
+                DirAppend.AddToLogger(action, Result.ERROR);
                 return false;
+            }
             // lock the shop
             lock (this.productsLock)
             {
                 // check if the account has the money
-                if (!PaymentSystem.pay(creditCard, price))
+                if (!PaymentSystem.pay(creditCard, price, this.founder))
+                {
+                    DirAppend.AddToLogger(action, Result.ERROR);
                     return false;
+                }
                 // remove the products from the store
                 foreach (int pId in basketProducts.Keys)
                 {
@@ -138,7 +172,8 @@ namespace TradingSystem
                     PurchaseReceipts.Instance.addReceipt(basket.owner, this.name, pId, basketProducts[pId], this.prices[pId] * basketProducts[pId]);
                 }
                 // send a request for the supply system
-                SupplySystem.supply(this.name, basketProducts);
+                SupplySystem.supply(basket);
+                DirAppend.AddToLogger(action, Result.LOG);
                 return true;
             }
         }

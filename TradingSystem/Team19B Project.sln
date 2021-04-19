@@ -1,13 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.1433
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-<<<<<<< HEAD:TradingSystem/TradingSystem.sln
-=======
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{DD6CFC39-8F2E-4213-89E4-ED76D67533DA}"
 EndProject
->>>>>>> tests:Project/Team19B Project/Team19B Project.sln
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingSystem", "TradingSystem\TradingSystem.csproj", "{B2A2CDDE-7A32-4C41-8167-5DAE61DB66A4}"
 EndProject
 Global
@@ -16,13 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<<<<<<< HEAD:TradingSystem/TradingSystem.sln
-=======
 		{DD6CFC39-8F2E-4213-89E4-ED76D67533DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD6CFC39-8F2E-4213-89E4-ED76D67533DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD6CFC39-8F2E-4213-89E4-ED76D67533DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD6CFC39-8F2E-4213-89E4-ED76D67533DA}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> tests:Project/Team19B Project/Team19B Project.sln
 		{B2A2CDDE-7A32-4C41-8167-5DAE61DB66A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2A2CDDE-7A32-4C41-8167-5DAE61DB66A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2A2CDDE-7A32-4C41-8167-5DAE61DB66A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -32,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E439FD8B-650C-48EE-ABC6-B6CCE8D538C1}
+		SolutionGuid = {47968A1D-35DF-49AD-9A21-510FD4647645}
 	EndGlobalSection
 EndGlobal

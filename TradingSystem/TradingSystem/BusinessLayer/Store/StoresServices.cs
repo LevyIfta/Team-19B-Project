@@ -26,12 +26,18 @@ namespace TradingSystem
                 return false;
 
             Stores.Instance.stores.Add(name, new Store(name, founder));
+            DirAppend.AddToLogger("Add a new store, store name: " + name + ", founder: " + founder + ".", Result.LOG);
             return true;
         }
 
         public static bool removeStore(string name)
         {
-            return Stores.Instance.stores.Remove(name);
+            bool output = Stores.Instance.stores.Remove(name);
+            if (output)
+                DirAppend.AddToLogger("Remove store: " + name + ".", Result.LOG);
+            else
+                DirAppend.AddToLogger("Remove store: " + name + ".", Result.LOG);
+            return output;
         }
 
         public static Dictionary<string, Dictionary<int, int>> searchProducts(string productName, double minPrice, double maxPrice, string category, string manufacturer)

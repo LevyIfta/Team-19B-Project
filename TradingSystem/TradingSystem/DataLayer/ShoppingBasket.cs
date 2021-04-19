@@ -19,11 +19,9 @@ namespace TradingSystem
         public bool addProducts(int productId, int amount)
         {
             // check if there are enough products in the store
-            
-            if (!StoresServices.getStore(this.storeName).products.ContainsKey(productId) || StoresServices.getStore(this.storeName).products[productId] < amount)
+            if (StoresServices.getStore(this.storeName).products[productId] < amount)
                 return false;
-            
-           
+
             if (!this.products.Keys.Contains(productId))
                 this.products.Add(productId, 0);
             this.products[productId] += amount;
