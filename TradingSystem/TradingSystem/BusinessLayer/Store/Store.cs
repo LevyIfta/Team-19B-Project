@@ -39,6 +39,11 @@ namespace TradingSystem
                 this.products[productId] = this.products[productId] + amount;
             }
             catch (Exception) { return false; }
+<<<<<<< HEAD
+=======
+
+            DirAppend.AddToLogger.AddToLogger("products added - product: " + Products.Instance.products[productId].name + ", amount: " + amount + ", store: " + this.name + ".", "log");
+>>>>>>> parent of eed0e08... added logs
 
             return true;
         }
@@ -128,7 +133,11 @@ namespace TradingSystem
             lock (this.productsLock)
             {
                 // check if the account has the money
+<<<<<<< HEAD
                 if (!PaymentSystem.pay(creditCard, price))
+=======
+                if (!PaymentSystem.pay(creditCard, price, this.founder))
+>>>>>>> parent of eed0e08... added logs
                     return false;
                 // remove the products from the store
                 foreach (int pId in basketProducts.Keys)
@@ -138,7 +147,11 @@ namespace TradingSystem
                     PurchaseReceipts.Instance.addReceipt(basket.owner, this.name, pId, basketProducts[pId], this.prices[pId] * basketProducts[pId]);
                 }
                 // send a request for the supply system
+<<<<<<< HEAD
                 SupplySystem.supply(this.name, basketProducts);
+=======
+                SupplySystem.supply(basket);
+>>>>>>> parent of eed0e08... added logs
                 return true;
             }
         }
