@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Team19B_Project.DAL
+namespace TradingSystem
 {
     public class Products
     {
@@ -26,7 +26,7 @@ namespace Team19B_Project.DAL
         {
             get
             {
-                if (Instance == null)
+                if (instance == null)
                     instance = new Products();
                 return instance;
             }

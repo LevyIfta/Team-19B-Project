@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using UnitTests.Bridge;
 
 namespace UnitTests
@@ -22,13 +23,19 @@ namespace UnitTests
             bridge.login("owner", "ownerPass");
             bridge.addStore("store1");
             bridge.addStore("store2");
-
-            bridge.hireNewManager(null);//todo hire manager
+         
+            bridge.hireNewManager("store1", "manager");//todo hire manager
+            List<string> permissions = new List<string>();
+            permissions.Add("all");
+            bridge.hireNewOwner("store1", "owner2", permissions);
+            bridge.logout();
+            bridge.login("owner2", "owner2Pass");
+            bridge.hireNewManager("store1", "manager2");//todo hire manager
             bridge.logout();
 
         }
         [ClassCleanup]
-        public void classCleanup()
+        public static void classCleanup()
         {
            
         }
@@ -51,14 +58,16 @@ namespace UnitTests
         public void editManagerPermissionTest()
         {
             bridge.login("owner", "ownerPass");
-            object ret = bridge.editManagerPermissions(null); //edit manager premission
-            Assert.IsTrue(ret==null, "failed to edit manager permission");
-            ret = bridge.editManagerPermissions(null); //edit manager 2 premiision
-            Assert.IsFalse(ret == null, "managed to change permision of manager not assigned by the logged owner");
+            List<string> premmisions = new List<string>();
+            premmisions.Add("view info");
+            bool ret = bridge.editManagerPermissions("manager", "store1", premmisions ); //edit manager premission
+            Assert.IsTrue(ret, "failed to edit manager permission");
+            ret = bridge.editManagerPermissions("manager2", "store1", premmisions); //edit manager 2 premiision
+            Assert.IsFalse(ret, "managed to change permision of manager not assigned by the logged owner");
             bridge.logout();
             bridge.login("manager", "managerPass");
-            ret = bridge.editManagerPermissions(null); //edit manager 2 premisions
-            Assert.IsFalse(ret == null, "managed to change permision of manager not assigned by the logged owner");
+            ret = bridge.editManagerPermissions("manager2", "store1", premmisions); //edit manager 2 premisions
+            Assert.IsFalse(ret , "managed to change permision of manager not assigned by the logged owner");
 
 
             //todo

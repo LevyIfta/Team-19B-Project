@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TradingSystem;
 
 namespace UnitTests.Bridge
 {
@@ -10,24 +11,11 @@ namespace UnitTests.Bridge
         {
       
         }
-        public override bool addProduct(int productId, double price)
+      
+        public override bool addProduct(int productId, double price, int amount, Store store)
         {
             if (RealBridge != null)
-                return RealBridge.addProduct(productId, price);
-            throw new NotImplementedException();
-        }
-
-        public override bool addProduct(int productId, double price, int amount)
-        {
-            if (RealBridge != null)
-                return RealBridge.addProduct(productId, price, amount);
-            throw new NotImplementedException();
-        }
-
-        public override bool addProduct(int productId, int amount)
-        {
-            if (RealBridge != null)
-                return RealBridge.addProduct(productId, amount);
+                return RealBridge.addProduct( productId,  price,  amount,  store);
             throw new NotImplementedException();
         }
 
@@ -38,17 +26,17 @@ namespace UnitTests.Bridge
             throw new NotImplementedException();
         }
 
-        public override double basketPrice(string storeName, object basket)
+        public override double basketPrice(string storeName)
         {
             if (RealBridge != null)
-                return RealBridge.basketPrice(storeName, basket);
-            throw new NotImplementedException();
+                return RealBridge.basketPrice(storeName);
+            return 1.1;
         }
 
-        public override bool createNewItem(object todo)
+        public override bool createNewItem(string name, string description, string category, string manafacturer)
         {
             if (RealBridge != null)
-                return RealBridge.createNewItem(todo);
+                return RealBridge.createNewItem(name, description,  category,  manafacturer);
             throw new NotImplementedException();
         }
 
@@ -59,24 +47,18 @@ namespace UnitTests.Bridge
             throw new NotImplementedException();
         }
 
-        public override object getStore(string name)
+
+        public override bool purchaseBasket(string storeName, string creditCardNumber, int cvv, string holderName, string experationDate)
         {
             if (RealBridge != null)
-                return RealBridge.getStore(name);
+                return RealBridge.purchaseBasket(storeName, creditCardNumber, cvv, holderName, experationDate);
             throw new NotImplementedException();
         }
 
-        public override bool purchaseBasket(object basket, object creditCard)
+        public override bool removeProduct(int productId, Store store)
         {
             if (RealBridge != null)
-                return RealBridge.purchaseBasket(basket, creditCard);
-            throw new NotImplementedException();
-        }
-
-        public override bool removeProduct(int productId)
-        {
-            if (RealBridge != null)
-                return RealBridge.removeProduct(productId);
+                return RealBridge.removeProduct(productId, store);
             throw new NotImplementedException();
         }
 
@@ -87,10 +69,12 @@ namespace UnitTests.Bridge
             throw new NotImplementedException();
         }
 
-        public override bool updateProduct(int productId, double price, int amount)
+
+
+        public override bool updateProduct(int productId, double price, int amount, Store store)
         {
             if (RealBridge != null)
-                return RealBridge.updateProduct(productId, price, amount);
+                return RealBridge.updateProduct(productId, price, amount, store);
             throw new NotImplementedException();
         }
     }

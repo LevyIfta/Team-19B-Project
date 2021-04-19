@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using UnitTests.Bridge;
 
 namespace UnitTests
@@ -11,11 +12,16 @@ namespace UnitTests
         public static void classInit(TestContext context)
         {
             bridge = Bridge.Driver.GetBridge();
-            bridge.register("userAct", "passwordAct");
-            bridge.login("userAct", "passwordAct");
+            bridge.register("userAct", "passwordAct0");
+            bridge.login("userAct", "passwordAct0");
+            bridge.addStore("store");
+            bridge.createNewItem("bamba", "n", "b", "dd");
+            bridge.addProduct(1, 1.1, 5, bridge.browseStore("store"));
+
+
         }
         [ClassCleanup]
-        public void classCleanup()
+        public static void classCleanup()
         {
             bridge.logout();
         }
@@ -32,64 +38,39 @@ namespace UnitTests
             
         }
 
-
-        /// <summary>
-        /// used for proxy. todo
-        /// </summary>
-        /// <param name="product"></param>
-        /// <returns></returns>
-        private bool isProper(object product)
-        {
-            if ((string)product == "good" || (string)product == "good2")
-                return true;
-            else
-                return false;
-        }
+        /*
         [TestMethod]
         public void browseProductsTest()
         {
-            object ret = bridge.browseProducts("good", "bamba", 1.1, 2.5, 5.0);
-            Assert.IsTrue(isProper(ret), "failed to retrive product");
-            ret = bridge.browseProducts("bad", "nope", 1.1, 2, 1);
-            Assert.IsFalse(isProper(ret), "managed to retrive bad product");
-            ret = bridge.browseProducts("good2", "__&^#", 3, -10, 9999);
-            Assert.IsFalse(isProper(ret), "managed to retrive bad product (should fail)");
+            
+            
+            Dictionary<string, Dictionary<int, int>> ret = bridge.browseProducts("good", "bamba", 1.1, 2.5, "honda");
+            Assert.IsTrue(ret != null, "failed to retrive product");
+            Assert.IsTrue(ret.Count > 0, "failed to retrive product");
+            ret = bridge.browseProducts("bad", "nope", 1.1, 2, "nisan");
 
-        }
+            Assert.IsFalse(ret != null && ret.Count > 0, "managed to retrive bad product");
+            ret = bridge.browseProducts("good2", "__&^#", 3, -10, "poopfactory");
+            Assert.IsFalse(ret != null && ret.Count > 0, "managed to retrive bad product (should fail)");
+            
+        }*/
 
-        [TestMethod]
-        public void browseStoreTest()
-        {
-            Assert.IsTrue(isProper(bridge.browseStore("good")), "failed to browse store");
-            Assert.IsFalse(isProper(bridge.browseStore("bad")), "managed to browsr bad store ");
-        }
 
         [TestMethod]
         public void saveProductTest()
         {
-            //todo
-            Assert.Fail();
-        }
+            Dictionary<int, int> dir = new Dictionary<int, int>();
+            dir.Add(1, 1);
+            dir.Add(2, 2);
+            Assert.IsTrue(bridge.saveProduct("store", dir), "failed to save items to basket");
+            Assert.IsTrue(bridge.GetBasket("store")[1] == 1, "failed to retrive basket");
+            Dictionary<int, int> dir2 = new Dictionary<int, int>();
+            dir2.Add(1, 1);
+            Assert.IsTrue(bridge.removeProductsFromBasket(dir2, "store"), "failed to remove product from basket");
+            Assert.IsFalse(bridge.GetBasket("store").ContainsKey(1), "remove didnt remove the product");
 
-        [TestMethod]
-        public void getPurchaseHistoryTest()
-        {
-            //todo
-            Assert.Fail();
-        }
 
-        [TestMethod]
-        public void getStoreAndProductsInfoTest()
-        {
-            //todo
-            Assert.Fail();
-        }
 
-        [TestMethod]
-        public void removeProductsFromBasketTest()
-        {
-            //todo
-            Assert.Fail();
         }
 
 

@@ -8,7 +8,7 @@ namespace UnitTests.Bridge
     {
         public static Bridge GetBridge()
         {
-            return new StoreProxyBridge(null);
+            return new StoreProxyBridge(new RealBridge());
         }
     }
 }

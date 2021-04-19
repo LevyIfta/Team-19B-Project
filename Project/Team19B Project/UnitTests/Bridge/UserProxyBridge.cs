@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TradingSystem;
 
 namespace UnitTests.Bridge
 {
@@ -37,55 +38,58 @@ namespace UnitTests.Bridge
         }
 
 
-        public override object browseProducts(string name, string category, double minPrice, double maxPrice, double storeRating)
+        public override Dictionary<string, Dictionary<int, int>> browseProducts(string name, string category, double minPrice, double maxPrice, string manufacturer)
         {
             if (RealBridge != null)
-                return RealBridge.browseProducts(name, category, minPrice, maxPrice, storeRating);
+                return RealBridge.browseProducts(name, category, minPrice, maxPrice, manufacturer);
             if (name == "good")
-                return "good";
+                return null;
             if (name == "good2")
-                return "good2";
-            return "bad";
+                return null;
+            return null;
 
         }
 
-        public override object browseStore(string name)
+        public override Store browseStore(string name)
         {
             if (RealBridge != null)
                 return RealBridge.browseStore(name);
             if (name == "good")
-                return "good";
-            return "bad";
+                return null;
+            return null;
         }
 
-        public override bool saveProduct(object store, List<object> Products)
+        public override bool saveProduct(string storeName, Dictionary<int, int> Products)
         {
             if (RealBridge != null)
-                return RealBridge.saveProduct(store, Products);
+                return RealBridge.saveProduct(storeName, Products);
             throw new NotImplementedException();
         }
 
-        public override List<object> getPurchHistory()
+        public override LinkedList<string> getPurchHistory()
         {
             if (RealBridge != null)
                 return RealBridge.getPurchHistory();
             throw new NotImplementedException();
         }
 
-        public override object getStoreAndProductsInfo(object shop)
+        public override bool removeProductsFromBasket(Dictionary<int, int> products, string storeName)
         {
             if (RealBridge != null)
-                return RealBridge.getStoreAndProductsInfo(shop);
+                return RealBridge.removeProductsFromBasket(products, storeName);
             throw new NotImplementedException();
         }
-
-        public override bool removeProductsFromBasket(List<object> products)
+        public override Dictionary<int, int> GetBasket(string storename)
         {
             if (RealBridge != null)
-                return RealBridge.removeProductsFromBasket(products);
-            throw new NotImplementedException();
+                return RealBridge.GetBasket(storename);
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            dic.Add(1, 1);
+            dic.Add(3, 5);
+            return dic;
         }
 
-      
+
+
     }
 }

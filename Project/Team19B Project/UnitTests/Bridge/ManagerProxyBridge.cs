@@ -11,39 +11,39 @@ namespace UnitTests.Bridge
 
         }
 
-        public override bool editManagerPermissions(object todo)
+        public override bool editManagerPermissions(string username, string store, List<string> premmisions)
         {
             if (RealBridge != null)
-                return RealBridge.editManagerPermissions(todo);
+                return RealBridge.editManagerPermissions(username, store, premmisions);
             throw new NotImplementedException();
         }
 
-        public override object getEmployeesInfo(object todo)
+        public override LinkedList<string> getEmployeesInfo(string storename)
         {
             if (RealBridge != null)
-                return RealBridge.getEmployeesInfo(todo);
+                return RealBridge.getEmployeesInfo(storename);
             throw new NotImplementedException();
         }
 
-        public override bool hireNewManager(object todo)
+        public override bool hireNewManager(string storeName, string username)
         {
             if (RealBridge != null)
-                return RealBridge.hireNewManager(todo);
+                return RealBridge.hireNewManager(storeName, username);
             throw new NotImplementedException();
         }
 
-        public override bool hireNewOwner(object todo)
+        public override bool hireNewOwner(string storeName, string username, List<string> premmisions)
         {
             if (RealBridge != null)
-                return RealBridge.hireNewOwner(todo);
+                return RealBridge.hireNewOwner(storeName, username, premmisions);
             throw new NotImplementedException();
         }
 
 
-        public override bool removeStoreManager(object todo)
+        public override bool removeStoreManager(string storeName, string userName)
         {
             if (RealBridge != null)
-                return RealBridge.removeStoreManager(todo);
+                return RealBridge.removeStoreManager(storeName, userName);
             throw new NotImplementedException();
         }
 

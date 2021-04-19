@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Team19B_Project.BusinessLayer
+namespace TradingSystem
 {
-    class Store
+    internal class Program
     {
+        private static void Main(string[] args)
+        {
+
+        }
     }
 }
