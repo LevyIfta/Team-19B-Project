@@ -28,5 +28,6 @@ namespace TradingSystem
         public abstract bool purchase(string storeName);
         public abstract bool EstablishStore(string storeName);
         public abstract LinkedList<string> getPurchHistory();
+        public abstract string getUserName();
     }
 }

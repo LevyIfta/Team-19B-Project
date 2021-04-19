@@ -8,9 +8,8 @@ namespace TradingSystem
 {
     public class SupplySystem
     {
-        public static bool supply(ShoppingBasket basket)
+        public static bool supply(string store, Dictionary<int, int> basket)
         {
-            DirAppend.AddToLogger.AddToLogger("supply from: " + basket.storeName + ", to: " + basket.owner + ".", "log");
             return true;
         }
     }

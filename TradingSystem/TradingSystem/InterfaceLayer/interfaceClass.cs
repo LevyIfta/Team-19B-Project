@@ -8,10 +8,18 @@ using TradingSystem;
 
 namespace TradingSystem
 {
-    internal class interfaceClass
+    public class interfaceClass
     {
-
+        
         private static User user = new Guest();
+
+
+        public static string getUsername
+        {
+            get { return user.getUserName(); }
+            set { }
+        }
+
         public static void loadMenu()
         {
             string username = "";
@@ -21,7 +29,7 @@ namespace TradingSystem
             {
                 printMenu();
                 string option = Console.ReadLine();
-
+                
                 switch (option)
                 {
                     case "1"://login
@@ -45,82 +53,68 @@ namespace TradingSystem
                 }
             }
         }
-
+        
 
         // User 
-        public static bool login(string username, string password)
-        {
+        public static bool login(string username, string password){
 
             Member reg = User.login(username, password);
             if (reg == null)
-            {
-                DirAppend.AddToLogger("login: " + username + "didn't succeeded to login.", Result.WARNING);
                 return false;
-            }
             user = reg;
-            DirAppend.AddToLogger("login: " + username + " is now login.", Result.LOG);
             return true;
-
+            
         }
         public static bool register(string username, string password)
         {
             if (!checkUserValidity(username) || !checkPasswordValidity(password))
                 return false;
             else
-            {
-                DirAppend.AddToLogger("register: " + username + "is register to the system.", Result.LOG);
                 return user.register(username, password);
-            }
         }
-        public static void logout()
-        {
+        public static void logout(){
+          
             user = new Guest();
         }
         // Guest
-        public static Dictionary<string, Dictionary<int, int>> browseProducts(string productName, double minPrice, double maxPrice, string category, string manufacturer)
-        {
+        public static Dictionary<string, Dictionary<int, int>> browseProducts(string productName, double minPrice, double maxPrice, string category, string manufacturer){
             return StoresServices.searchProducts(productName, minPrice, maxPrice, category, manufacturer);
-        }
-        public Store browseStore(string name)
-        {
+        }     
+        public static Store browseStore(string name){
             return StoresServices.getStore(name);
         }
-        public bool saveProduct(string storeName, Dictionary<int, int> products)
+        public static bool saveProduct(string storeName, Dictionary<int, int> products) 
         {
-            DirAppend.AddToLogger("save product: " + "user" + " save product with id " + products.ToString(), Result.LOG);
             return user.saveProduct(storeName, products);
         }
-        public bool removeProduct(string storeName, Dictionary<int, int> products)
+        public static bool removeProduct(string storeName, Dictionary<int, int> products)
         {
-            DirAppend.AddToLogger("delete product: " + "user" + " delete product with id " + products.ToString(), Result.LOG);
             return user.removeProduct(storeName, products);
         }
 
-        public ShoppingBasket checkShoppingBasketDetails(string storeName)
+        public static ShoppingBasket checkShoppingBasketDetails(string storeName)
         {
             return user.checkShoppingBasketDetails(storeName);
         }
 
-        public bool purchase(string storeName)
+        public static bool purchase(string storeName)
         {
-            DirAppend.AddToLogger("purchase: " + "user" + " buy from " + storeName, Result.LOG);
             return user.purchase(storeName);
         }
 
         // Member
-        public bool EstablishStore(string storeName)
+        public static bool EstablishStore(string storeName)
         {
             return user.EstablishStore(storeName);
         }
 
-        public LinkedList<string> getPurchHistory()
+        public static LinkedList<string> getPurchHistory()
         {
             return user.getPurchHistory();
         }
 
         // Manager
-        public bool addNewProduct(string storeName, int productId, double price, int amount)
-        {
+        public static bool addNewProduct(string storeName,int productId, double price, int amount){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -130,8 +124,7 @@ namespace TradingSystem
             args.AddLast(amount);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "addProduct").todo(args);
         }
-        public bool removeProduct(string storeName, int productId)
-        {
+        public static bool removeProduct(string storeName,int productId){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -139,8 +132,7 @@ namespace TradingSystem
             args.AddLast(productId);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "removeProduct").todo(args);
         }
-        public bool editProduct(string storeName, int productId, double price)
-        {
+        public static bool editProduct(string storeName,int productId, double price){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -149,8 +141,7 @@ namespace TradingSystem
             args.AddLast(price);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "editProduct").todo(args);
         }
-        public bool editManagerPermissions(string storeName, string username, List<string> Permissions)
-        {
+        public static bool editManagerPermissions(string storeName, string username, List<string> Permissions){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -159,16 +150,14 @@ namespace TradingSystem
             args.AddLast(username);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "editManagerPermissions").todo(args);
         }
-        public LinkedList<string> getPurchaseHistory(string storeName)
-        {
+        public static LinkedList<string> getPurchaseHistory(string storeName){
             if (!user.isManager(storeName))
                 return null;
             LinkedList<object> args = new LinkedList<object>();
             args.AddFirst(storeName);
             return (LinkedList<string>)((Member)user).GetUserDetails().doManage(storeName, "getPurchaseHistory").todo(args);
         }
-        public bool hireNewStoreManager(string storeName, string username)
-        {
+        public static bool hireNewStoreManager(string storeName,string username){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -176,8 +165,7 @@ namespace TradingSystem
             args.AddLast(username);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "hireNewStoreManager").todo(args);
         }
-        public bool hireNewStoreOwner(string storeName, string username, List<string> pre)
-        {
+        public static bool hireNewStoreOwner(string storeName,string username, List<string> pre){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -186,8 +174,7 @@ namespace TradingSystem
             args.AddLast(pre);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "hireNewStoreOwner").todo(args);
         }
-        public bool removeManager(string storeName, string username)
-        {
+        public static bool removeManager(string storeName,string username){
             if (!user.isManager(storeName))
                 return false;
             LinkedList<object> args = new LinkedList<object>();
@@ -195,15 +182,14 @@ namespace TradingSystem
             args.AddLast(username);
             return (bool)((Member)user).GetUserDetails().doManage(storeName, "removeManager").todo(args);
         }
-        public LinkedList<string> getInfoEmployees(string storeName)
-        {
+        public static LinkedList<string> getInfoEmployees(string storeName){
             if (!user.isManager(storeName))
                 return null;
             LinkedList<object> args = new LinkedList<object>();
             args.AddFirst(storeName);
             return (LinkedList<string>)((Member)user).GetUserDetails().doManage(storeName, "getInfoEmployees").todo(args);
-        }
-
+        }  
+        
         private static void printMenu()
         {
             Console.WriteLine("");

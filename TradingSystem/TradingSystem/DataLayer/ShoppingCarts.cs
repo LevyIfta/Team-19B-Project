@@ -23,6 +23,7 @@ namespace TradingSystem
         private ShoppingCarts()
         {
             this.carts = new Dictionary<string, ShoppingCart>();
+            this.carts.Add("guest", new ShoppingCart("guest1"));
         }
 
         public static ShoppingCarts Instance

@@ -8,9 +8,8 @@ namespace TradingSystem
 {
     public class PaymentSystem
     {
-        public static bool pay(CreditCardInfo creditCard, double price, string storeOwner)
+        public static bool pay(CreditCardInfo creditCard, double price)
         {
-            DirAppend.AddToLogger.AddToLogger("payment - from: " + creditCard.holderName + ", to: " + storeOwner + ", total: " + price + ".", "log");
             return true;
         }
     }
