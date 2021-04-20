@@ -21,12 +21,17 @@ namespace TradingSystem.ServiceLayer
             user = temp;
             return true;
         }
-
-
         public static bool register(string username, string password)
         {
             return UserServices.register(username, password);
         }
+        public static void logout()
+        {
+            //checke if user login, if yes so log out
+            user = null;
+        }
+
+        
 
     }
 }

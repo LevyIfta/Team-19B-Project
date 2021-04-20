@@ -23,5 +23,35 @@ namespace TradingSystem.BuissnessLayer
             UserDAL.addUser(new memberData(username, password));
             return true;
         }
+        public static bool saveProduct(ShoppingBasket basket)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool removeProduct(ShoppingBasket basket)
+        {
+
+            throw new NotImplementedException();
+        }
+
+        public static ShoppingBasket getBasket(Store store)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static ShoppingCart getCart(Store store)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool EstablishStore(string storeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool purchase(PaymentMethod payment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

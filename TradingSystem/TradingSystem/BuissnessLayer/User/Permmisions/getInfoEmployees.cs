@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    class addProduct : aPermission
+    class getInfoEmployees : aPermission
     {
         public override object todo(PersmissionsTypes func, object[] args)
         {
-            if (func == PersmissionsTypes.AddProduct)
+            if (func == PersmissionsTypes.getInfoEmployees)
                 return null; //todo
             return base.todo(func, args);
         }

@@ -55,6 +55,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BuissnessLayer\User\Permmisions\editManagerPermissions.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\editProduct.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\getInfoEmployees.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\getPurchaseHistory.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreManager.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreOwner.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\removeManager.cs" />
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
     <Compile Include="DataLayer\memberData.cs" />
     <Compile Include="DataLayer\UserDAL.cs" />
