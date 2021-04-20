@@ -4,12 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B2A2CDDE-7A32-4C41-8167-5DAE61DB66A4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{553860D7-EAAF-410C-B033-8F3DB937157B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>TradingSystem</RootNamespace>
     <AssemblyName>TradingSystem</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -34,53 +36,84 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessLayer\DirAppend.cs" />
-    <Compile Include="BusinessLayer\Store\CreditCardInfo.cs" />
-    <Compile Include="BusinessLayer\Store\manageSupply.cs" />
-    <Compile Include="BusinessLayer\Store\PaymentSystem.cs" />
-    <Compile Include="BusinessLayer\Store\Store.cs" />
-    <Compile Include="BusinessLayer\Store\Stores.cs" />
-    <Compile Include="BusinessLayer\Store\StoresServices.cs" />
-    <Compile Include="BusinessLayer\Store\SupplySystem.cs" />
-    <Compile Include="BusinessLayer\User\Admin.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\addProduct.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\Decorator.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\editManagerPermissions.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\editProduct.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\getInfoEmployees.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\getPurchaseHistory.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\hireNewStoreManager.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\hireNewStoreOwner.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\iDecorator.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\removeManager.cs" />
-    <Compile Include="BusinessLayer\User\Decorator\removeProduct.cs" />
-    <Compile Include="BusinessLayer\User\Guest.cs" />
-    <Compile Include="BusinessLayer\User\Member.cs" />
-    <Compile Include="BusinessLayer\User\User.cs" />
-    <Compile Include="BusinessLayer\User\userDetails.cs" />
-    <Compile Include="DataLayer\DataClass.cs" />
-    <Compile Include="DataLayer\ProductInfo.cs" />
-    <Compile Include="DataLayer\Products.cs" />
-    <Compile Include="DataLayer\PurchaseReceipts.cs" />
-    <Compile Include="DataLayer\ShoppingBasket.cs" />
-    <Compile Include="DataLayer\ShoppingCart.cs" />
-    <Compile Include="DataLayer\ShoppingCarts.cs" />
-    <Compile Include="DataLayer\ShoppingCartsServices.cs" />
-    <Compile Include="InterfaceLayer\interfaceClass.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="BuissnessLayer\User\UserServices.cs" />
+    <Compile Include="DataLayer\memberData.cs" />
+    <Compile Include="DataLayer\UserDAL.cs" />
+    <Compile Include="ServiceLayer\SeviceClass.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BuissnessLayer\commerce\CreditCard.cs" />
+    <Compile Include="BuissnessLayer\commerce\PaymentMethod.cs" />
+    <Compile Include="BuissnessLayer\User\aUser.cs" />
+    <Compile Include="BuissnessLayer\User\Guest.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\addProduct.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\aPermission.cs" />
+    <Compile Include="BuissnessLayer\User\Member.cs" />
+    <Compile Include="BuissnessLayer\commerce\PurchasePolicy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Reciept.cs" />
+    <Compile Include="BuissnessLayer\commerce\ShoppingBasket.cs" />
+    <Compile Include="BuissnessLayer\commerce\Product.cs" />
+    <Compile Include="BuissnessLayer\commerce\ProductInfo.cs" />
+    <Compile Include="BuissnessLayer\commerce\ShoppingCart.cs" />
+    <Compile Include="BuissnessLayer\commerce\Store.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\basePermmision.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\PersmissionsTypes.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
