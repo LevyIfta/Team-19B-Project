@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -11,8 +12,8 @@ namespace TradingSystem.BuissnessLayer
         public string name { get; private set; }
         public ICollection<Reciept> recipts { get; private set; }
         public ICollection<Product> inventory { get; private set; }
-        public ICollection<string> owners { get; private set; }
-        public ICollection<string> managers { get; private set; }
+        public ICollection<Member> owners { get; private set; }
+        public ICollection<Member> managers { get; private set; }
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
@@ -21,8 +22,18 @@ namespace TradingSystem.BuissnessLayer
             this.founder = founder;
             this.recipts = new List<Reciept>();
             this.inventory = new List<Product>();
-            this.owners = new List<string>();
-            this.managers = new List<string>();
+            this.owners = new List<Member>();
+            this.managers = new List<Member>();
+        }
+
+        public Store(StoreData storeData)
+        {
+            
+        }
+
+        internal StoreData getDataObject()
+        {
+            throw new NotImplementedException();
         }
 
         public double calcPrice(ICollection<Product> products)
@@ -34,40 +45,40 @@ namespace TradingSystem.BuissnessLayer
         {
             throw new NotImplementedException();
         }
-        public void addOwner(string username)
+        public void addOwner(Member username)
         {
             this.owners.Add(username);
         }
-        public void addManager(string username)
+        public void addManager(Member username)
         {
             this.managers.Add(username);
         }
-        public void removeOwner(string username)
+        public void removeOwner(Member username)
         {
             this.owners.Remove(username);
         }
 
-        public void removeManager(string username)
+        public void removeManager(Member username)
         {
             this.managers.Remove(username);
         }
 
-        public bool isManager(string userrname)
+        public bool isManager(Member userrname)
         {
             return this.managers.Contains(userrname);
         }
 
-        public bool isOwner(string username)
+        public bool isOwner(Member username)
         {
             return this.owners.Contains(username);
         }
 
-        public ICollection<string> getOwners()
+        public ICollection<Member> getOwners()
         {
             return owners;
         }
 
-        public ICollection<string> getManagers()
+        public ICollection<Member> getManagers()
         {
             return managers;
         }
