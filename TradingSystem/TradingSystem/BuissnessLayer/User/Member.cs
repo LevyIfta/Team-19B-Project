@@ -13,7 +13,7 @@ namespace TradingSystem.BuissnessLayer
         public string userName { get; set; }
         public string password { get; set; }
 
-        public ICollection<Reciept> reciepts { get; set; }
+        public ICollection<Receipt> reciepts { get; set; }
         public basePermmision permmisions { get; set; }
 
         public override string getUserName()

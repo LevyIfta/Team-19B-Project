@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Reciept
+    class Receipt
     {
         public ShoppingBasket basket { get; set; }
         public Store store { get { return basket.store; } private set {  } }
-        public string userName { get; set; }
+        public string username { get; set; }
         public double price { get; set; }
         public DateTime date { get; set; }
         public Object Discount { get; set; } //todo

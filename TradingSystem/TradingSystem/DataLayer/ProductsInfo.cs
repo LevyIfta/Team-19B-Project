@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.DataLayer
 {
-    class CreditCard : PaymentMethod
+    class ProductsInfo
     {
-        public bool pay(double price) { return true; }
     }
 }

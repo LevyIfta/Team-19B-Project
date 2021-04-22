@@ -8,5 +8,6 @@ namespace TradingSystem.BuissnessLayer
 {
     interface PaymentMethod
     {
+        bool pay(double price);
     }
 }

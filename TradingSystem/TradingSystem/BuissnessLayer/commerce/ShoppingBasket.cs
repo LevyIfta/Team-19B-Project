@@ -10,16 +10,33 @@ namespace TradingSystem.BuissnessLayer
     {
         public ICollection<Product> products { get; set; }
         public Store store { get; set; }
+        public string owner { get; }
 
+        public ShoppingBasket(Store store, string owner)
+        {
+            this.store = store;
+            this.products = new LinkedList<Product>();
+            this.owner = owner;
+        }
 
         public double checkPrice()
         {
             return store.calcPrice(products);
         }
 
-        public Reciept purchase(PaymentMethod payment)
+        public Receipt purchase(PaymentMethod payment)
         {
-            return store.executePurchase(this.products);
+            return store.executePurchase(this, payment);
+        }
+
+        public ShoppingBasket clone()
+        {
+            return null;
+        }
+
+        internal void clean()
+        {
+            this.products = new LinkedList<Product>();
         }
     }
 }
