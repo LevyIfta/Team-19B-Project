@@ -8,5 +8,6 @@ namespace TradingSystem.DataLayer
 {
     class ProductsInfo
     {
+
     }
 }

@@ -36,6 +36,8 @@ namespace TradingSystem.BuissnessLayer
             this.founder = Member.dataToObject(storeData.founder);
         }
 
+        
+
         public double calcPrice(ICollection<Product> products)
         {
             double price = 0.0;
