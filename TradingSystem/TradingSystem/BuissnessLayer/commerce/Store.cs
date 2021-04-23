@@ -36,7 +36,51 @@ namespace TradingSystem.BuissnessLayer
             this.founder = Member.dataToObject(storeData.founder);
         }
 
-        
+        public ProductInfo addProduct(string name, string category, string manufacturer)
+        {
+            ProductInfo productInfo = ProductInfo.getProductInfo(name, category, manufacturer);
+            lock (StoresData.getStore(this.name))
+            {
+                // check if the product already exists in the store
+                foreach (ProductData p in StoresData.getStore(this.name).inventory)
+                    if (p.info.Equals(productInfo.toDataObject()))
+                        return null;
+                // the product doesn't exist, add it to the DB
+                StoresData.getStore(this.name).inventory.Add(new ProductData(productInfo.toDataObject(), 0, -1));
+            }
+            return productInfo;
+        }
+
+        public bool editPrice(string name, string manufacturer, double newPrice)
+        {
+            // check if the product exists
+            foreach (ProductData p in StoresData.getStore(this.name).inventory)
+                if (p.info.name.Equals(name) & p.info.manufacturer.Equals(manufacturer))
+                {
+                    p.price = newPrice;
+                    return true;
+                }
+            // the product doesn't exist, can't edit price
+            return false;
+        }
+
+        public bool supply(string name, string manufacturer, int amount)
+        {
+            if (amount <= 0)
+                return false;
+            lock (StoresData.getStore(this.name).getPurchaseLock())
+            {
+                // check if the product exists
+                foreach (ProductData p in StoresData.getStore(this.name).inventory)
+                    if (p.info.name.Equals(name) & p.info.manufacturer.Equals(manufacturer))
+                    {
+                        p.amount += amount;
+                        return true;
+                    }
+            }
+            // the product doesn't exist
+            return false;
+        }
 
         public double calcPrice(ICollection<Product> products)
         {

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    class ProductsInfo
+    class ProductsInfoData
     {
-
+        public static ICollection<ProductInfoData> productsInfo = new LinkedList<ProductInfoData>();
     }
 }
