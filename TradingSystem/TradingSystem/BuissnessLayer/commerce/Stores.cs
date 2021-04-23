@@ -11,17 +11,24 @@ namespace TradingSystem.BuissnessLayer.commerce
     {
         public static Store addStore(string storeName, Member founder)
         {
-            return null;
+            // check for a name duplicant
+            if (StoresData.getStore(storeName) != null)
+                return null;
+            Store newStore = new Store(storeName, founder);
+            // add the new store to StoresData
+            StoresData.addStore(newStore.toDataObject());
+            return newStore;
         }
 
         public static Store searchStore(string storeName)
         {
-            return null;
+            StoreData storeData = StoresData.getStore(storeName);
+            return storeData == null ? null : new Store(storeData);
         }
 
-        public static bool removeStore(Store store)
+        public static void removeStore(Store store)
         {
-            return false;
+            StoresData.removeStore(store.toDataObject());
         }
     }
 }

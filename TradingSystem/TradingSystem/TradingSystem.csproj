@@ -65,6 +65,10 @@
     <Compile Include="BuissnessLayer\User\Permmisions\removeManager.cs" />
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
     <Compile Include="DataLayer\memberData.cs" />
+    <Compile Include="DataLayer\ProductData.cs" />
+    <Compile Include="DataLayer\ProductInfoData.cs" />
+    <Compile Include="DataLayer\ProductsInfo.cs" />
+    <Compile Include="DataLayer\ReceiptData.cs" />
     <Compile Include="DataLayer\StoreData.cs" />
     <Compile Include="DataLayer\StoresData.cs" />
     <Compile Include="DataLayer\UserDAL.cs" />
@@ -85,7 +89,7 @@
     <Compile Include="BuissnessLayer\User\Permmisions\aPermission.cs" />
     <Compile Include="BuissnessLayer\User\Member.cs" />
     <Compile Include="BuissnessLayer\commerce\PurchasePolicy.cs" />
-    <Compile Include="BuissnessLayer\commerce\Reciept.cs" />
+    <Compile Include="BuissnessLayer\commerce\Receipt.cs" />
     <Compile Include="BuissnessLayer\commerce\ShoppingBasket.cs" />
     <Compile Include="BuissnessLayer\commerce\Product.cs" />
     <Compile Include="BuissnessLayer\commerce\ProductInfo.cs" />

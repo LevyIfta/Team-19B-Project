@@ -73,7 +73,8 @@ namespace TradingSystem.BuissnessLayer
                         receipt.basket = cloned;
                         receipt.date = DateTime.Now;
                         receipt.price = price;
-                        receipt.username = basket.owner;
+                        // save the receipt
+                        StoresData.getStore(this.name).receipts.Add(receipt.toDataObject());
                     }
                 }
             }
@@ -88,7 +89,11 @@ namespace TradingSystem.BuissnessLayer
 
         private bool checkAmounts(ICollection<Product> products)
         {
-            return false;
+            foreach (Product product in products)
+                foreach (ProductData productData in StoresData.getStore(this.name).inventory)
+                    if (product.toDataObject().Equals(productData) & product.amount > productData.amount)
+                        return false;
+            return true;
         }
         public void addOwner(Member owner)
         {

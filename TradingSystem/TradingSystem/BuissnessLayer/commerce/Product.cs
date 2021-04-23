@@ -19,6 +19,13 @@ namespace TradingSystem.BuissnessLayer
             this.amount = amount;
             this.price = price;
         }
+
+        public Product(ProductData productData)
+        {
+            this.info = new ProductInfo(productData.info);
+            this.amount = productData.amount;
+            this.price = productData.price;
+        }
         public ProductData toDataObject()
         {
             return new ProductData(info.toDataObject(), amount, price);

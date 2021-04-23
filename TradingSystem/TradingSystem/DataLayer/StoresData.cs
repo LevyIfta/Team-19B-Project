@@ -21,6 +21,9 @@ namespace TradingSystem.DataLayer
             stores.Add(storeData.name, storeData);
         }
 
-
+        public static void removeStore(StoreData storeData)
+        {
+            stores.Remove(storeData.name);
+        }
     }
 }

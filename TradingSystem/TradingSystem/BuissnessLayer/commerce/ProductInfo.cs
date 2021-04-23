@@ -7,7 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class ProductInfo
+    class ProductInfo : IComparable
     {
         public string name { get; set; }
         public string category { get; set; }
@@ -32,7 +32,9 @@ namespace TradingSystem.BuissnessLayer
             return new ProductInfoData(this.name, this.category, this.manufacturer);
         }
 
-
-
+        public int CompareTo(object other)
+        {
+            return (other is ProductInfo && (this.name.Equals(((ProductInfo)other).name) & this.category.Equals(((ProductInfo)other).category) & this.manufacturer.Equals(((ProductInfo)other).manufacturer))) ? 0 : 1;
+        }
     }
 }
