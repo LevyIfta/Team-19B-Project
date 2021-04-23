@@ -66,7 +66,10 @@ namespace TradingSystem.BuissnessLayer
                         receipt = new Receipt();
                         // the payment was successful
                         foreach (Product product in products)
+                        {
                             StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                            product.info.LeaveFeedback(basket.owner, "");
+                        }
                         // clean the basket
                         basket.clean();
                         // fill receipt fields
@@ -126,6 +129,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return StoresData.getStore(this.name).getOwners().Contains(Member.objectToData(member));
         }
+
         /*
         public ICollection<Member> getOwners()
         {

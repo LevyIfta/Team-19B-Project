@@ -12,15 +12,15 @@ namespace TradingSystem.BuissnessLayer
 
         public static Member login(string username, string password)
         {
-            memberData data = UserDAL.getUser(username, password);
+            MemberData data = MemberDAL.getUser(username, password);
             return Member.dataToObject(data);
 
         }
         public static bool register(string username, string password)
         {
-            if (UserDAL.isExist(username))
+            if (MemberDAL.isExist(username))
                 return false;
-            UserDAL.addUser(new memberData(username, password));
+            MemberDAL.addUser(new MemberData(username, password));
             return true;
         }
         public static bool saveProduct(ShoppingBasket basket)

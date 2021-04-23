@@ -23,5 +23,10 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             return false;
         }
+
+        public static bool leaveFeedback (string userName, string productName, string manufacturer, string comment)
+        {
+            DataLayer.ProductInfoDAL.g
+        }
     }
 }

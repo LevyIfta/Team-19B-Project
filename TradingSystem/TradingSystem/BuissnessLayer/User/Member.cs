@@ -38,13 +38,13 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
 
-        public static Member dataToObject(memberData data)
+        public static Member dataToObject(MemberData data)
         {
             if(data == null)
                 return null;
             throw new NotImplementedException();
         }
-        public static memberData objectToData(Member member)
+        public static MemberData objectToData(Member member)
         {
             throw new NotImplementedException();
         }
@@ -54,7 +54,7 @@ namespace TradingSystem.BuissnessLayer
         /// </summary>
         protected override void update()
         {
-            UserDAL.update(new memberData(userName, password), objectToData(this));
+            MemberDAL.update(new MemberData(userName, password), objectToData(this));
         }
 
 
