@@ -188,7 +188,7 @@ namespace TradingSystem.BuissnessLayer
         /// </summary>
         protected override void update()
         {
-            MemberDAL.update(new memberData(userName, password), objectToData(this));
+            MemberDAL.update(new MemberData(userName, password));
         }
 
 

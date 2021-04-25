@@ -66,6 +66,7 @@
     <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreManager.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreOwner.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\removeManager.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\removeProduct.cs" />
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
     <Compile Include="DataLayer\DataAccess\BasketDAL.cs" />
     <Compile Include="DataLayer\DataAccess\FeedbackDAL.cs" />

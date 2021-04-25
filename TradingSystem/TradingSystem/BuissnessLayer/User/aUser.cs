@@ -52,7 +52,7 @@ namespace TradingSystem.BuissnessLayer
 
         public ShoppingBasket getBasket(Store store)
         {
-            return myCart.GetBasket(store);
+            return myCart.getBasket(store);
         }
 
         public ShoppingCart getCart()
