@@ -84,7 +84,7 @@ namespace TradingSystem.BuissnessLayer
 
         public ShoppingBasketData toDataObject()
         {
-            return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
+            //return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject(this.store.name)), store.toDataObject(), Member.objectToData(this.owner));
         }
 
         
@@ -110,6 +110,12 @@ namespace TradingSystem.BuissnessLayer
                 ans = false;
             }
             return ans;
+        }
+
+        public void update()
+        {
+
+            ShoppingBasketDAL.update(this.toDataObject());
         }
     }
 }

@@ -22,13 +22,22 @@ namespace TradingSystem.BuissnessLayer
 
         public Product(ProductData productData)
         {
-            this.info = new ProductInfo(productData.info);
+            this.info = ProductInfo.getProductInfo(productData.info.name, productData.info.category, productData.info.manufacturer);
             this.amount = productData.amount;
             this.price = productData.price;
         }
-        public ProductData toDataObject()
+
+        public Product(Product product)
         {
-            return new ProductData(info.toDataObject(), amount, price);
+            // clone the product
+            this.info = product.info;
+            this.amount = product.amount;
+            this.price = product.price;
+        }
+
+        public ProductData toDataObject(string storeName)
+        {
+            return new ProductData(this.info.id, this.amount, this.price, storeName);
         }
         public override bool Equals(object obj)
         {
@@ -41,6 +50,16 @@ namespace TradingSystem.BuissnessLayer
         public void addAmount(int add)
         {
             this.amount += add;
+        }
+
+        public void update(string storeName)
+        {
+            ProductDAL.update(this.toDataObject(storeName));
+        }
+
+        public void remove(string name)
+        {
+            ProductDAL.remove(this.toDataObject(name));
         }
     }
 }

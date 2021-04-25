@@ -14,16 +14,21 @@ namespace TradingSystem.BuissnessLayer
         public string username { get { return basket.owner.userName; } private set { } }
         public double price { get; set; }
         public DateTime date { get; set; }
+        public int id;
+        private static int currentId = -1;
+        private static Object idLocker = new Object();
         //public Object Discount { get; set; } //todo
         //public PurchasePolicy purchasePolicy { get; set; }
 
         public ReceiptData toDataObject()
         {
-            return new ReceiptData(this.basket.toDataObject(), this.price, this.date);
+            //return new ReceiptData(this.basket.toDataObject(), this.price, this.date);
+            return null;
         }
 
         public Receipt(ReceiptData receiptData)
         {
+
             this.basket = new ShoppingBasket(receiptData.basket);
             this.price = receiptData.price;
             this.date = receiptData.date;
@@ -31,7 +36,11 @@ namespace TradingSystem.BuissnessLayer
 
         public Receipt()
         {
-
+            lock (idLocker)
+            {
+                currentId++;
+                this.id = currentId;
+            }
         }
     }
 }

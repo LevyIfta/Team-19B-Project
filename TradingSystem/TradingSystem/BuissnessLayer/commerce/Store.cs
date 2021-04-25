@@ -10,54 +10,72 @@ namespace TradingSystem.BuissnessLayer
     class Store
     {
         public string name { get; private set; }
-        /*
+        
         public ICollection<Receipt> receipts { get; private set; }
         public ICollection<Product> inventory { get; private set; }
         public ICollection<Member> owners { get; private set; }
         public ICollection<Member> managers { get; private set; }
-        */
+        private Object purchaseLock = new Object();
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
         {
             this.name = name;
             this.founder = founder;
-            /*
+            
             this.receipts = new List<Receipt>();
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
-            */
+            
         }
 
         public Store(StoreData storeData)
         {
-            this.name = storeData.name;
-            this.founder = Member.dataToObject(storeData.founder);
+            this.name = storeData.storeName;
+            this.founder = Member.dataToObject(Member.dataToObject(MemberDAL.getMember(storeData.founder)));
         }
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
         {
             ProductInfo productInfo = ProductInfo.getProductInfo(name, category, manufacturer);
-            lock (StoresData.getStore(this.name))
+            lock (this.purchaseLock)
             {
                 // check if the product already exists in the store
-                foreach (ProductData p in StoresData.getStore(this.name).inventory)
+                foreach (Product p in this.inventory)
                     if (p.info.Equals(productInfo.toDataObject()))
                         return null;
-                // the product doesn't exist, add it to the DB
-                StoresData.getStore(this.name).inventory.Add(new ProductData(productInfo.toDataObject(), 0, -1));
+                // the product doesn't exist, add it
+                this.inventory.Add(new Product(productInfo, 0, 0));
+                // update DB
+                ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
             }
             return productInfo;
         }
 
-        public bool editPrice(string name, string manufacturer, double newPrice)
+        public void removeProduct(string productName, string manufacturer)
+        {
+            lock (this.purchaseLock)
+            {
+                foreach (Product product in this.inventory)
+                    if (product.info.name.Equals(productName) & product.info.manufacturer.Equals(manufacturer))
+                    {
+                        this.inventory.Remove(product);
+                        // update DB
+                        product.remove(this.name);
+                    }
+            }
+        }
+
+        public bool editPrice(string productName, string manufacturer, double newPrice)
         {
             // check if the product exists
-            foreach (ProductData p in StoresData.getStore(this.name).inventory)
-                if (p.info.name.Equals(name) & p.info.manufacturer.Equals(manufacturer))
+            foreach (Product p in this.inventory)
+                if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
                 {
                     p.price = newPrice;
+                    // update DB
+                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                     return true;
                 }
             // the product doesn't exist, can't edit price
@@ -68,13 +86,15 @@ namespace TradingSystem.BuissnessLayer
         {
             if (amount <= 0)
                 return false;
-            lock (StoresData.getStore(this.name).getPurchaseLock())
+            lock (this.purchaseLock)
             {
                 // check if the product exists
-                foreach (ProductData p in StoresData.getStore(this.name).inventory)
+                foreach (Product p in this.inventory)
                     if (p.info.name.Equals(name) & p.info.manufacturer.Equals(manufacturer))
                     {
                         p.amount += amount;
+                        // update DB
+                        ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                         return true;
                     }
             }
@@ -87,7 +107,9 @@ namespace TradingSystem.BuissnessLayer
             double price = 0.0;
 
             foreach (Product product in products)
-                price += StoresData.getStore(this.name).getPrice(product.info.toDataObject()) * product.amount;
+                foreach (Product localProduct in this.inventory)
+                    if (localProduct.info.Equals(product.info))
+                        price += localProduct.price * product.amount;
 
             return price;
         }
@@ -98,7 +120,7 @@ namespace TradingSystem.BuissnessLayer
             ICollection<Product> products = basket.products;
             Receipt receipt = null;
             // lock the store for purchase
-            lock (StoresData.getStore(this.name).getPurchaseLock())
+            lock (this.purchaseLock)
             {
                 // check for amounts validation
                 if (checkAmounts(products) & checkPolicies(basket))
@@ -112,15 +134,25 @@ namespace TradingSystem.BuissnessLayer
                         receipt = new Receipt();
                         // the payment was successful
                         foreach (Product product in products)
-                            StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                            foreach (Product localProduct in this.inventory)
+                                if (localProduct.info.Equals(product.info))
+                                {
+                                    localProduct.amount -= product.amount;
+                                    // update amount in DB
+                                    localProduct.update(this.name);
+                                }
                         // clean the basket
                         basket.clean();
+                        // update basket in DB
+                        basket.update();
                         // fill receipt fields
                         receipt.basket = cloned;
                         receipt.date = DateTime.Now;
                         receipt.price = price;
                         // save the receipt
-                        StoresData.getStore(this.name).receipts.Add(receipt.toDataObject());
+                        this.receipts.Add(receipt);
+                        // add receipt to DB
+                        
                     }
                 }
             }
@@ -177,7 +209,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return StoresData.getStore(this.name).getOwners().Contains(Member.objectToData(member));
         }
-        /*
+        
         public ICollection<Member> getOwners()
         {
             return owners;
@@ -187,11 +219,11 @@ namespace TradingSystem.BuissnessLayer
         {
             return managers;
         }
-        */
+        
         public StoreData toDataObject()
         {
             // init the data object
-            StoreData storeData = new StoreData(this.name, Member.objectToData(this.founder));
+            StoreData storeData = new StoreData(this.name, this.founder.userName);
             // convert collections elements to data ocjects and add them to the store data object
             /*
             foreach (Member owner in this.owners)
@@ -206,5 +238,30 @@ namespace TradingSystem.BuissnessLayer
             return storeData;
         }
 
+        public ICollection<Receipt> getAllReceipts()
+        {
+            return this.receipts;
+        }
+
+        public Product searchProduct(string productName)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName))
+                    return new Product(product);
+            return null; // no results
+        }
+
+        public bool isProductExist(string name, string manufacturer)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(name) & product.info.manufacturer.Equals(manufacturer))
+                    return true;
+            return false;
+        }
+
+        public void remove()
+        {
+            StoreDAL.remove(this.toDataObject());
+        }
     }
 }

@@ -13,9 +13,18 @@ namespace TradingSystem.BuissnessLayer
         public string name { get; set; }
         public string category { get; set; }
         public string manufacturer { get; set; }
+        public int id;
+        private static int currentId = -1;
+        private static Object idLocker = new Object();
 
         public ProductInfo(string name, string category, string manufacturer)
         {
+            // increment id
+            lock (idLocker)
+            {
+                currentId++;
+                this.id = currentId;
+            }
             this.name = name;
             this.category = category;
             this.manufacturer = manufacturer;

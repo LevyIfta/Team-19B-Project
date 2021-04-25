@@ -9,26 +9,39 @@ namespace TradingSystem.BuissnessLayer.commerce
 {
     class Stores
     {
+        public static ICollection<Store> stores = new LinkedList<Store>();
         public static Store addStore(string storeName, Member founder)
         {
-            // check for a name duplicant
-            if (StoresData.getStore(storeName) != null)
-                return null;
             Store newStore = new Store(storeName, founder);
-            // add the new store to StoresData
-            StoresData.addStore(newStore.toDataObject());
+            // check for a name duplicant
+            if (stores.Contains(newStore))
+                return null;
+            stores.Add(newStore);
+            // add the new store to DB TODO
+            StoreDAL.addStore(newStore.toDataObject());
             return newStore;
         }
 
         public static Store searchStore(string storeName)
         {
-            StoreData storeData = StoresData.getStore(storeName);
-            return storeData == null ? null : new Store(storeData);
+            foreach (Store store in stores)
+                if (store.name.Equals(storeName))
+                    return store;
+            return null;
         }
 
         public static void removeStore(Store store)
         {
-            StoresData.removeStore(store.toDataObject());
+            stores.Remove(store);
+            // update DB TODO
+            store.remove();
         }
+
+        public static ICollection<Store> getAllStores()
+        {
+            return stores;
+        }
+
+
     }
 }
