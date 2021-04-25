@@ -49,12 +49,12 @@ namespace TradingSystem.BuissnessLayer
         {
         }
 
-        public bool isManager(Member manager)
+        public bool isManager(string manager)
         {
             throw new NotImplementedException();
         }
 
-        public bool isOwner(Member owner)
+        public bool isOwner(string owner)
         {
             throw new NotImplementedException();
         }
@@ -67,6 +67,30 @@ namespace TradingSystem.BuissnessLayer
         public ICollection<aUser> getManagers()
         {
             return managers;
+        }
+        public ICollection<Receipt> getAllReceipts()
+        {
+            throw new NotImplementedException();
+        }
+        public bool isProductExist(string name, string manufacturer)
+        {
+            throw new NotImplementedException();
+        }
+        public bool editPrice(string productName, string manufacturer, double newPrice)
+        {
+            throw new NotImplementedException();
+        }
+        public bool supply(string name, string manufacturer, int amount)
+        {
+            throw new NotImplementedException();
+        }
+        public ProductInfo addProduct(string name, string category, string manufacturer)
+        {
+            throw new NotImplementedException();
+        }
+        public void removeProduct(string name, string manufacturer)
+        {
+            throw new NotImplementedException();
         }
         public override bool Equals(object obj)
         {

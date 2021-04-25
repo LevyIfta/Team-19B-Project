@@ -8,5 +8,6 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
     public class basePermmision : aPermission
     {
+        public basePermmision(string storeName, string sponser) : base(storeName, sponser) { }
     }
 }

@@ -7,21 +7,33 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
-    class Stores
+    static class Stores
     {
         public static Store addStore(string storeName, Member founder)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         public static Store searchStore(string storeName)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        public static bool removeStore(Store store)
+        public static void removeStore(Store store)
         {
-            return false;
+            throw new NotImplementedException();
+        }
+        public static ICollection<Store> getAllStores()
+        {
+            throw new NotImplementedException();
+        }
+        public static Dictionary<Store, Product> searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
+        {
+            throw new NotImplementedException();
+        }
+        public static Dictionary<Store, Product> searchProduct(string productName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -16,19 +16,19 @@ namespace TradingSystem.BuissnessLayer
         // users
         public static Member login(string username, string password)
         {
-            memberData data = UserDAL.getUser(username, password);
+            memberData data = MemberDAL.getUser(username, password);
             return Member.dataToObject(data);
 
         }
         public static bool register(string username, string password)
         {
-            if (UserDAL.isExist(username))
+            if (MemberDAL.isExist(username))
                 return false;
             if (!checkUserNameValid(username))
                 return false;
             if (!checkPasswordValid(password))
                 return false;
-            UserDAL.addUser(new memberData(username, password));
+            MemberDAL.addUser(new memberData(username, password));
             return true;
         }
         public static int countOnlineUsers()
@@ -39,8 +39,14 @@ namespace TradingSystem.BuissnessLayer
         {
             return onlineUsers.Contains(username);
         }
+        
 
-
+        // users
+        public static aUser gerUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+        
 
         // other
         private static bool checkUserNameValid(string username)

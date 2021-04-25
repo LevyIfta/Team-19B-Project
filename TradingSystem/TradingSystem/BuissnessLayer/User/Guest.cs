@@ -25,9 +25,16 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
 
-        public override bool purchase(PaymentMethod payment)
+        public override ICollection<Receipt> purchase(PaymentMethod payment)
         { // only Immediate and Offer
-            throw new NotImplementedException();
+            ICollection<Receipt> list = new List<Receipt>();
+            foreach (ShoppingBasket basket in myCart.baskets)
+            {
+                Receipt receipt = basket.store.executePurchase(basket, payment);
+                if (receipt == null)
+                    return null;
+            }
+            return list;
         }
 
 
