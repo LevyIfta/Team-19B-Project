@@ -33,6 +33,8 @@ namespace Tests.Bridge
         Reciept GetRecieptByUser(string storeName, string userName, DateTime Date);
         Reciept GetRecieptByStore(string storeName, string userName, DateTime Date);
 
+        void purchase(ShoppingBasket basket);
+
 
     }
 }
