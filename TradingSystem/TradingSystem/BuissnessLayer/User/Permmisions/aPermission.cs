@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    abstract class aPermission
+    public abstract class aPermission
     {
         public Store store { get; set; }
 

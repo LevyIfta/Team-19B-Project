@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    public class ShoppingBasketData
+    public class BasketData
     {
         //FIELDS
         public string storeName { get; set; }
         public string useName { get; }
 
         //CONSTRUCTORS
-        public ShoppingBasketData(string storeName, string useName)
+        public BasketData(string storeName, string useName)
         {
             this.storeName = storeName;
             this.useName = useName;
@@ -25,7 +25,7 @@ namespace TradingSystem.DataLayer
             return false;
         }
 
-        public bool Equals(ShoppingBasketData other)
+        public bool Equals(BasketData other)
         {
             return this.storeName.Equals(other.storeName) & this.useName.Equals(other.useName);
         }

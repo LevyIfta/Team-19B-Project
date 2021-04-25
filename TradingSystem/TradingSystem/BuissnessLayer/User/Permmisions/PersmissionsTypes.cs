@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    enum PersmissionsTypes
+    public enum PersmissionsTypes
     {
         AddProduct,
         editManagerPermissions,

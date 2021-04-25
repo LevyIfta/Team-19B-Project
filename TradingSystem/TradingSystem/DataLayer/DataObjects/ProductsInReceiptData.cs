@@ -6,21 +6,19 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    public class ProductData
+    public class ProductsInReceiptData
     {
         //FIELDS
+        public int receiptID { get; set; }
         public int productID { get; set; }
         public int amount { get; set; }
-        public double price { get; set; }
-        public string storeName { get; set; }
 
         //CONSTRUCTORS
-        public ProductData (int productID, int amount, double price, string storeName)
+        public ProductsInReceiptData(int receiptID, int productID, int amount)
         {
+            this.receiptID = receiptID;
             this.productID = productID;
             this.amount = amount;
-            this.price = price;
-            this.storeName = storeName;
         }
 
         //EQUALS
@@ -29,9 +27,9 @@ namespace TradingSystem.DataLayer
             return false;
         }
 
-        public bool Equals(ProductData other)
+        public bool Equals(ProductsInReceiptData other)
         {
-            return this.productID.Equals(other.productID) & this.amount.Equals(other.amount) & this.price.Equals(other.price);
+            return this.receiptID.Equals(other.receiptID) & this.productID.Equals(other.productID) & this.amount.Equals(other.amount);
         }
     }
 }

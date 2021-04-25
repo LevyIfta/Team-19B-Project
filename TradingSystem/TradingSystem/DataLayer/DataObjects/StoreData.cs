@@ -8,7 +8,7 @@ using TradingSystem.BuissnessLayer;
 
 namespace TradingSystem.DataLayer
 {
-    class StoreData
+    public class StoreData
     {
         //FIELDS
         public string storeName { get; set; }

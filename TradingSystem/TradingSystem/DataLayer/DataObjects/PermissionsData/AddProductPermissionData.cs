@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    public class ShoppingBasketData
+    class AddProductPermissionData
     {
         //FIELDS
+        public string userName { get; set; }
         public string storeName { get; set; }
-        public string useName { get; }
+
 
         //CONSTRUCTORS
-        public ShoppingBasketData(string storeName, string useName)
+        public AddProductPermissionData(string userName, string storeName)
         {
+            this.userName = userName;
             this.storeName = storeName;
-            this.useName = useName;
         }
 
         //EQUALS
@@ -25,9 +26,9 @@ namespace TradingSystem.DataLayer
             return false;
         }
 
-        public bool Equals(ShoppingBasketData other)
+        public bool Equals(AddProductPermissionData other)
         {
-            return this.storeName.Equals(other.storeName) & this.useName.Equals(other.useName);
+            return this.userName.Equals(other.userName) & this.storeName.Equals(other.storeName);
         }
     }
 }

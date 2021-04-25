@@ -1,22 +1,24 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer;
 
 namespace TradingSystem.DataLayer
 {
-    public class ShoppingBasketData
+    class OwnerPermissionData
     {
         //FIELDS
+        public string ownerName { get; set; }
         public string storeName { get; set; }
-        public string useName { get; }
 
         //CONSTRUCTORS
-        public ShoppingBasketData(string storeName, string useName)
+        public OwnerPermissionData(string ownerName, string storeName)
         {
+            this.ownerName = ownerName;
             this.storeName = storeName;
-            this.useName = useName;
         }
 
         //EQUALS
@@ -25,9 +27,9 @@ namespace TradingSystem.DataLayer
             return false;
         }
 
-        public bool Equals(ShoppingBasketData other)
+        public bool Equals(OwnerPermissionData other)
         {
-            return this.storeName.Equals(other.storeName) & this.useName.Equals(other.useName);
+            return this.ownerName.Equals(other.ownerName) & this.storeName.Equals(other.storeName);
         }
     }
 }

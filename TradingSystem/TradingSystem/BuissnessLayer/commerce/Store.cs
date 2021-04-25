@@ -7,7 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Store
+    public class Store
     {
         public string name { get; private set; }
         
@@ -33,7 +33,7 @@ namespace TradingSystem.BuissnessLayer
         public Store(StoreData storeData)
         {
             this.name = storeData.storeName;
-            this.founder = Member.dataToObject(Member.dataToObject(MemberDAL.getMember(storeData.founder)));
+            this.founder = Member.dataToObject();
         }
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
@@ -66,6 +66,8 @@ namespace TradingSystem.BuissnessLayer
                     }
             }
         }
+
+        
 
         public bool editPrice(string productName, string manufacturer, double newPrice)
         {
@@ -187,9 +189,9 @@ namespace TradingSystem.BuissnessLayer
         }
         public void removeOwner(Member owner)
         {
-            //this.owners.Remove(owner);
-            // update data
-            StoresData.getStore(this.name).removeOwner(Member.objectToData(owner));
+            this.owners.Remove(owner);
+            // update DB
+            
         }
 
         public void removeManager(Member manager)
@@ -199,15 +201,20 @@ namespace TradingSystem.BuissnessLayer
             StoresData.getStore(this.name).removeManager(Member.objectToData(manager));
         }
 
-        public bool isManager(Member member)
+        public bool isManager(string member)
         {
-            return StoresData.getStore(this.name).getManagers().Contains(Member.objectToData(member));
-            //return this.managers.Contains(userrname);
+            foreach (Member manager in this.managers)
+                if (manager.getUserName().Equals(member))
+                    return true;
+            return false;
         }
 
-        public bool isOwner(Member member)
+        public bool isOwner(string member)
         {
-            return StoresData.getStore(this.name).getOwners().Contains(Member.objectToData(member));
+            foreach (Member owner in this.owners)
+                if (owner.getUserName().Equals(member))
+                    return true;
+            return false;
         }
         
         public ICollection<Member> getOwners()
@@ -247,6 +254,22 @@ namespace TradingSystem.BuissnessLayer
         {
             foreach (Product product in this.inventory)
                 if (product.info.name.Equals(productName))
+                    return new Product(product);
+            return null; // no results
+        }
+
+        public Product searchProduct(string productName, double minPrice, double maxPrice)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName) & product.price <= maxPrice & product.price >= minPrice)
+                    return new Product(product);
+            return null; // no results
+        }
+
+        public Product searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName) & product.price <= maxPrice & product.price >= minPrice & product.info.category.Equals(category) & product.info.manufacturer.Equals(manufacturer))
                     return new Product(product);
             return null; // no results
         }
