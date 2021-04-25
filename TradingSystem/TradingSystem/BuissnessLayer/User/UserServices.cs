@@ -16,6 +16,8 @@ namespace TradingSystem.BuissnessLayer
         // users
         public static Member login(string username, string password)
         {
+            if (onlineUsers.Contains(username))
+                return null;
             memberData data = MemberDAL.getUser(username, password);
             return Member.dataToObject(data);
 
