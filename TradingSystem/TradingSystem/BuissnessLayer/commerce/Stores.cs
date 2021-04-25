@@ -44,18 +44,6 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             return stores;
         }
-        public static ICollection<Store> getAllStores()
-        {
-            throw new NotImplementedException();
-        }
-        public static Dictionary<Store, Product> searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
-        {
-            throw new NotImplementedException();
-        }
-        public static Dictionary<Store, Product> searchProduct(string productName)
-        {
-            throw new NotImplementedException();
-        }
 
         public static Dictionary<Store, Product> searchProduct(string productName)
         {
@@ -73,6 +61,6 @@ namespace TradingSystem.BuissnessLayer.commerce
                     result.Add(store, store.searchProduct(productName, category, manufacturer, minPrice, maxPrice));
             return result;
         }
-          
+
     }
 }

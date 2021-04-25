@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
+using TradingSystem.BuissnessLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
     public class Store
     {
         public string name { get; private set; }
-        
+
         public ICollection<Receipt> receipts { get; private set; }
         public ICollection<Product> inventory { get; private set; }
         public ICollection<Member> owners { get; private set; }
@@ -23,7 +24,7 @@ namespace TradingSystem.BuissnessLayer
         {
             this.name = name;
             this.founder = founder;
-            
+
             this.receipts = new List<Receipt>();
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
@@ -33,7 +34,7 @@ namespace TradingSystem.BuissnessLayer
         public Store(StoreData storeData)
         {
             this.name = storeData.storeName;
-            this.founder = Member.dataToObject();
+            this.founder = (Member)UserServices.getUser(storeData.founder);
         }
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
@@ -136,16 +137,17 @@ namespace TradingSystem.BuissnessLayer
                         // the payment was successful
                         foreach (Product product in products)
                             foreach (Product localProduct in this.inventory)
+                            {
                                 if (localProduct.info.Equals(product.info))
                                 {
                                     localProduct.amount -= product.amount;
                                     // update amount in DB
                                     localProduct.update(this.name);
                                 }
-                        {
-                            StoresData.getStore(this.name).removeProducts(product.toDataObject());
-                            product.info.LeaveFeedback(basket.owner, "");
-                        }
+
+                                //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                                product.info.LeaveFeedback(basket.owner.userName, "");
+                            }
 
                         // clean the basket
                         basket.clean();
@@ -158,7 +160,7 @@ namespace TradingSystem.BuissnessLayer
                         // save the receipt
                         this.receipts.Add(receipt);
                         // add receipt to DB
-                        
+
                     }
                 }
             }
@@ -174,35 +176,35 @@ namespace TradingSystem.BuissnessLayer
         private bool checkAmounts(ICollection<Product> products)
         {
             foreach (Product product in products)
-                foreach (ProductData productData in StoresData.getStore(this.name).inventory)
+                foreach (Product productData in this.inventory)
                     if (product.toDataObject().Equals(productData) & product.amount > productData.amount)
                         return false;
             return true;
         }
         public void addOwner(Member owner)
         {
-            //this.owners.Add(owner);
-            // update data
-            StoresData.getStore(this.name).addOwner(Member.objectToData(owner));
+            this.owners.Add(owner);
+            // update DB
+
         }
         public void addManager(Member manager)
         {
-            //this.managers.Add(manager);
-            // update data
-            StoresData.getStore(this.name).addManager(Member.objectToData(manager));
+            this.managers.Add(manager);
+            // update DB
+
         }
         public void removeOwner(Member owner)
         {
             this.owners.Remove(owner);
             // update DB
-            
+
         }
 
         public void removeManager(Member manager)
         {
-            //this.managers.Remove(manager);
-            // update data
-            StoresData.getStore(this.name).removeManager(Member.objectToData(manager));
+            this.managers.Remove(manager);
+            // update DB
+
         }
 
         public bool isManager(string member)
@@ -220,12 +222,12 @@ namespace TradingSystem.BuissnessLayer
                     return true;
             return false;
         }
-        
 
-        
+
+
         public override bool Equals(object obj)
         {
-            return false;
+            return (obj is Store) & ((Store)obj).name.Equals(name);
         }
         public bool Equals(Store obj)
         {
@@ -272,6 +274,11 @@ namespace TradingSystem.BuissnessLayer
         public void remove()
         {
             StoreDAL.remove(this.toDataObject());
+        }
+
+        public StoreData toDataObject()
+        {
+            return new StoreData(this.name, this.founder.userName);
         }
     }
 }

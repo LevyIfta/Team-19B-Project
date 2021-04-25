@@ -14,9 +14,9 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         { // string storeName, string username, string userSponser
             if (func == PersmissionsTypes.RemoveManager && this.store.Equals((string)args[0]))
             {
-                if (!((Member)UserServices.gerUser((string)args[1])).removePermission((string)args[0], (string)args[2]))
+                if (!((Member)UserServices.getUser((string)args[1])).removePermission((string)args[0], (string)args[2]))
                     return false;
-                Stores.searchStore((string)args[0]).removeManager(((Member)UserServices.gerUser((string)args[1])));
+                Stores.searchStore((string)args[0]).removeManager(((Member)UserServices.getUser((string)args[1])));
                 return true;
             }
             return base.todo(func, args);

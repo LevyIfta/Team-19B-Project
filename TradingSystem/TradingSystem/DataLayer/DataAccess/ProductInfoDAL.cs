@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    static class ProductInfoDAL
+    public static class ProductInfoDAL
     {
         private static List<ProductInfoData> ProductInfos;
 
