@@ -7,7 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class ProductInfo : IComparable
+    class ProductInfo
     {
         private static ICollection<ProductInfo> productsInfo = new LinkedList<ProductInfo>();
         public string name { get; set; }
