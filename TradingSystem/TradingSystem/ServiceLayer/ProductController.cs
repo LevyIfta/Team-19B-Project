@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-<<<<<<< HEAD:TradingSystem/TradingSystem/DataLayer/ProductsInfoData.cs
-    class ProductsInfoData
-    {
-        public static ICollection<ProductInfoData> productsInfo = new LinkedList<ProductInfoData>();
-=======
     class ProductController
     {
 
->>>>>>> ShauliTasks:TradingSystem/TradingSystem/ServiceLayer/ProductController.cs
     }
 }

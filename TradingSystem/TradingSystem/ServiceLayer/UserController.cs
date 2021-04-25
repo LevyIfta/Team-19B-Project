@@ -13,11 +13,19 @@ namespace TradingSystem.ServiceLayer
             return BuissnessLayer.UserServices.login(username, password);
         }
 
-        public static bool register(string username, string password)
+        public static bool logout()
         {
-            return BuissnessLayer.UserServices.register(username, password);
+            return BuissnessLayer.UserServices.logout();
         }
 
+        public static bool register(string userName, string password)
+        {
+            return BuissnessLayer.UserServices.register(userName, password);
+        }
 
+        public static bool saveProduct(string userName, string storeName, string manufacturer, int amount, List<string> productName)
+        {
+            return BuissnessLayer.UserServices.saveProduct(string userName, string storeName, string manufacturer, int amount, List<string> productName);
+        }
     }
 }

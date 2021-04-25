@@ -8,19 +8,14 @@ namespace TradingSystem.ServiceLayer
 {
     class StoreController
     {
-        public ShoppingBasketData basket { get; set; }
-        public StoreData store => this.basket.store;
-        public string username => this.basket.owner.getUsername();
-        public double price { get; set; }
-        public DateTime date { get; set; }
-
-        public ReceiptData(ShoppingBasketData basket, double price, DateTime date)
+        public static bool addProduct(string productName, string category, string userName)
         {
-            this.basket = basket;
-            this.price = price;
-            this.date = date;
+            return 
         }
 
-
+        public static bool addProduct(string name, string category, string manufacturer)
+        {
+            return
+        }
     }
 }
