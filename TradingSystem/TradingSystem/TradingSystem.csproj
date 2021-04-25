@@ -105,7 +105,10 @@
     <Compile Include="DataLayer\StoreDAL_IsITNeeded.cs" />
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
     <Compile Include="DataLayer\DataAccess\MemberDAL.cs" />
+    <Compile Include="ServiceLayer\ProductController.cs" />
     <Compile Include="ServiceLayer\SeviceClass.cs" />
+    <Compile Include="ServiceLayer\StoreController.cs" />
+    <Compile Include="ServiceLayer\UserController.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
