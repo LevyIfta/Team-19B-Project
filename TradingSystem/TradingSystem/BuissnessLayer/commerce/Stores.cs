@@ -7,6 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
+
     class Stores
     {
         public static ICollection<Store> stores = new LinkedList<Store>();
@@ -20,6 +21,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             // add the new store to DB TODO
             StoreDAL.addStore(newStore.toDataObject());
             return newStore;
+
         }
 
         public static Store searchStore(string storeName)
@@ -28,6 +30,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (store.name.Equals(storeName))
                     return store;
             return null;
+
         }
 
         public static void removeStore(Store store)
@@ -41,7 +44,17 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             return stores;
         }
-
-
+        public static ICollection<Store> getAllStores()
+        {
+            throw new NotImplementedException();
+        }
+        public static Dictionary<Store, Product> searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
+        {
+            throw new NotImplementedException();
+        }
+        public static Dictionary<Store, Product> searchProduct(string productName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

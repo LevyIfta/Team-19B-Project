@@ -7,10 +7,11 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Product
+    public class Product
     {
         public ProductInfo info { get; set; }
         public int amount { get; set; }
+
         public double price { get; set; }
 
         public Product(ProductInfo info, int amount, double price)
@@ -60,6 +61,10 @@ namespace TradingSystem.BuissnessLayer
         public void remove(string name)
         {
             ProductDAL.remove(this.toDataObject(name));
+        }
+        public ProductData toDataObject()
+        {
+            return new ProductData(info.toDataObject(), amount, price);
         }
     }
 }

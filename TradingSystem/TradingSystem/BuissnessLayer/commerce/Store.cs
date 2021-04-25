@@ -7,7 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Store
+    public class Store
     {
         public string name { get; private set; }
         
@@ -16,6 +16,7 @@ namespace TradingSystem.BuissnessLayer
         public ICollection<Member> owners { get; private set; }
         public ICollection<Member> managers { get; private set; }
         private Object purchaseLock = new Object();
+
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
@@ -27,7 +28,6 @@ namespace TradingSystem.BuissnessLayer
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
-            
         }
 
         public Store(StoreData storeData)
@@ -66,22 +66,6 @@ namespace TradingSystem.BuissnessLayer
                     }
             }
         }
-
-        public bool editPrice(string productName, string manufacturer, double newPrice)
-        {
-            // check if the product exists
-            foreach (Product p in this.inventory)
-                if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
-                {
-                    p.price = newPrice;
-                    // update DB
-                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
-                    return true;
-                }
-            // the product doesn't exist, can't edit price
-            return false;
-        }
-
         public bool supply(string name, string manufacturer, int amount)
         {
             if (amount <= 0)
@@ -210,7 +194,8 @@ namespace TradingSystem.BuissnessLayer
             return StoresData.getStore(this.name).getOwners().Contains(Member.objectToData(member));
         }
         
-        public ICollection<Member> getOwners()
+
+        public ICollection<aUser> getOwners()
         {
             return owners;
         }
@@ -219,7 +204,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return managers;
         }
-        
+
         public StoreData toDataObject()
         {
             // init the data object
@@ -236,6 +221,16 @@ namespace TradingSystem.BuissnessLayer
                 storeData.addProduct(product.toDataObject());
                 */
             return storeData;
+        }
+
+        
+        public override bool Equals(object obj)
+        {
+            return false;
+        }
+        public bool Equals(Store obj)
+        {
+            return obj.name.Equals(name);
         }
 
         public ICollection<Receipt> getAllReceipts()

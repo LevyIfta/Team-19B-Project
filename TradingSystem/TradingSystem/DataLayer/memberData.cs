@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    class memberData : IComparable
+    public class memberData : IComparable
     {
         string userName;
         string password;

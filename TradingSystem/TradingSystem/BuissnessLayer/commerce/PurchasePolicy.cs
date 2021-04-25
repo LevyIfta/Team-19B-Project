@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    enum PurchasePolicy
+    public enum PurchasePolicy
     {
         IMMEDIATE,
         OFFER,

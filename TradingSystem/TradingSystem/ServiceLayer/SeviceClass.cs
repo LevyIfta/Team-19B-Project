@@ -25,10 +25,15 @@ namespace TradingSystem.ServiceLayer
         {
             return UserServices.register(username, password);
         }
-        public static void logout()
+        public static bool logout()
         {
-            //checke if user login, if yes so log out
-            user = null;
+            if (UserServices.onlineUsers.Contains(user.getUserName()))
+            {
+                user = null;
+                return true;
+            }  
+            else
+                return false;
         }
 
         

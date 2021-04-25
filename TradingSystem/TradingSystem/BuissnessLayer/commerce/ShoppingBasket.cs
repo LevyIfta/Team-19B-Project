@@ -7,7 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class ShoppingBasket
+    public class ShoppingBasket
     {
         public ICollection<Product> products { get; set; }
         public Store store { get; set; }
@@ -19,14 +19,12 @@ namespace TradingSystem.BuissnessLayer
             this.products = new LinkedList<Product>();
             this.owner = owner;
         }
-
         public ShoppingBasket(ShoppingBasketData shoppingBasketData)
         {
             this.products = (ICollection<Product>)shoppingBasketData.products.Select(p => new Product(p));
             this.store = new Store(shoppingBasketData.store);
             this.owner = Member.dataToObject(shoppingBasketData.owner);
         }
-
         public double checkPrice()
         {
             return store.calcPrice(products);
@@ -76,18 +74,11 @@ namespace TradingSystem.BuissnessLayer
             basket.products = new LinkedList<Product>(this.products.ToList());
             return basket;
         }
-
         internal void clean()
         {
             this.products = new LinkedList<Product>();
         }
 
-        public ShoppingBasketData toDataObject()
-        {
-            //return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject(this.store.name)), store.toDataObject(), Member.objectToData(this.owner));
-        }
-
-        
 
         public override bool Equals(object obj)
         {
@@ -95,26 +86,34 @@ namespace TradingSystem.BuissnessLayer
         }
         public bool Equals(ShoppingBasket obj)
         {
-            bool ans = false;
-            foreach (Product pro2 in obj.products)
+            bool isMatch = false;
+            foreach(Product product1 in basket.products)
             {
-                foreach (Product pro1 in products)
+                foreach(Product product2 in products)
                 {
-                    if (pro1.Equals(pro2))
+                    if (!isMatch && product1.Equals(product2))
                     {
-                        ans = true;
+                        isMatch = true;
+                        product2.addAmount(product1.amount);
+                        products.Remove(product1);
+                        products.Add(product2);
                     }
                 }
-                if (!ans)
-                    return false;
-                ans = false;
+                if (!isMatch)
+                {
+                    products.Add(product1);
+                }
+                isMatch = false;
             }
-            return ans;
+        }
+        
+        public ShoppingBasketData toDataObject()
+        {
+            return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
         }
 
         public void update()
         {
-
             ShoppingBasketDAL.update(this.toDataObject());
         }
     }

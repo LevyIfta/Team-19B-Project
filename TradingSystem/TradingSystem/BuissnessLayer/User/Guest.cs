@@ -8,12 +8,13 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Guest : aUser
+    public class Guest : aUser
     {
-        // add static count for the name of the guest
+        private static int guestCount = 0;
         public override string getUserName()
         {
-            return "guest";
+            guestCount++;
+            return "guest" + guestCount;
         }
         public override object todo(PersmissionsTypes func, object[] args)
         {
@@ -24,9 +25,16 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
 
-        public override bool purchase(PaymentMethod payment)
+        public override ICollection<Receipt> purchase(PaymentMethod payment)
         { // only Immediate and Offer
-            throw new NotImplementedException();
+            ICollection<Receipt> list = new List<Receipt>();
+            foreach (ShoppingBasket basket in myCart.baskets)
+            {
+                Receipt receipt = basket.store.executePurchase(basket, payment);
+                if (receipt == null)
+                    return null;
+            }
+            return list;
         }
 
 

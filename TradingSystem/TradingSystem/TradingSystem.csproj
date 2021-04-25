@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BuissnessLayer\commerce\Stores.cs" />
+    <Compile Include="BuissnessLayer\User\Admin.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editManagerPermissions.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editProduct.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\getInfoEmployees.cs" />
@@ -80,6 +81,13 @@
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
     <Compile Include="DataLayer\memberData.cs" />
     <Compile Include="DataLayer\StoreDAL_IsITNeeded.cs" />
+    <Compile Include="DataLayer\ProductData.cs" />
+    <Compile Include="DataLayer\ProductInfoData.cs" />
+    <Compile Include="DataLayer\ProductsInfoData.cs" />
+    <Compile Include="DataLayer\ReceiptData.cs" />
+    <Compile Include="DataLayer\ShoppingBasketData.cs" />
+    <Compile Include="DataLayer\StoreData.cs" />
+    <Compile Include="DataLayer\StoresData.cs" />
     <Compile Include="DataLayer\UserDAL.cs" />
     <Compile Include="ServiceLayer\SeviceClass.cs" />
     <Page Include="MainWindow.xaml">

@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    class removeManager : aPermission
+    public class removeManager : aPermission
     {
+        public removeManager(string storeName, string sponser) : base(storeName, sponser) { }
         public override object todo(PersmissionsTypes func, object[] args)
-        {
-            if (func == PersmissionsTypes.removeManager)
-                return null; //todo
+        { // string storeName, string username, string userSponser
+            if (func == PersmissionsTypes.RemoveManager && this.store.Equals((string)args[0]))
+            {
+                if (!((Member)UserServices.gerUser((string)args[1])).removePermission((string)args[0], (string)args[2]))
+                    return false;
+                Stores.searchStore((string)args[0]).removeManager(((Member)UserServices.gerUser((string)args[1])));
+                return true;
+            }
             return base.todo(func, args);
         }
     }

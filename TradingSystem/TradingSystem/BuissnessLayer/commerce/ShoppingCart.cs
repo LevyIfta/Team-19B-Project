@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class ShoppingCart
+    public class ShoppingCart
     {
         public ICollection<ShoppingBasket> baskets { get; set; }
         public Member owner;
@@ -27,6 +28,14 @@ namespace TradingSystem.BuissnessLayer
             return basket;
         }
 
-
+        public double checkPrice()
+        {
+            double ans = 0;
+            foreach (ShoppingBasket basket in baskets)
+            {
+                ans += basket.checkPrice();
+            }
+            return ans;
+        }
     }
 }

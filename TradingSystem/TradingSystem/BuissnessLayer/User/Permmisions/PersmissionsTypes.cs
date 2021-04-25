@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    enum PersmissionsTypes
+    public enum PersmissionsTypes
     {
         AddProduct,
-        editManagerPermissions,
-        editProduct,
-        getInfoEmployees,
-        getPurchaseHistory,
-        hireNewStoreManager,
-        hireNewStoreOwner,
-        removeManager,
-        removeProduct
+        EditManagerPermissions,
+        EditProduct,
+        GetInfoEmployees,
+        GetPurchaseHistory,
+        HireNewStoreManager,
+        HireNewStoreOwner,
+        RemoveManager,
+        RemoveProduct
     }
 }

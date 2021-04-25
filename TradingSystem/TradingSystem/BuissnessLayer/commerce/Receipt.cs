@@ -10,7 +10,7 @@ namespace TradingSystem.BuissnessLayer
     class Receipt
     {
         public ShoppingBasket basket { get; set; }
-        public Store store { get { return basket.store; } private set {  } }
+        public Store store { get { return basket.store; } private set { } }
         public string username { get { return basket.owner.userName; } private set { } }
         public double price { get; set; }
         public DateTime date { get; set; }
