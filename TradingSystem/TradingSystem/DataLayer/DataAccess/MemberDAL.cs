@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace TradingSystem.DataLayer
 {
     static class MemberDAL
@@ -39,24 +38,23 @@ namespace TradingSystem.DataLayer
             
         }
 
-        public static void addMember(string userName, string password)
+        public static void addMember(MemberData memberData)
         {
-            members.Add(new MemberData(userName, password));
+            members.Add(memberData);
         }
 
-        public static bool update(string userName, string password)
+        public static bool update(MemberData memberData)
         {
-            MemberData temp = new MemberData(userName, password);
-            if (!members.Remove(temp))
+            if (!members.Remove(memberData))
                 return false;
-            members.Add(temp);
+            members.Add(memberData);
             return true;
  
         }
 
-        public static bool remove(string userName, string password)
+        public static bool remove(MemberData memberData)
         {
-            return members.Remove(new MemberData(userName, password));
+            return members.Remove(memberData);
         }
 
     }

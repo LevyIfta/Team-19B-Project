@@ -172,13 +172,13 @@ namespace TradingSystem.BuissnessLayer
             return (ICollection<aUser>)todo(PersmissionsTypes.GetInfoEmployees, args);
         }
 
-        public static Member dataToObject(memberData data)
+        public static Member dataToObject(MemberData data)
         {
             if(data == null)
                 return null;
             throw new NotImplementedException();
         }
-        public static memberData objectToData(Member member)
+        public static MemberData objectToData(Member member)
         {
             throw new NotImplementedException();
         }

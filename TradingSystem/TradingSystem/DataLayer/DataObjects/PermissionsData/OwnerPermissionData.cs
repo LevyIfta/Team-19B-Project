@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    class StoreData
+    class OwnerPermissionData
     {
         //FIELDS
+        public string ownerName { get; set; }
         public string storeName { get; set; }
-        public string founder { get; set; }
 
         //CONSTRUCTORS
-        public StoreData(string storeName, string founder)
+        public OwnerPermissionData(string ownerName, string storeName)
         {
+            this.ownerName = ownerName;
             this.storeName = storeName;
-            this.founder = founder;
         }
 
         //EQUALS
@@ -25,9 +25,9 @@ namespace TradingSystem.DataLayer
             return false;
         }
 
-        public bool Equals(StoreData other)
+        public bool Equals(OwnerPermissionData other)
         {
-            return this.storeName.Equals(other.storeName) & this.founder.Equals(other.founder);
+            return this.ownerName.Equals(other.ownerName) & this.storeName.Equals(other.storeName);
         }
     }
 }

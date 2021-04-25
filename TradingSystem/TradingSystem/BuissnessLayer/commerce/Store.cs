@@ -125,6 +125,11 @@ namespace TradingSystem.BuissnessLayer
                                     // update amount in DB
                                     localProduct.update(this.name);
                                 }
+                        {
+                            StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                            product.info.LeaveFeedback(basket.owner, "");
+                        }
+
                         // clean the basket
                         basket.clean();
                         // update basket in DB
@@ -194,34 +199,6 @@ namespace TradingSystem.BuissnessLayer
             return StoresData.getStore(this.name).getOwners().Contains(Member.objectToData(member));
         }
         
-
-        public ICollection<aUser> getOwners()
-        {
-            return owners;
-        }
-
-        public ICollection<Member> getManagers()
-        {
-            return managers;
-        }
-
-        public StoreData toDataObject()
-        {
-            // init the data object
-            StoreData storeData = new StoreData(this.name, this.founder.userName);
-            // convert collections elements to data ocjects and add them to the store data object
-            /*
-            foreach (Member owner in this.owners)
-                storeData.addOwner(Member.objectToData(owner));
-            
-            foreach (Member manager in this.managers)
-                storeData.addManager(Member.objectToData(manager));
-
-            foreach (Product product in this.inventory)
-                storeData.addProduct(product.toDataObject());
-                */
-            return storeData;
-        }
 
         
         public override bool Equals(object obj)

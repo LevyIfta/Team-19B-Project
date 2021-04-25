@@ -31,6 +31,7 @@ namespace TradingSystem.BuissnessLayer
             if (!checkPasswordValid(password))
                 return false;
             MemberDAL.addUser(new memberData(username, password));
+            UserDAL.addUser(new memberData(username, password));
             return true;
         }
         public static int countOnlineUsers()
@@ -45,8 +46,24 @@ namespace TradingSystem.BuissnessLayer
 
         // users
         public static aUser gerUser(string username)
+
+
+        // other
+        private static bool checkUserNameValid(string username)
         {
-            throw new NotImplementedException();
+            if(username == null || username.Length < 4 || containNumber(username))
+            {
+                return false;
+            }
+            return true;
+        }
+        private static bool checkPasswordValid(string password)
+        {
+            if (password == null || password.Length < 4 || password.Length > 20 || !containNumber(password) || !containLatter(password) || !containCapital(password))
+            {
+                return false;
+            }
+            return true;
         }
         
 
@@ -72,6 +89,30 @@ namespace TradingSystem.BuissnessLayer
             foreach (char letter in str)
             {
                 if (122 >= (int)letter & (int)letter >= 97)
+
+        private static bool containNumber(string str)
+        {
+            foreach (char letter in str)
+            {
+                if (122 >= (int)letter & (int)letter >= 97)
+                    return true;
+            }
+            return false;
+        }
+        private static bool containCapital(string str)
+        {
+            foreach (char letter in str)
+            {
+                if (60 <= (int)letter && (int)letter <= 90)
+                    return true;
+            }
+            return false;
+        }
+        private static bool containLatter(string str)
+        {
+            foreach (char letter in str)
+            {
+                if (97 <= (int)letter && (int)letter <= 122)
                     return true;
             }
             return false;

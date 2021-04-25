@@ -16,6 +16,7 @@ namespace TradingSystem.BuissnessLayer
         public int id;
         private static int currentId = -1;
         private static Object idLocker = new Object();
+        public Dictionary<string, string> feedbacks { get; }
 
         public ProductInfo(string name, string category, string manufacturer)
         {
@@ -28,6 +29,7 @@ namespace TradingSystem.BuissnessLayer
             this.name = name;
             this.category = category;
             this.manufacturer = manufacturer;
+            this.feedbacks = new Dictionary<string, string>();
         }
 
         public ProductInfo(ProductInfoData productInfoData)
@@ -35,11 +37,12 @@ namespace TradingSystem.BuissnessLayer
             this.name = productInfoData.name;
             this.category = productInfoData.category;
             this.manufacturer = productInfoData.manufacturer;
+            this.feedbacks = productInfoData.feedbacks;
         }
 
         public ProductInfoData toDataObject()
         {
-            return new ProductInfoData(this.name, this.category, this.manufacturer);
+            return new ProductInfoData(this.name, this.category, this.manufacturer, this.feedbacks);
         }
 
         override
@@ -63,5 +66,38 @@ namespace TradingSystem.BuissnessLayer
             return productInfo;
         }
 
+        /// <summary>
+        /// by shauli
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="comment"></param>
+        public void LeaveFeedback (string username, string comment)
+        {
+            if (this.feedbacks.ContainsKey(username))
+            {
+                this.feedbacks[username] = comment;
+            }
+            else
+            {
+                this.feedbacks.Add(username, comment);
+            }
+        }
+
+        /// <summary>
+        /// by shauli
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public string getUserFeeback(string username)
+        {
+            try
+            {
+                return this.feedbacks[username];
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

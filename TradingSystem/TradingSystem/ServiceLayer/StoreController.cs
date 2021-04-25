@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.DataLayer
+namespace TradingSystem.ServiceLayer
 {
-    class ReceiptData
+    class StoreController
     {
         public ShoppingBasketData basket { get; set; }
         public StoreData store => this.basket.store;
