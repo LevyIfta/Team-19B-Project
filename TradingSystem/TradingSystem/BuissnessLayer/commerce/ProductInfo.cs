@@ -34,15 +34,16 @@ namespace TradingSystem.BuissnessLayer
 
         public ProductInfo(ProductInfoData productInfoData)
         {
-            this.name = productInfoData.name;
+            this.name = productInfoData.productName;
             this.category = productInfoData.category;
             this.manufacturer = productInfoData.manufacturer;
-            this.feedbacks = productInfoData.feedbacks;
+            // get feedbacks - TODO
+
         }
 
         public ProductInfoData toDataObject()
         {
-            return new ProductInfoData(this.name, this.category, this.manufacturer, this.feedbacks);
+            return new ProductInfoData(this.name, this.category, this.manufacturer);
         }
 
         override
@@ -53,8 +54,6 @@ namespace TradingSystem.BuissnessLayer
 
         public static ProductInfo getProductInfo(string name, string category, string manufacturer)
         {
-            // sync productsInfo
-            productsInfo = (ICollection<ProductInfo>)ProductsInfoData.productsInfo.Select(p => new ProductInfo(p));
             ProductInfo productInfo = new ProductInfo(name, category, manufacturer);
             // checks a product with the given info already exists, if so returns it else creates a new one
             foreach (ProductInfo p in productsInfo)
@@ -62,7 +61,8 @@ namespace TradingSystem.BuissnessLayer
                     return p;
             // the productInfo doesn't exist, add it and update DAL
             productsInfo.Add(productInfo);
-            ProductsInfoData.productsInfo.Add(productInfo.toDataObject());
+            // update in DB
+            ProductInfoDAL.addProductInfo(productInfo.toDataObject());
             return productInfo;
         }
 

@@ -13,7 +13,7 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         {// string storeName, string username, string userSponser, aPermission Permissions
             if (func == PersmissionsTypes.EditManagerPermissions && this.store.Equals((string)args[0]))
             {
-                return ((Member)UserServices.gerUser((string)args[1])).editPermission((string)args[0], (string)args[2],(aPermission)args[3]);
+                return ((Member)UserServices.getUser((string)args[1])).editPermission((string)args[0], (string)args[2],(aPermission)args[3]);
             }
             return base.todo(func, args);
         }

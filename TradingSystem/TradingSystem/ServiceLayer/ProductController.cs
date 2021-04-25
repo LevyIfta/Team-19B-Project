@@ -8,6 +8,6 @@ namespace TradingSystem.ServiceLayer
 {
     class ProductController
     {
-
+        
     }
 }

@@ -17,9 +17,9 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
                 if (Stores.searchStore((string)args[0]).isOwner((string)args[1]))
                     return false;
                 if (Stores.searchStore((string)args[0]).isManager((string)args[1]))
-                    Stores.searchStore((string)args[0]).removeManager(((Member)UserServices.gerUser((string)args[1])));
-                Stores.searchStore((string)args[0]).addOwner(((Member)UserServices.gerUser((string)args[1])));
-                ((Member)UserServices.gerUser((string)args[1])).addPermission((aPermission)args[2]);
+                    Stores.searchStore((string)args[0]).removeManager(((Member)UserServices.getUser((string)args[1])));
+                Stores.searchStore((string)args[0]).addOwner(((Member)UserServices.getUser((string)args[1])));
+                ((Member)UserServices.getUser((string)args[1])).addPermission((aPermission)args[2]);
                 return true;
             }
             return base.todo(func, args);

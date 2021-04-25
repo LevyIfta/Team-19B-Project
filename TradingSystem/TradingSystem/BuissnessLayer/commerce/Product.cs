@@ -23,7 +23,8 @@ namespace TradingSystem.BuissnessLayer
 
         public Product(ProductData productData)
         {
-            this.info = ProductInfo.getProductInfo(productData.info.name, productData.info.category, productData.info.manufacturer);
+            ProductInfoData productInfoData = ProductInfoDAL.getProductInfo(productData.productID);
+            this.info = ProductInfo.getProductInfo(productData.name, productData.category, productData.manufacturer);
             this.amount = productData.amount;
             this.price = productData.price;
         }
@@ -61,10 +62,6 @@ namespace TradingSystem.BuissnessLayer
         public void remove(string name)
         {
             ProductDAL.remove(this.toDataObject(name));
-        }
-        public ProductData toDataObject()
-        {
-            return new ProductData(info.toDataObject(), amount, price);
         }
     }
 }

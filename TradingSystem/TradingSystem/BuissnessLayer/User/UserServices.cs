@@ -45,7 +45,7 @@ namespace TradingSystem.BuissnessLayer
         
 
         // users
-        public static aUser gerUser(string username)
+        public static aUser getUser(string username) { return null; }
 
 
         // other

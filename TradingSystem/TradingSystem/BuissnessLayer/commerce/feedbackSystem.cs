@@ -10,11 +10,11 @@ namespace TradingSystem.BuissnessLayer.commerce
     {
         public static bool leaveFeedback(string userName, string productName, string manufacturer, string comment)
         {
-            if(! DataLayer.DataAccess.ProductInfoDAL.isExist(productName, manufacturer))
+            if (!DataLayer.ProductInfoDAL.isExist(productName, manufacturer))
             {
                 return false;
             }
-            if (!DataLayer.DataAccess.FeedbackDAL.isExist(productName, manufacturer, userName){
+            if (!DataLayer.FeedbackDAL.isExist(productName, manufacturer, userName)){
                 return false;
             }
 
