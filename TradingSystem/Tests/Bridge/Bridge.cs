@@ -1,11 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TradingSystem.ServiceLayer;
+using TradingSystem.BuissnessLayer;
 
 namespace Tests.Bridge
 {
     interface Bridge
     {
-        bool login(string username, string password);
+        //unit tests
+        bool login(string userName, string password);
+        bool register(string userName, string password);
+        void logout();
+        aUser getUser();
+        string getUserName();
+        bool isUserExist(string username, string password);
+        bool isUserUnique(string username);
+        bool isUserLoggedIn(string username);
+        int onlineUserCount();
+        bool openStore(string storeName);
+        bool isStoreExist(string storeName);
+        bool isProductExist(string productName);
+        ShoppingBasket getBasket(string storeName);
+        int getProductAmount(ShoppingBasket basket, ProductInfo info);
+        void addProducts(ShoppingBasket basket); //to cart
+        void removeProducts(ShoppingBasket basket); //to cart
+
+        void addInventory(ShoppingBasket basket); //to store
+        void removeInventory(ShoppingBasket basket);
+        
+        Store getStore(string storeName);
+        Reciept GetRecieptByUser(string storeName, string userName, DateTime Date);
+        Reciept GetRecieptByStore(string storeName, string userName, DateTime Date);
+
+
     }
 }

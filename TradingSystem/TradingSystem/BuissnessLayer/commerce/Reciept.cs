@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Reciept
+    public class Reciept
     {
         public ShoppingBasket basket { get; set; }
         public Store store { get { return basket.store; } private set {  } }

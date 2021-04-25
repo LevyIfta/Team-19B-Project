@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Product
+    public class Product
     {
         public ProductInfo info { get; set; }
         public int amount { get; set; }

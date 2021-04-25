@@ -7,7 +7,7 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 
 namespace TradingSystem.BuissnessLayer
 {
-    abstract class aUser
+    public abstract class aUser
     {
         public ShoppingCart myCart { get; set; }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Store
+    public class Store
     {
         public string name { get; private set; }
         public ICollection<Reciept> recipts { get; private set; }

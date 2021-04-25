@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    interface PaymentMethod
+    public interface PaymentMethod
     {
     }
 }
