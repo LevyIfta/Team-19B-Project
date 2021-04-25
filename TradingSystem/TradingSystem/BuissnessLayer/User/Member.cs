@@ -8,12 +8,12 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Member : aUser
+    public class Member : aUser
     {
         public string userName { get; set; }
         public string password { get; set; }
 
-        public ICollection<Reciept> reciepts { get; set; }
+        public ICollection<Receipt> reciepts { get; set; }
         public basePermmision permmisions { get; set; }
 
         public override string getUserName()

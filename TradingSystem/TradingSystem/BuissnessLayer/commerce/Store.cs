@@ -7,33 +7,21 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Store
+    public class Store
     {
         public string name { get; private set; }
-        public ICollection<Reciept> recipts { get; private set; }
+        public ICollection<Receipt> recipts { get; private set; }
         public ICollection<Product> inventory { get; private set; }
-        public ICollection<Member> owners { get; private set; }
-        public ICollection<Member> managers { get; private set; }
+        public ICollection<aUser> owners { get; private set; }
+        public ICollection<aUser> managers { get; private set; }
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
         {
             this.name = name;
             this.founder = founder;
-            this.recipts = new List<Reciept>();
+            this.recipts = new List<Receipt>();
             this.inventory = new List<Product>();
-            this.owners = new List<Member>();
-            this.managers = new List<Member>();
-        }
-
-        public Store(StoreData storeData)
-        {
-            
-        }
-
-        internal StoreData getDataObject()
-        {
-            throw new NotImplementedException();
         }
 
         public double calcPrice(ICollection<Product> products)
@@ -41,46 +29,52 @@ namespace TradingSystem.BuissnessLayer
             throw new NotImplementedException();
         }
 
-        public Reciept executePurchase(ICollection<Product> products)
+        public Receipt executePurchase(ShoppingBasket basket, PaymentMethod paymentMethod)
         {
             throw new NotImplementedException();
         }
-        public void addOwner(Member username)
+        public void addOwner(Member owner)
         {
-            this.owners.Add(username);
+
         }
-        public void addManager(Member username)
+        public void addManager(Member manager)
         {
-            this.managers.Add(username);
+
         }
-        public void removeOwner(Member username)
+        public void removeOwner(Member owner)
         {
-            this.owners.Remove(username);
         }
 
-        public void removeManager(Member username)
+        public void removeManager(Member manager)
         {
-            this.managers.Remove(username);
         }
 
-        public bool isManager(Member userrname)
+        public bool isManager(Member manager)
         {
-            return this.managers.Contains(userrname);
+            throw new NotImplementedException();
         }
 
-        public bool isOwner(Member username)
+        public bool isOwner(Member owner)
         {
-            return this.owners.Contains(username);
+            throw new NotImplementedException();
         }
 
-        public ICollection<Member> getOwners()
+        public ICollection<aUser> getOwners()
         {
             return owners;
         }
 
-        public ICollection<Member> getManagers()
+        public ICollection<aUser> getManagers()
         {
             return managers;
+        }
+        public override bool Equals(object obj)
+        {
+            return false;
+        }
+        public bool Equals(Store obj)
+        {
+            return obj.name.Equals(name);
         }
 
     }

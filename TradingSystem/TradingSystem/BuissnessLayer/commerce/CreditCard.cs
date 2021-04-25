@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class CreditCard : PaymentMethod
+    public class CreditCard : PaymentMethod
     {
     }
 }

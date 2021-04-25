@@ -7,7 +7,7 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 
 namespace TradingSystem.BuissnessLayer
 {
-    abstract class aUser
+    public abstract class aUser
     {
         public ShoppingCart myCart { get; set; }
 
@@ -21,26 +21,43 @@ namespace TradingSystem.BuissnessLayer
             return null;
         }
 
-        public bool saveProduct(ShoppingBasket basket)
+        public bool saveProduct(ShoppingBasket basket1)
         {
-
-            throw new NotImplementedException();
+            bool match = false;
+            foreach (ShoppingBasket basket2 in myCart.baskets)
+            {
+                if(!match && basket2.store.Equals(basket1.store))
+                {
+                    match = true;
+                    basket2.margeBasket(basket1);
+                }
+            }
+            return true;
         }
 
-        public bool removeProduct(ShoppingBasket basket)
+        public bool removeProduct(ShoppingBasket basket1)
         {
-
-            throw new NotImplementedException();
+            basket1.reverse();
+            bool match = false;
+            foreach (ShoppingBasket basket2 in myCart.baskets)
+            {
+                if (!match && basket2.store.Equals(basket1.store))
+                {
+                    match = true;
+                    basket2.margeBasket(basket1);
+                }
+            }
+            return true;
         }
 
         public ShoppingBasket getBasket(Store store)
         {
-            throw new NotImplementedException();
+            return myCart.GetBasket(store);
         }
 
-        public ShoppingCart getCart(Store store)
+        public ShoppingCart getCart()
         {
-            throw new NotImplementedException();
+            return myCart;
         }
 
         public virtual bool EstablishStore(string storeName)
@@ -48,14 +65,14 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
 
-        public virtual  bool purchase(PaymentMethod payment)
+        public virtual bool purchase(PaymentMethod payment)
         {
             throw new NotImplementedException();
         }
 
         public double checkPrice()
         {
-            throw new NotImplementedException();
+            return myCart.checkPrice();
 
         }
         /// <summary>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    static class UserDAL
+    public static class UserDAL
     {
         private static List<memberData> members;
 

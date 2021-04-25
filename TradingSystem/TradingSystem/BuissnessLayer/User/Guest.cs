@@ -8,12 +8,13 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Guest : aUser
+    public class Guest : aUser
     {
-        // add static count for the name of the guest
+        private static int guestCount = 0;
         public override string getUserName()
         {
-            return "guest";
+            guestCount++;
+            return "guest" + guestCount;
         }
         public override object todo(PersmissionsTypes func, object[] args)
         {

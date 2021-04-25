@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    class getInfoEmployees : aPermission
+    public class getInfoEmployees : aPermission
     {
         public override object todo(PersmissionsTypes func, object[] args)
         {

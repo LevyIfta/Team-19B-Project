@@ -9,19 +9,21 @@ namespace TradingSystem.DataLayer
 {
     class StoresData
     {
-        internal static ICollection<Store> getStores()
-        {
-            throw new NotImplementedException();
-        }
+        private static Dictionary<string, StoreData> stores = new Dictionary<string, StoreData>();
 
         internal static StoreData getStore(string storeName)
         {
-            throw new NotImplementedException();
+            return stores[storeName];
         }
 
         internal static void addStore(StoreData storeData)
         {
-            throw new NotImplementedException();
+            stores.Add(storeData.name, storeData);
+        }
+
+        public static void removeStore(StoreData storeData)
+        {
+            stores.Remove(storeData.name);
         }
     }
 }

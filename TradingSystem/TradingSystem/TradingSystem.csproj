@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BuissnessLayer\User\Admin.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editManagerPermissions.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editProduct.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\getInfoEmployees.cs" />
@@ -64,6 +65,13 @@
     <Compile Include="BuissnessLayer\User\Permmisions\removeManager.cs" />
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
     <Compile Include="DataLayer\memberData.cs" />
+    <Compile Include="DataLayer\ProductData.cs" />
+    <Compile Include="DataLayer\ProductInfoData.cs" />
+    <Compile Include="DataLayer\ProductsInfoData.cs" />
+    <Compile Include="DataLayer\ReceiptData.cs" />
+    <Compile Include="DataLayer\ShoppingBasketData.cs" />
+    <Compile Include="DataLayer\StoreData.cs" />
+    <Compile Include="DataLayer\StoresData.cs" />
     <Compile Include="DataLayer\UserDAL.cs" />
     <Compile Include="ServiceLayer\SeviceClass.cs" />
     <Page Include="MainWindow.xaml">
@@ -82,7 +90,7 @@
     <Compile Include="BuissnessLayer\User\Permmisions\aPermission.cs" />
     <Compile Include="BuissnessLayer\User\Member.cs" />
     <Compile Include="BuissnessLayer\commerce\PurchasePolicy.cs" />
-    <Compile Include="BuissnessLayer\commerce\Reciept.cs" />
+    <Compile Include="BuissnessLayer\commerce\Receipt.cs" />
     <Compile Include="BuissnessLayer\commerce\ShoppingBasket.cs" />
     <Compile Include="BuissnessLayer\commerce\Product.cs" />
     <Compile Include="BuissnessLayer\commerce\ProductInfo.cs" />
