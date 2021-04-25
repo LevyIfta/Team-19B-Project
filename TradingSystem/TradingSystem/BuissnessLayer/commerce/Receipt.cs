@@ -7,7 +7,7 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
-    class Receipt
+    public class Receipt
     {
         public ShoppingBasket basket { get; set; }
         public Store store { get { return basket.store; } private set { } }

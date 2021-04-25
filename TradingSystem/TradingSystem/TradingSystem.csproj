@@ -67,6 +67,7 @@
     <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreOwner.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\removeManager.cs" />
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
+    <Compile Include="DataLayer\DataAccess\BasketDAL.cs" />
     <Compile Include="DataLayer\DataAccess\FeedbackDAL.cs" />
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\AdminPermissionDAL.cs" />
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\OwnerPermissionDAL.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\GetInfoEmployeesPermissionDAL.cs" />
     <Compile Include="DataLayer\DataAccess\ProductDAL.cs" />
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\AddProductPermissionDAL.cs" />
+    <Compile Include="DataLayer\DataAccess\MemberDAL.cs" />
+    <Compile Include="DataLayer\DataAccess\ProductInfoDAL.cs" />
     <Compile Include="DataLayer\DataAccess\ProductsInBasketDAL.cs" />
     <Compile Include="DataLayer\DataAccess\ProductsInReceiptDAL.cs" />
     <Compile Include="DataLayer\DataAccess\ReceiptDAL.cs" />
@@ -93,8 +96,19 @@
     <Compile Include="DataLayer\DataObjects\PermissionsData\EditProductPermissionData.cs" />
     <Compile Include="DataLayer\DataObjects\PermissionsData\EditManagerPermissionData.cs" />
     <Compile Include="DataLayer\DataObjects\PermissionsData\AddProductPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\BasketData.cs" />
     <Compile Include="DataLayer\DataObjects\FeedbackData.cs" />
     <Compile Include="DataLayer\DataObjects\MemberData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\AddProductPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\AdminPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\EditManagerPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\EditProductPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\GetInfoEmployeesPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\GetPurchaseHistoryPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\HireNewStoreManagerPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\HireNewStoreOwnerPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\OwnerPermissionData.cs" />
+    <Compile Include="DataLayer\DataObjects\PermissionsData\RemoveManagerPermissionData.cs" />
     <Compile Include="DataLayer\DataObjects\ProductData.cs" />
     <Compile Include="DataLayer\DataAccess\ProductInfoDAL.cs" />
     <Compile Include="DataLayer\DataObjects\ProductInfoData.cs" />

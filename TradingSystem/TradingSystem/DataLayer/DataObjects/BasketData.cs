@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    class BasketData
+    public class BasketData
+
     {
         //FIELDS
         public string storeName { get; set; }

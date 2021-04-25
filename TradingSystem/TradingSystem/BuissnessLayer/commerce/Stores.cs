@@ -7,8 +7,8 @@ using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
+    public static class Stores
 
-    class Stores
     {
         public static ICollection<Store> stores = new LinkedList<Store>();
         public static Store addStore(string storeName, Member founder)
@@ -57,6 +57,22 @@ namespace TradingSystem.BuissnessLayer.commerce
             throw new NotImplementedException();
         }
 
-        
+        public static Dictionary<Store, Product> searchProduct(string productName)
+        {
+            Dictionary<Store, Product> result = new Dictionary<Store, Product>();
+            foreach (Store store in stores)
+                if (store.searchProduct(productName) != null)
+                    result.Add(store, store.searchProduct(productName));
+            return result;
+        }
+        public static Dictionary<Store, Product> searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
+        {
+            Dictionary<Store, Product> result = new Dictionary<Store, Product>();
+            foreach (Store store in stores)
+                if (store.searchProduct(productName) != null)
+                    result.Add(store, store.searchProduct(productName, category, manufacturer, minPrice, maxPrice));
+            return result;
+        }
+          
     }
 }

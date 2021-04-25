@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    class MemberData
+    public class MemberData
     {
         //FIELDS
         public string userName { get; set; }
