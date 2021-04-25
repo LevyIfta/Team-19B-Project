@@ -30,5 +30,17 @@ namespace TradingSystem.BuissnessLayer
         {
             return new ProductData(info.toDataObject(), amount, price);
         }
+        public override bool Equals(object obj)
+        {
+            return false;
+        }
+        public bool Equals(Product product)
+        {
+            return product.info.name.Equals(info.name);
+        }
+        public void addAmount(int add)
+        {
+            this.amount += add;
+        }
     }
 }

@@ -36,12 +36,39 @@ namespace TradingSystem.BuissnessLayer
         {
             return store.executePurchase(this, payment);
         }
-
-        public ShoppingBasketData toDataObject()
+        public void margeBasket(ShoppingBasket basket)
         {
-            return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
+            bool isMatch = false;
+            foreach (Product product1 in basket.products)
+            {
+                foreach (Product product2 in products)
+                {
+                    if (!isMatch && product1.Equals(product2))
+                    {
+                        isMatch = true;
+                        product2.addAmount(product1.amount);
+                        products.Remove(product1);
+                        products.Add(product2);
+                    }
+                }
+                if (!isMatch)
+                {
+                    products.Add(product1);
+                }
+                isMatch = false;
+            }
         }
-
+        public void addProduct(Product pro)
+        {
+            products.Add(pro);
+        }
+        public void reverse()
+        {
+            foreach (Product pro in products)
+            {
+                pro.amount = pro.amount * -1;
+            }
+        }
         public ShoppingBasket clone()
         {
             ShoppingBasket basket = new ShoppingBasket(this.store, this.owner);
@@ -53,6 +80,36 @@ namespace TradingSystem.BuissnessLayer
         internal void clean()
         {
             this.products = new LinkedList<Product>();
+        }
+
+        public ShoppingBasketData toDataObject()
+        {
+            return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
+        }
+
+        
+
+        public override bool Equals(object obj)
+        {
+            return false;
+        }
+        public bool Equals(ShoppingBasket obj)
+        {
+            bool ans = false;
+            foreach (Product pro2 in obj.products)
+            {
+                foreach (Product pro1 in products)
+                {
+                    if (pro1.Equals(pro2))
+                    {
+                        ans = true;
+                    }
+                }
+                if (!ans)
+                    return false;
+                ans = false;
+            }
+            return ans;
         }
     }
 }

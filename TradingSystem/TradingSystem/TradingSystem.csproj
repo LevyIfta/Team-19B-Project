@@ -67,7 +67,7 @@
     <Compile Include="DataLayer\memberData.cs" />
     <Compile Include="DataLayer\ProductData.cs" />
     <Compile Include="DataLayer\ProductInfoData.cs" />
-    <Compile Include="DataLayer\ProductsInfo.cs" />
+    <Compile Include="DataLayer\ProductsInfoData.cs" />
     <Compile Include="DataLayer\ReceiptData.cs" />
     <Compile Include="DataLayer\ShoppingBasketData.cs" />
     <Compile Include="DataLayer\StoreData.cs" />
