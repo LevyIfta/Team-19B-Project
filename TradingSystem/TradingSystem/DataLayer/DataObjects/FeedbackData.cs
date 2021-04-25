@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,15 +9,15 @@ namespace TradingSystem.DataLayer
     class FeedbackData
     {       
         //FIELDS
-        public string productInfo { get; set; }
+        public string productName { get; set; }
         public string manufacturer { get; set; }
         public string userName { get; set; }
         public string comment { get; set; }
 
         //CONSTRUCTORS
-        public FeedbackData(string productInfo, string manufacturer, string userName, string comment)
+        public FeedbackData(string productName, string manufacturer, string userName, string comment)
         {
-            this.productInfo = productInfo;
+            this.productName = productName;
             this.manufacturer = manufacturer;
             this.userName = userName;
             this.comment = comment;
@@ -31,7 +31,7 @@ namespace TradingSystem.DataLayer
 
         public bool Equals(FeedbackData other)
         {
-            return this.productInfo.Equals(other.productInfo) & this.manufacturer.Equals(other.manufacturer) & this.manufacturer.Equals(other.manufacturer) & this.userName.Equals(other.userName) & this.comment.Equals(other.comment);
+            return this.productName.Equals(other.productName) & this.manufacturer.Equals(other.manufacturer) & this.manufacturer.Equals(other.manufacturer) & this.userName.Equals(other.userName) & this.comment.Equals(other.comment);
         }
     }
 }

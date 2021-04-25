@@ -10,22 +10,22 @@ namespace TradingSystem.DataLayer
     {
         private static List<ProductInfoData> ProductInfos;
 
-        public static ProductInfoData getProductInfo(string productName, string category)
+        public static ProductInfoData getProductInfo(string productName, string manufacturer)
         {
             foreach (ProductInfoData productInfoData in ProductInfos)
             {
-                if (productInfoData.productName == productName && productInfoData.category == category)
+                if (productInfoData.productName == productName && productInfoData.manufacturer == manufacturer)
                     return productInfoData;
             }
             return null;
         }
 
 
-        public static bool isExist(string productName, string category)
+        public static bool isExist(string productName, string manufacturer)
         {
             foreach (ProductInfoData productInfoData in ProductInfos)
             {
-                if (productInfoData.productName == productName && productInfoData.category == category)
+                if (productInfoData.productName == productName && productInfoData.manufacturer == manufacturer)
                     return true;
             }
             return false;

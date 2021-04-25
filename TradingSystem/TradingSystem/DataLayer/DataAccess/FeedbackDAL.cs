@@ -4,28 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.DataLayer.DataAccess
+namespace TradingSystem.DataLayer
 {
     static class FeedbackDAL
     {
         private static List<FeedbackData> feedbacks;
 
-        public static FeedbackData getFeedback(string productInfo, string manufacturer, string userName)
+        public static FeedbackData getFeedback(string productName, string manufacturer, string userName)
         {
             foreach (FeedbackData feedbackData in feedbacks)
             {
-                if (feedbackData.productInfo == productInfo && feedbackData.manufacturer == manufacturer && feedbackData.userName == userName)
+                if (feedbackData.productName == productName && feedbackData.manufacturer == manufacturer && feedbackData.userName == userName)
                     return feedbackData;
             }
             return null;
         }
 
 
-        public static bool isExist(string productInfo, string manufacturer, string userName)
+        public static bool isExist(string productName, string manufacturer, string userName)
         {
             foreach (FeedbackData feedbackData in feedbacks)
             {
-                if (feedbackData.productInfo == productInfo && feedbackData.manufacturer == manufacturer && feedbackData.userName == userName)
+                if (feedbackData.productName == productName && feedbackData.manufacturer == manufacturer && feedbackData.userName == userName)
                     return true;
             }
             return false;

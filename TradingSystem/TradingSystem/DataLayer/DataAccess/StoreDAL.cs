@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.DataLayer.DataAccess
+namespace TradingSystem.DataLayer
 {
     static class StoreDAL
     {
         private static List<StoreData> stores;
 
-        public static StoreData getSStore(string storeName)
+        public static StoreData getStore(string storeName)
         {
             foreach (StoreData storeData in stores)
             {
