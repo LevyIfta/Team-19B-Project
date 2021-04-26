@@ -88,6 +88,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             bool isMatch = false;
             foreach (Product product1 in obj.products)
+
             {
                 foreach (Product product2 in products)
                 {
@@ -102,6 +103,12 @@ namespace TradingSystem.BuissnessLayer.commerce
                 }
             }
             return true;
+
+        }
+        
+        public BasketData toDataObject()
+        {
+            return new BasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
         }
 
         public void update()
@@ -110,6 +117,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             // update products
             foreach (Product product in this.products)
                 ProductsInBasketDAL.update(new ProductsInBasketData(this.store.storeName, this.owner.userName, product.info.id, product.amount));
+
         }
     }
 }

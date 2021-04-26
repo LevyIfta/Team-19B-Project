@@ -66,28 +66,39 @@ namespace TradingSystem.BuissnessLayer.commerce
             return productInfo;
         }
 
-        /// <summary>
-        /// by shauli
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="comment"></param>
-        public void LeaveFeedback (string username, string comment)
+        public bool roomForFeedback (string username)
         {
             if (this.feedbacks.ContainsKey(username))
             {
-                this.feedbacks[username] = comment;
+                return false;
             }
             else
             {
-                this.feedbacks.Add(username, comment);
+                this.feedbacks.Add(username, "");
+                return true;
             }
         }
 
-        /// <summary>
-        /// by shauli
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
+        public bool leaveFeedback(string username, string comment)
+        {
+            if (this.feedbacks.ContainsKey(username))
+            {
+                if (feedbacks[username].CompareTo("") == 0)
+                {
+                    this.feedbacks[username] = comment;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public string getUserFeeback(string username)
         {
             try
@@ -98,6 +109,19 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 return null;
             }
+        }
+
+        public Dictionary<string, string> getAllFeedbacks()
+        {
+            Dictionary<string, string> allFeedbacks = new Dictionary<string, string>();
+            foreach (string userName in this.feedbacks.Keys)
+            {
+                if(this.feedbacks[userName].CompareTo("") != 0)
+                {
+                    allFeedbacks.Add(userName, this.feedbacks[userName]);
+                }
+            }
+            return allFeedbacks;
         }
     }
 }

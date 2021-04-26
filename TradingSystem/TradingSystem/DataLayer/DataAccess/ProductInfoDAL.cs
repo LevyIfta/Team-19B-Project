@@ -10,11 +10,11 @@ namespace TradingSystem.DataLayer
     {
         private static List<ProductInfoData> ProductInfos;
 
-        public static ProductInfoData getProductInfo(string productName, string manufacturer)
+        public static ProductInfoData getProductInfo(int productID)
         {
             foreach (ProductInfoData productInfoData in ProductInfos)
             {
-                if (productInfoData.productName == productName && productInfoData.manufacturer == manufacturer)
+                if (productInfoData.productID == productID)
                     return productInfoData;
             }
             return null;

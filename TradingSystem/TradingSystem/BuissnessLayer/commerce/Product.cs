@@ -11,7 +11,6 @@ namespace TradingSystem.BuissnessLayer.commerce
     {
         public ProductInfo info { get; set; }
         public int amount { get; set; }
-
         public double price { get; set; }
 
         public Product(ProductInfo info, int amount, double price)

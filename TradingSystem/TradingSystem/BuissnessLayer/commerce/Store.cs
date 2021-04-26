@@ -149,6 +149,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                                     // update feedback in DB
                                     FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
                                 }
+                                //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                                product.info.roomForFeedback(basket.owner.userName);
                             }
 
                         // clean the basket
