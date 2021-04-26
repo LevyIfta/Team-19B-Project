@@ -21,13 +21,15 @@ namespace Tests.Bridge
         bool openStore(string storeName);
         bool isStoreExist(string storeName);
         bool isProductExist(string productName);
-        ShoppingBasket getBasket(string storeName);
+        ShoppingBasket getBasket(string storeName);//what happens in case of few users with baskets in the same store? maybe should add string userName to get specific basket
         int getProductAmount(ShoppingBasket basket, ProductInfo info);
+        int getProductAmount(string storeName, string productName);
         void addProducts(ShoppingBasket basket); //to cart
         void removeProducts(ShoppingBasket basket); //to cart
 
         void addInventory(ShoppingBasket basket); //to store
         void removeInventory(ShoppingBasket basket);
+        bool isItemAtStore(string storeName, string productName);
         
         Store getStore(string storeName);
         Reciept GetRecieptByUser(string storeName, string userName, DateTime Date);
