@@ -104,14 +104,11 @@
     <Compile Include="DataLayer\DataObjects\ProductsInReceiptData.cs" />
     <Compile Include="DataLayer\DataObjects\ReceiptData.cs" />
     <Compile Include="DataLayer\DataObjects\BasketData.cs" />
-    <Compile Include="DataLayer\StoreDAL_IsITNeeded.cs" />
-    <Compile Include="DataLayer\memberData.cs" />
-    <Compile Include="DataLayer\ProductsInfoData.cs" />
-    <Compile Include="DataLayer\ShoppingBasketData.cs" />
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
     <Compile Include="ServiceLayer\Controllers\ProductController.cs" />
     <Compile Include="ServiceLayer\SeviceClass.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLbasket.cs" />
+    <Compile Include="ServiceLayer\SLdataObjects\SLemployee.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLproduct.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLreceipt.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLstore.cs" />

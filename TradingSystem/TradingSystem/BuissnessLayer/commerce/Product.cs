@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
     public class Product
     {
         public ProductInfo info { get; set; }
         public int amount { get; set; }
-
         public double price { get; set; }
 
         public Product(ProductInfo info, int amount, double price)
@@ -24,7 +23,7 @@ namespace TradingSystem.BuissnessLayer
         public Product(ProductData productData)
         {
             ProductInfoData productInfoData = ProductInfoDAL.getProductInfo(productData.productID);
-            this.info = ProductInfo.getProductInfo(productData.name, productData.category, productData.manufacturer);
+            this.info = ProductInfo.getProductInfo(productInfoData.productName, productInfoData.category, productInfoData.manufacturer);
             this.amount = productData.amount;
             this.price = productData.price;
         }
@@ -47,7 +46,7 @@ namespace TradingSystem.BuissnessLayer
         }
         public bool Equals(Product product)
         {
-            return product.info.name.Equals(info.name);
+            return product.info.Equals(info); // maybe add amounts ?
         }
         public void addAmount(int add)
         {

@@ -8,15 +8,15 @@ namespace TradingSystem.ServiceLayer
 {
     class SLproduct
     {
-        public int amount;
-        public double price;
-        public string productName;
-        public string category;
-        public string manufacturer;
-        public int productID;
-        public Dictionary<string, string> feedbacks;
+        public int amount { get; }
+        public double price { get; }
+        public string productName { get; }
+        public string category { get; }
+        public string manufacturer { get; }
+        public int productID { get; }       //TODO
+        public Dictionary<string, string> feedbacks { get; }
 
-        private const int PARAMETER_COUNT = 7;
+        public const int PARAMETER_COUNT = 7;
 
         public SLproduct(int amount, double price, string productName, string category, string manufacturer, int productID, Dictionary<string, string> feedbacks)
         {

@@ -8,14 +8,14 @@ namespace TradingSystem.ServiceLayer
 {
     class SLreceipt
     {
-        public ICollection<SLproduct> products;
-        public string storeName;
-        public string userName;
-        public double price;
-        public DateTime date;
-        public int receiptID;
+        public ICollection<SLproduct> products { get; }
+        public string storeName { get; }
+        public string userName { get; }
+        public double price { get; }
+        public DateTime date { get; }
+        public int receiptID { get; }
 
-        private const int PARAMETER_COUNT = 6;
+        public const int PARAMETER_COUNT = 6;
 
         public SLreceipt(ICollection<SLproduct> products, string storeName, string userName, double price, DateTime date, int receiptID)
         {

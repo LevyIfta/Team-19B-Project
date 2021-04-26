@@ -3,33 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.DataLayer;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
     public class Receipt
     {
-        public ShoppingBasket basket { get; set; }
-        public Store store { get { return basket.store; } private set { } }
-        public string username { get { return basket.owner.userName; } private set { } }
+        public Dictionary<int, int> products { get; set; } // <product_id, amount>
+        public Store store { get; set; }
+        public string username { get; set; }
         public double price { get; set; }
         public DateTime date { get; set; }
-        public int id;
+        public int receiptId;
         private static int currentId = -1;
         private static Object idLocker = new Object();
-        //public Object Discount { get; set; } //todo
+        public int discount { get; set; } //todo
         //public PurchasePolicy purchasePolicy { get; set; }
 
         public ReceiptData toDataObject()
         {
-            //return new ReceiptData(this.basket.toDataObject(), this.price, this.date);
-            return null;
+            return new ReceiptData(this.receiptId, this.store.storeName, this.username, this.price, this.date, this.discount, -1);
         }
 
         public Receipt(ReceiptData receiptData)
         {
-
-            this.basket = new ShoppingBasket(receiptData.basket);
+            this.receiptId = receiptData.receiptID;
+            this.store = Stores.searchStore(receiptData.storeName);
+            this.products = new Dictionary<int, int>();
+            foreach (ProductsInReceiptData pInR in ProductsInReceiptDAL.getProducts(this.receiptId))
+                this.products.Add(pInR.productID, pInR.amount);
+            // get products and fill in this.products
             this.price = receiptData.price;
             this.date = receiptData.date;
         }
@@ -39,8 +43,18 @@ namespace TradingSystem.BuissnessLayer
             lock (idLocker)
             {
                 currentId++;
-                this.id = currentId;
+                this.receiptId = currentId;
             }
+            this.products = new Dictionary<int, int>();
+        }
+
+        public void save()
+        {
+            // update self
+            ReceiptDAL.addReceipt(this.toDataObject());
+            // update products
+            foreach (int id in this.products.Keys)
+                ProductsInReceiptDAL.addProductsInBasket(new ProductsInReceiptData(this.receiptId, id, this.products[id]));
         }
     }
 }

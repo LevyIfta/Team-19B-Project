@@ -8,11 +8,11 @@ namespace TradingSystem.ServiceLayer
 {
     class SLbasket
     {
-        public ICollection<SLproduct> products;
-        public string storeName;
-        public string userName;
+        public ICollection<SLproduct> products { get; }
+        public string storeName { get; }
+        public string userName { get; }
 
-        private const int PARAMETER_COUNT = 3;
+        public const int PARAMETER_COUNT = 3;
 
         public SLbasket(ICollection<SLproduct> products, string storeName, string userName)
         {

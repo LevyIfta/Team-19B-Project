@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
     public class ShoppingBasket
     {
@@ -21,9 +21,9 @@ namespace TradingSystem.BuissnessLayer
         }
         public ShoppingBasket(BasketData shoppingBasketData)
         {
-            this.products = (ICollection<Product>)shoppingBasketData.products.Select(p => new Product(p));
-            this.store = new Store(shoppingBasketData.store);
-            this.owner = Member.dataToObject(shoppingBasketData.owner);
+            this.products = BasketDAL.getProductIDs(shoppingBasketData.storeName, shoppingBasketData.useName).Select(products => new Product(products));
+            this.store = new Store(StoreDAL.getStore(shoppingBasketData.storeName));
+            this.owner = (Member)UserServices.getUser(shoppingBasketData.useName);
         }
         public double checkPrice()
         {
@@ -87,9 +87,10 @@ namespace TradingSystem.BuissnessLayer
         public bool Equals(ShoppingBasket obj)
         {
             bool isMatch = false;
-            foreach(Product product1 in obj.products)
+            foreach (Product product1 in obj.products)
+
             {
-                foreach(Product product2 in products)
+                foreach (Product product2 in products)
                 {
                     if (product1.Equals(product2))
                     {
@@ -102,6 +103,7 @@ namespace TradingSystem.BuissnessLayer
                 }
             }
             return true;
+
         }
         
         public BasketData toDataObject()
@@ -111,7 +113,11 @@ namespace TradingSystem.BuissnessLayer
 
         public void update()
         {
-            BasketDAL.update(this.toDataObject());
+            BasketDAL.update(new BasketData(this.store.storeName, this.owner.userName));
+            // update products
+            foreach (Product product in this.products)
+                ProductsInBasketDAL.update(new ProductsInBasketData(this.store.storeName, this.owner.userName, product.info.id, product.amount));
+
         }
     }
 }
