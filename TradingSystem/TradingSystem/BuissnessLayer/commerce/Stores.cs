@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
     public static class Stores
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TradingSystem.ServiceLayer;
 using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace Tests.Bridge
 {
@@ -30,8 +31,8 @@ namespace Tests.Bridge
         void removeInventory(ShoppingBasket basket);
         
         Store getStore(string storeName);
-        Reciept GetRecieptByUser(string storeName, string userName, DateTime Date);
-        Reciept GetRecieptByStore(string storeName, string userName, DateTime Date);
+        Receipt GetRecieptByUser(string storeName, string userName, DateTime Date);
+        Receipt GetRecieptByStore(string storeName, string userName, DateTime Date);
         void purchase();
 
 

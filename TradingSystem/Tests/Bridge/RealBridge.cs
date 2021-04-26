@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace Tests.Bridge
 {
@@ -9,12 +10,16 @@ namespace Tests.Bridge
     {
         public void addInventory(ShoppingBasket basket)
         {
-            throw new NotImplementedException();
+            foreach (Product item in basket.products)
+            {
+                basket.store.supply(item.info.name, item.info.manufacturer, item.amount);
+            }
         }
 
         public void addProducts(ShoppingBasket basket)
         {
-            throw new NotImplementedException();
+            ShoppingBasket userBasket = getBasket(basket.store.storeName);
+            userBasket.margeBasket(basket);
         }
 
         public ShoppingBasket getBasket(string storeName)
@@ -24,22 +29,28 @@ namespace Tests.Bridge
 
         public int getProductAmount(ShoppingBasket basket, ProductInfo info)
         {
+            //non
             throw new NotImplementedException();
         }
 
-        public Reciept GetRecieptByStore(string storeName, string userName, DateTime Date)
+        public Receipt GetRecieptByStore(string storeName, string userName, DateTime Date)
         {
-            throw new NotImplementedException();
+            foreach (Receipt item in getStore(storeName).receipts)
+            {
+                if (item.username == userName && item.date == Date)
+                    return item;
+            }
+            return null;
         }
 
-        public Reciept GetRecieptByUser(string storeName, string userName, DateTime Date)
+        public Receipt GetRecieptByUser(string storeName, string userName, DateTime Date)
         {
             throw new NotImplementedException();
         }
 
         public Store getStore(string storeName)
         {
-            throw new NotImplementedException();
+            return Stores.searchStore(storeName);
         }
 
         public aUser getUser()
@@ -54,12 +65,12 @@ namespace Tests.Bridge
 
         public bool isProductExist(string productName)
         {
-            throw new NotImplementedException();
+            return Stores.searchProduct(productName).Count != 0;
         }
 
         public bool isStoreExist(string storeName)
         {
-            throw new NotImplementedException();
+            return Stores.searchStore(storeName) == null;
         }
 
         public bool isUserExist(string username, string password)
@@ -94,7 +105,7 @@ namespace Tests.Bridge
 
         public bool openStore(string storeName)
         {
-            throw new NotImplementedException();
+            return Stores.addStore(storeName, (Member)getUser());
         }
 
         public void purchase()
@@ -109,11 +120,13 @@ namespace Tests.Bridge
 
         public void removeInventory(ShoppingBasket basket)
         {
+            //none
             throw new NotImplementedException();
         }
 
         public void removeProducts(ShoppingBasket basket)
         {
+            //non
             throw new NotImplementedException();
         }
     }

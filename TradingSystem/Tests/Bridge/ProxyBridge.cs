@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace Tests.Bridge
 {
@@ -50,14 +51,14 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public Reciept GetRecieptByStore(string storeName, string userName, DateTime Date)
+        public Receipt GetRecieptByStore(string storeName, string userName, DateTime Date)
         {
             if (realBridge != null)
                 return this.realBridge.GetRecieptByStore(storeName, userName, Date);
             throw new NotImplementedException();
         }
 
-        public Reciept GetRecieptByUser(string storeName, string userName, DateTime Date)
+        public Receipt GetRecieptByUser(string storeName, string userName, DateTime Date)
         {
             if (realBridge != null)
                 return this.realBridge.GetRecieptByUser(storeName, userName, Date);
