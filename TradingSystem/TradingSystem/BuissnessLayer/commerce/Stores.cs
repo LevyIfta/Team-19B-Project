@@ -11,23 +11,23 @@ namespace TradingSystem.BuissnessLayer.commerce
 
     {
         public static ICollection<Store> stores = new LinkedList<Store>();
-        public static Store addStore(string storeName, Member founder)
+        public static bool addStore(string storeName, Member founder)
         {
             Store newStore = new Store(storeName, founder);
             // check for a name duplicant
             if (stores.Contains(newStore))
-                return null;
+                return false;
             stores.Add(newStore);
-            // add the new store to DB TODO
+            // add the new store to DB
             StoreDAL.addStore(newStore.toDataObject());
-            return newStore;
+            return true;
 
         }
 
         public static Store searchStore(string storeName)
         {
             foreach (Store store in stores)
-                if (store.name.Equals(storeName))
+                if (store.storeName.Equals(storeName))
                     return store;
             return null;
 
