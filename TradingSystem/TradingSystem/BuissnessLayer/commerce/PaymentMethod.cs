@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
-    interface PaymentMethod
+    public interface PaymentMethod
     {
+        bool pay(double price);
     }
 }

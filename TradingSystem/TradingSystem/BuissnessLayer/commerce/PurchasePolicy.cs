@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
-    enum PurchasePolicy
+    public enum PurchasePolicy
     {
         IMMEDIATE,
         OFFER,

@@ -5,23 +5,62 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 
-namespace TradingSystem.BuissnessLayer.commerce
+namespace TradingSystem.BuissnessLayer
 {
-    class Stores
+    public static class Stores
+
     {
-        public static Store addStore(string storeName, Member founder)
+        public static ICollection<Store> stores = new LinkedList<Store>();
+        public static bool addStore(string storeName, Member founder)
         {
-            return null;
+            Store newStore = new Store(storeName, founder);
+            // check for a name duplicant
+            if (stores.Contains(newStore))
+                return false;
+            stores.Add(newStore);
+            // add the new store to DB
+            StoreDAL.addStore(newStore.toDataObject());
+            return true;
+
         }
 
         public static Store searchStore(string storeName)
         {
+            foreach (Store store in stores)
+                if (store.storeName.Equals(storeName))
+                    return store;
             return null;
+
         }
 
-        public static bool removeStore(Store store)
+        public static void removeStore(Store store)
         {
-            return false;
+            stores.Remove(store);
+            // update DB TODO
+            store.remove();
         }
+
+        public static ICollection<Store> getAllStores()
+        {
+            return stores;
+        }
+
+        public static Dictionary<Store, Product> searchProduct(string productName)
+        {
+            Dictionary<Store, Product> result = new Dictionary<Store, Product>();
+            foreach (Store store in stores)
+                if (store.searchProduct(productName) != null)
+                    result.Add(store, store.searchProduct(productName));
+            return result;
+        }
+        public static Dictionary<Store, Product> searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
+        {
+            Dictionary<Store, Product> result = new Dictionary<Store, Product>();
+            foreach (Store store in stores)
+                if (store.searchProduct(productName) != null)
+                    result.Add(store, store.searchProduct(productName, category, manufacturer, minPrice, maxPrice));
+            return result;
+        }
+
     }
 }

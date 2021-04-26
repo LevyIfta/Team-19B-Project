@@ -4,23 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
+using TradingSystem.BuissnessLayer;
 
-namespace TradingSystem.BuissnessLayer
+namespace TradingSystem.BuissnessLayer.commerce
 {
-    class Store
+    public class Store
     {
-        public string name { get; private set; }
-        public ICollection<Reciept> recipts { get; private set; }
+        public string storeName { get; private set; }
+
+        public ICollection<Receipt> receipts { get; private set; }
         public ICollection<Product> inventory { get; private set; }
         public ICollection<Member> owners { get; private set; }
         public ICollection<Member> managers { get; private set; }
+        private Object purchaseLock = new Object();
+
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
         {
-            this.name = name;
+            this.storeName = name;
             this.founder = founder;
-            this.recipts = new List<Reciept>();
+
+            this.receipts = new List<Receipt>();
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
@@ -28,60 +33,257 @@ namespace TradingSystem.BuissnessLayer
 
         public Store(StoreData storeData)
         {
-            
+            this.storeName = storeData.storeName;
+            this.founder = (Member)UserServices.getUser(storeData.founder);
         }
 
-        internal StoreData getDataObject()
+        public ProductInfo addProduct(string name, string category, string manufacturer)
         {
-            throw new NotImplementedException();
+            ProductInfo productInfo = ProductInfo.getProductInfo(name, category, manufacturer);
+            lock (this.purchaseLock)
+            {
+                // check if the product already exists in the store
+                foreach (Product p in this.inventory)
+                    if (p.info.Equals(productInfo.toDataObject()))
+                        return null;
+                // the product doesn't exist, add it
+                this.inventory.Add(new Product(productInfo, 0, 0));
+                // update DB
+                ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.storeName));
+            }
+            return productInfo;
+        }
+
+        public void removeProduct(string productName, string manufacturer)
+        {
+            lock (this.purchaseLock)
+            {
+                foreach (Product product in this.inventory)
+                    if (product.info.name.Equals(productName) & product.info.manufacturer.Equals(manufacturer))
+                    {
+                        this.inventory.Remove(product);
+                        // update DB
+                        product.remove(this.storeName);
+                    }
+            }
+        }
+
+        public bool editPrice(string productName, string manufacturer, double newPrice)
+        {
+            // check if the product exists
+            foreach (Product p in this.inventory)
+                if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
+                {
+                    p.price = newPrice;
+                    // update DB
+                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.storeName));
+                    return true;
+                }
+            // the product doesn't exist, can't edit price
+            return false;
+        }
+
+
+        public bool supply(string name, string manufacturer, int amount)
+        {
+            if (amount <= 0)
+                return false;
+            lock (this.purchaseLock)
+            {
+                // check if the product exists
+                foreach (Product p in this.inventory)
+                    if (p.info.name.Equals(name) & p.info.manufacturer.Equals(manufacturer))
+                    {
+                        p.amount += amount;
+                        // update DB
+                        ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.storeName));
+                        return true;
+                    }
+            }
+            // the product doesn't exist
+            return false;
         }
 
         public double calcPrice(ICollection<Product> products)
         {
-            throw new NotImplementedException();
+            double price = 0.0;
+
+            foreach (Product product in products)
+                foreach (Product localProduct in this.inventory)
+                    if (localProduct.info.Equals(product.info))
+                        price += localProduct.price * product.amount;
+
+            return price;
         }
 
-        public Reciept executePurchase(ICollection<Product> products)
+        public Receipt executePurchase(ShoppingBasket basket, PaymentMethod paymentMethod)
         {
-            throw new NotImplementedException();
-        }
-        public void addOwner(Member username)
-        {
-            this.owners.Add(username);
-        }
-        public void addManager(Member username)
-        {
-            this.managers.Add(username);
-        }
-        public void removeOwner(Member username)
-        {
-            this.owners.Remove(username);
+            ICollection<Product> products = basket.products;
+            Receipt receipt = null;
+            // lock the store for purchase
+            lock (this.purchaseLock)
+            {
+                // check for amounts validation
+                if (checkAmounts(products) & checkPolicies(basket))
+                {
+                    // calc the price
+                    double price = calcPrice(products);
+                    // request for payment
+                    if (paymentMethod.pay(price))
+                    {
+                        // create the receipt
+                        receipt = new Receipt();
+                        // the payment was successful
+                        foreach (Product product in products)
+                            foreach (Product localProduct in this.inventory)
+                            {
+                                if (localProduct.info.Equals(product.info))
+                                {
+                                    localProduct.amount -= product.amount;
+                                    // update amount in DB
+                                    localProduct.update(this.storeName);
+                                    // add the products to receipt
+                                    receipt.products.Add(localProduct.info.id, product.amount);
+                                    // leave feedback
+                                    product.info.LeaveFeedback(basket.owner.userName, "");
+                                    // update feedback in DB
+                                    FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                                }
+                                //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                                product.info.roomForFeedback(basket.owner.userName);
+                            }
+
+                        // clean the basket
+                        basket.clean();
+                        // update basket in DB
+                        basket.update();
+                        // fill receipt fields
+                        receipt.store = this;
+                        receipt.discount = 0;
+                        receipt.date = DateTime.Now;
+                        receipt.price = price;
+                        // save the receipt
+                        this.receipts.Add(receipt);
+                        // add receipt to DB
+                        receipt.save();
+                    }
+                }
+            }
+
+            return receipt;
         }
 
-        public void removeManager(Member username)
+        private bool checkPolicies(ShoppingBasket basket)
         {
-            this.managers.Remove(username);
+            return true;
         }
 
-        public bool isManager(Member userrname)
+        private bool checkAmounts(ICollection<Product> products)
         {
-            return this.managers.Contains(userrname);
+            foreach (Product product in products)
+                foreach (Product productData in this.inventory)
+                    if (product.info.Equals(productData.info) & product.amount > productData.amount)
+                        return false;
+            return true;
+        }
+        public void addOwner(Member owner)
+        {
+            this.owners.Add(owner);
+            // update DB
+            HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.storeName));
+        }
+        public void addManager(Member manager)
+        {
+            this.managers.Add(manager);
+            // update DB
+            HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.storeName));
+        }
+        public void removeOwner(Member owner)
+        {
+            this.owners.Remove(owner);
+            // update DB
+            HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.storeName));
         }
 
-        public bool isOwner(Member username)
+        public void removeManager(Member manager)
         {
-            return this.owners.Contains(username);
+            this.managers.Remove(manager);
+            // update DB
+            HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.storeName));
         }
 
-        public ICollection<Member> getOwners()
+        public bool isManager(string member)
         {
-            return owners;
+            foreach (Member manager in this.managers)
+                if (manager.getUserName().Equals(member))
+                    return true;
+            return false;
         }
 
-        public ICollection<Member> getManagers()
+        public bool isOwner(string member)
         {
-            return managers;
+            foreach (Member owner in this.owners)
+                if (owner.getUserName().Equals(member))
+                    return true;
+            return false;
         }
 
+
+
+        public override bool Equals(object obj)
+        {
+            return (obj is Store) & ((Store)obj).storeName.Equals(storeName);
+        }
+        public bool Equals(Store obj)
+        {
+            return obj.storeName.Equals(storeName);
+        }
+
+        public ICollection<Receipt> getAllReceipts()
+        {
+            return this.receipts;
+        }
+
+        public Product searchProduct(string productName)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName))
+                    return new Product(product);
+            return null; // no results
+        }
+
+        public Product searchProduct(string productName, double minPrice, double maxPrice)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName) & product.price <= maxPrice & product.price >= minPrice)
+                    return new Product(product);
+            return null; // no results
+        }
+
+        public Product searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName) & product.price <= maxPrice & product.price >= minPrice & product.info.category.Equals(category) & product.info.manufacturer.Equals(manufacturer))
+                    return new Product(product);
+            return null; // no results
+        }
+
+        public bool isProductExist(string name, string manufacturer)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(name) & product.info.manufacturer.Equals(manufacturer))
+                    return true;
+            return false;
+        }
+
+        public void remove()
+        {
+            StoreDAL.remove(this.toDataObject());
+        }
+
+        public StoreData toDataObject()
+        {
+            return new StoreData(this.storeName, this.founder.userName);
+        }
     }
 }

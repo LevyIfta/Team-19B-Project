@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
-    class basePermmision : aPermission
+    public class basePermmision : aPermission
     {
+        public basePermmision(string storeName, string sponser) : base(storeName, sponser) { }
     }
 }
