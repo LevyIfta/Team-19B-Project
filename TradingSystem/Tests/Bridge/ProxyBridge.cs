@@ -42,6 +42,11 @@ namespace Tests.Bridge
 
         public int getProductAmount(ShoppingBasket basket, ProductInfo info)
         {
+            if (realBridge != null)
+            {
+                return this.realBridge.getProductAmount(basket, info);
+                
+            }
             throw new NotImplementedException();
         }
 
@@ -68,11 +73,15 @@ namespace Tests.Bridge
 
         public aUser getUser()
         {
+            if (realBridge != null)
+                return this.realBridge.getUser();
             throw new NotImplementedException();
         }
 
         public string getUserName()
         {
+            if (realBridge != null)
+                return this.realBridge.getUserName();
             throw new NotImplementedException();
         }
 
@@ -139,6 +148,17 @@ namespace Tests.Bridge
 
         public bool openStore(string storeName)
         {
+            if (realBridge != null)
+                return this.realBridge.openStore(storeName);
+            throw new NotImplementedException();
+        }
+
+        public void purchase()
+        {
+            if (realBridge != null)
+            {
+                this.realBridge.purchase();
+            }
             throw new NotImplementedException();
         }
 
@@ -161,6 +181,11 @@ namespace Tests.Bridge
 
         public void removeProducts(ShoppingBasket basket)
         {
+            if (realBridge != null)
+            {
+                this.realBridge.removeProducts(basket);
+                return;
+            }
             throw new NotImplementedException();
         }
     }

@@ -1,6 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections;
+using System.Collections.Generic;
 using Tests.Bridge;
 using TradingSystem.BuissnessLayer;
+using System.Linq;
 
 namespace Tests
 {
@@ -94,6 +97,7 @@ namespace Tests
     public class BasketTests
     {
         private static Bridge.Bridge bridge;
+
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
@@ -109,6 +113,7 @@ namespace Tests
             Product items1 = new Product(), items2 = new Product();
             items1.amount = 5; items1.info = newInfo1;
             items2.amount = 2; items2.info = newInfo2;
+
 
             ShoppingBasket basket = new ShoppingBasket();
             basket.products.Add(items1);
@@ -196,15 +201,34 @@ namespace Tests
     [TestClass]
     public class StoreTests
     {
+        private static ProductInfo prod1;
+        private static ProductInfo prod2;
         private static Bridge.Bridge bridge;
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
             bridge = Driver.getBridge();
             bridge.register("store1", "Store1");
+            bridge.register("store2", "Store2");
             bridge.login("store1", "Store1");
             bridge.openStore("Store1");
-            
+            ProductInfo newInfo1 = new ProductInfo();
+            newInfo1.name = "item1";
+            ProductInfo newInfo2 = new ProductInfo();
+            newInfo2.name = "item2";
+
+            prod1 = newInfo1;
+            prod2 = newInfo2;
+
+            Product items1 = new Product(), items2 = new Product();
+            items1.amount = 2; items1.info = newInfo1;
+            items2.amount = 2; items2.info = newInfo2;
+            ShoppingBasket basket = new ShoppingBasket();
+            basket.store = bridge.getStore("Store1");
+            basket.products.Add(items1);
+            basket.products.Add(items2);
+  
+            bridge.addInventory(basket);
 
 
 
@@ -227,6 +251,203 @@ namespace Tests
 
             Assert.AreSame(store.name, "store2", "store has wrong name");
         }
+        [TestMethod]
+        public void createStoreTestBad()
+        {
+            bridge.logout();
+            bridge.login("store2", "Store2");
+            Assert.IsFalse(bridge.openStore("store1"), "manage to open a tore with an existing name");
+
+            Store store = bridge.getStore("store1");
+            Assert.AreNotEqual(store.founder.getUserName(), "store2", "store founder changed");
+            Assert.AreEqual(store.founder.getUserName(), "store1", "store founder changed");
+
+            bridge.logout();
+            bridge.login("store1", "Store1");
+        }
+
+        [TestMethod]
+        public void addInventoryTest()
+        {
+            //setup
+            ProductInfo newInfo3 = new ProductInfo();
+            newInfo3.name = "item3";
+            ProductInfo newInfo4 = new ProductInfo();
+            newInfo4.name = "item4";
+            Product items3 = new Product(), items4 = new Product();
+            items3.amount = 5; items3.info = newInfo3;
+            items4.amount = 2; items4.info = newInfo4;
+
+            ShoppingBasket basket = new ShoppingBasket();
+            basket.products.Add(items3);
+            basket.products.Add(items4);
+            Store store = bridge.getStore("store1");
+            basket.store = store;
+            ICollection<Product> inventory = store.inventory;
+            int count = inventory.Count;
+            bridge.addInventory(basket);
+
+          
+            
+            Assert.IsTrue(inventory.Contains(items3), "failed to save one of the items");
+            Assert.IsTrue(inventory.Contains(items4), "failed to save one of the items");
+            Assert.IsFalse(inventory.Contains(null), "saved a null item");
+            Assert.AreSame(inventory.Count, count+2, "count update wrong");
+            foreach (Product item in store.inventory)
+            {
+                if (item.info.Equals(newInfo3))
+                    Assert.AreEqual(item.amount, 5, "failed to update the item amount properly");
+                if (item.info.Equals(newInfo4))
+                    Assert.AreEqual(item.amount, 2, "failed to update the item amount properly");
+            }
+
+            count += 2;
+            bridge.addInventory(basket);
+            Assert.AreSame(inventory.Count, count, "count update wrong(add more of exising product");
+            foreach (Product item in store.inventory)
+            {
+                if (item.info.Equals(newInfo3))
+                    Assert.AreEqual(item.amount, 10, "failed to update the item amount properly(2nd add)");
+                if (item.info.Equals(newInfo4))
+                    Assert.AreEqual(item.amount, 4, "failed to update the item amount properly(2nd add)");
+            }
+
+
+        }
+
+        [TestMethod]
+        public void removeInventoryTest()
+        {
+            //setup
+
+            Product items1 = new Product(), items2 = new Product();
+            items1.amount = 1; items1.info = prod1;
+            items2.amount = 2; items2.info = prod2;
+
+            ShoppingBasket basket = new ShoppingBasket();
+            basket.products.Add(items1);
+            basket.products.Add(items2);
+            Store store = bridge.getStore("store1");
+            basket.store = store;
+            ICollection<Product> inventory = store.inventory;
+            int count = inventory.Count;
+            bridge.removeInventory(basket);
+
+
+
+            Assert.IsTrue(inventory.Contains(items1), "removed an item with remaining amount");
+            Assert.IsFalse(inventory.Contains(items2), "kept an item with 0 amount");
+            Assert.IsFalse(inventory.Contains(null), "saved a null item");
+            Assert.AreSame(inventory.Count, count - 1, "count update wrong");
+            foreach (Product item in store.inventory)
+            {
+                if (item.info.Equals(prod1))
+                    Assert.AreEqual(item.amount, 1, "failed to update the item amount properly");
+
+            }
+       
+
+        }
+
+    }
+
+    [TestClass]
+    class ReciptTests
+    {
+        private static Bridge.Bridge bridge;
+        [ClassInitialize]
+        public static void classInit(TestContext context)
+        {
+            bridge = Driver.getBridge();
+            bridge.register("recipt1", "Recipt1");
+            bridge.register("recipt2", "Recipt2");
+            bridge.login("recipt2", "Recipt2");
+            bridge.openStore("StoreRecipt1");
+            bridge.openStore("StoreRecipt2");
+            ProductInfo newInfo1 = new ProductInfo();
+            newInfo1.name = "item1";
+            ProductInfo newInfo2 = new ProductInfo();
+            newInfo2.name = "item2";
+            
+            Product items1 = new Product(), items2 = new Product();
+            items1.amount = 2; items1.info = newInfo1;
+            items2.amount = 2; items2.info = newInfo2;
+            ShoppingBasket basket = new ShoppingBasket();
+            basket.store = bridge.getStore("StoreRecipt1");
+            basket.products.Add(items1);
+            basket.products.Add(items2);
+
+            bridge.addInventory(basket);
+            bridge.logout();
+            bridge.login("recipt1", "Recipt1");
+            bridge.addProducts(basket);
+            bridge.purchase();
+
+
+        }
+
+        [ClassCleanup]
+        public static void classCleanUp()
+        {
+            bridge.logout();
+        }
+
+        [TestMethod]
+        public void userReciptTestGood()
+        {
+            Reciept reciept = bridge.GetRecieptByUser("StoreRecipt1", "recipt1", new System.DateTime());
+            Assert.AreEqual(reciept.userName, "recipt1", "the username is wrong");
+            Assert.AreEqual(reciept.store.name, "StoreRecipt1", "the store name is wrong");
+            Assert.AreEqual(reciept.basket.products.Count, 2, "saved wrong product list");
+        }
+
+
+        [TestMethod]
+        public void userReciptTestBad()
+        {
+            bridge.logout();
+            bridge.login("recipt2", "Recipt2");
+            
+            Reciept reciept = bridge.GetRecieptByUser("StoreRecipt1", "recipt2", new System.DateTime());
+            Assert.IsNull(reciept, "managed to get recpit from wong user");
+            //clean up
+            bridge.logout();
+            bridge.login("recipt1", "Recipt1");
+
+        }
+
+        [TestMethod]
+        public void storeReciptTestGood()
+        {
+            bridge.logout();
+            bridge.login("recipt2", "Recipt2");
+
+            Reciept reciept = bridge.GetRecieptByStore("StoreRecipt1", "recipt1", new System.DateTime());
+            Assert.AreEqual(reciept.userName, "recipt1", "the username is wrong");
+            Assert.AreEqual(reciept.store.name, "StoreRecipt1", "the store name is wrong");
+            Assert.AreEqual(reciept.basket.products.Count, 2, "saved wrong product list");
+            //clean up
+            bridge.logout();
+            bridge.login("recipt1", "Recipt1");
+
+        }
+
+
+        [TestMethod]
+        public void storeReciptTestBad()
+        {
+            bridge.logout();
+            bridge.login("recipt2", "Recipt2");
+
+
+            Reciept reciept = bridge.GetRecieptByUser("StoreRecipt2", "recipt1", new System.DateTime());
+            Assert.IsNull(reciept, "managed to get recpit from wrong store");
+            //clean up
+            bridge.logout();
+            bridge.login("recipt1", "Recipt1");
+
+        }
+
     }
 
 }
