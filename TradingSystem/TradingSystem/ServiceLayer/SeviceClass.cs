@@ -21,12 +21,22 @@ namespace TradingSystem.ServiceLayer
             user = temp;
             return true;
         }
-
-
         public static bool register(string username, string password)
         {
             return UserServices.register(username, password);
         }
+        public static bool logout()
+        {
+            if (UserServices.onlineUsers.Contains(user.getUserName()))
+            {
+                user = null;
+                return true;
+            }  
+            else
+                return false;
+        }
+
+        
 
     }
 }

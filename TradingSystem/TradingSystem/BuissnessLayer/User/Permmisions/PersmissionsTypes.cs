@@ -8,6 +8,14 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
     public enum PersmissionsTypes
     {
-        ADDPRODCT
+        AddProduct,
+        EditManagerPermissions,
+        EditProduct,
+        GetInfoEmployees,
+        GetPurchaseHistory,
+        HireNewStoreManager,
+        HireNewStoreOwner,
+        RemoveManager,
+        RemoveProduct
     }
 }

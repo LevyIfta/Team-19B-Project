@@ -32,5 +32,7 @@ namespace TradingSystem.DataLayer
         {
             return this.userName == userName;
         }
+
+        public string getUsername() { return this.userName; }
     }
 }
