@@ -8,14 +8,14 @@ namespace TradingSystem.ServiceLayer
 {
     class SLstore
     {
-        public string storeName;
-        public ICollection<SLreceipt> receipts;
-        public ICollection<SLproduct> inventory;
-        public ICollection<string> ownerNames;
-        public ICollection<string> managerNames;
-        public string founderName;
+        public string storeName { get; }
+        public ICollection<SLreceipt> receipts { get; }
+        public ICollection<SLproduct> inventory { get; }
+        public ICollection<string> ownerNames { get; }
+        public ICollection<string> managerNames { get; }
+        public string founderName { get; }
 
-        private const int PARAMETER_COUNT = 6;
+        public const int PARAMETER_COUNT = 6;
 
         public SLstore(string storeName, ICollection<SLreceipt> receipts, ICollection<SLproduct> inventory, ICollection<string> ownerNames, ICollection<string> managerNames, string founderName)
         {

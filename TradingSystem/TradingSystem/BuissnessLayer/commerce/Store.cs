@@ -146,7 +146,7 @@ namespace TradingSystem.BuissnessLayer
                                 }
 
                                 //StoresData.getStore(this.name).removeProducts(product.toDataObject());
-                                product.info.LeaveFeedback(basket.owner.userName, "");
+                                product.info.roomForFeedback(basket.owner.userName);
                             }
 
                         // clean the basket

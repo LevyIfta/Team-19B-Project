@@ -149,6 +149,15 @@ namespace TradingSystem.BuissnessLayer
             return getUser(username).getInfoEmployees(storeName);
         }
 
+        public static bool leaveFeedback (string username, string storeName, string productName, string manufacturer, string comment)
+        {
+            return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.leaveFeedback(username, comment);
+        }
+
+        public static Dictionary<string, string> getAllFeedbacks (string storeName, string productName, string manufacturer)
+        {
+            return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.getAllFeedbacks();
+        }
 
 
         // users
