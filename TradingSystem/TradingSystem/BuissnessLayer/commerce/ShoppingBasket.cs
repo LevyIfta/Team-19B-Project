@@ -19,7 +19,7 @@ namespace TradingSystem.BuissnessLayer
             this.products = new LinkedList<Product>();
             this.owner = owner;
         }
-        public ShoppingBasket(ShoppingBasketData shoppingBasketData)
+        public ShoppingBasket(BasketData shoppingBasketData)
         {
             this.products = (ICollection<Product>)shoppingBasketData.products.Select(p => new Product(p));
             this.store = new Store(shoppingBasketData.store);
@@ -87,34 +87,31 @@ namespace TradingSystem.BuissnessLayer
         public bool Equals(ShoppingBasket obj)
         {
             bool isMatch = false;
-            foreach(Product product1 in basket.products)
+            foreach(Product product1 in obj.products)
             {
                 foreach(Product product2 in products)
                 {
-                    if (!isMatch && product1.Equals(product2))
+                    if (product1.Equals(product2))
                     {
                         isMatch = true;
-                        product2.addAmount(product1.amount);
-                        products.Remove(product1);
-                        products.Add(product2);
                     }
                 }
                 if (!isMatch)
                 {
-                    products.Add(product1);
+                    return false;
                 }
-                isMatch = false;
             }
+            return true;
         }
         
-        public ShoppingBasketData toDataObject()
+        public BasketData toDataObject()
         {
-            return new ShoppingBasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
+            return new BasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
         }
 
         public void update()
         {
-            ShoppingBasketDAL.update(this.toDataObject());
+            BasketDAL.update(this.toDataObject());
         }
     }
 }

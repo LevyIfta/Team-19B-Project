@@ -50,5 +50,18 @@ namespace TradingSystem.DataLayer
         {
             return ProductsInReceipts.Remove(productsInReceiptData);
         }
+
+        public static ICollection<ProductsInReceiptData> getProducts(int receiptID)
+        {
+            ICollection<ProductsInReceiptData> products = new List<ProductsInReceiptData>();
+            foreach (ProductsInReceiptData productsInReceiptData in ProductsInReceipts)
+            {
+                if (productsInReceiptData.receiptID == receiptID)
+                {
+                    products.Add(productsInReceiptData);
+                }
+            }
+            return products;
+        }
     }
 }

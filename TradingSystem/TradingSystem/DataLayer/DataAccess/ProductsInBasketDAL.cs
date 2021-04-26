@@ -50,5 +50,18 @@ namespace TradingSystem.DataLayer
         {
             return ProductsInBaskets.Remove(productsInBasketData);
         }
+
+        public static ICollection<ProductsInBasketData> getProductIDs(string storeName, string useName)
+        {
+            ICollection<ProductsInBasketData> products = new List<ProductsInBasketData>();
+            foreach (ProductsInBasketData productsInBasketData in ProductsInBaskets)
+            {
+                if (productsInBasketData.storeName == storeName && productsInBasketData.useName == useName)
+                {
+                    products.Add(productsInBasketData);
+                }
+            }
+            return products;
+        }
     }
 }
