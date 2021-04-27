@@ -9,17 +9,22 @@ namespace TradingSystem.ServiceLayer
 {
     public class UserController
     {
-        public static aUser user = null;
+        public static aUser user = new Guest();
         public static bool login(string username, string password)
         {
-            return BuissnessLayer.UserServices.login(username, password);
+            aUser logged = BuissnessLayer.UserServices.login(username, password);
+            if ((logged == null))
+                return false;
+            user = logged;
+            return true;
+
         }
 
         public static bool logout()
         {
-            if(user != null && UserServices.onlineUsers.Contains(user.getUserName()))
+            if(!user.getUserName().Equals("guest") && UserServices.onlineUsers.Contains(user.getUserName()))
             {
-                user = null;
+                user = new Guest();
                 return UserServices.logout(user.getUserName());
             }
             return false;

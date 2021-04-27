@@ -15,7 +15,7 @@ namespace TradingSystem.BuissnessLayer
         public override string getUserName()
         {
             guestCount++;
-            return "guest" + guestCount;
+            return "guest";//+ guestCount;
         }
         public override object todo(PersmissionsTypes func, object[] args)
         {

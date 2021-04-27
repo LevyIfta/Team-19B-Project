@@ -68,8 +68,8 @@ namespace Tests
             Assert.IsFalse(bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "managed to register with bad username");
             Assert.IsFalse(bridge.isUserExist("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "invlid user saved (bad username)");
 
-            Assert.IsFalse(bridge.register("okUser", "badpassword^^^#@#$%^"), "managed to register with bad password");
-            Assert.IsFalse(bridge.isUserExist("okUser", "badpassword^^^#@#$%^"), "invlid user saved (bad password)");
+            Assert.IsFalse(bridge.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "managed to register with bad password");
+            Assert.IsFalse(bridge.isUserExist("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "invlid user saved (bad password)");
 
 
             Assert.IsFalse(bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "managed to register with bad username and bad password");

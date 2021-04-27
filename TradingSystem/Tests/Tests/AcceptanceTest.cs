@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Bridge;
 using TradingSystem.BuissnessLayer;
-
+using TradingSystem.BuissnessLayer.commerce;
+/*
 namespace Tests
 {
     [TestClass]
@@ -86,3 +87,4 @@ namespace Tests
     }
 
 }
+*/

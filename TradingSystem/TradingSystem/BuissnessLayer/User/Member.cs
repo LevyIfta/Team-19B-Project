@@ -17,6 +17,23 @@ namespace TradingSystem.BuissnessLayer
         public ICollection<Receipt> reciepts { get; set; }
         public basePermmision permmisions { get; set; }
 
+
+        public Member(string username, string password) : base()
+        {
+            this.userName = username;
+            this.password = password;
+            this.reciepts = new List<Receipt>();
+            this.myCart = new ShoppingCart(this);
+        }
+
+        public Member(MemberData member)
+        {
+            this.userName = member.userName;
+            this.password = member.password;
+            this.reciepts = new List<Receipt>();
+            this.myCart = new ShoppingCart(this);
+        }
+
         public override string getUserName()
         {
             return userName;

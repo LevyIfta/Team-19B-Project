@@ -51,6 +51,11 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
+        public int getProductAmount(string storeName, string productName)
+        {
+            throw new NotImplementedException();
+        }
+
         public Receipt GetRecieptByStore(string storeName, string userName, DateTime Date)
         {
             if (realBridge != null)
@@ -83,6 +88,11 @@ namespace Tests.Bridge
         {
             if (realBridge != null)
                 return this.realBridge.getUserName();
+            throw new NotImplementedException();
+        }
+
+        public bool isItemAtStore(string storeName, string productName)
+        {
             throw new NotImplementedException();
         }
 
@@ -160,6 +170,11 @@ namespace Tests.Bridge
             {
                 this.realBridge.purchase();
             }
+            throw new NotImplementedException();
+        }
+
+        public void purchase(ShoppingBasket basket)
+        {
             throw new NotImplementedException();
         }
 

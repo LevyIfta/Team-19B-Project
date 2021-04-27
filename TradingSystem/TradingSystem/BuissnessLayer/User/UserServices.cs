@@ -11,19 +11,30 @@ namespace TradingSystem.BuissnessLayer
 {
     public static class UserServices
     {
-        public static ICollection<aUser> Users { get; private set; }
+        public static ICollection<aUser> Users { get; private set; } = new List<aUser>();
         public static ICollection<string> onlineUsers { get; private set; } = new List<string>();
         public static ICollection<string> offlineUsers { get; private set; } = new List<string>() ;
 
         // menu functions
         // users
-        public static bool login(string username, string password)
+        public static aUser login(string username, string password)
         {
             if (onlineUsers.Contains(username))
-                return false;
+                return null;
+            bool ans = false;
+            foreach (aUser user1 in Users)
+            {
+                if (user1.getUserName().Equals(username))
+                    ans = true;
+            }
+            if (!ans && !MemberDAL.isExist(username))
+                return null;
+           
+            if (!MemberDAL.getMember(username).password.Equals(password) )
+                return null;
             onlineUsers.Add(username);
             offlineUsers.Remove(username);
-            return true;
+            return  new Member(MemberDAL.getMember(username)); 
         }
         public static bool logout(string username)
         {
@@ -41,7 +52,7 @@ namespace TradingSystem.BuissnessLayer
             if (!checkPasswordValid(password))
                 return false;
             MemberDAL.addMember(new MemberData(username, password));
-            //Users.Add(); /////////////////////////////////
+            Users.Add(new Member(username, password));
             offlineUsers.Add(username);
             return true;
         }
@@ -232,7 +243,7 @@ namespace TradingSystem.BuissnessLayer
 
         private static bool checkUserNameValid(string username)
         {
-            if (username == null || username.Length < 4 || containNumber(username))
+            if (username == null || username.Length < 4 /*|| containNumber(username)*/ || username.Length > 15)
             {
                 return false;
             }

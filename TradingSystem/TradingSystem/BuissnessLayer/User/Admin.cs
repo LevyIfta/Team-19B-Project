@@ -4,11 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.User
 {
     public class Admin : Member
     {
+        public Admin(MemberData member) : base(member)
+        {
+        }
+
+        public Admin(string username, string password) : base(username, password)
+        {
+        }
+
         public ICollection<Receipt> getAllReceipts()
         {
             ICollection<Receipt> list = new List<Receipt>();

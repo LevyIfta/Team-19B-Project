@@ -38,6 +38,11 @@ namespace Tests.Bridge
             return 0;
         }
 
+        public int getProductAmount(string storeName, string productName)
+        {
+            throw new NotImplementedException();
+        }
+
         public Receipt GetRecieptByStore(string storeName, string userName, DateTime Date)
         {
             foreach (Receipt item in getStore(storeName).receipts)
@@ -72,6 +77,11 @@ namespace Tests.Bridge
         {
             return getUser().getUserName();
            
+        }
+
+        public bool isItemAtStore(string storeName, string productName)
+        {
+            throw new NotImplementedException();
         }
 
         public bool isProductExist(string productName, string manufacturar)
@@ -122,10 +132,15 @@ namespace Tests.Bridge
 
         public bool openStore(string storeName)
         {
-            return Stores.addStore(storeName, (Member)getUser());
+            return UserController.EstablishStore(getUserName(), storeName);
         }
 
         public void purchase()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void purchase(ShoppingBasket basket)
         {
             throw new NotImplementedException();
         }
