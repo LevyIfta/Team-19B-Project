@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TradingSystem.BuissnessLayer;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.ServiceLayer;
 
 namespace Tests.Bridge
 {
@@ -24,13 +25,17 @@ namespace Tests.Bridge
 
         public ShoppingBasket getBasket(string storeName)
         {
-            throw new NotImplementedException();
+            return UserServices.getBasket(getUserName(), storeName);
         }
 
         public int getProductAmount(ShoppingBasket basket, ProductInfo info)
         {
-            //non
-            throw new NotImplementedException();
+            foreach (Product item in basket.products)
+            {
+                if (item.info.Equals(info))
+                    return item.amount;
+            }
+            return 0;
         }
 
         public Receipt GetRecieptByStore(string storeName, string userName, DateTime Date)
@@ -45,7 +50,12 @@ namespace Tests.Bridge
 
         public Receipt GetRecieptByUser(string storeName, string userName, DateTime Date)
         {
-            throw new NotImplementedException();
+            foreach (Receipt receipt in UserServices.getAllReceiptsHistory(userName, storeName) )
+            {
+                if (receipt.date.Equals(Date))
+                    return receipt;
+            }
+            return null;
         }
 
         public Store getStore(string storeName)
@@ -55,12 +65,14 @@ namespace Tests.Bridge
 
         public aUser getUser()
         {
+            //non
             throw new NotImplementedException();
         }
 
         public string getUserName()
         {
-            throw new NotImplementedException();
+            return getUser().getUserName();
+           
         }
 
         public bool isProductExist(string productName)
@@ -75,32 +87,38 @@ namespace Tests.Bridge
 
         public bool isUserExist(string username, string password)
         {
-            throw new NotImplementedException();
+            aUser user = UserServices.getUser(username);
+            if (user == null)
+                return false;
+            if (user is Guest)
+                return false;
+            return ((Member)user).password.Equals(password);
         }
 
         public bool isUserLoggedIn(string username)
         {
-            throw new NotImplementedException();
+            return UserServices.isUserOnline(username);
         }
 
         public bool isUserUnique(string username)
         {
-            throw new NotImplementedException();
+            return UserServices.getUser(username) == null;
         }
 
         public bool login(string userName, string password)
         {
-            throw new NotImplementedException();
+            return UserController.login(userName, password);
         }
 
         public void logout()
         {
-            throw new NotImplementedException();
+            UserController.logout();
+         
         }
 
         public int onlineUserCount()
         {
-            throw new NotImplementedException();
+            return UserServices.countOnlineUsers();
         }
 
         public bool openStore(string storeName)
@@ -115,7 +133,7 @@ namespace Tests.Bridge
 
         public bool register(string userName, string password)
         {
-            throw new NotImplementedException();
+            return UserController.register(userName, password);
         }
 
         public void removeInventory(ShoppingBasket basket)

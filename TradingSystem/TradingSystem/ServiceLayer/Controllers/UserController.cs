@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-    class UserController
+    public class UserController
     {
         public static bool login(string username, string password)
         {
