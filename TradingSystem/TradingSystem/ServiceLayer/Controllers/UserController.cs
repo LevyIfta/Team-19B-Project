@@ -12,6 +12,7 @@ namespace TradingSystem.ServiceLayer
         public static aUser user = new Guest();
         public static bool login(string username, string password)
         {
+            DirAppend.AddToLogger("user " + username + " login", Result.Log);
             aUser logged = BuissnessLayer.UserServices.login(username, password);
             if ((logged == null))
                 return false;
@@ -24,9 +25,11 @@ namespace TradingSystem.ServiceLayer
         {
             if(!user.getUserName().Equals("guest") && UserServices.onlineUsers.Contains(user.getUserName()))
             {
+                DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
                 user = new Guest();
                 return UserServices.logout(user.getUserName());
             }
+            DirAppend.AddToLogger("There was a failed login attempt", Result.Warnning);
             return false;
         }
         public static aUser getCorrentOnlineUser()
@@ -35,7 +38,12 @@ namespace TradingSystem.ServiceLayer
         }
         public static bool register(string userName, string password)
         {
-            return BuissnessLayer.UserServices.register(userName, password);
+            if (BuissnessLayer.UserServices.register(userName, password))
+            {
+                DirAppend.AddToLogger("new user register", Result.Log);
+                return true;
+            }
+            return false;
         }
 
         public static bool saveProduct(string userName, string storeName, string manufacturer, int amount, Dictionary<string, int> product)
@@ -83,6 +91,7 @@ namespace TradingSystem.ServiceLayer
             {                
                 receipts.Add(ProductController.makeReceipt(receipt));
             }
+            DirAppend.AddToLogger("user " + user.getUserName() + " just purchase his cart", Result.Log);
             return receipts;
         }
 
