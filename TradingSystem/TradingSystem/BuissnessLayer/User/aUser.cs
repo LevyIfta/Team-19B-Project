@@ -74,9 +74,9 @@ namespace TradingSystem.BuissnessLayer
             return myCart.checkPrice();
 
         }
-        public Dictionary<Store, Product> browseProducts(string productName)
+        public Dictionary<Store, Product> browseProducts(string productName, string manufacturer)
         {
-            return Stores.searchProduct(productName);
+            return Stores.searchProduct(productName, manufacturer);
         }
         public Dictionary<Store, Product> browseProducts(string productName, string category, string manufacturer, double minPrice, double maxPrice)
         {
@@ -127,6 +127,10 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
         public virtual ICollection<aUser> getInfoEmployees(string storeName)
+        {
+            return null;
+        }
+        public virtual Dictionary<string, ICollection<string>> GetAllPermissions()
         {
             return null;
         }

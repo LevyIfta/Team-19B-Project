@@ -171,7 +171,46 @@ namespace TradingSystem.BuissnessLayer
             object[] args = new object[] { storeName };
             return (ICollection<aUser>)todo(PersmissionsTypes.GetInfoEmployees, args);
         }
-
+        public ICollection<PersmissionsTypes> GetPermissions(string storeName)
+        {
+            if (permmisions == null || permmisions.next == null)
+                return null;
+            ICollection<PersmissionsTypes> ans = new List<PersmissionsTypes>();
+            aPermission corrent = permmisions;
+            while (corrent.next != null)
+            {
+                corrent = corrent.next;
+                if (corrent.store.Equals(storeName))
+                    ans.Add(corrent.who());
+            }
+            return ans;
+        }
+        public override Dictionary<string, ICollection<string>> GetAllPermissions()
+        {
+            aPermission corrent = permmisions;
+            string storeName = "";
+            bool first = true;
+            Dictionary<string, ICollection<string>> ans = new Dictionary<string, ICollection<string>>();
+            ICollection<string> list = new List<string>();
+            while (corrent.next != null)
+            {
+                corrent = corrent.next;
+                if (corrent.store.Equals(""))
+                    storeName = corrent.store;
+                if (!(storeName.Equals(corrent.store)))
+                {
+                    if(first)
+                    {
+                        ans[storeName] = list;
+                        first = false;
+                        storeName = corrent.store;
+                    }
+                    list = new List<string>();
+                }
+                list.Add(aPermission.who(corrent.who()));
+            }
+            return ans;
+        }
         public static Member dataToObject(MemberData data)
         {
             if(data == null)

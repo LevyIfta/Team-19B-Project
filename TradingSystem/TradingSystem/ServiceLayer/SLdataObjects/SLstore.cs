@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-    class SLstore
+    public class SLstore
     {
         public string storeName { get; }
         public ICollection<SLreceipt> receipts { get; }

@@ -35,6 +35,13 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.amount = product.amount;
             this.price = product.price;
         }
+        public Product(ProductsInBasketData productsInBasketData)
+        {
+            ProductInfoData productInfoData = ProductInfoDAL.getProductInfo(productsInBasketData.productID);
+            this.info = ProductInfo.getProductInfo(productInfoData.productName, productInfoData.category, productInfoData.manufacturer);
+            this.amount = productsInBasketData.amount;
+            this.price = 0;
+        }
 
         public ProductData toDataObject(string storeName)
         {

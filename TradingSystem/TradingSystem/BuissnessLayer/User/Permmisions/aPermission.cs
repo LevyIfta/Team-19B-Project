@@ -48,33 +48,53 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
             {
                 case PersmissionsTypes.AddProduct:
                     return new addProduct(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.EditManagerPermissions:
                     return new editManagerPermissions(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.EditProduct:
                     return new editProduct(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.GetInfoEmployees:
                     return new getInfoEmployees(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.GetPurchaseHistory:
                     return new getPurchaseHistory(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.HireNewStoreManager:
                     return new hireNewStoreManager(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.HireNewStoreOwner:
                     return new hireNewStoreOwner(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.RemoveManager:
                     return new removeManager(storeName, userSponser);
-                    break;
                 case PersmissionsTypes.RemoveProduct:
                     return new removeProduct(storeName, userSponser);
-                    break;
             }
             return null;
+        }
+        public static string who(PersmissionsTypes type)
+        {
+            switch (type)
+            {
+                case PersmissionsTypes.AddProduct:
+                    return "AddProduct";
+                case PersmissionsTypes.EditManagerPermissions:
+                    return "EditManagerPermissions";
+                case PersmissionsTypes.EditProduct:
+                    return "EditProduct";
+                case PersmissionsTypes.GetInfoEmployees:
+                    return "GetInfoEmployees";
+                case PersmissionsTypes.GetPurchaseHistory:
+                    return "GetPurchaseHistory";
+                case PersmissionsTypes.HireNewStoreManager:
+                    return "HireNewStoreManager";
+                case PersmissionsTypes.HireNewStoreOwner:
+                    return "HireNewStoreOwner";
+                case PersmissionsTypes.RemoveManager:
+                    return "RemoveManager";
+                case PersmissionsTypes.RemoveProduct:
+                    return "RemoveProduct";
+            }
+            return "";
+        }
+        public virtual PersmissionsTypes who()
+        {
+            return PersmissionsTypes.AddProduct;
         }
     }
 }

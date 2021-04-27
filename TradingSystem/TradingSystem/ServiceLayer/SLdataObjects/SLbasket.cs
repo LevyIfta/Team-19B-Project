@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-    class SLbasket
+    public class SLbasket
     {
         public ICollection<SLproduct> products { get; }
         public string storeName { get; }

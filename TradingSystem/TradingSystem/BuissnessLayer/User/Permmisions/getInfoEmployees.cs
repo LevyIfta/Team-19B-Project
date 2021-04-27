@@ -14,15 +14,19 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         { // string storeName
             if (func == PersmissionsTypes.GetInfoEmployees && this.store.Equals((string)args[0]))
             {
-                ICollection<aUser> list1 = Stores.searchStore((string)args[0]).getOwners();
-                ICollection<aUser> list2 = Stores.searchStore((string)args[0]).getManagers();
-                foreach (aUser temp in list2)
+                ICollection<Member> list1 = Stores.searchStore((string)args[0]).getOwners();
+                ICollection<Member> list2 = Stores.searchStore((string)args[0]).getManagers();
+                foreach (Member temp in list2)
                 {
                     list1.Add(temp);
                 }
                 return list1;
             }
             return base.todo(func, args);
+        }
+        public override PersmissionsTypes who()
+        {
+            return PersmissionsTypes.GetInfoEmployees;
         }
     }
 }

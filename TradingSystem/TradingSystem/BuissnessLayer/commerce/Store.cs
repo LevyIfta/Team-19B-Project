@@ -10,7 +10,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 {
     public class Store
     {
-        public string storeName { get; private set; }
+        public string name { get; private set; }
 
         public ICollection<Receipt> receipts { get; private set; }
         public ICollection<Product> inventory { get; private set; }
@@ -22,7 +22,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public Store(string name, Member founder)
         {
-            this.storeName = name;
+            this.name = name;
             this.founder = founder;
 
             this.receipts = new List<Receipt>();
@@ -33,7 +33,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public Store(StoreData storeData)
         {
-            this.storeName = storeData.storeName;
+            this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder);
         }
 
@@ -49,7 +49,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // the product doesn't exist, add it
                 this.inventory.Add(new Product(productInfo, 0, 0));
                 // update DB
-                ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.storeName));
+                ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
             }
             return productInfo;
         }
@@ -63,7 +63,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                     {
                         this.inventory.Remove(product);
                         // update DB
-                        product.remove(this.storeName);
+                        product.remove(this.name);
                     }
             }
         }
@@ -76,7 +76,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 {
                     p.price = newPrice;
                     // update DB
-                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.storeName));
+                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                     return true;
                 }
             // the product doesn't exist, can't edit price
@@ -96,7 +96,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                     {
                         p.amount += amount;
                         // update DB
-                        ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.storeName));
+                        ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                         return true;
                     }
             }
@@ -141,11 +141,13 @@ namespace TradingSystem.BuissnessLayer.commerce
                                 {
                                     localProduct.amount -= product.amount;
                                     // update amount in DB
-                                    localProduct.update(this.storeName);
+                                    localProduct.update(this.name);
                                     // add the products to receipt
                                     receipt.products.Add(localProduct.info.id, product.amount);
+                                    // 
+                                    receipt.actualProducts.Add(new Product(localProduct));
                                     // leave feedback
-                                    product.info.LeaveFeedback(basket.owner.userName, "");
+                                    product.info.leaveFeedback(basket.owner.userName, "");
                                     // update feedback in DB
                                     FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
                                 }
@@ -190,26 +192,26 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.owners.Add(owner);
             // update DB
-            HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.storeName));
+            HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
         }
         public void addManager(Member manager)
         {
             this.managers.Add(manager);
             // update DB
-            HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.storeName));
+            HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.name));
         }
         public void removeOwner(Member owner)
         {
             this.owners.Remove(owner);
             // update DB
-            HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.storeName));
+            HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
         }
 
         public void removeManager(Member manager)
         {
             this.managers.Remove(manager);
             // update DB
-            HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.storeName));
+            HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.name));
         }
 
         public bool isManager(string member)
@@ -227,16 +229,24 @@ namespace TradingSystem.BuissnessLayer.commerce
                     return true;
             return false;
         }
+        public ICollection<Member> getManagers()
+        {
+            return managers;
+        }
+        public ICollection<Member> getOwners()
+        {
+            return owners;
+        }
 
 
 
         public override bool Equals(object obj)
         {
-            return (obj is Store) & ((Store)obj).storeName.Equals(storeName);
+            return (obj is Store) & ((Store)obj).name.Equals(name);
         }
         public bool Equals(Store obj)
         {
-            return obj.storeName.Equals(storeName);
+            return obj.name.Equals(name);
         }
 
         public ICollection<Receipt> getAllReceipts()
@@ -244,10 +254,10 @@ namespace TradingSystem.BuissnessLayer.commerce
             return this.receipts;
         }
 
-        public Product searchProduct(string productName)
+        public Product searchProduct(string productName, string manufacturer)
         {
             foreach (Product product in this.inventory)
-                if (product.info.name.Equals(productName))
+                if (product.info.name.Equals(productName) && product.info.manufacturer.Equals(manufacturer))
                     return new Product(product);
             return null; // no results
         }
@@ -280,10 +290,17 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             StoreDAL.remove(this.toDataObject());
         }
+        public Product getProduct(int productId)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.id == productId)
+                    return product;
+            return null;
+        }
 
         public StoreData toDataObject()
         {
-            return new StoreData(this.storeName, this.founder.userName);
+            return new StoreData(this.name, this.founder.userName);
         }
     }
 }

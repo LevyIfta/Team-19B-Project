@@ -23,5 +23,9 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
             }
             return base.todo(func, args);
         }// only - getInfoEmployees
+        public override PersmissionsTypes who()
+        {
+            return PersmissionsTypes.HireNewStoreManager;
+        }
     }
 }
