@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class ProductsInReceiptDAL
     {
-        private static List<ProductsInReceiptData> ProductsInReceipts;
+        private static List<ProductsInReceiptData> ProductsInReceipts = new List<ProductsInReceiptData>();
 
         public static ProductsInReceiptData getProductsInBasket(int receiptID, int productID)
         {

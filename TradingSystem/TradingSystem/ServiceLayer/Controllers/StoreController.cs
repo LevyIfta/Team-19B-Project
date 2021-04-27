@@ -32,7 +32,7 @@ namespace TradingSystem.ServiceLayer
 
         public static SLstore searchStore(string storeName)
         {
-            BuissnessLayer.commerce.Store store = BuissnessLayer.Stores.searchStore(storeName);
+            BuissnessLayer.commerce.Store store = BuissnessLayer.commerce.Stores.searchStore(storeName);
             return StoreController.makeSLstore(store);
         }
 

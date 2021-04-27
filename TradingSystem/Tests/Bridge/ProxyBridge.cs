@@ -86,10 +86,10 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool isProductExist(string productName)
+        public bool isProductExist(string productName, string manufacturar)
         {
             if (realBridge != null)
-                return this.realBridge.isProductExist(productName);
+                return this.realBridge.isProductExist(productName, manufacturar);
             throw new NotImplementedException();
         }
 

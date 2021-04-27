@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class BasketDAL
     {
-        private static List<BasketData> shoppingBaskets;
+        private static List<BasketData> shoppingBaskets = new List<BasketData>();
 
         public static BasketData getShoppingBasket(string storeName, string useName)
         {

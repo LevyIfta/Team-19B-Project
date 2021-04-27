@@ -21,7 +21,7 @@ namespace Tests.Bridge
         int onlineUserCount();
         bool openStore(string storeName);
         bool isStoreExist(string storeName);
-        bool isProductExist(string productName);
+        bool isProductExist(string productName, string manufacturar);
         ShoppingBasket getBasket(string storeName);
         int getProductAmount(ShoppingBasket basket, ProductInfo info);
         void addProducts(ShoppingBasket basket); //to cart

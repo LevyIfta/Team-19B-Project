@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class MemberDAL
     {
-        private static List<MemberData> members;
+        private static List<MemberData> members = new List<MemberData>();
 
         /// <summary>
         /// retrive a user from the db

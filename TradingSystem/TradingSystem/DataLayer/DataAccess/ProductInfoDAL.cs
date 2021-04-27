@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     public static class ProductInfoDAL
     {
-        private static List<ProductInfoData> ProductInfos;
+        private static List<ProductInfoData> ProductInfos = new List<ProductInfoData>();
 
         public static ProductInfoData getProductInfo(int productID)
         {

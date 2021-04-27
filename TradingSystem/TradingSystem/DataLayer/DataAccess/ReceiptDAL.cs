@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class ReceiptDAL
     {
-        private static List<ReceiptData> receipts;
+        private static List<ReceiptData> receipts = new List<ReceiptData>();
 
         public static ReceiptData getReceipt(int receiptID)
         {

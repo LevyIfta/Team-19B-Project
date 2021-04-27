@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class StoreDAL
     {
-        private static List<StoreData> stores;
+        private static List<StoreData> stores = new List<StoreData>();
 
         public static StoreData getStore(string storeName)
         {

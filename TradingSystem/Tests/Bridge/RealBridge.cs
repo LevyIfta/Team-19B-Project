@@ -19,7 +19,7 @@ namespace Tests.Bridge
 
         public void addProducts(ShoppingBasket basket)
         {
-            ShoppingBasket userBasket = getBasket(basket.store.storeName);
+            ShoppingBasket userBasket = getBasket(basket.store.name);
             userBasket.margeBasket(basket);
         }
 
@@ -65,8 +65,7 @@ namespace Tests.Bridge
 
         public aUser getUser()
         {
-            //non
-            throw new NotImplementedException();
+            return UserController.getCorrentOnlineUser();
         }
 
         public string getUserName()
@@ -75,9 +74,9 @@ namespace Tests.Bridge
            
         }
 
-        public bool isProductExist(string productName)
+        public bool isProductExist(string productName, string manufacturar)
         {
-            return Stores.searchProduct(productName).Count != 0;
+            return Stores.searchProduct(productName, manufacturar).Count != 0;
         }
 
         public bool isStoreExist(string storeName)

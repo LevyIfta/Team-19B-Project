@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class FeedbackDAL
     {
-        private static List<FeedbackData> feedbacks;
+        private static List<FeedbackData> feedbacks = new List<FeedbackData>();
 
         public static FeedbackData getFeedback(string productName, string manufacturer, string userName)
         {

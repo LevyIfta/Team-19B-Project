@@ -9,7 +9,7 @@ namespace Tests.Bridge
 
         public static Bridge getBridge()
         {
-            return new ProxyBridge(null);
+            return new ProxyBridge(new RealBridge());
         }
     }
 }
