@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer;
 
 namespace TradingSystem.ServiceLayer
 {
-    class UserController
+    public class UserController
     {
+        public static aUser user = null;
         public static bool login(string username, string password)
         {
             return BuissnessLayer.UserServices.login(username, password);
@@ -15,9 +17,17 @@ namespace TradingSystem.ServiceLayer
 
         public static bool logout()
         {
-            return BuissnessLayer.UserServices.logout();
+            if(user != null && UserServices.onlineUsers.Contains(user.getUserName()))
+            {
+                user = null;
+                return UserServices.logout(user.getUserName());
+            }
+            return false;
         }
-
+        public static aUser getCorrentOnlineUser()
+        {
+            return user;
+        }
         public static bool register(string userName, string password)
         {
             return BuissnessLayer.UserServices.register(userName, password);
@@ -35,15 +45,15 @@ namespace TradingSystem.ServiceLayer
 
         public static SLbasket getBasket(string username, string storeName)
         {
-            BuissnessLayer.ShoppingBasket basket = BuissnessLayer.UserServices.getBasket(username, storeName);
+            BuissnessLayer.commerce.ShoppingBasket basket = BuissnessLayer.UserServices.getBasket(username, storeName);
             return ProductController.makeSLbasket(basket);
         }
 
         public static ICollection<SLbasket> getCart(string username)
         {
-            BuissnessLayer.ShoppingCart cart = BuissnessLayer.UserServices.getCart(username);
+            BuissnessLayer.commerce.ShoppingCart cart = BuissnessLayer.UserServices.getCart(username);
             ICollection<SLbasket> SLcart = new List<SLbasket>();
-            foreach (BuissnessLayer.ShoppingBasket basket in cart.baskets)
+            foreach (BuissnessLayer.commerce.ShoppingBasket basket in cart.baskets)
             {
                 SLcart.Add(ProductController.makeSLbasket(basket));
             }
@@ -62,20 +72,20 @@ namespace TradingSystem.ServiceLayer
 
         public static ICollection<SLreceipt> purchase(string username, string paymentName)
         {
-            ICollection<BuissnessLayer.Receipt> temp = BuissnessLayer.UserServices.purchase(username, paymentName);
+            ICollection<BuissnessLayer.commerce.Receipt> temp = BuissnessLayer.UserServices.purchase(username, paymentName);
             ICollection<SLreceipt> receipts = new List<SLreceipt>();
-            foreach (BuissnessLayer.Receipt receipt in temp)
+            foreach (BuissnessLayer.commerce.Receipt receipt in temp)
             {                
                 receipts.Add(ProductController.makeReceipt(receipt));
             }
             return receipts;
         }
 
-        public static Dictionary<string,SLproduct> browseProducts(string username, string productName)
+        public static Dictionary<string,SLproduct> browseProducts(string username, string productName, string manufacturer)
         {
-            Dictionary<BuissnessLayer.Store, BuissnessLayer.Product> catallog = BuissnessLayer.UserServices.browseProducts(username, productName);
+            Dictionary<BuissnessLayer.commerce.Store, BuissnessLayer.commerce.Product> catallog = BuissnessLayer.UserServices.browseProducts(username, productName, manufacturer);
             Dictionary<string, SLproduct> SLcatalog = new Dictionary<string, SLproduct>();
-            foreach (BuissnessLayer.Store store in catallog.Keys)
+            foreach (BuissnessLayer.commerce.Store store in catallog.Keys)
             {
                 SLcatalog.Add(store.name, ProductController.makeSLproduct(catallog[store]));
             }
@@ -84,9 +94,9 @@ namespace TradingSystem.ServiceLayer
 
         public static Dictionary<string, SLproduct> browseProducts(string username, string productName, string category, string manufacturer, double minPrice, double maxPrice)
         {
-            Dictionary<BuissnessLayer.Store, BuissnessLayer.Product> catallog = BuissnessLayer.UserServices.browseProducts(username, productName, category, manufacturer, minPrice, maxPrice);
+            Dictionary<BuissnessLayer.commerce.Store, BuissnessLayer.commerce.Product> catallog = BuissnessLayer.UserServices.browseProducts(username, productName, category, manufacturer, minPrice, maxPrice);
             Dictionary<string, SLproduct> SLcatalog = new Dictionary<string, SLproduct>();
-            foreach (BuissnessLayer.Store store in catallog.Keys)
+            foreach (BuissnessLayer.commerce.Store store in catallog.Keys)
             {
                 SLcatalog.Add(store.name, ProductController.makeSLproduct(catallog[store]));
             }
@@ -100,19 +110,19 @@ namespace TradingSystem.ServiceLayer
 
         public static ICollection<SLreceipt> getReceiptsHistory(string username, string storeName)
         {
-            ICollection<BuissnessLayer.Receipt> receipts = BuissnessLayer.UserServices.getReceiptsHistory(username, storeName);
+            ICollection<BuissnessLayer.commerce.Receipt> receipts = BuissnessLayer.UserServices.getReceiptsHistory(username, storeName);
             return ProductController.makeSLreceiptCollection(receipts);
         }
 
         public static ICollection<SLreceipt> getAllReceiptsHistory(string username, string storeName)
         {
-            ICollection<BuissnessLayer.Receipt> receipts = BuissnessLayer.UserServices.getAllReceiptsHistory(username, storeName);
+            ICollection<BuissnessLayer.commerce.Receipt> receipts = BuissnessLayer.UserServices.getAllReceiptsHistory(username, storeName);
             return ProductController.makeSLreceiptCollection(receipts);
         }
 
         public static ICollection<SLreceipt> getAllMyReceiptHistory(string username)
         {
-            ICollection<BuissnessLayer.Receipt> receipts = BuissnessLayer.UserServices.getAllMyReceiptHistory(username);
+            ICollection<BuissnessLayer.commerce.Receipt> receipts = BuissnessLayer.UserServices.getAllMyReceiptHistory(username);
             return ProductController.makeSLreceiptCollection(receipts);
         }
 
@@ -154,7 +164,7 @@ namespace TradingSystem.ServiceLayer
 
         public static bool hireNewStoreOwner(string username, string storeName, string userToHire, List<string> Permissions)
         {
-            return BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions)
+            return BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions);
         }
 
         public static bool removeManager(string username, string storeName, string userToHire)
@@ -176,9 +186,8 @@ namespace TradingSystem.ServiceLayer
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {
             Object[] parameters = new Object[SLbasket.PARAMETER_COUNT];
-            parameters[0] = ProductController.makeSLproductCollection(basket.products);
-            parameters[1] = basket.store.name;
-            parameters[2] = basket.owner.userName;
+            parameters[0] = employee.getUserName();
+            parameters[1] = employee.GetAllPermissions();
             return (new SLemployee(parameters));
         }
     }

@@ -6,26 +6,24 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-    class SLproduct
+    public class SLproduct
     {
         public int amount { get; }
         public double price { get; }
         public string productName { get; }
         public string category { get; }
         public string manufacturer { get; }
-        public int productID { get; }       //TODO
         public Dictionary<string, string> feedbacks { get; }
 
         public const int PARAMETER_COUNT = 7;
 
-        public SLproduct(int amount, double price, string productName, string category, string manufacturer, int productID, Dictionary<string, string> feedbacks)
+        public SLproduct(int amount, double price, string productName, string category, string manufacturer, Dictionary<string, string> feedbacks)
         {
             this.amount = amount;
             this.price = price;
             this.productName = productName;
             this.category = category;
             this.manufacturer = manufacturer;
-            this.productID = productID;
             this.feedbacks = feedbacks;
         }
 
@@ -36,8 +34,7 @@ namespace TradingSystem.ServiceLayer
             this.productName = (string)parameters[2];
             this.category = (string)parameters[3];
             this.manufacturer = (string)parameters[4];
-            this.productID = (int)parameters[5];
-            this.feedbacks = (Dictionary<string, string>)parameters[6];
+            this.feedbacks = (Dictionary<string, string>)parameters[5];
         }
 
     }

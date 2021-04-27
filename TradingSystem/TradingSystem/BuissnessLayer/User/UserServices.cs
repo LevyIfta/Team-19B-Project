@@ -21,9 +21,17 @@ namespace TradingSystem.BuissnessLayer
         {
             if (onlineUsers.Contains(username))
                 return false;
-            //MemberData data = MemberDAL.getUser(username, password);
+            onlineUsers.Add(username);
+            offlineUsers.Remove(username);
             return true;
         }
+        public static bool logout(string username)
+        {
+            onlineUsers.Remove(username);
+            offlineUsers.Add(username);
+            return true;
+        }
+
         public static bool register(string username, string password)
         {
             if (MemberDAL.isExist(username))
@@ -33,6 +41,8 @@ namespace TradingSystem.BuissnessLayer
             if (!checkPasswordValid(password))
                 return false;
             MemberDAL.addMember(new MemberData(username, password));
+            //Users.Add(); /////////////////////////////////
+            offlineUsers.Add(username);
             return true;
         }
         // aUser
@@ -92,9 +102,9 @@ namespace TradingSystem.BuissnessLayer
             }
             return getUser(username).purchase(p);
         }
-        public static Dictionary<Store, Product> browseProducts(string username, string productName)
+        public static Dictionary<Store, Product> browseProducts(string username, string productName, string manufacturer)
         {
-            return getUser(username).browseProducts(productName);
+            return getUser(username).browseProducts(productName, manufacturer);
         }
         public static Dictionary<Store, Product> browseProducts(string username, string productName, string category, string manufacturer, double minPrice, double maxPrice)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TradingSystem.ServiceLayer
 {
     //TODO
-    class SLemployee
+    public class SLemployee
     {
         public string userName;
         public Dictionary<string, ICollection<string>> permissionsPerStore; //per store?

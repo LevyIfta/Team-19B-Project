@@ -21,8 +21,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         }
         public ShoppingBasket(BasketData shoppingBasketData)
         {
-            this.products = BasketDAL.getProductIDs(shoppingBasketData.storeName, shoppingBasketData.useName).Select(products => new Product(products));
-            this.store = new Store(StoreDAL.getStore(shoppingBasketData.storeName));
+            this.products = (ICollection<Product>)ProductsInBasketDAL.getProductIDs(shoppingBasketData.storeName, shoppingBasketData.useName).Select(products => new Product(products)); this.store = new Store(StoreDAL.getStore(shoppingBasketData.storeName));
             this.owner = (Member)UserServices.getUser(shoppingBasketData.useName);
         }
         public double checkPrice()
@@ -106,17 +105,17 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         }
         
-        public BasketData toDataObject()
+        /*public BasketData toDataObject()
         {
-            return new BasketData((ICollection<ProductData>)this.products.Select(p => p.toDataObject()), store.toDataObject(), Member.objectToData(this.owner));
-        }
-
+            return new BasketData(store.name, owner.getUserName());
+        }// (ICollection<ProductData>)this.products.Select(p => p.toDataObject()),
+        */
         public void update()
         {
-            BasketDAL.update(new BasketData(this.store.storeName, this.owner.userName));
+            BasketDAL.update(new BasketData(this.store.name, this.owner.userName));
             // update products
             foreach (Product product in this.products)
-                ProductsInBasketDAL.update(new ProductsInBasketData(this.store.storeName, this.owner.userName, product.info.id, product.amount));
+                ProductsInBasketDAL.update(new ProductsInBasketData(this.store.name, this.owner.userName, product.info.id, product.amount));
 
         }
     }

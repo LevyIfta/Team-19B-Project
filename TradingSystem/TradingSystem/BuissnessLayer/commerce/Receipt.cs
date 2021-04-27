@@ -11,6 +11,7 @@ namespace TradingSystem.BuissnessLayer.commerce
     public class Receipt
     {
         public Dictionary<int, int> products { get; set; } // <product_id, amount>
+        public ICollection<Product> actualProducts { get; set; }
         public Store store { get; set; }
         public string username { get; set; }
         public double price { get; set; }
@@ -23,7 +24,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public ReceiptData toDataObject()
         {
-            return new ReceiptData(this.receiptId, this.store.storeName, this.username, this.price, this.date, this.discount, -1);
+            return new ReceiptData(this.receiptId, this.store.name, this.username, this.price, this.date, this.discount, -1);
         }
 
         public Receipt(ReceiptData receiptData)
@@ -56,5 +57,6 @@ namespace TradingSystem.BuissnessLayer.commerce
             foreach (int id in this.products.Keys)
                 ProductsInReceiptDAL.addProductsInBasket(new ProductsInReceiptData(this.receiptId, id, this.products[id]));
         }
+        public ICollection<Product> getProducts() { return this.actualProducts; }
     }
 }

@@ -43,11 +43,11 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public ProductInfoData toDataObject()
         {
-            return new ProductInfoData(this.name, this.category, this.manufacturer);
+            return new ProductInfoData(this.name, this.category, this.manufacturer, this.id);
         }
 
         override
-        public Boolean Equals(object other)
+        public bool Equals(object other)
         {
             return (other is ProductInfo && (this.name.Equals(((ProductInfo)other).name) & this.category.Equals(((ProductInfo)other).category) & this.manufacturer.Equals(((ProductInfo)other).manufacturer)));
         }
@@ -123,5 +123,13 @@ namespace TradingSystem.BuissnessLayer.commerce
             }
             return allFeedbacks;
         }
+        /*
+        public static string getProductName(int productId)
+        {
+            foreach (ProductInfo productInfo in productsInfo)
+                if (productInfo.id == productId)
+                    return productInfo.name;
+            return "";
+        }*/
     }
 }

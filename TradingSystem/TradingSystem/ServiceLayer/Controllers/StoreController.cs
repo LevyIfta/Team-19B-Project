@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-    class StoreController
+    public class StoreController
     {
-        public static SLstore makeSLstore(BuissnessLayer.Store store)
+        public static SLstore makeSLstore(BuissnessLayer.commerce.Store store)
         {
             Object[] parameters = new Object[SLstore.PARAMETER_COUNT];
             ICollection<string> ownerNames = new List<string>();
@@ -32,7 +32,7 @@ namespace TradingSystem.ServiceLayer
 
         public static SLstore searchStore(string storeName)
         {
-            BuissnessLayer.Store store = BuissnessLayer.Stores.searchStore(storeName);
+            BuissnessLayer.commerce.Store store = BuissnessLayer.Stores.searchStore(storeName);
             return StoreController.makeSLstore(store);
         }
 

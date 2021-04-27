@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -27,7 +28,7 @@ namespace TradingSystem.BuissnessLayer
         public static Store searchStore(string storeName)
         {
             foreach (Store store in stores)
-                if (store.storeName.Equals(storeName))
+                if (store.name.Equals(storeName))
                     return store;
             return null;
 
@@ -45,19 +46,19 @@ namespace TradingSystem.BuissnessLayer
             return stores;
         }
 
-        public static Dictionary<Store, Product> searchProduct(string productName)
+        public static Dictionary<Store, Product> searchProduct(string productName, string manufacturer)
         {
             Dictionary<Store, Product> result = new Dictionary<Store, Product>();
             foreach (Store store in stores)
-                if (store.searchProduct(productName) != null)
-                    result.Add(store, store.searchProduct(productName));
+                if (store.searchProduct(productName, manufacturer) != null)
+                    result.Add(store, store.searchProduct(productName, manufacturer));
             return result;
         }
         public static Dictionary<Store, Product> searchProduct(string productName, string category, string manufacturer, double minPrice, double maxPrice)
         {
             Dictionary<Store, Product> result = new Dictionary<Store, Product>();
             foreach (Store store in stores)
-                if (store.searchProduct(productName) != null)
+                if (store.searchProduct(productName, manufacturer) != null)
                     result.Add(store, store.searchProduct(productName, category, manufacturer, minPrice, maxPrice));
             return result;
         }

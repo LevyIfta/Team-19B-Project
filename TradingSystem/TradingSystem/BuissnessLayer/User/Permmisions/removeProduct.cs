@@ -19,5 +19,9 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
             }
             return base.todo(func, args);
         }
+        public override PersmissionsTypes who()
+        {
+            return PersmissionsTypes.RemoveProduct;
+        }
     }
 }

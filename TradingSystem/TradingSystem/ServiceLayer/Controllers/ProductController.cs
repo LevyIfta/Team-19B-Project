@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.ServiceLayer
 {
-    class ProductController
+    public class ProductController
     {
-        public static SLproduct makeSLproduct(BuissnessLayer.Product product)
+        public static SLproduct makeSLproduct(BuissnessLayer.commerce.Product product)
         {
             Object[] parameters = new Object[SLproduct.PARAMETER_COUNT];
             parameters[0] = product.amount;
@@ -16,22 +16,21 @@ namespace TradingSystem.ServiceLayer
             parameters[2] = product.info.name;
             parameters[3] = product.info.category;
             parameters[4] = product.info.manufacturer;
-            parameters[5] = product.id;         //TODO
-            parameters[6] = product.info.feedbacks;
+            parameters[5] = product.info.feedbacks;
             return (new SLproduct(parameters));
         }
 
-        public static ICollection<SLproduct> makeSLproductCollection(ICollection<BuissnessLayer.Product> products)
+        public static ICollection<SLproduct> makeSLproductCollection(ICollection<BuissnessLayer.commerce.Product> products)
         {
             ICollection<SLproduct> SLproducts = new List<SLproduct>();
-            foreach (BuissnessLayer.Product product in products)
+            foreach (BuissnessLayer.commerce.Product product in products)
             {
                 SLproducts.Add(ProductController.makeSLproduct(product));
             }
             return SLproducts;
         }
 
-        public static SLbasket makeSLbasket(BuissnessLayer.ShoppingBasket basket)
+        public static SLbasket makeSLbasket(BuissnessLayer.commerce.ShoppingBasket basket)
         {
             Object[] parameters = new Object[SLbasket.PARAMETER_COUNT];
             parameters[0] = ProductController.makeSLproductCollection(basket.products);
@@ -40,22 +39,21 @@ namespace TradingSystem.ServiceLayer
             return (new SLbasket(parameters));
         }
 
-        public static SLreceipt makeReceipt(BuissnessLayer.Receipt receipt)
+        public static SLreceipt makeReceipt(BuissnessLayer.commerce.Receipt receipt)
         {
             Object[] parameters = new Object[SLreceipt.PARAMETER_COUNT];
-            parameters[0] = ProductController.makeSLproductCollection(receipt.basket.products);
+            parameters[0] = ProductController.makeSLproductCollection(receipt.getProducts());
             parameters[1] = receipt.store.name;
             parameters[2] = receipt.username;
             parameters[3] = receipt.date;
             parameters[4] = receipt.price;
-            parameters[5] = receipt.id;
             return new SLreceipt(parameters);
         }
 
-        public static ICollection<SLreceipt> makeSLreceiptCollection(ICollection<BuissnessLayer.Receipt> receipts)
+        public static ICollection<SLreceipt> makeSLreceiptCollection(ICollection<BuissnessLayer.commerce.Receipt> receipts)
         {
             ICollection<SLreceipt> SLreceipts = new List<SLreceipt>();
-            foreach (BuissnessLayer.Receipt receipt in receipts)
+            foreach (BuissnessLayer.commerce.Receipt receipt in receipts)
             {
                 SLreceipts.Add(ProductController.makeReceipt(receipt));
             }
