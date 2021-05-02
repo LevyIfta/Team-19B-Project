@@ -126,53 +126,63 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // check for amounts validation
                 if (checkAmounts(products) & checkPolicies(basket))
                 {
-                    // calc the price
-                    double price = calcPrice(products);
-                    // request for payment
-                    if (paymentMethod.pay(price))
-                    {
-                        // create the receipt
-                        receipt = new Receipt();
-                        // the payment was successful
-                        foreach (Product product in products)
-                            foreach (Product localProduct in this.inventory)
-                            {
-                                if (localProduct.info.Equals(product.info))
-                                {
-                                    localProduct.amount -= product.amount;
-                                    // update amount in DB
-                                    localProduct.update(this.name);
-                                    // add the products to receipt
-                                    receipt.products.Add(localProduct.info.id, product.amount);
-                                    // 
-                                    receipt.actualProducts.Add(new Product(localProduct));
-                                    // leave feedback
-                                    product.info.leaveFeedback(basket.owner.userName, "");
-                                    // update feedback in DB
-                                    FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
-                                }
-                                //StoresData.getStore(this.name).removeProducts(product.toDataObject());
-                                product.info.roomForFeedback(basket.owner.userName);
-                            }
-
-                        // clean the basket
-                        basket.clean();
-                        // update basket in DB
-                        basket.update();
-                        // fill receipt fields
-                        receipt.store = this;
-                        receipt.discount = 0;
-                        receipt.date = DateTime.Now;
-                        receipt.price = price;
-                        // save the receipt
-                        this.receipts.Add(receipt);
-                        // add receipt to DB
-                        receipt.save();
-                    }
+                    validPurchase(basket, paymentMethod, receipt);
                 }
             }
 
             return receipt;
+        }
+
+        private void validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
+        {
+            // calc the price
+            double price = calcPrice(basket.products);
+            // request for payment
+            if (paymentMethod.pay(price))
+            {
+                // create the receipt
+                receipt = new Receipt();
+                // the payment was successful
+                foreach (Product product in basket.products)
+                    foreach (Product localProduct in this.inventory)
+                    {
+                        if (localProduct.info.Equals(product.info))
+                        {
+                            localProduct.amount -= product.amount;
+                            // update amount in DB
+                            localProduct.update(this.name);
+                            // add the products to receipt
+                            receipt.products.Add(localProduct.info.id, product.amount);
+                            // 
+                            receipt.actualProducts.Add(new Product(localProduct));
+                            // leave feedback
+                            product.info.leaveFeedback(basket.owner.userName, "");
+                            // update feedback in DB
+                            FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                        }
+                        //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                        product.info.roomForFeedback(basket.owner.userName);
+                    }
+
+                // clean the basket
+                basket.clean();
+                // update basket in DB
+                basket.update();
+                // fill receipt fields
+                fillReceipt(receipt, price);
+            }
+        }
+
+        private void fillReceipt(Receipt receipt, double price)
+        {
+            receipt.store = this;
+            receipt.discount = 0;
+            receipt.date = DateTime.Now;
+            receipt.price = price;
+            // save the receipt
+            this.receipts.Add(receipt);
+            // add receipt to DB
+            receipt.save();
         }
 
         private bool checkPolicies(ShoppingBasket basket)
