@@ -136,6 +136,7 @@
     <Compile Include="BuissnessLayer\commerce\ProductInfo.cs" />
     <Compile Include="BuissnessLayer\commerce\ShoppingCart.cs" />
     <Compile Include="BuissnessLayer\commerce\Store.cs" />
+    <Compile Include="BuissnessLayer\DirAppend.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\basePermmision.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\PersmissionsTypes.cs" />
     <Compile Include="MainWindow.xaml.cs">
