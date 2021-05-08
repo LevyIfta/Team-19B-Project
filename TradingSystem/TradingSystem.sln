@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28307.960
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingSystem", "TradingSystem\TradingSystem.csproj", "{553860D7-EAAF-410C-B033-8F3DB937157B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{D2BF5781-22FA-4A99-8B8D-C677636DE857}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{D2BF5781-22FA-4A99-8B8D-C677636DE857}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientProject", "ClientProject\ClientProject.csproj", "{D98DFFA2-F00C-4977-B23E-C3059B23095C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D2BF5781-22FA-4A99-8B8D-C677636DE857}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2BF5781-22FA-4A99-8B8D-C677636DE857}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2BF5781-22FA-4A99-8B8D-C677636DE857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D98DFFA2-F00C-4977-B23E-C3059B23095C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98DFFA2-F00C-4977-B23E-C3059B23095C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98DFFA2-F00C-4977-B23E-C3059B23095C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D98DFFA2-F00C-4977-B23E-C3059B23095C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

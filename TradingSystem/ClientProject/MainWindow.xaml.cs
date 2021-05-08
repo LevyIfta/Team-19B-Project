@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;   
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -14,32 +13,33 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TradingSystem
+namespace ClientProject
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Controller controller;
         public MainWindow()
         {
             InitializeComponent();
-            
-            new Thread(new ThreadStart( ServiceLayer.ServerConnectionManager.init)).Start();
+
+            controller = Controller.GetController();
+      
             Application.Current.Exit += new ExitEventHandler(disconnect);
 
-        }
-
-
-
-        public void dothedo(TradingSystem.ServiceLayer.DecodedMessge msg)
-        {
             
-            this.label2.Content = "" + msg.type + "  " + msg.name + "  " + msg.param_list.ToString();   
         }
+
         private void disconnect(object sender, ExitEventArgs args)
         {
-            ServiceLayer.ServerConnectionManager.disconnect();
+           controller.disconnect();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string k = controller.test();
         }
     }
 }
