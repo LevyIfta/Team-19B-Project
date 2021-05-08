@@ -26,6 +26,7 @@ namespace ClientProject
             InitializeComponent();
 
             controller = Controller.GetController();
+      
             Application.Current.Exit += new ExitEventHandler(disconnect);
 
             
@@ -34,6 +35,11 @@ namespace ClientProject
         private void disconnect(object sender, ExitEventArgs args)
         {
            controller.disconnect();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string k = controller.test();
         }
     }
 }

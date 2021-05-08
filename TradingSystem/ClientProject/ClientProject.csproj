@@ -56,6 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Connection\ConnectionManager.cs" />
+    <Compile Include="Connection\DecodedMessge.cs" />
+    <Compile Include="Connection\Decoder.cs" />
+    <Compile Include="Connection\Encoder.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="SLdataObjects\SLbasket.cs" />
     <Compile Include="SLdataObjects\SLemployee.cs" />

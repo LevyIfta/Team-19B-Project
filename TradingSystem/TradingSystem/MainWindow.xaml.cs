@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows;   
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -23,6 +24,22 @@ namespace TradingSystem
         public MainWindow()
         {
             InitializeComponent();
+            
+            new Thread(new ThreadStart( ServiceLayer.ServerConnectionManager.init)).Start();
+            Application.Current.Exit += new ExitEventHandler(disconnect);
+
+        }
+
+
+
+        public void dothedo(TradingSystem.ServiceLayer.DecodedMessge msg)
+        {
+            
+            this.label2.Content = "" + msg.type + "  " + msg.name + "  " + msg.param_list.ToString();   
+        }
+        private void disconnect(object sender, ExitEventArgs args)
+        {
+            ServiceLayer.ServerConnectionManager.disconnect();
         }
     }
 }

@@ -106,6 +106,10 @@
     <Compile Include="DataLayer\DataObjects\ReceiptData.cs" />
     <Compile Include="DataLayer\DataObjects\BasketData.cs" />
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
+    <Compile Include="ServiceLayer\Connection\ServerConnectionManager.cs" />
+    <Compile Include="ServiceLayer\Connection\DecodedMessge.cs" />
+    <Compile Include="ServiceLayer\Connection\Decoder.cs" />
+    <Compile Include="ServiceLayer\Connection\Encoder.cs" />
     <Compile Include="ServiceLayer\Controllers\ProductController.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLbasket.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLemployee.cs" />

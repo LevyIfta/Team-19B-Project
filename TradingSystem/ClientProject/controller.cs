@@ -30,5 +30,18 @@ namespace ClientProject
         }
 
 
+        public string test()
+        {
+            DecodedMessge msg = new DecodedMessge();    
+            msg.type = msgType.OBJ;
+            msg.name = "basket";
+            msg.param_list = new string[] { "item1", "item2", "item3", "item4"};
+
+            byte[] enc = Connection.Encoder.encode(msg);
+
+            Connection.ConnectionManager.sendMessage(enc);
+            return "blup";
+        }
+
     }
 }

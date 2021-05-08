@@ -13,12 +13,12 @@ namespace ClientProject.Connection
 
         public static readonly int EOT = 4;
 
-        private static int hostPort;
+        private static string hostAdress = "192.168.56.1";
         private static int serverPort = 8888; //default
-        public static long serveradress;
+        public static string serveradress= "192.168.56.1";
         public static IPEndPoint serverIP;
         private static NetworkStream stream;
-        private static TcpClient client;
+        private static Socket socket;
 
 
         static ConnectionManager()
@@ -34,12 +34,12 @@ namespace ClientProject.Connection
             try
             {
          
-                serverIP = new IPEndPoint(serveradress, serverPort);
-                client = new TcpClient(serverIP);
+                serverIP = new IPEndPoint(IPAddress.Parse(serveradress), serverPort);
+                socket = new Socket(IPAddress.Parse(hostAdress).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-
-                stream = client.GetStream();
-
+                socket.Connect(serverIP);
+                stream = new NetworkStream(socket);
+                
 
             }
             catch (ArgumentNullException e)
@@ -107,7 +107,7 @@ namespace ClientProject.Connection
         public static void disconnect()
         {
             stream.Close();
-            client.Close();
+            socket.Close();
         }
 
     }
