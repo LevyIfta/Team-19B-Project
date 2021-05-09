@@ -50,6 +50,14 @@ namespace TradingSystem.DataLayer
         {
             return products.Remove(productData);
         }
+        public static ICollection<ProductData> getStoreProducts(string storeName)
+        {
+            ICollection<ProductData> storeProducts = new LinkedList<ProductData>();
+            foreach (ProductData product in products)
+                if (product.storeName.Equals(storeName))
+                    storeProducts.Add(product);
+            return storeProducts;
+        }
 
     }
 }

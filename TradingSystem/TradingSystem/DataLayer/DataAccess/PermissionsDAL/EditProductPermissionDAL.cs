@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class EditProductPermissionDAL
     {
-        private static List<EditProductPermissionData> EditProductPermissions;
+        private static List<EditProductPermissionData> EditProductPermissions = new List<EditProductPermissionData>();
 
         public static EditProductPermissionData getEditProductPermission(string userName, string storeName)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TradingSystem.BuissnessLayer;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.ServiceLayer;
 
 namespace Tests.Bridge
 {
@@ -24,6 +25,15 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
+        public void saveProducts(string userName, string storeName, string manufacturer, Dictionary<string, int> product)
+        {
+            if (realBridge != null)
+            {
+                this.realBridge.saveProducts( userName,  storeName,  manufacturer,  product);
+                return;
+            }
+            throw new NotImplementedException();
+        }
         public void addProducts(ShoppingBasket basket)
         {
             if (realBridge != null)
@@ -51,8 +61,10 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public int getProductAmount(string storeName, string productName)
+        public double getProductAmount(string storeName, string productName, string manufacturer)
         {
+            if (realBridge != null)
+                return this.realBridge.getProductAmount(storeName, productName, manufacturer);
             throw new NotImplementedException();
         }
 
@@ -91,8 +103,10 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool isItemAtStore(string storeName, string productName)
+        public bool isItemAtStore(string storeName, string productName, string manufacturar)
         {
+            if (realBridge != null)
+                return this.realBridge.isItemAtStore(storeName, productName, manufacturar);
             throw new NotImplementedException();
         }
 
@@ -164,11 +178,11 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public void purchase()
+        public ICollection<SLreceipt> purchase(string paymentName)
         {
             if (realBridge != null)
             {
-                this.realBridge.purchase();
+                return this.realBridge.purchase(paymentName);
             }
             throw new NotImplementedException();
         }
@@ -201,6 +215,14 @@ namespace Tests.Bridge
             {
                 this.realBridge.removeProducts(basket);
                 return;
+            }
+            throw new NotImplementedException();
+        }
+        public double checkPrice(string username)
+        {
+            if (realBridge != null)
+            {
+                return this.realBridge.checkPrice(username);
             }
             throw new NotImplementedException();
         }

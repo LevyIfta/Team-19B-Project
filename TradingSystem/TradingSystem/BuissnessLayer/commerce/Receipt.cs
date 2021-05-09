@@ -34,6 +34,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.products = new Dictionary<int, int>();
             foreach (ProductsInReceiptData pInR in ProductsInReceiptDAL.getProducts(this.receiptId))
                 this.products.Add(pInR.productID, pInR.amount);
+            this.actualProducts = new LinkedList<Product>();
+            foreach (ProductsInReceiptData pInR in ProductsInReceiptDAL.getProducts(this.receiptId))
+                this.actualProducts.Add(new Product(ProductInfo.getProductInfo(pInR.productID), pInR.amount, 0));
             // get products and fill in this.products
             this.price = receiptData.price;
             this.date = receiptData.date;
@@ -41,6 +44,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public Receipt()
         {
+            this.actualProducts = new LinkedList<Product>();
             lock (idLocker)
             {
                 currentId++;

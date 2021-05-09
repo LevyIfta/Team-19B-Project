@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class AdminPermissionDAL
     {
-        private static List<AdminPermissionData> AdminPermissions;
+        private static List<AdminPermissionData> AdminPermissions = new List<AdminPermissionData>();
 
         public static AdminPermissionData getAdminPermission(string adminName)
         {

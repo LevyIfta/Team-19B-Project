@@ -13,10 +13,18 @@ namespace Tests.Bridge
         {
             foreach (Product item in basket.products)
             {
+                basket.store.addProduct(item.info.name, item.info.category, item.info.manufacturer);
+                basket.store.editPrice(item.info.name, item.info.manufacturer, item.price);
                 basket.store.supply(item.info.name, item.info.manufacturer, item.amount);
             }
         }
 
+        public void saveProducts(string userName, string storeName, string manufacturer, Dictionary<string, int> product)
+        {
+            //ShoppingBasket userBasket = getBasket(basket.store.name);
+            //userBasket.margeBasket(basket);
+            UserController.saveProduct( userName,  storeName,  manufacturer,  product);
+        }
         public void addProducts(ShoppingBasket basket)
         {
             ShoppingBasket userBasket = getBasket(basket.store.name);
@@ -38,9 +46,12 @@ namespace Tests.Bridge
             return 0;
         }
 
-        public int getProductAmount(string storeName, string productName)
+        public double getProductAmount(string storeName, string productName, string manufacturer)
         {
-            throw new NotImplementedException();
+            foreach (Product product in getStore(storeName).inventory)
+                if (product.info.name.Equals(productName) & product.info.manufacturer.Equals(manufacturer))
+                    return product.amount;
+            return -1;
         }
 
         public Receipt GetRecieptByStore(string storeName, string userName, DateTime Date)
@@ -79,9 +90,9 @@ namespace Tests.Bridge
            
         }
 
-        public bool isItemAtStore(string storeName, string productName)
+        public bool isItemAtStore(string storeName, string productName, string manufacturar)
         {
-            throw new NotImplementedException();
+            return Stores.searchStore(storeName).isProductExist(productName, manufacturar);
         }
 
         public bool isProductExist(string productName, string manufacturar)
@@ -91,7 +102,7 @@ namespace Tests.Bridge
 
         public bool isStoreExist(string storeName)
         {
-            return Stores.searchStore(storeName) == null;
+            return Stores.searchStore(storeName) != null;
         }
 
         public bool isUserExist(string username, string password)
@@ -135,9 +146,9 @@ namespace Tests.Bridge
             return UserController.EstablishStore(getUserName(), storeName);
         }
 
-        public void purchase()
+        public ICollection<SLreceipt> purchase(string paymentName)
         {
-            throw new NotImplementedException();
+            return UserController.purchase(getUserName(), paymentName);
         }
 
         public void purchase(ShoppingBasket basket)
@@ -148,6 +159,10 @@ namespace Tests.Bridge
         public bool register(string userName, string password)
         {
             return UserController.register(userName, password);
+        }
+        public double checkPrice(string username)
+        {
+            return UserController.checkPrice(username);
         }
 
         public void removeInventory(ShoppingBasket basket)

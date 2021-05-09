@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class GetInfoEmployeesPermissionDAL
     {
-        private static List<GetInfoEmployeesPermissionData> GetInfoEmployeesPermissions;
+        private static List<GetInfoEmployeesPermissionData> GetInfoEmployeesPermissions = new List<GetInfoEmployeesPermissionData>();
 
         public static GetInfoEmployeesPermissionData getGetInfoEmployeesPermission(string userName, string storeName)
         {

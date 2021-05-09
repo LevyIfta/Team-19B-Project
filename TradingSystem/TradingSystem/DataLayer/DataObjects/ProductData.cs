@@ -26,12 +26,12 @@ namespace TradingSystem.DataLayer
         //EQUALS
         public override bool Equals(object obj)
         {
-            return false;
+            return this.productID.Equals(((ProductData)obj).productID);
         }
 
-        public bool Equals(ProductData other)
+        public bool Equals(ProductData obj)
         {
-            return this.productID.Equals(other.productID) & this.amount.Equals(other.amount) & this.price.Equals(other.price);
+            return this.productID.Equals(obj.productID);
         }
     }
 }

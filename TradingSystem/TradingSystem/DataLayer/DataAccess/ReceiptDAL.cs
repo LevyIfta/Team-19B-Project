@@ -50,5 +50,13 @@ namespace TradingSystem.DataLayer
         {
             return receipts.Remove(receiptData);
         }
+        public static ICollection<ReceiptData> getStoreReceipts(string storeName)
+        {
+            ICollection<ReceiptData> storeReceipts = new LinkedList<ReceiptData>();
+            foreach (ReceiptData receipt in receipts)
+                if (receipt.storeName.Equals(storeName))
+                    storeReceipts.Add(receipt);
+            return storeReceipts;
+        }
     }
 }

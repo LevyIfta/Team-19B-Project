@@ -45,8 +45,9 @@ namespace TradingSystem.ServiceLayer
             parameters[0] = ProductController.makeSLproductCollection(receipt.getProducts());
             parameters[1] = receipt.store.name;
             parameters[2] = receipt.username;
-            parameters[3] = receipt.date;
-            parameters[4] = receipt.price;
+            parameters[3] = receipt.price;
+            parameters[4] = receipt.date;
+            parameters[5] = receipt.receiptId;
             return new SLreceipt(parameters);
         }
 

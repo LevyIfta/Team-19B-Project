@@ -109,9 +109,9 @@ namespace Tests
             bridge.login("basket1", "Basket1");
             bridge.openStore("basketStore1");
             bridge.openStore("basketStore2");
-            ProductInfo newInfo1 = new ProductInfo("item1", "cat", "man");
+            ProductInfo newInfo1 = ProductInfo.getProductInfo("item1", "cat", "man");
             prod1 = newInfo1;
-            ProductInfo newInfo2 = new ProductInfo("item2", "ca1", "man1");
+            ProductInfo newInfo2 =  ProductInfo.getProductInfo("item2", "ca1", "man1");
             prod2 = newInfo2;
 
             Product items1 = new Product(newInfo1, 2, 5), items2 = new Product(newInfo2, 2, 5);
@@ -135,9 +135,9 @@ namespace Tests
         public void saveProductTest()
         {
             //setup
-            ProductInfo newInfo3 = new ProductInfo("item3", "cat", "man");
+            ProductInfo newInfo3 =  ProductInfo.getProductInfo("item3", "cat", "man");
 
-            ProductInfo newInfo4 = new ProductInfo("item4", "cat", "man");
+            ProductInfo newInfo4 =  ProductInfo.getProductInfo("item4", "cat", "man");
 
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
 
@@ -207,9 +207,9 @@ namespace Tests
             bridge.register("store2", "Store2");
             bridge.login("store1", "Store1");
             bridge.openStore("Store1");
-            ProductInfo newInfo1 = new ProductInfo("item1", "cat", "man");
+            ProductInfo newInfo1 =  ProductInfo.getProductInfo("item1", "cat", "man");
           
-            ProductInfo newInfo2 = new ProductInfo("item2", "cat2", "man2");
+            ProductInfo newInfo2 =  ProductInfo.getProductInfo("item2", "cat2", "man2");
             
 
             prod1 = newInfo1;
@@ -265,9 +265,9 @@ namespace Tests
         public void addInventoryTest()
         {
             //setup
-            ProductInfo newInfo3 = new ProductInfo("item3", "cat", "manInv");
+            ProductInfo newInfo3 =  ProductInfo.getProductInfo("item3", "cat", "manInv");
 
-            ProductInfo newInfo4 = new ProductInfo("item4", "cat", "manInv");
+            ProductInfo newInfo4 =  ProductInfo.getProductInfo("item4", "cat", "manInv");
 
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
             Assert.IsFalse(bridge.isProductExist("item3", "manInv"), "new product alread exist");
@@ -388,9 +388,9 @@ namespace Tests
             bridge.login("recipt2", "Recipt2");
             bridge.openStore("StoreRecipt1");
             bridge.openStore("StoreRecipt2");
-            ProductInfo newInfo1 = new ProductInfo("item1", "cat", "man");
+            ProductInfo newInfo1 =  ProductInfo.getProductInfo("item1", "cat", "man");
 
-            ProductInfo newInfo2 = new ProductInfo("item2", "cat2", "man2");
+            ProductInfo newInfo2 =  ProductInfo.getProductInfo("item2", "cat2", "man2");
 
 
             prod1 = newInfo1;
@@ -410,7 +410,7 @@ namespace Tests
             bridge.logout();
             bridge.login("recipt1", "Recipt1");
             bridge.addProducts(basket);
-            bridge.purchase();
+            bridge.purchase("Credit");
 
 
         }

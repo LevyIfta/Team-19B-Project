@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class HireNewStoreManagerPermissionDAL
     {
-        private static List<HireNewStoreManagerPermissionData> HireNewStoreManagerPermissions;
+        private static List<HireNewStoreManagerPermissionData> HireNewStoreManagerPermissions = new List<HireNewStoreManagerPermissionData>();
 
         public static HireNewStoreManagerPermissionData getHireNewStoreManagerPermission(string userName, string storeName)
         {
@@ -49,6 +49,14 @@ namespace TradingSystem.DataLayer
         public static bool remove(HireNewStoreManagerPermissionData hireNewStoreManagerPermissionData)
         {
             return HireNewStoreManagerPermissions.Remove(hireNewStoreManagerPermissionData);
+        }
+        public static ICollection<HireNewStoreManagerPermissionData> getStoreManagers(string storeName)
+        {
+            ICollection<HireNewStoreManagerPermissionData> storeManagers = new LinkedList<HireNewStoreManagerPermissionData>();
+            foreach (HireNewStoreManagerPermissionData manager in HireNewStoreManagerPermissions)
+                if (manager.storeName.Equals(storeName))
+                    storeManagers.Add(manager);
+            return storeManagers;
         }
     }
 }

@@ -26,18 +26,20 @@ namespace Tests.Bridge
         ShoppingBasket getBasket(string storeName);
 
         int getProductAmount(ShoppingBasket basket, ProductInfo info);
-        int getProductAmount(string storeName, string productName);
-        void addProducts(ShoppingBasket basket); //to cart
+        double getProductAmount(string storeName, string productName, string manufacturer);
+        void saveProducts(string userName, string storeName, string manufacturer, Dictionary<string, int> product); //to cart
+        void addProducts(ShoppingBasket basket);
         void removeProducts(ShoppingBasket basket); //to cart
 
         void addInventory(ShoppingBasket basket); //to store
         void removeInventory(ShoppingBasket basket);
-        bool isItemAtStore(string storeName, string productName);
+        bool isItemAtStore(string storeName, string productName, string manufacturar);
         
         Store getStore(string storeName);
         Receipt GetRecieptByUser(string storeName, string userName, DateTime Date);
         Receipt GetRecieptByStore(string storeName, string userName, DateTime Date);
-        void purchase();
+        double checkPrice(string username);
+        ICollection<SLreceipt> purchase(string paymentName);
 
         void purchase(ShoppingBasket basket);
 

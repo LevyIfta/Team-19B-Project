@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +35,44 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder);
+            
+            // fill the collections
+            this.fillReceipts();
+            this.fillInventory();
+            this.fillOwners();
+            this.fillManagers();
+        }
+
+        private void fillReceipts()
+        {
+            this.receipts = new LinkedList<Receipt>();
+            ICollection<ReceiptData> receiptsData = ReceiptDAL.getStoreReceipts(this.name);
+            foreach (ReceiptData receipt in receiptsData)
+                this.receipts.Add(new Receipt(receipt));
+        }
+
+        private void fillInventory()
+        {
+            this.inventory = new LinkedList<Product>();
+            ICollection<ProductData> productsData = ProductDAL.getStoreProducts(this.name);
+            foreach (ProductData productData in productsData)
+                this.inventory.Add(new Product(productData));
+        }
+
+        private void fillManagers()
+        {
+            this.managers = new LinkedList<Member>();
+            ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
+            foreach (HireNewStoreManagerPermissionData manager in managersData)
+                this.managers.Add((Member)UserServices.getUser(manager.userName));
+        }
+
+        private void fillOwners()
+        {
+            this.owners = new LinkedList<Member>();
+            ICollection<HireNewStoreOwnerPermissionData> ownersData = HireNewStoreOwnerPermissionDAL.getStoreOwners(this.name);
+            foreach (HireNewStoreOwnerPermissionData owner in ownersData)
+                this.owners.Add((Member)UserServices.getUser(owner.userName));
         }
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
@@ -127,6 +165,9 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (checkAmounts(products) & checkPolicies(basket))
                 {
                     validPurchase(basket, paymentMethod, receipt);
+                    // update the origin store
+                    Stores.stores[this.name].inventory = this.inventory;
+                    Stores.stores[this.name].receipts = this.receipts;
                 }
             }
 
@@ -268,7 +309,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             foreach (Product product in this.inventory)
                 if (product.info.name.Equals(productName) && product.info.manufacturer.Equals(manufacturer))
-                    return new Product(product);
+                    return new Product(product); // clone so that the user cannot edit price/amout ...
             return null; // no results
         }
 
