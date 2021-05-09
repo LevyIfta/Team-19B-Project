@@ -24,7 +24,6 @@ namespace TradingSystem.ServiceLayer
         
         private static void act(DecodedMessge msg)
         {
-
             if (msg.type == msgType.FUNC)
             {
                 switch (msg.name)
@@ -128,6 +127,10 @@ namespace TradingSystem.ServiceLayer
                 list.Add(pre);
             }
             return list;
+            
+            System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(new Action (()=> {
+                ((MainWindow)Application.Current.MainWindow).dothedo(msg);
+            }));
         }
 
         private static void threadsMain(object socketPar)

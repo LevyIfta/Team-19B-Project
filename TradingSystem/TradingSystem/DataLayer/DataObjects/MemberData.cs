@@ -11,12 +11,23 @@ namespace TradingSystem.DataLayer
         //FIELDS
         public string userName { get; set; }
         public string password { get; set; }
+        public double age { get; set; }
+        public string gender { get; set; }
 
         //CONSTRUCTORS
         public MemberData(string userName, string password)
         {
             this.userName = userName;
             this.password = password;
+            this.age = -1;
+            this.gender = "nun";
+        }
+        public MemberData(string userName, string password, double age, string gender)
+        {
+            this.userName = userName;
+            this.password = password;
+            this.age = age;
+            this.gender = gender;
         }
 
         //EQUALS

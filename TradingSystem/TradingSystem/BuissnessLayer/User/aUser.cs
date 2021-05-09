@@ -20,8 +20,16 @@ namespace TradingSystem.BuissnessLayer
             return myCart;
         }
         public abstract string getUserName();
+        public virtual double getAge()
+        {
+            return -1;
+        }
+        public virtual string getGender()
+        {
+            return "nun";
+        }
 
-        
+
         public virtual object todo(PersmissionsTypes func, object[] args)
         {
             return null;
@@ -137,6 +145,10 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
         public virtual bool removeManager(string storeName, string username)
+        {
+            return false;
+        }
+        public virtual bool removeOwner(string storeName, string username)
         {
             return false;
         }

@@ -67,6 +67,7 @@
     <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreManager.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\hireNewStoreOwner.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\removeManager.cs" />
+    <Compile Include="BuissnessLayer\User\Permmisions\removeOwner.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\removeProduct.cs" />
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
     <Compile Include="DataLayer\DataAccess\BasketDAL.cs" />
@@ -111,6 +112,10 @@
     <Compile Include="DataLayer\DataObjects\ReceiptData.cs" />
     <Compile Include="DataLayer\DataObjects\BasketData.cs" />
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
+    <Compile Include="ServiceLayer\Connection\ServerConnectionManager.cs" />
+    <Compile Include="ServiceLayer\Connection\DecodedMessge.cs" />
+    <Compile Include="ServiceLayer\Connection\Decoder.cs" />
+    <Compile Include="ServiceLayer\Connection\Encoder.cs" />
     <Compile Include="ServiceLayer\Controllers\ProductController.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLbasket.cs" />
     <Compile Include="ServiceLayer\SLdataObjects\SLemployee.cs" />
@@ -141,6 +146,7 @@
     <Compile Include="BuissnessLayer\commerce\ProductInfo.cs" />
     <Compile Include="BuissnessLayer\commerce\ShoppingCart.cs" />
     <Compile Include="BuissnessLayer\commerce\Store.cs" />
+    <Compile Include="BuissnessLayer\DirAppend.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\basePermmision.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\PersmissionsTypes.cs" />
     <Compile Include="MainWindow.xaml.cs">

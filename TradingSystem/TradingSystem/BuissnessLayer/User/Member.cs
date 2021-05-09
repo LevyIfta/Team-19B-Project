@@ -13,6 +13,8 @@ namespace TradingSystem.BuissnessLayer
     {
         //public string userName { get; set; }
         public string password { get; set; }
+        public double age { get; set; }
+        public string gender { get; set; }
 
         public ICollection<Receipt> reciepts { get; set; }
         public basePermmision permmisions { get; set; }
@@ -22,6 +24,17 @@ namespace TradingSystem.BuissnessLayer
         {
             this.userName = username;
             this.password = password;
+            this.age = -1;
+            this.gender = "nun";
+            this.reciepts = new List<Receipt>();
+            this.myCart = new ShoppingCart(this);
+        }
+        public Member(string username, string password, double age, string gender) : base()
+        {
+            this.userName = username;
+            this.password = password;
+            this.age = age;
+            this.gender = gender;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
         }
@@ -37,6 +50,14 @@ namespace TradingSystem.BuissnessLayer
         public override string getUserName()
         {
             return userName;
+        }
+        public override double getAge()
+        {
+            return age;
+        }
+        public override string getGender()
+        {
+            return gender;
         }
 
         override
@@ -179,6 +200,11 @@ namespace TradingSystem.BuissnessLayer
             return (bool)todo(PersmissionsTypes.HireNewStoreOwner, args);
         }
         public override bool removeManager(string storeName, string username)
+        {
+            object[] args = new object[] { storeName, username, this.userName };
+            return (bool)todo(PersmissionsTypes.RemoveManager, args);
+        }
+        public override bool removeOwner(string storeName, string username)
         {
             object[] args = new object[] { storeName, username, this.userName };
             return (bool)todo(PersmissionsTypes.RemoveManager, args);

@@ -342,6 +342,36 @@ namespace Tests
 
         }
 
+        [TestMethod]
+        public void parallelPurchase()
+        {
+            // establish a new store
+            bridge.openStore("Ali Shop");
+            Store aliShop = bridge.getStore("Ali Shop");
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 20);
+            // register twice and login from two different users
+            UserServices.register("Ali", "123");
+            UserServices.register("Bader", "456");
+            // login
+            aUser user1 = UserServices.login("Ali", "123");
+            aUser user2 = UserServices.login("Bader", "456");
+            // try to buy more than 20 bamba in total
+            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
+            user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
+            // purchase
+            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
+            ICollection<Receipt> receipts2 = user2.purchase(new CreditCard());
+            
+            Assert.IsTrue((receipts1.Count > 0 & receipts2.Count == 0) | (receipts2.Count > 0 & receipts1.Count == 0));
+            // check for amount
+            Assert.IsTrue(aliShop.searchProduct("BAmba", "Osem").amount == 8);
+        }
+
     }
 
     [TestClass]

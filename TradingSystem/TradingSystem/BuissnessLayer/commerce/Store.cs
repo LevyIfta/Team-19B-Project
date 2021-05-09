@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +24,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = name;
             this.founder = founder;
+
             this.receipts = new List<Receipt>();
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
@@ -34,7 +35,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder);
-
+            
             // fill the collections
             this.fillReceipts();
             this.fillInventory();
@@ -120,7 +121,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return false;
         }
 
-        
+
         public bool supply(string name, string manufacturer, int amount)
         {
             if (amount <= 0)
@@ -163,13 +164,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // check for amounts validation
                 if (checkAmounts(products) & checkPolicies(basket))
                 {
-<<<<<<< Updated upstream
-                    // calc the price
-                    double price = calcPrice(products);
-                    // request for payment
-                    if (paymentMethod.pay(price))
-=======
-                    receipt = validPurchase(basket, paymentMethod, receipt);
+                    validPurchase(basket, paymentMethod, receipt);
                     // update the origin store
                     Stores.stores[this.name].inventory = this.inventory;
                     Stores.stores[this.name].receipts = this.receipts;
@@ -179,7 +174,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return receipt;
         }
 
-        private Receipt validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
+        private void validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
         {
             // calc the price
             double price = calcPrice(basket.products);
@@ -191,64 +186,35 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // the payment was successful
                 foreach (Product product in basket.products)
                     foreach (Product localProduct in this.inventory)
->>>>>>> Stashed changes
                     {
-                        // create the receipt
-                        receipt = new Receipt();
-                        // the payment was successful
-                        foreach (Product product in products)
-                            foreach (Product localProduct in this.inventory)
-                            {
-                                if (localProduct.info.Equals(product.info))
-                                {
-                                    localProduct.amount -= product.amount;
-                                    // update amount in DB
-                                    localProduct.update(this.name);
-                                    // add the products to receipt
-                                    receipt.products.Add(localProduct.info.id, product.amount);
-                                    // 
-                                    receipt.actualProducts.Add(new Product(localProduct));
-                                    // leave feedback
-                                    product.info.leaveFeedback(basket.owner.userName, "");
-                                    // update feedback in DB
-                                    FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
-                                }
-                                //StoresData.getStore(this.name).removeProducts(product.toDataObject());
-                                product.info.roomForFeedback(basket.owner.userName);
-                            }
-
-                        // clean the basket
-                        basket.clean();
-                        // update basket in DB
-                        basket.update();
-                        // fill receipt fields
-                        receipt.store = this;
-                        receipt.discount = 0;
-                        receipt.date = DateTime.Now;
-                        receipt.price = price;
-                        // save the receipt
-                        this.receipts.Add(receipt);
-                        // add receipt to DB
-                        receipt.save();
+                        if (localProduct.info.Equals(product.info))
+                        {
+                            localProduct.amount -= product.amount;
+                            // update amount in DB
+                            localProduct.update(this.name);
+                            // add the products to receipt
+                            receipt.products.Add(localProduct.info.id, product.amount);
+                            // 
+                            receipt.actualProducts.Add(new Product(localProduct));
+                            // leave feedback
+                            product.info.leaveFeedback(basket.owner.userName, "");
+                            // update feedback in DB
+                            FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                        }
+                        //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                        product.info.roomForFeedback(basket.owner.userName);
                     }
-<<<<<<< Updated upstream
-                }
-            }
-
-=======
 
                 // clean the basket
                 basket.clean();
                 // update basket in DB
                 basket.update();
                 // fill receipt fields
-                receipt = fillReceipt(receipt, price);
-                receipt.username = basket.owner.userName;
+                fillReceipt(receipt, price);
             }
-            return receipt;
         }
 
-        private Receipt fillReceipt(Receipt receipt, double price)
+        private void fillReceipt(Receipt receipt, double price)
         {
             receipt.store = this;
             receipt.discount = 0;
@@ -258,8 +224,6 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.receipts.Add(receipt);
             // add receipt to DB
             receipt.save();
->>>>>>> Stashed changes
-            return receipt;
         }
 
         private bool checkPolicies(ShoppingBasket basket)
@@ -345,7 +309,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             foreach (Product product in this.inventory)
                 if (product.info.name.Equals(productName) && product.info.manufacturer.Equals(manufacturer))
-                    return new Product(product);
+                    return new Product(product); // clone so that the user cannot edit price/amout ...
             return null; // no results
         }
 
@@ -364,6 +328,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                     return new Product(product);
             return null; // no results
         }
+
         public bool isProductExist(string name, string manufacturer)
         {
             foreach (Product product in this.inventory)
