@@ -26,10 +26,13 @@ namespace TradingSystem.ServiceLayer
         {
             if(!user.getUserName().Equals("guest") && UserServices.onlineUsers.Contains(user.getUserName()))
             {
-         //       DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
-                user = new Guest();
-         //       DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
-                return UserServices.logout(user.getUserName());
+                //       DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
+                //       DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
+                if (UserServices.logout(user.getUserName()))
+                {
+                    user = new Guest();
+                    return true;
+                }
             }
         //    DirAppend.AddToLogger("There was a failed login attempt", Result.Warnning);
             return false;

@@ -164,7 +164,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // check for amounts validation
                 if (checkAmounts(products) & checkPolicies(basket))
                 {
-                    validPurchase(basket, paymentMethod, receipt);
+                    receipt = validPurchase(basket, paymentMethod, receipt);
                     // update the origin store
                     Stores.stores[this.name].inventory = this.inventory;
                     Stores.stores[this.name].receipts = this.receipts;
@@ -174,7 +174,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return receipt;
         }
 
-        private void validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
+        private Receipt validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
         {
             // calc the price
             double price = calcPrice(basket.products);
@@ -210,11 +210,12 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // update basket in DB
                 basket.update();
                 // fill receipt fields
-                fillReceipt(receipt, price);
+                receipt = fillReceipt(receipt, price);
             }
+            return receipt;
         }
 
-        private void fillReceipt(Receipt receipt, double price)
+        private Receipt fillReceipt(Receipt receipt, double price)
         {
             receipt.store = this;
             receipt.discount = 0;
@@ -224,6 +225,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.receipts.Add(receipt);
             // add receipt to DB
             receipt.save();
+            return receipt;
         }
 
         private bool checkPolicies(ShoppingBasket basket)
