@@ -68,7 +68,9 @@ namespace TradingSystem.BuissnessLayer
         override
         public bool EstablishStore(string storeName)
         {
-            Stores.addStore(storeName, this);
+            if (!Stores.addStore(storeName, this))
+                return false;
+            
             permmisions = new basePermmision("", null);
             aPermission temp1 = new addProduct(storeName, null);
             aPermission temp2 = new editManagerPermissions(storeName, null);
