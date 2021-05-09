@@ -63,6 +63,7 @@ namespace TradingSystem.BuissnessLayer
             foreach (string pName in product.Keys)
             {
                 Product p1 = Stores.searchStore(storeName).searchProduct(pName, manufacturer);
+                p1.amount = product[pName];
                 basket.addProduct(p1);
             }
             return getUser(username).saveProduct(basket);
@@ -145,7 +146,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return getUser(username).removeProduct(storeName, productName, manufacturer);
         }
-        public static bool editProduct(string username, string storeName, int productName, double price, string manufacturer)
+        public static bool editProduct(string username, string storeName, string productName, double price, string manufacturer)
         {
             return getUser(username).editProduct(storeName, productName, price, manufacturer);
         }

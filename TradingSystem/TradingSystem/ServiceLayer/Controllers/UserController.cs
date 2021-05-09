@@ -9,6 +9,7 @@ namespace TradingSystem.ServiceLayer
 {
     public class UserController
     {
+        [ThreadStatic]
         public static aUser user = new Guest();
         public static bool login(string username, string password)
         {
@@ -25,9 +26,15 @@ namespace TradingSystem.ServiceLayer
         {
             if(!user.getUserName().Equals("guest") && UserServices.onlineUsers.Contains(user.getUserName()))
             {
+<<<<<<< Updated upstream
                 DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
                 user = new Guest();
+=======
+         //       DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
+                
+>>>>>>> Stashed changes
                 return UserServices.logout(user.getUserName());
+                user = new Guest();
             }
             DirAppend.AddToLogger("There was a failed login attempt", Result.Warnning);
             return false;
@@ -46,7 +53,7 @@ namespace TradingSystem.ServiceLayer
             return false;
         }
 
-        public static bool saveProduct(string userName, string storeName, string manufacturer, int amount, Dictionary<string, int> product)
+        public static bool saveProduct(string userName, string storeName, string manufacturer, Dictionary<string, int> product)
         {
             return BuissnessLayer.UserServices.saveProduct(userName, storeName, manufacturer, product);
         }
@@ -87,6 +94,10 @@ namespace TradingSystem.ServiceLayer
         {
             ICollection<BuissnessLayer.commerce.Receipt> temp = BuissnessLayer.UserServices.purchase(username, paymentName);
             ICollection<SLreceipt> receipts = new List<SLreceipt>();
+            if(temp == null)
+            {
+                return null;
+            }
             foreach (BuissnessLayer.commerce.Receipt receipt in temp)
             {                
                 receipts.Add(ProductController.makeReceipt(receipt));
@@ -161,7 +172,7 @@ namespace TradingSystem.ServiceLayer
             return BuissnessLayer.UserServices.removeProduct(username, storeName, productName, manufacturer);
         }
 
-        public static bool editProduct(string username, string storeName, int productName, double price, string manufacturer)
+        public static bool editProduct(string username, string storeName, string productName, double price, string manufacturer)
         {
             return BuissnessLayer.UserServices.editProduct(username, storeName, productName, price, manufacturer);
         }

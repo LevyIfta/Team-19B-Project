@@ -11,7 +11,7 @@ namespace TradingSystem.BuissnessLayer
 {
     public class Member : aUser
     {
-        public string userName { get; set; }
+        //public string userName { get; set; }
         public string password { get; set; }
 
         public ICollection<Receipt> reciepts { get; set; }
@@ -73,7 +73,7 @@ namespace TradingSystem.BuissnessLayer
         public override ICollection<Receipt> purchase(PaymentMethod payment)
         {
             ICollection<Receipt> list = new List<Receipt>();
-            foreach (ShoppingBasket basket in myCart.baskets)
+            foreach (ShoppingBasket basket in getMyCart().baskets)
             {
                 Receipt receipt = basket.store.executePurchase(basket, payment);
                 if (receipt == null)
@@ -143,7 +143,7 @@ namespace TradingSystem.BuissnessLayer
             object[] args = new object[] { storeName, productName, manufacturer };
             return (bool)todo(PersmissionsTypes.RemoveProduct, args);
         }
-        public override bool editProduct(string storeName, int productName, double price, string manufacturer)
+        public override bool editProduct(string storeName, string productName, double price, string manufacturer)
         {
             object[] args = new object[] { storeName, productName, price, manufacturer };
             return (bool)todo(PersmissionsTypes.EditProduct, args);

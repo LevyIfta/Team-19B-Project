@@ -11,9 +11,9 @@ namespace TradingSystem.BuissnessLayer.commerce
     {
         public ICollection<Product> products { get; set; }
         public Store store { get; set; }
-        public Member owner { get; }
+        public aUser owner { get; }
 
-        public ShoppingBasket(Store store, Member owner)
+        public ShoppingBasket(Store store, aUser owner)
         {
             this.store = store;
             this.products = new LinkedList<Product>();
@@ -21,8 +21,15 @@ namespace TradingSystem.BuissnessLayer.commerce
         }
         public ShoppingBasket(BasketData shoppingBasketData)
         {
-            this.products = (ICollection<Product>)ProductsInBasketDAL.getProductIDs(shoppingBasketData.storeName, shoppingBasketData.useName).Select(products => new Product(products)); this.store = new Store(StoreDAL.getStore(shoppingBasketData.storeName));
-            this.owner = (Member)UserServices.getUser(shoppingBasketData.useName);
+            this.products = new LinkedList<Product>();
+            ICollection<ProductsInBasketData> productsInBasketData = ProductsInBasketDAL.getProductIDs(shoppingBasketData.storeName, shoppingBasketData.useName);
+
+            foreach (ProductsInBasketData p_data in productsInBasketData)
+            {
+                this.products.Add(new Product(p_data));
+            }
+            this.store = new Store(StoreDAL.getStore(shoppingBasketData.storeName));
+            this.owner = UserServices.getUser(shoppingBasketData.useName);
         }
         public double checkPrice()
         {
@@ -56,6 +63,10 @@ namespace TradingSystem.BuissnessLayer.commerce
             }
         }
         public void addProduct(Product pro)
+        {
+            products.Add(pro);
+        }
+        public void saveProduct(Product pro)
         {
             products.Add(pro);
         }
@@ -112,10 +123,10 @@ namespace TradingSystem.BuissnessLayer.commerce
         */
         public void update()
         {
-            BasketDAL.update(new BasketData(this.store.name, this.owner.userName));
+            BasketDAL.update(new BasketData(this.store.name, this.owner.getUserName()));
             // update products
             foreach (Product product in this.products)
-                ProductsInBasketDAL.update(new ProductsInBasketData(this.store.name, this.owner.userName, product.info.id, product.amount));
+                ProductsInBasketDAL.update(new ProductsInBasketData(this.store.name, this.owner.getUserName(), product.info.id, product.amount));
 
         }
     }

@@ -24,7 +24,6 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = name;
             this.founder = founder;
-
             this.receipts = new List<Receipt>();
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
@@ -35,6 +34,44 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder);
+
+            // fill the collections
+            this.fillReceipts();
+            this.fillInventory();
+            this.fillOwners();
+            this.fillManagers();
+        }
+
+        private void fillReceipts()
+        {
+            this.receipts = new LinkedList<Receipt>();
+            ICollection<ReceiptData> receiptsData = ReceiptDAL.getStoreReceipts(this.name);
+            foreach (ReceiptData receipt in receiptsData)
+                this.receipts.Add(new Receipt(receipt));
+        }
+
+        private void fillInventory()
+        {
+            this.inventory = new LinkedList<Product>();
+            ICollection<ProductData> productsData = ProductDAL.getStoreProducts(this.name);
+            foreach (ProductData productData in productsData)
+                this.inventory.Add(new Product(productData));
+        }
+
+        private void fillManagers()
+        {
+            this.managers = new LinkedList<Member>();
+            ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
+            foreach (HireNewStoreManagerPermissionData manager in managersData)
+                this.managers.Add((Member)UserServices.getUser(manager.userName));
+        }
+
+        private void fillOwners()
+        {
+            this.owners = new LinkedList<Member>();
+            ICollection<HireNewStoreOwnerPermissionData> ownersData = HireNewStoreOwnerPermissionDAL.getStoreOwners(this.name);
+            foreach (HireNewStoreOwnerPermissionData owner in ownersData)
+                this.owners.Add((Member)UserServices.getUser(owner.userName));
         }
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
@@ -83,7 +120,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return false;
         }
 
-
+        
         public bool supply(string name, string manufacturer, int amount)
         {
             if (amount <= 0)
@@ -126,10 +163,35 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // check for amounts validation
                 if (checkAmounts(products) & checkPolicies(basket))
                 {
+<<<<<<< Updated upstream
                     // calc the price
                     double price = calcPrice(products);
                     // request for payment
                     if (paymentMethod.pay(price))
+=======
+                    receipt = validPurchase(basket, paymentMethod, receipt);
+                    // update the origin store
+                    Stores.stores[this.name].inventory = this.inventory;
+                    Stores.stores[this.name].receipts = this.receipts;
+                }
+            }
+
+            return receipt;
+        }
+
+        private Receipt validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
+        {
+            // calc the price
+            double price = calcPrice(basket.products);
+            // request for payment
+            if (paymentMethod.pay(price))
+            {
+                // create the receipt
+                receipt = new Receipt();
+                // the payment was successful
+                foreach (Product product in basket.products)
+                    foreach (Product localProduct in this.inventory)
+>>>>>>> Stashed changes
                     {
                         // create the receipt
                         receipt = new Receipt();
@@ -169,9 +231,34 @@ namespace TradingSystem.BuissnessLayer.commerce
                         // add receipt to DB
                         receipt.save();
                     }
+<<<<<<< Updated upstream
                 }
             }
 
+=======
+
+                // clean the basket
+                basket.clean();
+                // update basket in DB
+                basket.update();
+                // fill receipt fields
+                receipt = fillReceipt(receipt, price);
+                receipt.username = basket.owner.userName;
+            }
+            return receipt;
+        }
+
+        private Receipt fillReceipt(Receipt receipt, double price)
+        {
+            receipt.store = this;
+            receipt.discount = 0;
+            receipt.date = DateTime.Now;
+            receipt.price = price;
+            // save the receipt
+            this.receipts.Add(receipt);
+            // add receipt to DB
+            receipt.save();
+>>>>>>> Stashed changes
             return receipt;
         }
 
@@ -277,7 +364,6 @@ namespace TradingSystem.BuissnessLayer.commerce
                     return new Product(product);
             return null; // no results
         }
-
         public bool isProductExist(string name, string manufacturer)
         {
             foreach (Product product in this.inventory)

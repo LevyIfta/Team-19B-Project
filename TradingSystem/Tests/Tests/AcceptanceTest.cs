@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using Tests.Bridge;
 using TradingSystem.BuissnessLayer;
 using TradingSystem.BuissnessLayer.commerce;
-/*
+using TradingSystem.ServiceLayer;
+
 namespace Tests
 {
     [TestClass]
@@ -13,78 +15,80 @@ namespace Tests
         public static void classInit(TestContext context)
         {
             bridge = Driver.getBridge();
-            bridge.register("Owner1", "Pass1234");
-            bridge.login("Owner1", "Pass1234");
+            bridge.register("Owner", "Pass1234");
+            bridge.login("Owner", "Pass1234");
             bridge.openStore("Store1");
-            ProductInfo newInfo1 = new ProductInfo();
-            newInfo1.name = "item1";
-            ProductInfo newInfo2 = new ProductInfo();
-            newInfo2.name = "item2";
-            Product items1 = new Product(), items2 = new Product();
-            items1.amount = 10; items1.info = newInfo1;
-            items2.amount = 20; items2.info = newInfo2;
-            ShoppingBasket basket = new ShoppingBasket();
+            ProductInfo newInfo1 = ProductInfo.getProductInfo("item1", "food", "manu1"); //new ProductInfo("item1", "food", "manu1");
+            ProductInfo newInfo2 = ProductInfo.getProductInfo("item2", "food", "manu1");
+            Product items1 = new Product(newInfo1, 10, 10.9), items2 = new Product(newInfo2, 20, 4.9);
+            Store store1 = bridge.getStore("Store1");
+            ShoppingBasket basket = new ShoppingBasket(store1, (Member)bridge.getUser());
             basket.products.Add(items1);
             basket.products.Add(items2);
-            basket.store = bridge.getStore("Store1");
             bridge.addInventory(basket);
             bridge.logout();
         }
-
         [TestMethod]
+        public void TestAll()
+        {
+            TestShopMenagement();
+            PurchaseTestGood();
+            PurchaseTestBad();
+        }
+
         public void TestShopMenagement()
         {
-            Assert.isFalse(isUserLoggedIn("Owner1"), "logout failed");
-            Assert.isTrue(isStoreExist("Store1"), "store was not created");
-            Assert.isTrue(bridge.isProductAtStore("Store1", "item1"), "failed loading products to inventory");
-            Assert.isTrue(bridge.isProductAtStore("Store1", "item2"), "failed loading products to inventory");
-            Assert.AreSame(bridge.getProductAmount("Store1", "item1"), 10, "did not add correct amount of the item");
-            Assert.AreSame(bridge.getProductAmount("Store1", "item2"), 20, "did not add correct amount of the item");
+            Assert.IsFalse(bridge.isUserLoggedIn("Owner"), "logout failed");
+            Assert.IsTrue(bridge.isStoreExist("Store1"), "store was not created");
+            Assert.IsTrue(bridge.isItemAtStore("Store1", "item1", "manu1"), "failed loading products to inventory");
+            Assert.IsTrue(bridge.isItemAtStore("Store1", "item2", "manu1"), "failed loading products to inventory");
+            Assert.IsTrue(bridge.getProductAmount("Store1", "item1", "manu1") == 10, "did not add correct amount of the item");
+            Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 20, "did not add correct amount of the item");
         }
 
         //register user with valid details
         //logs in to the user's account
         //adds a product to the user's basket and purchases it
-        [TestMethod]
         public void PurchaseTestGood()
         {
+            //Member member2 = new Member("regular", "justsomemember12");
             bridge.register("Member1", "Pass2345");
             bridge.login("Member1", "Pass2345");
-            ShoppingBasket basketToBuy = new ShoppingBasket();
-            basket.store = bridge.getStore("Store1");
-            ProductInfo newInfo1 = new ProductInfo();
-            newInfo1.name = "item1";
-            Product item1 = new Product();
-            item1.info = newInfo1;
-            item1.amount = 6;
-            basketToBuy.products.Add(item1);
-            bridge.purchase(basketToBuy);
+            Dictionary<string, int> d = new Dictionary<string, int>();
+            d["item1"] = 10;
+            d["item2"] = 10;
+            bridge.saveProducts(bridge.getUserName(), "Store1", "manu1", d);
+            double amount = bridge.checkPrice(bridge.getUserName());
+            ICollection<SLreceipt> ans = bridge.purchase("Immediate");
+            Store store1 = bridge.getStore("Store1");
             bridge.logout();
+            Store store2 = bridge.getStore("Store1");
+            Assert.IsTrue(ans.Count > 0, "empty receipt");
 
-
-            Assert.isFalse(isUserLoggedIn("Member1"), "user should not be logged in");
-            Assert.AreSame(getProductAmount("Store1", "item1"), 4, "did not remove correct amount of items from inventory");
+            foreach(SLreceipt re in ans)
+            {
+                Assert.IsTrue(re.storeName.Equals("Store1"), "different store");
+                Assert.IsTrue(re.price == amount, "different amount");
+            }
+            Assert.IsFalse(bridge.isUserLoggedIn("Member1"), "user should not be logged in");
+            Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "did not remove correct amount of items from inventory");
         }
 
-        [TestMethod]
         public void PurchaseTestBad()
         {
             bridge.register("Member2", "Pass2345");
             bridge.login("Member2", "Pass2345");
-            ShoppingBasket basketToBuy = new ShoppingBasket();
-            basket.store = bridge.getStore("Store1");
-            ProductInfo newInfo1 = new ProductInfo();
-            newInfo1.name = "item1";
-            Product item1 = new Product();
-            item1.info = newInfo1;
-            item1.amount = 12;
-            basketToBuy.products.Add(item1);
-            bridge.purchase(basketToBuy);
+            Dictionary<string, int> d = new Dictionary<string, int>();
+            d["item1"] = 10;
+            d["item2"] = 10;
+            Store store1 = bridge.getStore("Store1");
+            bridge.saveProducts(bridge.getUserName(), "Store1", "manu1", d);
+            ICollection<SLreceipt> ans = bridge.purchase("Immediate");
             bridge.logout();
-            Assert.isFalse(isUserLoggedIn("Member2"), "user should not be logged in");
-            Assert.AreSame(getProductAmount("Store1", "item1"), 4, "should not change the inventory if the purchase is invalid");//should not process the purchase because there are not enough of the product in the store
+            Assert.IsTrue(ans == null, "receipt should be empty");
+            Assert.IsFalse(bridge.isUserLoggedIn("Member2"), "user should not be logged in");
+            Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "should not change the inventory if the purchase is invalid");//should not process the purchase because there are not enough of the product in the store
         }
     }
 
 }
-*/

@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class RemoveManagerPermissionDAL
     {
-        private static List<RemoveManagerPermissionData> RemoveManagerPermissions;
+        private static List<RemoveManagerPermissionData> RemoveManagerPermissions = new List<RemoveManagerPermissionData>();
 
         public static RemoveManagerPermissionData getRemoveManagerPermission(string userName, string storeName)
         {

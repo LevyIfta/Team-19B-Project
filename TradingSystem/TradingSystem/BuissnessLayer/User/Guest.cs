@@ -29,7 +29,7 @@ namespace TradingSystem.BuissnessLayer
         public override ICollection<Receipt> purchase(PaymentMethod payment)
         { // only Immediate and Offer
             ICollection<Receipt> list = new List<Receipt>();
-            foreach (ShoppingBasket basket in myCart.baskets)
+            foreach (ShoppingBasket basket in getMyCart().baskets)
             {
                 Receipt receipt = basket.store.executePurchase(basket, payment);
                 if (receipt == null)

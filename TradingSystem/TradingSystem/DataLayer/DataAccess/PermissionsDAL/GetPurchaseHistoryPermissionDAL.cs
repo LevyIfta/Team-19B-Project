@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class GetPurchaseHistoryPermissionDAL
     {
-        private static List<GetPurchaseHistoryPermissionData> GetPurchaseHistoryPermissions;
+        private static List<GetPurchaseHistoryPermissionData> GetPurchaseHistoryPermissions = new List<GetPurchaseHistoryPermissionData>();
 
         public static GetPurchaseHistoryPermissionData getGetPurchaseHistoryPermission(string userName, string storeName)
         {

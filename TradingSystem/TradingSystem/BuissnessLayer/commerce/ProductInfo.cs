@@ -18,7 +18,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         private static Object idLocker = new Object();
         public Dictionary<string, string> feedbacks { get; }
 
-        public ProductInfo(string name, string category, string manufacturer)
+        private ProductInfo(string name, string category, string manufacturer)
         {
             // increment id
             lock (idLocker)
@@ -54,16 +54,23 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public static ProductInfo getProductInfo(string name, string category, string manufacturer)
         {
-            ProductInfo productInfo = new ProductInfo(name, category, manufacturer);
             // checks a product with the given info already exists, if so returns it else creates a new one
             foreach (ProductInfo p in productsInfo)
-                if (p.Equals(productsInfo))
+                if (p.name.Equals(name) & p.category.Equals(category) & p.manufacturer.Equals(manufacturer))
                     return p;
             // the productInfo doesn't exist, add it and update DAL
+            ProductInfo productInfo = new ProductInfo(name, category, manufacturer);
             productsInfo.Add(productInfo);
             // update in DB
             ProductInfoDAL.addProductInfo(productInfo.toDataObject());
             return productInfo;
+        }
+        public static ProductInfo getProductInfo(int id)
+        {
+            foreach (ProductInfo pInfo in productsInfo)
+                if (pInfo.id == id)
+                    return pInfo;
+            return null;
         }
 
         public bool roomForFeedback (string username)
