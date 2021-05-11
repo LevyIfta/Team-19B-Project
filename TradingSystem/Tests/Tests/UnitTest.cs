@@ -58,46 +58,40 @@ namespace Tests
         [TestMethod]
         public void registerTestGood()
         {
-            Assert.IsTrue(bridge.register("newUser1", "newPassword1"), "faild to register as a valid user");
-            Assert.IsTrue(bridge.isUserExist("newUser1", "newPassword1"), "user was not properly saved");
-            Assert.IsFalse(bridge.isUserExist("newUser1", "fakePassword1"), "wrong password found as exist");
+            Assert.IsTrue(UserServices.register("newUser1", "newPassword1"), "faild to register as a valid user");
+            Assert.IsNotNull(UserServices.login("newUser1", "newPassword1"), "user was not properly saved");
+            Assert.IsNull(UserServices.login("newUser1", "fakePassword1"), "wrong password found as exist");
 
             Assert.IsTrue(bridge.register("newUser2", "newPassword1"), "faild to register as a valid user(existing password)");
             Assert.IsTrue(bridge.isUserExist("newUser2", "newPassword1"), "user was not properly saved (existing password)");
-
         }
 
         [TestMethod]
         public void registerTestBad()
         {
-            Assert.IsFalse(bridge.register("user1", "Password1"), "managed to register as an alread existing user (same password)");
-            Assert.IsFalse(bridge.register("user1", "Password2"), "managed to register with an existig username (different passwords)");
-            Assert.IsFalse(bridge.isUserExist("user1", "Password2"), "exisint user with different passworrd considerd to exist");
+            Assert.IsFalse(UserServices.register("user1", "Password1"), "managed to register as an alread existing user (same password)");
+            Assert.IsFalse(UserServices.register("user1", "Password2"), "managed to register with an existig username (different passwords)");
+            Assert.IsNull(UserServices.login("user1", "Password2"), "exisint user with different passworrd considerd to exist");
 
-            Assert.IsFalse(bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "managed to register with bad username");
-            Assert.IsFalse(bridge.isUserExist("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "invlid user saved (bad username)");
+            Assert.IsFalse(UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "managed to register with bad username");
+            Assert.IsNull(UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "invlid user saved (bad username)");
 
-            Assert.IsFalse(bridge.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "managed to register with bad password");
-            Assert.IsFalse(bridge.isUserExist("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "invlid user saved (bad password)");
-
-
-            Assert.IsFalse(bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "managed to register with bad username and bad password");
-            Assert.IsFalse(bridge.isUserExist("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "invlid user saved (bad username and bad passsword)");
+            Assert.IsFalse(UserServices.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "managed to register with bad password");
+            Assert.IsNull(UserServices.login("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "invlid user saved (bad password)");
+            
+            Assert.IsFalse(UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "managed to register with bad username and bad password");
+            Assert.IsNull(UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "invlid user saved (bad username and bad passsword)");
         }
 
         [TestMethod]
         public void logoutTest()
         {
-            Assert.IsTrue(bridge.login("user2", "Password2"), "failed login");
-            Assert.AreEqual<string>(bridge.getUserName(), "user2", "failed login (login didnt change the logged user properly)");
-
-            bridge.logout();
-
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "logout did not change the logged user to guest");
-
-            bridge.logout();
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "2nd logout changed something");
-
+            string username = "newUser1_", pass = "newPas00s";
+            UserServices.register(username, pass);
+            aUser u = UserServices.login(username, pass);
+            Assert.IsNull(UserServices.login(username, pass)); // user should be logged in
+            UserServices.logout(username);
+            Assert.IsNotNull(UserServices.login(username, pass));
         }
 
         [ClassCleanup]
