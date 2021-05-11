@@ -18,11 +18,13 @@ namespace Tests
             bridge = Driver.getBridge();
             bridge.register("user1", "Password1");
             bridge.register("user2", "Password2");
-
         }
+
         [TestMethod]
         public void loginTestGood()
         {
+            bridge.logout();
+
             Assert.AreEqual(bridge.getUserName(), "guest", "default user is nt guest");
             Assert.IsTrue(bridge.login("user1", "Password1"));
             Assert.IsTrue(bridge.isUserLoggedIn("user1"), "user is not considerd logged in");
@@ -91,7 +93,13 @@ namespace Tests
 
         }
 
- 
+        [ClassCleanup]
+        public static void classCleanUp()
+        {
+            bridge.logout();
+        }
+
+
     }
 
     [TestClass]
@@ -250,6 +258,7 @@ namespace Tests
         {
             Store store = bridge.getStore("store2");
             Assert.IsNull(store, "store found before  being founded");
+            bridge.login("store1", "Store1");
             bridge.openStore("store2");
             store = bridge.getStore("store2");
 
@@ -274,13 +283,15 @@ namespace Tests
         [TestMethod]
         public void searchStoreTestGood()
         {
-
-        }
-
-        [TestMethod]
-        public void searchStoreTestBad()
-        {
-
+            Store s1 = bridge.getStore(store1Name);
+            Assert.IsNotNull(s1, "could not find an existing store: " + store1Name);
+            bridge.logout();
+            bridge.login("store1", "Store1");
+            string newStore = "this_is_for_test";
+            bridge.openStore(newStore);
+            s1 = bridge.getStore(newStore);
+            Assert.IsNotNull(s1, "could not find an existing store: " + newStore);
+            Assert.IsNull(bridge.getStore("this store does not exist"));
         }
 
         [TestMethod]
@@ -399,23 +410,27 @@ namespace Tests
         [TestMethod]
         public void addProductTestGood()
         {
+            // add new ProductInfo
+            ProductInfo p = ProductInfo.getProductInfo("productX2", "categoryX2", "ManufacturerX2");
+            ProductInfo p1 = ProductInfo.getProductInfo("productY2", "categoryY2", "ManufacturerY2");
+            ProductInfo p2 = ProductInfo.getProductInfo("productZ2", "categoryZ2", "ManufacturerZ2");
             // add products to stores
-            Stores.searchStore(store1Name).addProduct(product1.name, product1.category, product1.manufacturer);
-            Stores.searchStore(store1Name).addProduct(product2.name, product2.category, product2.manufacturer);
-            Stores.searchStore(store2Name).addProduct(product1.name, product1.category, product1.manufacturer);
+            Stores.searchStore(store1Name).addProduct(p1.name, p1.category, p1.manufacturer);
+            Stores.searchStore(store1Name).addProduct(p2.name, p2.category, p2.manufacturer);
+            Stores.searchStore(store2Name).addProduct(p1.name, p1.category, p1.manufacturer);
             // assert that the products exist
-            Assert.IsTrue(Stores.searchStore(store1Name).isProductExist(product1.name, product1.manufacturer));
-            Assert.IsTrue(Stores.searchStore(store1Name).isProductExist(product2.name, product2.manufacturer));
-            Assert.IsTrue(Stores.searchStore(store2Name).isProductExist(product1.name, product1.manufacturer));
-            Assert.IsFalse(Stores.searchStore(store2Name).isProductExist(product2.name, product2.manufacturer));
+            Assert.IsTrue(Stores.searchStore(store1Name).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsTrue(Stores.searchStore(store1Name).isProductExist(p2.name, p2.manufacturer));
+            Assert.IsTrue(Stores.searchStore(store2Name).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsFalse(Stores.searchStore(store2Name).isProductExist(p2.name, p2.manufacturer));
             // clean the stores
-            Stores.searchStore(store1Name).removeProduct(product1.name, product1.manufacturer);
-            Stores.searchStore(store1Name).removeProduct(product2.name, product2.manufacturer);
-            Stores.searchStore(store2Name).removeProduct(product1.name, product1.manufacturer);
+            Stores.searchStore(store1Name).removeProduct(p1.name, p1.manufacturer);
+            Stores.searchStore(store1Name).removeProduct(p2.name, p2.manufacturer);
+            Stores.searchStore(store2Name).removeProduct(p1.name, p1.manufacturer);
             // assert that the products were removed
-            Assert.IsFalse(Stores.searchStore(store1Name).isProductExist(product1.name, product1.manufacturer));
-            Assert.IsFalse(Stores.searchStore(store1Name).isProductExist(product2.name, product2.manufacturer));
-            Assert.IsFalse(Stores.searchStore(store2Name).isProductExist(product1.name, product1.manufacturer));
+            Assert.IsFalse(Stores.searchStore(store1Name).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsFalse(Stores.searchStore(store1Name).isProductExist(p2.name, p2.manufacturer));
+            Assert.IsFalse(Stores.searchStore(store2Name).isProductExist(p1.name, p1.manufacturer));
         }
 
         [TestMethod]
@@ -444,43 +459,46 @@ namespace Tests
         [TestMethod]
         public void supplyTestBad()
         {
-            // add a new ProductInfo
+            // add new ProductInfo
             ProductInfo p = ProductInfo.getProductInfo("productX", "categoryX", "ManufacturerX");
+            ProductInfo p1 = ProductInfo.getProductInfo("productY", "categoryY", "ManufacturerY");
+            ProductInfo p2 = ProductInfo.getProductInfo("productZ", "categoryZ", "ManufacturerZ");
             // add the products to the stores
-            Stores.searchStore(store1Name).addProduct(product1.name, product1.category, product1.manufacturer);
-            Stores.searchStore(store1Name).addProduct(product2.name, product2.category, product2.manufacturer);
-            Stores.searchStore(store2Name).addProduct(product1.name, product1.category, product1.manufacturer);
-            Stores.searchStore(store2Name).addProduct(product2.name, product2.category, product2.manufacturer);
+            Stores.searchStore(store1Name).addProduct(p1.name, p1.category, p1.manufacturer);
+            Stores.searchStore(store1Name).addProduct(p2.name, p2.category, p2.manufacturer);
+            Stores.searchStore(store2Name).addProduct(p1.name, p1.category, p1.manufacturer);
+            Stores.searchStore(store2Name).addProduct(p2.name, p2.category, p2.manufacturer);
             // supply stores with illegal amoounts
-            Assert.IsFalse(Stores.searchStore(store1Name).supply(product1.name, product1.manufacturer, -5));
-            Assert.IsFalse(Stores.searchStore(store1Name).supply(product2.name, product2.manufacturer, -3));
-            Assert.IsFalse(Stores.searchStore(store2Name).supply(product1.name, product1.manufacturer, -9));
-            Assert.IsFalse(Stores.searchStore(store2Name).supply(product2.name, product2.manufacturer, -6));
+            Assert.IsFalse(Stores.searchStore(store1Name).supply(p1.name, p1.manufacturer, -5));
+            Assert.IsFalse(Stores.searchStore(store1Name).supply(p2.name, p2.manufacturer, -3));
+            Assert.IsFalse(Stores.searchStore(store2Name).supply(p1.name, p1.manufacturer, -9));
+            Assert.IsFalse(Stores.searchStore(store2Name).supply(p2.name, p2.manufacturer, -6));
             // supply stores with illegal product info
             Assert.IsFalse(Stores.searchStore(store1Name).supply(p.name, p.manufacturer, 30));
             Assert.IsFalse(Stores.searchStore(store2Name).supply(p.name, p.manufacturer, 40));
-            Assert.IsFalse(Stores.searchStore(store1Name).supply(product1.name, p.manufacturer, 30)); // wrong manufacturer
-            Assert.IsFalse(Stores.searchStore(store2Name).supply(p.name, product1.manufacturer, 40)); // wrong name
+            Assert.IsFalse(Stores.searchStore(store1Name).supply(p1.name, p.manufacturer, 30)); // wrong manufacturer
+            Assert.IsFalse(Stores.searchStore(store2Name).supply(p.name, p1.manufacturer, 40)); // wrong name
             // check amounts
             // store1
             // wrong amounts
-            Assert.AreEqual(Stores.searchStore(store1Name).searchProduct(product1.name, product1.manufacturer).amount, 0);
-            Assert.AreEqual(Stores.searchStore(store1Name).searchProduct(product2.name, product2.manufacturer).amount, 0);
+            Assert.AreEqual(Stores.searchStore(store1Name).searchProduct(p1.name, p1.manufacturer).amount, 0);
+            Assert.AreEqual(Stores.searchStore(store1Name).searchProduct(p2.name, p2.manufacturer).amount, 0);
             // wrong info
             Assert.IsNull(Stores.searchStore(store1Name).searchProduct(p.name, p.manufacturer)); // wrong name & manufacturer
-            Assert.IsNull(Stores.searchStore(store1Name).searchProduct(product1.name, p.manufacturer)); // wrong manufacturer
+            Assert.IsNull(Stores.searchStore(store1Name).searchProduct(p1.name, p.manufacturer)); // wrong manufacturer
             // store2
             // wrong amounts
-            Assert.AreEqual(Stores.searchStore(store2Name).searchProduct(product1.name, product1.manufacturer).amount, 0);
-            Assert.AreEqual(Stores.searchStore(store2Name).searchProduct(product2.name, product2.manufacturer).amount, 0);
+            Assert.AreEqual(Stores.searchStore(store2Name).searchProduct(p1.name, p1.manufacturer).amount, 0);
+            Assert.AreEqual(Stores.searchStore(store2Name).searchProduct(p2.name, p2.manufacturer).amount, 0);
             // wrong info
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p.manufacturer)); // wrong name & manufacturer
-            Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, product1.manufacturer)); // wrong name
+            Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p1.manufacturer)); // wrong name
         }
 
         [TestMethod]
         public void addOwnerTestGood()
         {
+            // register new users
 
         }
 
