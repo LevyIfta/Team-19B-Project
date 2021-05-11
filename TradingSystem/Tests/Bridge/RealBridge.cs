@@ -78,7 +78,6 @@ namespace Tests.Bridge
         {
             return Stores.searchStore(storeName);
         }
-
         public aUser getUser()
         {
             return UserController.getCorrentOnlineUser();

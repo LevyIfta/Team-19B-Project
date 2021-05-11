@@ -256,13 +256,14 @@ namespace Tests
         [TestMethod]
         public void createStoreTestGood()
         {
-            Store store = bridge.getStore("store2");
+            bridge.logout();
+            Store store = bridge.getStore("store2qq");
             Assert.IsNull(store, "store found before  being founded");
             bridge.login("store1", "Store1");
-            bridge.openStore("store2");
-            store = bridge.getStore("store2");
-
-            Assert.AreEqual(store.name, "store2", "store has wrong name");
+            bridge.openStore("store2qq");
+            store = bridge.getStore("store2qq");
+            
+            Assert.AreEqual(store.name, "store2qq", "store has wrong name");
         }
         [TestMethod]
         public void createStoreTestBad()
@@ -272,24 +273,25 @@ namespace Tests
             bridge.openStore("store1");
             Assert.IsFalse(bridge.openStore("store1"), "manage to open a store with an existing name");
 
-            Store store = bridge.getStore("store1");
+            string storeName = "s_1233_s";
+            bridge.openStore(storeName);
+            Store store = bridge.getStore(storeName);
             Assert.AreEqual(store.founder.getUserName(), "store2", "store founder changed");
-            Assert.AreNotEqual(store.founder.getUserName(), "store1", "store founder changed");
-
-            bridge.logout();
-            bridge.login("store1", "Store1");
         }
 
         [TestMethod]
         public void searchStoreTestGood()
         {
-            Store s1 = bridge.getStore(store1Name);
-            Assert.IsNotNull(s1, "could not find an existing store: " + store1Name);
             bridge.logout();
             bridge.login("store1", "Store1");
+            bridge.openStore(store1Name);
+            Store s1 = bridge.getStore(store1Name);
+            Assert.IsNotNull(s1, "could not find an existing store: " + store1Name);
+
             string newStore = "this_is_for_test";
             bridge.openStore(newStore);
             s1 = bridge.getStore(newStore);
+
             Assert.IsNotNull(s1, "could not find an existing store: " + newStore);
             Assert.IsNull(bridge.getStore("this store does not exist"));
         }
@@ -297,14 +299,18 @@ namespace Tests
         [TestMethod]
         public void addInventoryTest()
         {
+            bridge.logout();
+            bridge.login("store1", "Store1");
             //setup
             ProductInfo newInfo3 = ProductInfo.getProductInfo("item3", "cat", "manInv");
-
             ProductInfo newInfo4 = ProductInfo.getProductInfo("item4", "cat", "manInv");
 
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
             Assert.IsFalse(bridge.isProductExist("item3", "manInv"), "new product alread exist");
-
+            
+            //bridge.openStore("store_1");
+            
+            bridge.openStore("store1");
             Store store = bridge.getStore("store1");
             ShoppingBasket basket = new ShoppingBasket(store, (Member)bridge.getUser());
             basket.products.Add(items3);
@@ -343,43 +349,12 @@ namespace Tests
 
 
         }
-        /*
-        [TestMethod]
-        public void removeInventoryTest()
-        {
-            //setup
-
-            Product items1 = new Product(prod1, 1, 5), items2 = new Product(prod2, 2, 5);
-
-            Stores.addStore("store1", (Member)bridge.getUser());
-            Store store = bridge.getStore("store1");
-            ShoppingBasket basket = new ShoppingBasket(store, (Member)bridge.getUser());
-            basket.products.Add(items1);
-            basket.products.Add(items2);
-
-            ICollection<Product> inventory = store.inventory;
-            int count = inventory.Count;
-            bridge.removeInventory(basket);
-
-
-
-            Assert.IsTrue(inventory.Contains(items1), "removed an item with remaining amount");
-            Assert.IsFalse(inventory.Contains(items2), "kept an item with 0 amount");
-            Assert.IsFalse(inventory.Contains(null), "saved a null item");
-            Assert.AreSame(inventory.Count, count - 1, "count update wrong");
-            foreach (Product item in store.inventory)
-            {
-                if (item.info.Equals(prod1))
-                    Assert.AreEqual(item.amount, 1, "failed to update the item amount properly");
-
-            }
-
-
-        }
-        */
+        
         [TestMethod]
         public void parallelPurchase()
         {
+            
+            bridge.login("store1", "Store1");
             // establish a new store
             bridge.openStore("Ali Shop");
             Store aliShop = bridge.getStore("Ali Shop");
@@ -405,6 +380,64 @@ namespace Tests
             Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
             // check for amount
             Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
+        }
+
+        [TestMethod]
+        public void purchaseTestGood()
+        {
+            bridge.login("store1", "Store1");
+            // establish a new store
+            string storeName = "Ali Shop2";
+            bridge.openStore(storeName);
+            Store aliShop = bridge.getStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 20);
+            // register and login
+            string username = "AliKSB";
+            string pass = "123xX456";
+
+            bool user1reg = UserServices.register(username, pass);
+            aUser user1 = UserServices.login(username, pass);
+            // try to buy 12 bamba - less that overall
+            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
+            // purchase
+            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
+            // check for the amounts
+            Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 8);
+        }
+
+        [TestMethod]
+        public void purchaseTestBad()
+        {
+
+            bridge.logout();
+            bridge.login("store1", "Store1");
+            // establish a new store
+            string storeName = "Ali Shop3";
+            bridge.openStore(storeName);
+            Store aliShop = bridge.getStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 20);
+            // register and login
+            string username = "AliKSBa";
+            string pass = "123xX456";
+
+            bool user1reg = UserServices.register(username, pass);
+            aUser user1 = UserServices.login(username, pass);
+            // try to buy 22 bamba - more that overall
+            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 22, 0));
+            // purchase
+            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
+            // check for the amounts
+            Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 20);
         }
 
         [TestMethod]
@@ -494,32 +527,7 @@ namespace Tests
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p.manufacturer)); // wrong name & manufacturer
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p1.manufacturer)); // wrong name
         }
-
-        [TestMethod]
-        public void addOwnerTestGood()
-        {
-            // register new users
-
-        }
-
-        [TestMethod]
-        public void addOwnerTestBad()
-        {
-
-        }
-
-        [TestMethod]
-        public void addManagerTestGood()
-        {
-
-        }
-
-        [TestMethod]
-        public void addManagerTestBad()
-        {
-
-        }
-
+        
     }
 
     [TestClass]
