@@ -37,14 +37,21 @@ namespace Tests
         [TestMethod]
         public void loginTestBad()
         {
-            Assert.IsFalse(bridge.login("fakeUser", "fakePassword"), "managed to login as fake user");
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "the logged user changed (fake user)");
+            // init usernames and passes
+            string username1 = "AbD1", username2 = "QwEr2", fake1 = "fake1", fake2 = "fake2";
+            string pass1 = "123Xx456", pass2 = "465Ss789", fakePass1 = "111", fakePass2 = "789";
+            // register
+            UserServices.register(username1, pass1);
+            UserServices.register(username2, pass2);
+            // try to login twice
+            aUser u1 = UserServices.login(username1, pass1);
+            Assert.IsNull(UserServices.login(username1, pass1));
+            // try to login with fake user
+            Assert.IsNull(UserServices.login(fake1, fakePass1), "managed to login as fake user");
+            // fake pass
+            Assert.IsNull(UserServices.login(username2, fakePass2), "managed to login with wrong password");
 
-            Assert.IsFalse(bridge.login("user1", "fakePassword"), "managed to login with wrong password");
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "the logged user changed (wrong password)");
-
-            Assert.IsFalse(bridge.login("fakeUser", "Password1"), "managed to login with fake userbane");
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "the logged user changed (fake username)");
+            Assert.IsNull(UserServices.login(fake1, pass1), "managed to login with fake username");
         }
 
 
@@ -130,7 +137,7 @@ namespace Tests
             basket.products.Add(items2);
             bridge.addProducts(basket);
 
-
+            bridge.logout();
         }
 
         [ClassCleanup]
@@ -142,6 +149,14 @@ namespace Tests
         [TestMethod]
         public void saveProductTest()
         {
+            string username = "AlIbAd";
+            string pass = "123xX4";
+            string storeName = "new_store_1";
+
+            UserServices.register(username, pass);
+            aUser user = UserServices.login(username, pass);
+            // open a new store
+            Stores.addStore(storeName, (Member)user);
             //setup
             ProductInfo newInfo3 =  ProductInfo.getProductInfo("item3", "cat", "man");
 
@@ -150,17 +165,14 @@ namespace Tests
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
 
 
-            ShoppingBasket basket = new ShoppingBasket(bridge.getStore("basketStore1"), (Member)bridge.getUser());
-            basket.products.Add(items3);
-            basket.products.Add(items4);
-
-            bridge.addProducts(basket);
-
-            ShoppingBasket saveBasket = bridge.getBasket("basketStore1");
-            Assert.IsTrue(saveBasket.products.Contains(items3), "failed to save one of the items");
-            Assert.IsTrue(saveBasket.products.Contains(items4), "failed to save one of the items");
-            Assert.IsFalse(saveBasket.products.Contains(null), "saved a null item");
-
+            ShoppingBasket basket = new ShoppingBasket(Stores.searchStore(storeName), (Member)user);
+            basket.addProduct(items3);
+            basket.addProduct(items4);
+            
+            Assert.IsTrue(basket.products.Contains(items3), "failed to save one of the items");
+            Assert.IsTrue(basket.products.Contains(items4), "failed to save one of the items");
+            Assert.IsFalse(basket.products.Contains(null), "saved a null item");
+            bridge.logout();
         }
 
         /*
@@ -353,23 +365,22 @@ namespace Tests
         [TestMethod]
         public void parallelPurchase()
         {
-            
-            bridge.login("store1", "Store1");
-            // establish a new store
-            bridge.openStore("Ali Shop");
-            Store aliShop = bridge.getStore("Ali Shop");
-            // add products to the strore
-            aliShop.addProduct("Bamba", "Food", "Osem");
-            // set the price of the product
-            aliShop.editPrice("Bamba", "Osem", 3);
-            // supply 
-            aliShop.supply("Bamba", "Osem", 20);
             // register twice and login from two different users
             bool user1reg = UserServices.register("AliKB", "123xX456");
             bool user2reg = UserServices.register("Bader", "456xX789");
             // login
             aUser user1 = UserServices.login("AliKB", "123xX456");
             aUser user2 = UserServices.login("Bader", "456xX789");
+            // establish a new store
+            string storeName = "Ali Shop";
+            Stores.addStore(storeName, (Member)user1);
+            Store aliShop = Stores.searchStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 20);
             // try to buy more than 20 bamba in total
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
@@ -385,11 +396,16 @@ namespace Tests
         [TestMethod]
         public void purchaseTestGood()
         {
-            bridge.login("store1", "Store1");
+            // register
+            string username1 = "StoreOwner";
+            string pass1 = "123xX456";
+            // register and login
+            bool ownerReg = UserServices.register(username1, pass1);
+            aUser storeOwner = UserServices.login(username1, pass1);
             // establish a new store
             string storeName = "Ali Shop2";
-            bridge.openStore(storeName);
-            Store aliShop = bridge.getStore(storeName);
+            Stores.addStore(storeName, (Member)storeOwner);
+            Store aliShop = Stores.searchStore(storeName);
             // add products to the strore
             aliShop.addProduct("Bamba", "Food", "Osem");
             // set the price of the product
