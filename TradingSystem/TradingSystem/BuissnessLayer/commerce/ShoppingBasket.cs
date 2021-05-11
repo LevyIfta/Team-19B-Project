@@ -129,5 +129,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 ProductsInBasketDAL.update(new ProductsInBasketData(this.store.name, this.owner.getUserName(), product.info.id, product.amount));
 
         }
+
+        public void removeProducts() { }
     }
 }

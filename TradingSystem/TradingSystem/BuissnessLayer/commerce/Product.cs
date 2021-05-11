@@ -49,7 +49,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         }
         public override bool Equals(object obj)
         {
-            return false;
+            return ((Product)obj).info.Equals(this.info);
         }
         public bool Equals(Product product)
         {

@@ -102,6 +102,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                         this.inventory.Remove(product);
                         // update DB
                         product.remove(this.name);
+                        return;
                     }
             }
         }
@@ -113,6 +114,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
                 {
                     p.price = newPrice;
+                    
                     // update DB
                     ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                     return true;
@@ -354,6 +356,16 @@ namespace TradingSystem.BuissnessLayer.commerce
         public StoreData toDataObject()
         {
             return new StoreData(this.name, this.founder.userName);
+        }
+
+        public void removeFromInventory(Product product)
+        {
+            lock (this.purchaseLock)
+            {
+                foreach (Product p in this.inventory)
+                    if (p.info.Equals(product.info) & p.amount >= product.amount)
+                        p.amount -= product.amount;
+            }
         }
     }
 }
