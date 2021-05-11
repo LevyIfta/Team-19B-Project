@@ -41,6 +41,10 @@ namespace TradingSystem.ServiceLayer
         {
             return user;
         }
+        public static string getCorrentOnlineUserName()
+        {
+            return user.getUserName();
+        }
         public static bool register(string userName, string password)
         {
             if (BuissnessLayer.UserServices.register(userName, password))

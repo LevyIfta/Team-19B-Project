@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="Amatic-R">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Amatic SC Reegular</FontFamily>
+    <FontFamily x:Key="Caviar Dreams">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Caviar Dreams</FontFamily>
+    <FontFamily x:Key="signature">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Windsong</FontFamily>
+    <FontFamily x:Key="Buttom">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Caviar Dreams Bold</FontFamily>
+    <FontFamily x:Key="Password">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Password Dots Regular</FontFamily>
+    <FontFamily x:Key="Ostrich Bold">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Ostrich Sans Bold</FontFamily>
+    <FontFamily x:Key="Error">pack://appliction;,,,/PresentationLayer/Windows/Fonts/#Sofia Regular</FontFamily>
+
+
+    <Color x:Key="TextColorError">#A901DB</Color>
+    <SolidColorBrush x:Key="TextColorErrorU" Color="{StaticResource TextColorError}" />
+    <Color x:Key="BackgroungButtom">#2194fe</Color>
+    <SolidColorBrush x:Key="BackgroungButtomU" Color="{StaticResource BackgroungButtom}" />
+    <Color x:Key="BackgroungTextBox">#add1d2</Color>
+    <SolidColorBrush x:Key="BackgroungTextBoxU" Color="{StaticResource BackgroungTextBox}" />
+    <Color x:Key="TextColorWhite">#ffffff</Color>
+    <SolidColorBrush x:Key="TextColorWhiteU" Color="{StaticResource TextColorWhite}" />
+</ResourceDictionary>

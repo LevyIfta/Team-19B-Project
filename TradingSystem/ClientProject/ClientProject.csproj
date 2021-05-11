@@ -59,24 +59,44 @@
     <Compile Include="Connection\DecodedMessge.cs" />
     <Compile Include="Connection\Decoder.cs" />
     <Compile Include="Connection\Encoder.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="PresentationLayer\Windows\ANotifyPropChange.cs" />
+    <Compile Include="PresentationLayer\Windows\Controller.cs" />
+    <Compile Include="PresentationLayer\DataContext\StoreDataContext.cs" />
+    <Compile Include="PresentationLayer\DataContext\UserDataContext.cs" />
+    <Compile Include="PresentationLayer\Windows\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PresentationLayer\Windows\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PresentationLayer\Windows\RegistrationWindow.xaml.cs">
+      <DependentUpon>RegistrationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SLdataObjects\SLbasket.cs" />
     <Compile Include="SLdataObjects\SLemployee.cs" />
     <Compile Include="SLdataObjects\SLproduct.cs" />
     <Compile Include="SLdataObjects\SLreceipt.cs" />
     <Compile Include="SLdataObjects\SLstore.cs" />
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Page Include="PresentationLayer\Windows\LoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PresentationLayer\Windows\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PresentationLayer\Windows\RegistrationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PresentationLayer\Windows\Styles\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -96,13 +116,51 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="PresentationLayer\Windows\Fonts\Amatic-Bold.ttf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\AmaticSC-Regular.ttf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\CaviarDreams.ttf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\Caviar_Dreams_Bold.ttf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\ostrich-regular.ttf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\OstrichSans-Bold.otf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\password-dots.ttf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\Sofia-Regular.otf" />
+    <Resource Include="PresentationLayer\Windows\Fonts\Windsong.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\password-dots.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\magnifying-glass-icon.png" />
+    <Resource Include="Resources\mail-icon.png" />
+    <Resource Include="Resources\shopping_cart_icon.png" />
+    <Resource Include="Resources\team19b-logo-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PresentationLayer\Icons\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PresentationLayer\Windows\Fonts\Background.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\Backgroung.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\Buttom.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\clickme.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\down.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\infinity.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\stars.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\Talk.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\unicorn.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\up.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\whiteback.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PresentationLayer\Windows\Fonts\Login.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PresentationLayer\Windows\Fonts\SignUp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

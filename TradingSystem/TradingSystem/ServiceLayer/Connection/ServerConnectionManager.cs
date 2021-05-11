@@ -24,21 +24,57 @@ namespace TradingSystem.ServiceLayer
         
         private static void act(DecodedMessge msg)
         {
+            bool ans = false;
+            string ans1 = "";
+            string ans_d = "";
+            DecodedMessge msg_send = new DecodedMessge();
             if (msg.type == msgType.FUNC)
             {
                 switch (msg.name)
                 {
                     case ("register"):
-                        TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
+                        ans = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        byte[] enc_r = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                        ServerConnectionManager.sendMessage(enc_r);
                         break;
                     case ("login"):
-                        TradingSystem.ServiceLayer.UserController.login(msg.param_list[0], msg.param_list[1]);
+                        ans = TradingSystem.ServiceLayer.UserController.login(msg.param_list[0], msg.param_list[1]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                        ServerConnectionManager.sendMessage(enc_l);
                         break;
                     case ("get online user"):
                         TradingSystem.ServiceLayer.UserController.getCorrentOnlineUser();
                         break;
+                    case ("get online user name"):
+                        ans1 = TradingSystem.ServiceLayer.UserController.getCorrentOnlineUserName();
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string";
+                        msg_send.param_list = new string[] { ans1 };
+                        byte[] enc_name = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                        ServerConnectionManager.sendMessage(enc_name);
+                        break;
                     case ("logout"):
-                        TradingSystem.ServiceLayer.UserController.logout();
+                        ans = TradingSystem.ServiceLayer.UserController.logout();
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        byte[] enc_lo = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                        ServerConnectionManager.sendMessage(enc_lo);
                         break;
                     case ("save product"): // Products : "name1:15 name2:30 ..."
                         TradingSystem.ServiceLayer.UserController.saveProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], StringToDictionary(msg.param_list[3]));
@@ -53,7 +89,15 @@ namespace TradingSystem.ServiceLayer
                         TradingSystem.ServiceLayer.UserController.getCart(msg.param_list[0]);
                         break;
                     case ("open store"):
-                        TradingSystem.ServiceLayer.UserController.EstablishStore(msg.param_list[0], msg.param_list[1]);
+                        ans = TradingSystem.ServiceLayer.UserController.EstablishStore(msg.param_list[0], msg.param_list[1]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        byte[] enc_os = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                        ServerConnectionManager.sendMessage(enc_os);
                         break;
                     case ("purchase"): // string username, string paymentName
                         TradingSystem.ServiceLayer.UserController.checkPrice(msg.param_list[0]);
@@ -107,6 +151,12 @@ namespace TradingSystem.ServiceLayer
                 }
             }
         }
+
+        private static void sendMessage(byte[] enc)
+        {
+            throw new NotImplementedException();
+        }
+
         private static Dictionary<string, int> StringToDictionary(string str)
         {
             Dictionary<string, int> dic = new Dictionary<string, int>();
