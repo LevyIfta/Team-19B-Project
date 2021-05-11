@@ -16,7 +16,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             Store newStore = new Store(storeName, founder);
             // check for a name duplicant
-            if (stores.ContainsKey(storeName))
+            if ((storeName == null | founder == null) || stores.ContainsKey(storeName))
                 return false;
             stores.Add(storeName, newStore);
             // add the new store to DB
@@ -26,7 +26,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public static Store searchStore(string storeName)
         {
-            if (!stores.ContainsKey(storeName))
+            if (storeName == null || !stores.ContainsKey(storeName))
                 return null;
             return stores[storeName];
         }
