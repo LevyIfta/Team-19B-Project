@@ -9,6 +9,7 @@ namespace TradingSystem.ServiceLayer
 {
     public class UserController
     {
+        [ThreadStatic]
         public static aUser user = new Guest();
         public static bool login(string username, string password)
         {

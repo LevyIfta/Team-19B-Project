@@ -24,10 +24,16 @@ namespace TradingSystem.ServiceLayer
         
         private static void act(DecodedMessge msg)
         {
+            if(msg.type == msgType.FUNC)
+            {
+                switch(msg.name)
+                {
+                    case ("register") :
+                        TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
+                        break;
+                }
+            }
             
-            System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(new Action (()=> {
-                ((MainWindow)Application.Current.MainWindow).dothedo(msg);
-            }));
         }
 
         private static void threadsMain(object socketPar)

@@ -33,9 +33,9 @@ namespace ClientProject
         public string test()
         {
             DecodedMessge msg = new DecodedMessge();    
-            msg.type = msgType.OBJ;
-            msg.name = "basket";
-            msg.param_list = new string[] { "item1", "item2", "item3", "item4"};
+            msg.type = msgType.FUNC;
+            msg.name = "register";
+            msg.param_list = new string[] { "username", "Password1"};
 
             byte[] enc = Connection.Encoder.encode(msg);
 
