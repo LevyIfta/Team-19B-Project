@@ -17,10 +17,10 @@ namespace TradingSystem.BuissnessLayer
 
         // menu functions
         // users
-        public static aUser login(string username, string password)
+        public static string[] login(string username, string password)
         {
             if (onlineUsers.Contains(username))
-                return null;
+                return new string[] { "false", "user already login" };
             bool ans = false;
             foreach (aUser user1 in Users)
             {
@@ -28,13 +28,14 @@ namespace TradingSystem.BuissnessLayer
                     ans = true;
             }
             if (!ans && !MemberDAL.isExist(username))
-                return null;
-           
-            if (!MemberDAL.getMember(username).password.Equals(password) )
-                return null;
+                return new string[] { "false", "username not exist" };
+
+            if (!MemberDAL.getMember(username).password.Equals(password))
+                return new string[] { "false", "password incorrect" };
             onlineUsers.Add(username);
             offlineUsers.Remove(username);
-            return  new Member(MemberDAL.getMember(username)); 
+            //Users.Add(new Member(MemberDAL.getMember(username)));
+            return new string[] { "true", "" };
         }
         public static bool logout(string username)
         {
@@ -43,27 +44,31 @@ namespace TradingSystem.BuissnessLayer
             return true;
         }
 
-        public static bool register(string username, string password)
+        public static string[] register(string username, string password)
         {
-            if (MemberDAL.isExist(username))
-                return false;
-            if (!checkUserNameValid(username))
-                return false;
-            if (!checkPasswordValid(password))
-                return false;
-            MemberDAL.addMember(new MemberData(username, password));
-            Users.Add(new Member(username, password));
-            offlineUsers.Add(username);
-            return true;
+            string[] fullans = new string[2]
+;            if (MemberDAL.isExist(username))
+                return new string[] { "false", "user already exist" };
+            fullans[1] = checkUserNameValid(username) + ":";
+            fullans[1] += checkPasswordValid(password);
+            fullans[0] = "false";
+            if(fullans[1].Length < 3)
+            {
+                MemberDAL.addMember(new MemberData(username, password));
+                Users.Add(new Member(username, password));
+                offlineUsers.Add(username);
+                fullans[0] = "true";
+            }
+            return fullans;
         }
         public static bool register(string username, string password, double age, string gender)
         {
             if (MemberDAL.isExist(username))
                 return false;
-            if (!checkUserNameValid(username))
+           /* if (!checkUserNameValid(username))
                 return false;
             if (!checkPasswordValid(password))
-                return false;
+                return false;*/
             MemberDAL.addMember(new MemberData(username, password, age, gender));
             Users.Add(new Member(username, password, age, gender));
             offlineUsers.Add(username);
@@ -267,27 +272,51 @@ namespace TradingSystem.BuissnessLayer
             return true;
         }
 
-        private static bool checkUserNameValid(string username)
+        private static string checkUserNameValid(string username)
         {
-            if (username == null || username.Length < 4 /*|| containNumber(username)*/ || username.Length > 15)
-            {
-                return false;
-            }
-            return true;
+            if (username == null || username.Length < 4)
+                return "username too short";
+            if (username.Length > 15)
+                return "username too long";
+            return "";
         }
-        private static bool checkPasswordValid(string password)
+        private static string checkPasswordValid(string password)
         {
-            if (password == null || password.Length < 4 || password.Length > 20 || !containNumber(password) || !containLatter(password) || !containCapital(password))
+            if (password == null || password.Length < 4)
+                return "password too short";
+            if (password.Length > 20 )
+                return "password too long";
+            string ans = "";
+            if (!containNumber(password))
+                ans += "numbers ";
+            if (!containLatter(password))
+                ans += "latters ";
+            if (!containCapital(password))
+                ans += "capital";
+            string fullans = "";
+            if(ans.Length > 0)
             {
-                return false;
+                string[] str = ans.Split(' ');
+                for(int i=0; i<str.Length; i++)
+                {
+                    if(str[i].Length > 2)
+                    {
+                        if (fullans.Length != 0)
+                            fullans += " and ";
+                        fullans += str[i];
+                    }
+                }
             }
-            return true;
+            if (fullans.Length > 0)
+                fullans = "password doesn't contain " + fullans;
+            
+            return fullans;
         }
         private static bool containNumber(string str)
         {
             foreach (char letter in str)
             {
-                if (122 >= (int)letter & (int)letter >= 97)
+                if (48 <= (int)letter && (int)letter <= 57)
                     return true;
             }
             return false;
@@ -296,7 +325,7 @@ namespace TradingSystem.BuissnessLayer
         {
             foreach (char letter in str)
             {
-                if (60 <= (int)letter && (int)letter <= 90)
+                if (65 <= (int)letter && (int)letter <= 90)
                     return true;
             }
             return false;

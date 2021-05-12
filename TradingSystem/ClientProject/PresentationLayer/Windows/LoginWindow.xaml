@@ -20,7 +20,7 @@
                 <ImageBrush ImageSource="Fonts\Login.png" Stretch="UniformToFill" />
             </Grid.Background>
             <Label Content="User Name:" FontFamily="{StaticResource Caviar Dreams}" Margin="135,175,168,0" VerticalAlignment="Top" Height="24" Grid.Column="2"/>
-            <TextBox x:Name="username" Background="{StaticResource BackgroungTextBoxU}" BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Left" Height="29" Margin="135.333,199,0,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" VerticalAlignment="Top" Width="146" Grid.Column="2" >
+            <TextBox x:Name="username" Background="{StaticResource BackgroungTextBoxU}" BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Left" Height="29" Margin="135.333,199,0,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" VerticalAlignment="Top" Width="146" Grid.Column="2"  >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="4"/>

@@ -30,6 +30,30 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 OnPropertyChanged();
             }
         }
+
+        private String Storename;
+
+        public String storename
+        {
+            get { return Storename; }
+            set
+            {
+                Storename = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Storemsg;
+
+        public String storemsg
+        {
+            get { return Storemsg; }
+            set
+            {
+                Storemsg = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public partial class MainWindow : Window
     {
@@ -71,10 +95,10 @@ namespace WPF_Trial2.PresentationLayer.Windows
         {
             //this.userDataContext = new UserDataContext();
             this.DataContext = user;
-            user.userhello = "guest";
-            string ans = controler.getUserName();
-            if (ans != null)
-                user.userhello = ans;
+            user.userhello = "hello, guest";
+            //string ans = controler.getUserName();
+            //if (ans != null)
+                //user.userhello = ans;
             //this.UserNameHello = ans;
             this.storesDataContexts = new List<StoreDataContext>();
             this.searchStr = new searchString();
@@ -151,6 +175,28 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 user.userhello = "guest";
             }
             //loginWindow.ShowDialog();
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            if(user.storename == null)
+            {
+                user.storemsg = "insert store name";
+            }
+            else
+            {
+                bool ans = controler.OpenStore(user.userhello, user.storename);
+                if (!ans)
+                {
+                    user.storename = "";
+                    user.storemsg = "the name is already taken";
+                }
+                else
+                {
+                    user.storename = "";
+                    user.storemsg = "the store is open!";
+                }
+            }
         }
     }
 }

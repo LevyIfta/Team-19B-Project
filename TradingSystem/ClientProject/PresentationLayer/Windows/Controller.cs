@@ -69,7 +69,7 @@ namespace ClientProject
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
-            msg.name = "login";
+            msg.name = "logout";
             msg.param_list = new string[] { };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
@@ -84,6 +84,7 @@ namespace ClientProject
         }
         public string getUserName()
         {
+            Connection.ConnectionManager.Connect();
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "username";

@@ -174,5 +174,6 @@ namespace WPF_Trial2.PresentationLayer.Windows
             this.Close();
         }
 
+        
     }
 }

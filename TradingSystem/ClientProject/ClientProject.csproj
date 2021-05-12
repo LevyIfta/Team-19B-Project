@@ -129,16 +129,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Resource Include="Resources\password-dots.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\magnifying-glass-icon.png" />
-    <Resource Include="Resources\mail-icon.png" />
-    <Resource Include="Resources\shopping_cart_icon.png" />
-    <Resource Include="Resources\team19b-logo-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PresentationLayer\Icons\" />
@@ -161,6 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="PresentationLayer\Windows\Fonts\SignUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PresentationLayer\Windows\Fonts\magnifying-glass-icon.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\mail-icon.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\shopping_cart_icon.png" />
+    <Resource Include="PresentationLayer\Windows\Fonts\team19b-logo-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

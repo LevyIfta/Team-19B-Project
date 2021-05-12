@@ -17,14 +17,13 @@ namespace TradingSystem.ServiceLayer
         public static bool login(string username, string password)
         {
        //     DirAppend.AddToLogger("user " + username + " login", Result.Log);
-
-            aUser logged = BuissnessLayer.UserServices.login(username, password);
-            if ((logged == null))
+            string[] ans = BuissnessLayer.UserServices.login(username, password);
+            if (ans[0].Equals("false"))
             {
-                user.addAlarm("didnt logged in", "you suck");
+                user.addAlarm("login failed", ans[1]);
                 return false;
             }
-            user = logged;
+            user = BuissnessLayer.UserServices.getUser(username);
             user.addAlarm("logged in", "you did it");
             return true;
 
@@ -55,11 +54,14 @@ namespace TradingSystem.ServiceLayer
         }
         public static bool register(string userName, string password)
         {
-            if (BuissnessLayer.UserServices.register(userName, password))
+
+            string[] ans = BuissnessLayer.UserServices.register(userName, password);
+            if(ans[0].Equals("true"))
             {
             //    DirAppend.AddToLogger("new user register", Result.Log);
                 return true;
             }
+            user.addAlarm("register", ans[1]);
             return false;
         }
 

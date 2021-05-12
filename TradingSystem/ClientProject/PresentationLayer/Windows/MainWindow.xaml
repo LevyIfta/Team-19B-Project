@@ -11,41 +11,41 @@
     </Window.Resources>
 
 
-    <DockPanel>
+    <DockPanel Background="Azure">
 
-        <DockPanel x:Name="TopPanel" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
+        <DockPanel x:Name="TopPanel" Background="CornflowerBlue" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="162">
-                <Button x:Name="login_register" Content="Login\Register" Click="login_register_Click" Width="99" HorizontalAlignment="Right" Margin="0,0,-808,0"/>
+                <Button x:Name="login_register" Background="LightSlateGray" FontFamily="{StaticResource Buttom}" Content="Login\Register" Click="login_register_Click" Width="99" HorizontalAlignment="Right" Margin="0,0,-808,0"/>
             </Border>
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="162">
-                <Label x:Name="UserNameHello" Content="{Binding Path=userhello}" Height="auto" HorizontalAlignment="Right" Margin="0,0,-541,0" Width="162"/>
+                <Label x:Name="UserNameHello" FontFamily="{StaticResource Caviar Dreams}" Content="{Binding Path=userhello}" Height="auto" HorizontalAlignment="Right" Margin="0,0,-541,0" Width="162"/>
             </Border>
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="252">
-                <Button x:Name="logoutz" Content="logout" Click="login_register_Click" Margin="34,0,0,0" HorizontalAlignment="Left" Width="63"/>
+                <Button x:Name="logoutz" Background="LightSlateGray" FontFamily="{StaticResource Buttom}" Content="logout" Click="login_register_Click" Margin="34,0,0,0" HorizontalAlignment="Left" Grid.Column="2" Width="63"/>
             </Border>
         </DockPanel>
 
-        <DockPanel x:Name="SearchPanel" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
+        <DockPanel x:Name="SearchPanel" Background="LightSteelBlue" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4">
                 <DockPanel>
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="0,0,5,0">
                         <Label>
-                          <!--  <Image Height="50" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\team19b-logo-icon.png"></Image>
-                        -->  </Label>
+                            <Image Source="Fonts/team19b-logo-icon.png" Height="50"  />
+                        </Label>
                     </StackPanel>
                     <StackPanel x:Name="radioButtonPanel" Margin="0,0,20,0">
-                        <Label x:Name="SearchLabel" Content="Search by:" Height="auto"/>
-                        <RadioButton x:Name="byStore" Checked="byStoreChecked" Margin="25,0,0,0">Store</RadioButton>
-                        <RadioButton x:Name="byProduct" Checked="byProductChecked" Margin="25,0,0,0">Product</RadioButton>
+                        <Label x:Name="SearchLabel" FontFamily="{StaticResource Caviar Dreams}" Content="Search by:" Height="auto"/>
+                        <RadioButton x:Name="byStore" FontFamily="{StaticResource Caviar Dreams}" Checked="byStoreChecked" Margin="25,0,0,0">Store</RadioButton>
+                        <RadioButton x:Name="byProduct" FontFamily="{StaticResource Caviar Dreams}" Checked="byProductChecked" Margin="25,0,0,0">Product</RadioButton>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="0,0,20,0">
                         <Button Click="Search">
-                       <!--     <Image Height="{Binding ActualHeight, ElementName=SearchLabel}" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\magnifying-glass-icon.png"></Image>
-                        --></Button>
+                            <Image Height="{Binding ActualHeight, ElementName=SearchLabel}" Source="Fonts/magnifying-glass-icon.png"></Image>
+                        </Button>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Right" Margin="0,10,20,20">
                         <Grid >
-                            <TextBox x:Name="searchBarBox" DataContext="searchStr" Text="{Binding Search, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox x:Name="searchBarBox" Background="{StaticResource BackgroungTextBoxU}" BorderThickness="2" BorderBrush="Black" DataContext="searchStr" Text="{Binding Search, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <EventSetter Event="GotKeyboardFocus" Handler="TextBox_GotKeyboardFocus"></EventSetter>
@@ -54,7 +54,7 @@
                                 </TextBox.Style>
                             </TextBox>
 
-                            <TextBlock x:Name="searchBarText" Text="here" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#bfbfbf" FontStyle="Italic" IsHitTestVisible="False" >
+                            <TextBlock x:Name="searchBarText" FontFamily="{StaticResource Caviar Dreams}" Text="here" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#bfbfbf" FontStyle="Italic" IsHitTestVisible="False" >
                             </TextBlock>
                         </Grid>
                     </StackPanel>
@@ -63,11 +63,11 @@
             </Border>
         </DockPanel>
 
-        <DockPanel x:Name="ControlsPanel" Height="auto" HorizontalAlignment="Left"  DockPanel.Dock="Left" Width="100">
+        <DockPanel x:Name="ControlsPanel" Background="LightSteelBlue" Height="auto" HorizontalAlignment="Left"  DockPanel.Dock="Left" Width="100">
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top" Margin="5,5,5,5">
-                        <Button x:Name="button1" Content="Open Store" Click="OpenStore"/>
+                        <Button x:Name="button1" Background="LightSlateGray" FontFamily="{StaticResource Buttom}" Content="Open Store" Click="OpenStore"/>
                     </StackPanel>
                 </DockPanel>
             </Border>
@@ -97,7 +97,6 @@
    <UniformGrid Columns="3"/>
   </ItemsPanelTemplate>
  </ListBox.ItemsPanel>
-
                 <Grid>
                     <ItemsControl x:Name="lst" ItemsSource="{Binding storesDataContexts}"  ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
                 </Grid>
@@ -105,8 +104,6 @@
       
                 </DataTemplate>
                 </ListBox>
-
-
                 <ListView ItemsSource="{Binding storesDataContexts}">
                     <ListView.View>
                         <GridView>
@@ -126,7 +123,6 @@
                <DataGrid x:Name="storeGrid" ItemsSource="{Binding abc}" VerticalScrollBarVisibility="Visible" HeadersVisibility="None" 
                     CanUserAddRows="False" CanUserDeleteRows="False"  CanUserResizeRows="False"
                           CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False">
-
                     <DataGrid.Columns>
                         
                         <DataGridTemplateColumn  Width="150">
@@ -142,6 +138,12 @@
 
             </Border>
         </DockPanel>
+        <Grid>
+            <Label x:Name="label" FontFamily="{StaticResource Caviar Dreams}" Content="Store Name:" Margin="10,10,798,0" Height="29" VerticalAlignment="Top"/>
+            <Label x:Name="label1" Foreground="{StaticResource TextColorErrorU}" Content="{Binding Path=storemsg}" Margin="88,10,646,0" Height="29" VerticalAlignment="Top"/>
 
+            <TextBox x:Name="storeName" Background="{StaticResource BackgroungTextBoxU}" BorderThickness="2" BorderBrush="Black" Text="{Binding storename, Mode=TwoWay}" Height="23" TextWrapping="Wrap" Margin="10,39,0,0" VerticalAlignment="Top" d:LayoutOverrides="Height" HorizontalAlignment="Left" Width="162" />
+            <Button x:Name="button" Background="LightSlateGray" FontFamily="{StaticResource Buttom}" Content="Button" Click="button_Click" HorizontalAlignment="Left" Margin="117,83,0,0" Width="76" Height="21" VerticalAlignment="Top"/>
+        </Grid>
     </DockPanel>
 </Window>
