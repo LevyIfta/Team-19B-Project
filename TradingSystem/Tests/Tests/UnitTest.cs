@@ -37,60 +37,61 @@ namespace Tests
         [TestMethod]
         public void loginTestBad()
         {
-            Assert.IsFalse(bridge.login("fakeUser", "fakePassword"), "managed to login as fake user");
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "the logged user changed (fake user)");
+            // init usernames and passes
+            string username1 = "AbD1", username2 = "QwEr2", fake1 = "fake1", fake2 = "fake2";
+            string pass1 = "123Xx456", pass2 = "465Ss789", fakePass1 = "111", fakePass2 = "789";
+            // register
+            UserServices.register(username1, pass1);
+            UserServices.register(username2, pass2);
+            // try to login twice
+            aUser u1 = UserServices.login(username1, pass1);
+            Assert.IsNull(UserServices.login(username1, pass1));
+            // try to login with fake user
+            Assert.IsNull(UserServices.login(fake1, fakePass1), "managed to login as fake user");
+            // fake pass
+            Assert.IsNull(UserServices.login(username2, fakePass2), "managed to login with wrong password");
 
-            Assert.IsFalse(bridge.login("user1", "fakePassword"), "managed to login with wrong password");
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "the logged user changed (wrong password)");
-
-            Assert.IsFalse(bridge.login("fakeUser", "Password1"), "managed to login with fake userbane");
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "the logged user changed (fake username)");
+            Assert.IsNull(UserServices.login(fake1, pass1), "managed to login with fake username");
         }
 
 
         [TestMethod]
         public void registerTestGood()
         {
-            Assert.IsTrue(bridge.register("newUser1", "newPassword1"), "faild to register as a valid user");
-            Assert.IsTrue(bridge.isUserExist("newUser1", "newPassword1"), "user was not properly saved");
-            Assert.IsFalse(bridge.isUserExist("newUser1", "fakePassword1"), "wrong password found as exist");
+            Assert.IsTrue(UserServices.register("newUser1", "newPassword1"), "faild to register as a valid user");
+            Assert.IsNotNull(UserServices.login("newUser1", "newPassword1"), "user was not properly saved");
+            Assert.IsNull(UserServices.login("newUser1", "fakePassword1"), "wrong password found as exist");
 
             Assert.IsTrue(bridge.register("newUser2", "newPassword1"), "faild to register as a valid user(existing password)");
             Assert.IsTrue(bridge.isUserExist("newUser2", "newPassword1"), "user was not properly saved (existing password)");
-
         }
 
         [TestMethod]
         public void registerTestBad()
         {
-            Assert.IsFalse(bridge.register("user1", "Password1"), "managed to register as an alread existing user (same password)");
-            Assert.IsFalse(bridge.register("user1", "Password2"), "managed to register with an existig username (different passwords)");
-            Assert.IsFalse(bridge.isUserExist("user1", "Password2"), "exisint user with different passworrd considerd to exist");
+            Assert.IsFalse(UserServices.register("user1", "Password1"), "managed to register as an alread existing user (same password)");
+            Assert.IsFalse(UserServices.register("user1", "Password2"), "managed to register with an existig username (different passwords)");
+            Assert.IsNull(UserServices.login("user1", "Password2"), "exisint user with different passworrd considerd to exist");
 
-            Assert.IsFalse(bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "managed to register with bad username");
-            Assert.IsFalse(bridge.isUserExist("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "invlid user saved (bad username)");
+            Assert.IsFalse(UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "managed to register with bad username");
+            Assert.IsNull(UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword"), "invlid user saved (bad username)");
 
-            Assert.IsFalse(bridge.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "managed to register with bad password");
-            Assert.IsFalse(bridge.isUserExist("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "invlid user saved (bad password)");
-
-
-            Assert.IsFalse(bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "managed to register with bad username and bad password");
-            Assert.IsFalse(bridge.isUserExist("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "invlid user saved (bad username and bad passsword)");
+            Assert.IsFalse(UserServices.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "managed to register with bad password");
+            Assert.IsNull(UserServices.login("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^"), "invlid user saved (bad password)");
+            
+            Assert.IsFalse(UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "managed to register with bad username and bad password");
+            Assert.IsNull(UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^"), "invlid user saved (bad username and bad passsword)");
         }
 
         [TestMethod]
         public void logoutTest()
         {
-            Assert.IsTrue(bridge.login("user2", "Password2"), "failed login");
-            Assert.AreEqual<string>(bridge.getUserName(), "user2", "failed login (login didnt change the logged user properly)");
-
-            bridge.logout();
-
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "logout did not change the logged user to guest");
-
-            bridge.logout();
-            Assert.AreEqual<string>(bridge.getUserName(), "guest", "2nd logout changed something");
-
+            string username = "newUser1_", pass = "newPas00s";
+            UserServices.register(username, pass);
+            aUser u = UserServices.login(username, pass);
+            Assert.IsNull(UserServices.login(username, pass)); // user should be logged in
+            UserServices.logout(username);
+            Assert.IsNotNull(UserServices.login(username, pass));
         }
 
         [ClassCleanup]
@@ -130,7 +131,7 @@ namespace Tests
             basket.products.Add(items2);
             bridge.addProducts(basket);
 
-
+            bridge.logout();
         }
 
         [ClassCleanup]
@@ -142,6 +143,14 @@ namespace Tests
         [TestMethod]
         public void saveProductTest()
         {
+            string username = "AlIbAd";
+            string pass = "123xX4";
+            string storeName = "new_store_1";
+
+            UserServices.register(username, pass);
+            aUser user = UserServices.login(username, pass);
+            // open a new store
+            Stores.addStore(storeName, (Member)user);
             //setup
             ProductInfo newInfo3 =  ProductInfo.getProductInfo("item3", "cat", "man");
 
@@ -150,17 +159,14 @@ namespace Tests
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
 
 
-            ShoppingBasket basket = new ShoppingBasket(bridge.getStore("basketStore1"), (Member)bridge.getUser());
-            basket.products.Add(items3);
-            basket.products.Add(items4);
-
-            bridge.addProducts(basket);
-
-            ShoppingBasket saveBasket = bridge.getBasket("basketStore1");
-            Assert.IsTrue(saveBasket.products.Contains(items3), "failed to save one of the items");
-            Assert.IsTrue(saveBasket.products.Contains(items4), "failed to save one of the items");
-            Assert.IsFalse(saveBasket.products.Contains(null), "saved a null item");
-
+            ShoppingBasket basket = new ShoppingBasket(Stores.searchStore(storeName), (Member)user);
+            basket.addProduct(items3);
+            basket.addProduct(items4);
+            
+            Assert.IsTrue(basket.products.Contains(items3), "failed to save one of the items");
+            Assert.IsTrue(basket.products.Contains(items4), "failed to save one of the items");
+            Assert.IsFalse(basket.products.Contains(null), "saved a null item");
+            //bridge.logout();
         }
 
         /*
@@ -256,62 +262,58 @@ namespace Tests
         [TestMethod]
         public void createStoreTestGood()
         {
-            bridge.logout();
-            Store store = bridge.getStore("store2qq");
-            Assert.IsNull(store, "store found before  being founded");
-            bridge.login("store1", "Store1");
-            bridge.openStore("store2qq");
-            store = bridge.getStore("store2qq");
-            
-            Assert.AreEqual(store.name, "store2qq", "store has wrong name");
+            string storeOwnerName = "StoreOwner_", storeOwnerPass = "123Xx456";
+            string storeName = null;
+            bool ownerReg = UserServices.register(storeOwnerName, storeOwnerPass);
+            aUser storeOwner = UserServices.login(storeOwnerName, storeOwnerPass);
+            // try to create a store  with an empty name
+            Assert.IsFalse(Stores.addStore(storeName, (Member)storeOwner), "managed to create a store with a null name");
+            Assert.IsNull(Stores.searchStore(storeName), "found a store with a null name");
         }
         [TestMethod]
         public void createStoreTestBad()
         {
-            bridge.logout();
-            bridge.login("store2", "Store2");
-            bridge.openStore("store1");
-            Assert.IsFalse(bridge.openStore("store1"), "manage to open a store with an existing name");
+            string storeOwnerName = "StoreOwner", storeOwnerPass = "123Xx456";
+            string storeName = "createStoreTestBad_store1";
+            bool ownerReg = UserServices.register(storeOwnerName, storeOwnerPass);
+            aUser storeOwner = UserServices.login(storeOwnerName, storeOwnerPass);
+            Stores.addStore(storeName, (Member)storeOwner);
+            Store store = Stores.searchStore(storeName);
 
-            string storeName = "s_1233_s";
-            bridge.openStore(storeName);
-            Store store = bridge.getStore(storeName);
-            Assert.AreEqual(store.founder.getUserName(), "store2", "store founder changed");
+            Assert.IsFalse(Stores.addStore(storeName, (Member)storeOwner), "manage to open a store with an existing name");
+            Assert.AreEqual(store.founder.getUserName(), storeOwnerName, "store founder changed");
         }
 
         [TestMethod]
-        public void searchStoreTestGood()
+        public void searchStoreTest()
         {
-            bridge.logout();
-            bridge.login("store1", "Store1");
-            bridge.openStore(store1Name);
-            Store s1 = bridge.getStore(store1Name);
-            Assert.IsNotNull(s1, "could not find an existing store: " + store1Name);
+            string storeOwnerName = "StoreOwner_1", storeOwnerPass = "123Xx456";
+            string storeName = "searchStoreTestGood_store1";
+            bool ownerReg = UserServices.register(storeOwnerName, storeOwnerPass);
+            aUser storeOwner = UserServices.login(storeOwnerName, storeOwnerPass);
+            Stores.addStore(storeName, (Member)storeOwner);
+            Store store = Stores.searchStore(storeName);
 
-            string newStore = "this_is_for_test";
-            bridge.openStore(newStore);
-            s1 = bridge.getStore(newStore);
-
-            Assert.IsNotNull(s1, "could not find an existing store: " + newStore);
-            Assert.IsNull(bridge.getStore("this store does not exist"));
+            Assert.IsNotNull(store, "could not find an existing store: " + storeName);
+            Assert.IsNull(Stores.searchStore("this store does not exist"));
         }
-
+        
+        /*
         [TestMethod]
         public void addInventoryTest()
         {
-            bridge.logout();
-            bridge.login("store1", "Store1");
+            string storeOwnerName = "StoreOwner", storeOwnerPass = "123Xx456";
+            bool ownerReg = UserServices.register(storeOwnerName, storeOwnerPass);
+            aUser storeOwner = UserServices.login(storeOwnerName, storeOwnerPass);
+            Stores.addStore("store1", (Member)storeOwner);
+            Store store = Stores.searchStore("store1");
+
             //setup
             ProductInfo newInfo3 = ProductInfo.getProductInfo("item3", "cat", "manInv");
             ProductInfo newInfo4 = ProductInfo.getProductInfo("item4", "cat", "manInv");
 
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
-            Assert.IsFalse(bridge.isProductExist("item3", "manInv"), "new product alread exist");
             
-            //bridge.openStore("store_1");
-            
-            bridge.openStore("store1");
-            Store store = bridge.getStore("store1");
             ShoppingBasket basket = new ShoppingBasket(store, (Member)bridge.getUser());
             basket.products.Add(items3);
             basket.products.Add(items4);
@@ -337,7 +339,7 @@ namespace Tests
             count += 2;
             bridge.addInventory(basket);
             Assert.AreEqual(inventory.Count, count, "count update wrong(add more of exising product");
-            /*
+            
             foreach (Product item in store.inventory)
             {
                 if (item.info.Equals(newInfo3))
@@ -345,31 +347,31 @@ namespace Tests
                 if (item.info.Equals(newInfo4))
                     Assert.AreEqual(item.amount, 4, "failed to update the item amount properly(2nd add)");
             }
-            */
+            
 
 
         }
+        */
         
         [TestMethod]
         public void parallelPurchase()
         {
-            
-            bridge.login("store1", "Store1");
-            // establish a new store
-            bridge.openStore("Ali Shop");
-            Store aliShop = bridge.getStore("Ali Shop");
-            // add products to the strore
-            aliShop.addProduct("Bamba", "Food", "Osem");
-            // set the price of the product
-            aliShop.editPrice("Bamba", "Osem", 3);
-            // supply 
-            aliShop.supply("Bamba", "Osem", 20);
             // register twice and login from two different users
             bool user1reg = UserServices.register("AliKB", "123xX456");
             bool user2reg = UserServices.register("Bader", "456xX789");
             // login
             aUser user1 = UserServices.login("AliKB", "123xX456");
             aUser user2 = UserServices.login("Bader", "456xX789");
+            // establish a new store
+            string storeName = "Ali Shop";
+            Stores.addStore(storeName, (Member)user1);
+            Store aliShop = Stores.searchStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 20);
             // try to buy more than 20 bamba in total
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
@@ -385,11 +387,16 @@ namespace Tests
         [TestMethod]
         public void purchaseTestGood()
         {
-            bridge.login("store1", "Store1");
+            // register
+            string username1 = "StoreOwner1";
+            string pass1 = "123xX456";
+            // register and login
+            bool ownerReg = UserServices.register(username1, pass1);
+            aUser storeOwner = UserServices.login(username1, pass1);
             // establish a new store
-            string storeName = "Ali Shop2";
-            bridge.openStore(storeName);
-            Store aliShop = bridge.getStore(storeName);
+            string storeName = "Ali Shop2_purchaseTestGood";
+            Stores.addStore(storeName, (Member)storeOwner);
+            Store aliShop = Stores.searchStore(storeName);
             // add products to the strore
             aliShop.addProduct("Bamba", "Food", "Osem");
             // set the price of the product
@@ -413,12 +420,16 @@ namespace Tests
         [TestMethod]
         public void purchaseTestBad()
         {
-
-            bridge.logout();
-            bridge.login("store1", "Store1");
-            // establish a new store
+            // register
+            string ownerUsername = "AliBB", ownerPass = "123Xx123";
+            bool reg = UserServices.register(ownerUsername, ownerPass);
             string storeName = "Ali Shop3";
-            bridge.openStore(storeName);
+
+            aUser owner = UserServices.login(ownerUsername, ownerPass);
+            Stores.addStore(storeName, (Member)owner);
+            // establish a new store
+
+            
             Store aliShop = bridge.getStore(storeName);
             // add products to the strore
             aliShop.addProduct("Bamba", "Food", "Osem");
