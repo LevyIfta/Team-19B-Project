@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +35,44 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder);
+            
+            // fill the collections
+            this.fillReceipts();
+            this.fillInventory();
+            this.fillOwners();
+            this.fillManagers();
+        }
+
+        private void fillReceipts()
+        {
+            this.receipts = new LinkedList<Receipt>();
+            ICollection<ReceiptData> receiptsData = ReceiptDAL.getStoreReceipts(this.name);
+            foreach (ReceiptData receipt in receiptsData)
+                this.receipts.Add(new Receipt(receipt));
+        }
+
+        private void fillInventory()
+        {
+            this.inventory = new LinkedList<Product>();
+            ICollection<ProductData> productsData = ProductDAL.getStoreProducts(this.name);
+            foreach (ProductData productData in productsData)
+                this.inventory.Add(new Product(productData));
+        }
+
+        private void fillManagers()
+        {
+            this.managers = new LinkedList<Member>();
+            ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
+            foreach (HireNewStoreManagerPermissionData manager in managersData)
+                this.managers.Add((Member)UserServices.getUser(manager.userName));
+        }
+
+        private void fillOwners()
+        {
+            this.owners = new LinkedList<Member>();
+            ICollection<HireNewStoreOwnerPermissionData> ownersData = HireNewStoreOwnerPermissionDAL.getStoreOwners(this.name);
+            foreach (HireNewStoreOwnerPermissionData owner in ownersData)
+                this.owners.Add((Member)UserServices.getUser(owner.userName));
         }
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
@@ -64,6 +102,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                         this.inventory.Remove(product);
                         // update DB
                         product.remove(this.name);
+                        return;
                     }
             }
         }
@@ -75,6 +114,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
                 {
                     p.price = newPrice;
+                    
                     // update DB
                     ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                     return true;
@@ -126,52 +166,67 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // check for amounts validation
                 if (checkAmounts(products) & checkPolicies(basket))
                 {
-                    // calc the price
-                    double price = calcPrice(products);
-                    // request for payment
-                    if (paymentMethod.pay(price))
-                    {
-                        // create the receipt
-                        receipt = new Receipt();
-                        // the payment was successful
-                        foreach (Product product in products)
-                            foreach (Product localProduct in this.inventory)
-                            {
-                                if (localProduct.info.Equals(product.info))
-                                {
-                                    localProduct.amount -= product.amount;
-                                    // update amount in DB
-                                    localProduct.update(this.name);
-                                    // add the products to receipt
-                                    receipt.products.Add(localProduct.info.id, product.amount);
-                                    // 
-                                    receipt.actualProducts.Add(new Product(localProduct));
-                                    // leave feedback
-                                    product.info.leaveFeedback(basket.owner.userName, "");
-                                    // update feedback in DB
-                                    FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
-                                }
-                                //StoresData.getStore(this.name).removeProducts(product.toDataObject());
-                                product.info.roomForFeedback(basket.owner.userName);
-                            }
-
-                        // clean the basket
-                        basket.clean();
-                        // update basket in DB
-                        basket.update();
-                        // fill receipt fields
-                        receipt.store = this;
-                        receipt.discount = 0;
-                        receipt.date = DateTime.Now;
-                        receipt.price = price;
-                        // save the receipt
-                        this.receipts.Add(receipt);
-                        // add receipt to DB
-                        receipt.save();
-                    }
+                    receipt = validPurchase(basket, paymentMethod, receipt);
+                    // update the origin store
+                    Stores.stores[this.name].inventory = this.inventory;
+                    Stores.stores[this.name].receipts = this.receipts;
                 }
             }
 
+            return receipt;
+        }
+
+        private Receipt validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
+        {
+            // calc the price
+            double price = calcPrice(basket.products);
+            // request for payment
+            if (paymentMethod.pay(price))
+            {
+                // create the receipt
+                receipt = new Receipt();
+                // the payment was successful
+                foreach (Product product in basket.products)
+                    foreach (Product localProduct in this.inventory)
+                    {
+                        if (localProduct.info.Equals(product.info))
+                        {
+                            localProduct.amount -= product.amount;
+                            // update amount in DB
+                            localProduct.update(this.name);
+                            // add the products to receipt
+                            receipt.products.Add(localProduct.info.id, product.amount);
+                            // 
+                            receipt.actualProducts.Add(new Product(localProduct));
+                            // leave feedback
+                            product.info.leaveFeedback(basket.owner.userName, "");
+                            // update feedback in DB
+                            FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                        }
+                        //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                        product.info.roomForFeedback(basket.owner.userName);
+                    }
+
+                // clean the basket
+                basket.clean();
+                // update basket in DB
+                basket.update();
+                // fill receipt fields
+                receipt = fillReceipt(receipt, price);
+            }
+            return receipt;
+        }
+
+        private Receipt fillReceipt(Receipt receipt, double price)
+        {
+            receipt.store = this;
+            receipt.discount = 0;
+            receipt.date = DateTime.Now;
+            receipt.price = price;
+            // save the receipt
+            this.receipts.Add(receipt);
+            // add receipt to DB
+            receipt.save();
             return receipt;
         }
 
@@ -258,7 +313,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             foreach (Product product in this.inventory)
                 if (product.info.name.Equals(productName) && product.info.manufacturer.Equals(manufacturer))
-                    return new Product(product);
+                    return new Product(product); // clone so that the user cannot edit price/amout ...
             return null; // no results
         }
 
@@ -301,6 +356,16 @@ namespace TradingSystem.BuissnessLayer.commerce
         public StoreData toDataObject()
         {
             return new StoreData(this.name, this.founder.userName);
+        }
+
+        public void removeFromInventory(Product product)
+        {
+            lock (this.purchaseLock)
+            {
+                foreach (Product p in this.inventory)
+                    if (p.info.Equals(product.info) & p.amount >= product.amount)
+                        p.amount -= product.amount;
+            }
         }
     }
 }

@@ -1,0 +1,147 @@
+﻿<Window x:Class="WPF_Trial2.PresentationLayer.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Trial2.PresentationLayer.Windows"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1000">
+    <Window.Resources>
+
+    </Window.Resources>
+
+
+    <DockPanel>
+
+        <DockPanel x:Name="TopPanel" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="162">
+                <Button x:Name="login_register" Content="Login\Register" Click="login_register_Click" Width="99" HorizontalAlignment="Right" Margin="0,0,-808,0"/>
+            </Border>
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="162">
+                <Label x:Name="UserNameHello" Content="{Binding Path=userhello}" Height="auto" HorizontalAlignment="Right" Margin="0,0,-541,0" Width="162"/>
+            </Border>
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="252">
+                <Button x:Name="logout" Content="logout" Click="login_register_Click" Margin="34,0,0,0" HorizontalAlignment="Left" Width="63"/>
+            </Border>
+        </DockPanel>
+
+        <DockPanel x:Name="SearchPanel" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4">
+                <DockPanel>
+                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="0,0,5,0">
+                        <Label>
+                            <Image Height="50" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\team19b-logo-icon.png"></Image>
+                        </Label>
+                    </StackPanel>
+                    <StackPanel x:Name="radioButtonPanel" Margin="0,0,20,0">
+                        <Label x:Name="SearchLabel" Content="Search by:" Height="auto"/>
+                        <RadioButton x:Name="byStore" Checked="byStoreChecked" Margin="25,0,0,0">Store</RadioButton>
+                        <RadioButton x:Name="byProduct" Checked="byProductChecked" Margin="25,0,0,0">Product</RadioButton>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="0,0,20,0">
+                        <Button Click="Search">
+                            <Image Height="{Binding ActualHeight, ElementName=SearchLabel}" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\magnifying-glass-icon.png"></Image>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Right" Margin="0,10,20,20">
+                        <Grid >
+                            <TextBox x:Name="searchBarBox" DataContext="searchStr" Text="{Binding Search, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <EventSetter Event="GotKeyboardFocus" Handler="TextBox_GotKeyboardFocus"></EventSetter>
+                                        <EventSetter Event="LostKeyboardFocus" Handler="TextBox_LostKeyboardFocus"/>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <TextBlock x:Name="searchBarText" Text="here" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#bfbfbf" FontStyle="Italic" IsHitTestVisible="False" >
+                            </TextBlock>
+                        </Grid>
+                    </StackPanel>
+
+                </DockPanel>
+            </Border>
+        </DockPanel>
+
+        <DockPanel x:Name="ControlsPanel" Height="auto" HorizontalAlignment="Left"  DockPanel.Dock="Left" Width="100">
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Margin="5,5,5,5">
+                        <Button x:Name="button1" Content="Open Store" Click="OpenStore"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </DockPanel>
+
+        <DockPanel x:Name="ContentPanel" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4">
+
+                <ListBox x:Name="StoresList" ItemsSource="{Binding storesDataContexts}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3">
+                            </UniformGrid>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <DataTemplate>
+                        <Button Content="{Binding name}" Height="40" Width="40"/>
+                    </DataTemplate>
+                </ListBox>
+
+
+                <!--
+                
+                <ListBox>
+ <ListBox.ItemsPanel>
+  <ItemsPanelTemplate>
+   <UniformGrid Columns="3"/>
+  </ItemsPanelTemplate>
+ </ListBox.ItemsPanel>
+
+                <Grid>
+                    <ItemsControl x:Name="lst" ItemsSource="{Binding storesDataContexts}"  ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
+                </Grid>
+ <DataTemplate>
+      
+                </DataTemplate>
+                </ListBox>
+
+
+                <ListView ItemsSource="{Binding storesDataContexts}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Source=storesDataContexts, ElementName=Name}" Cursor="Hand" Grid.ColumnSpan="3"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                
+              
+               <DataGrid x:Name="storeGrid" ItemsSource="{Binding abc}" VerticalScrollBarVisibility="Visible" HeadersVisibility="None" 
+                    CanUserAddRows="False" CanUserDeleteRows="False"  CanUserResizeRows="False"
+                          CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False">
+
+                    <DataGrid.Columns>
+                        
+                        <DataGridTemplateColumn  Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="storeName" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                -->
+
+            </Border>
+        </DockPanel>
+
+    </DockPanel>
+</Window>

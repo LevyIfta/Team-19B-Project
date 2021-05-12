@@ -10,12 +10,26 @@ namespace TradingSystem.BuissnessLayer
 {
     public abstract class aUser
     {
-        public ShoppingCart myCart { get { return myCart; } set { } }
+        public string userName { get; set; }
+        public ShoppingCart myCart { get; set; }
 
-
+        public ShoppingCart getMyCart()
+        {
+            if (myCart == null)
+                myCart = new ShoppingCart(this);
+            return myCart;
+        }
         public abstract string getUserName();
+        public virtual double getAge()
+        {
+            return -1;
+        }
+        public virtual string getGender()
+        {
+            return "nun";
+        }
 
-        
+
         public virtual object todo(PersmissionsTypes func, object[] args)
         {
             return null;
@@ -24,6 +38,10 @@ namespace TradingSystem.BuissnessLayer
         public bool saveProduct(ShoppingBasket basket1)
         {
             bool match = false;
+            if(myCart == null)
+            {
+                myCart = new ShoppingCart(this);
+            }
             foreach (ShoppingBasket basket2 in myCart.baskets)
             {
                 if(!match && basket2.store.Equals(basket1.store))
@@ -31,6 +49,10 @@ namespace TradingSystem.BuissnessLayer
                     match = true;
                     basket2.margeBasket(basket1);
                 }
+            }
+            if (!match)
+            {
+                myCart.baskets.Add(basket1);
             }
             return true;
         }
@@ -98,7 +120,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
-        public virtual bool editProduct(string storeName, int productName, double price, string manufacturer)
+        public virtual bool editProduct(string storeName, string productName, double price, string manufacturer)
         {
             return false;
         }
@@ -123,6 +145,10 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
         public virtual bool removeManager(string storeName, string username)
+        {
+            return false;
+        }
+        public virtual bool removeOwner(string storeName, string username)
         {
             return false;
         }

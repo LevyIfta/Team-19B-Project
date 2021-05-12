@@ -56,6 +56,19 @@ namespace TradingSystem.BuissnessLayer
             offlineUsers.Add(username);
             return true;
         }
+        public static bool register(string username, string password, double age, string gender)
+        {
+            if (MemberDAL.isExist(username))
+                return false;
+            if (!checkUserNameValid(username))
+                return false;
+            if (!checkPasswordValid(password))
+                return false;
+            MemberDAL.addMember(new MemberData(username, password, age, gender));
+            Users.Add(new Member(username, password, age, gender));
+            offlineUsers.Add(username);
+            return true;
+        }
         // aUser
         public static bool saveProduct(string username, string storeName, string manufacturer, Dictionary<string, int> product)
         {
@@ -63,6 +76,7 @@ namespace TradingSystem.BuissnessLayer
             foreach (string pName in product.Keys)
             {
                 Product p1 = Stores.searchStore(storeName).searchProduct(pName, manufacturer);
+                p1.amount = product[pName];
                 basket.addProduct(p1);
             }
             return getUser(username).saveProduct(basket);
@@ -145,7 +159,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return getUser(username).removeProduct(storeName, productName, manufacturer);
         }
-        public static bool editProduct(string username, string storeName, int productName, double price, string manufacturer)
+        public static bool editProduct(string username, string storeName, string productName, double price, string manufacturer)
         {
             return getUser(username).editProduct(storeName, productName, price, manufacturer);
         }
@@ -239,6 +253,18 @@ namespace TradingSystem.BuissnessLayer
                 }
             }
             return ans;
+        }
+        public static bool removeEmployeesPermission(string storeName, string sponser)
+        {
+            foreach (Member user in Users)
+            {
+                if (user.removePermission(storeName, sponser))
+                {
+                    Stores.searchStore(storeName).removeManager(user);
+                    Stores.searchStore(storeName).removeOwner(user);
+                }
+            }
+            return true;
         }
 
         private static bool checkUserNameValid(string username)

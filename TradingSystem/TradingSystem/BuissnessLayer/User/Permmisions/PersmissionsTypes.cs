@@ -16,6 +16,7 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         HireNewStoreManager,
         HireNewStoreOwner,
         RemoveManager,
-        RemoveProduct
+        RemoveProduct,
+        RemoveOwner
     }
 }

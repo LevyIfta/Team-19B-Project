@@ -64,8 +64,10 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
                     return new removeManager(storeName, userSponser);
                 case PersmissionsTypes.RemoveProduct:
                     return new removeProduct(storeName, userSponser);
+                case PersmissionsTypes.RemoveOwner:
+                    return new removeOwner(storeName, userSponser);
             }
-            return null;
+            return null; 
         }
         public static string who(PersmissionsTypes type)
         {
@@ -89,6 +91,8 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
                     return "RemoveManager";
                 case PersmissionsTypes.RemoveProduct:
                     return "RemoveProduct";
+                case PersmissionsTypes.RemoveOwner:
+                    return "RemoveOwner";
             }
             return "";
         }

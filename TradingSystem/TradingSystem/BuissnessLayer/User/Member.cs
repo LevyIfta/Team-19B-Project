@@ -11,8 +11,10 @@ namespace TradingSystem.BuissnessLayer
 {
     public class Member : aUser
     {
-        public string userName { get; set; }
+        //public string userName { get; set; }
         public string password { get; set; }
+        public double age { get; set; }
+        public string gender { get; set; }
 
         public ICollection<Receipt> reciepts { get; set; }
         public basePermmision permmisions { get; set; }
@@ -22,6 +24,17 @@ namespace TradingSystem.BuissnessLayer
         {
             this.userName = username;
             this.password = password;
+            this.age = -1;
+            this.gender = "nun";
+            this.reciepts = new List<Receipt>();
+            this.myCart = new ShoppingCart(this);
+        }
+        public Member(string username, string password, double age, string gender) : base()
+        {
+            this.userName = username;
+            this.password = password;
+            this.age = age;
+            this.gender = gender;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
         }
@@ -38,6 +51,14 @@ namespace TradingSystem.BuissnessLayer
         {
             return userName;
         }
+        public override double getAge()
+        {
+            return age;
+        }
+        public override string getGender()
+        {
+            return gender;
+        }
 
         override
         public object todo(PersmissionsTypes func, object[] args)
@@ -47,7 +68,9 @@ namespace TradingSystem.BuissnessLayer
         override
         public bool EstablishStore(string storeName)
         {
-            Stores.addStore(storeName, this);
+            if (!Stores.addStore(storeName, this))
+                return false;
+            
             permmisions = new basePermmision("", null);
             aPermission temp1 = new addProduct(storeName, null);
             aPermission temp2 = new editManagerPermissions(storeName, null);
@@ -73,7 +96,7 @@ namespace TradingSystem.BuissnessLayer
         public override ICollection<Receipt> purchase(PaymentMethod payment)
         {
             ICollection<Receipt> list = new List<Receipt>();
-            foreach (ShoppingBasket basket in myCart.baskets)
+            foreach (ShoppingBasket basket in getMyCart().baskets)
             {
                 Receipt receipt = basket.store.executePurchase(basket, payment);
                 if (receipt == null)
@@ -143,7 +166,7 @@ namespace TradingSystem.BuissnessLayer
             object[] args = new object[] { storeName, productName, manufacturer };
             return (bool)todo(PersmissionsTypes.RemoveProduct, args);
         }
-        public override bool editProduct(string storeName, int productName, double price, string manufacturer)
+        public override bool editProduct(string storeName, string productName, double price, string manufacturer)
         {
             object[] args = new object[] { storeName, productName, price, manufacturer };
             return (bool)todo(PersmissionsTypes.EditProduct, args);
@@ -179,6 +202,11 @@ namespace TradingSystem.BuissnessLayer
             return (bool)todo(PersmissionsTypes.HireNewStoreOwner, args);
         }
         public override bool removeManager(string storeName, string username)
+        {
+            object[] args = new object[] { storeName, username, this.userName };
+            return (bool)todo(PersmissionsTypes.RemoveManager, args);
+        }
+        public override bool removeOwner(string storeName, string username)
         {
             object[] args = new object[] { storeName, username, this.userName };
             return (bool)todo(PersmissionsTypes.RemoveManager, args);

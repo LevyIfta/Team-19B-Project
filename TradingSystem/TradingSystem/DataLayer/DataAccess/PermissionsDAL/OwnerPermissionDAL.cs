@@ -8,7 +8,7 @@ namespace TradingSystem.DataLayer
 {
     static class OwnerPermissionDAL
     {
-        private static List<OwnerPermissionData> OwnerPermissions;
+        private static List<OwnerPermissionData> OwnerPermissions = new List<OwnerPermissionData>();
 
         public static OwnerPermissionData getOwnerPermission(string ownerName, string storeName)
         {

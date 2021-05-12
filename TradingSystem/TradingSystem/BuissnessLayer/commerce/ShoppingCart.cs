@@ -10,8 +10,8 @@ namespace TradingSystem.BuissnessLayer.commerce
     public class ShoppingCart
     {
         public ICollection<ShoppingBasket> baskets { get; set; }
-        public Member owner;
-        public ShoppingCart(Member owner)
+        public aUser owner;
+        public ShoppingCart(aUser owner)
         {
             this.owner = owner;
             this.baskets = new LinkedList<ShoppingBasket>();
@@ -31,9 +31,10 @@ namespace TradingSystem.BuissnessLayer.commerce
         public double checkPrice()
         {
             double ans = 0;
+            
             foreach (ShoppingBasket basket in baskets)
             {
-                ans += basket.checkPrice();
+                ans += basket.store.calcPrice(basket.products);
             }
             return ans;
         }
