@@ -11,13 +11,21 @@ namespace TradingSystem.ServiceLayer
     {
         [ThreadStatic]
         public static aUser user = new Guest();
+
+
+
         public static bool login(string username, string password)
         {
        //     DirAppend.AddToLogger("user " + username + " login", Result.Log);
+
             aUser logged = BuissnessLayer.UserServices.login(username, password);
             if ((logged == null))
+            {
+                user.addAlarm("didnt logged in", "you suck");
                 return false;
+            }
             user = logged;
+            user.addAlarm("logged in", "you did it");
             return true;
 
         }
@@ -216,6 +224,21 @@ namespace TradingSystem.ServiceLayer
             parameters[0] = employee.getUserName();
             parameters[1] = employee.GetAllPermissions();
             return (new SLemployee(parameters));
+        }
+
+        public static string getUserName()
+        {
+            return user.getUserName();
+        }
+
+        public static Tuple<string, string> fetchAlarm()
+        {
+            return user.fetchAlarm();
+        }
+
+        public static bool isAlarmsEmpty()
+        {
+            return user.isAlarmsEmpty();
         }
     }
 }

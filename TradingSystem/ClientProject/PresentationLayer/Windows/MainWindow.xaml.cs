@@ -130,15 +130,18 @@ namespace WPF_Trial2.PresentationLayer.Windows
 
         private void login_register_Click(object sender, RoutedEventArgs e)
         {
+    
+            
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             App.Current.MainWindow = loginWindow;
             this.Close();
+            
             //loginWindow.ShowDialog();
         }
-        private void logout(object sender, RoutedEventArgs e)
+        private void logoutf(object sender, RoutedEventArgs e)
         {
-            bool ans = controler.Logout();
+            bool ans = controler.Logoutfunc();
             if (!ans)
             {
                 user.userhello = "Failed logout";
