@@ -21,6 +21,9 @@ namespace TradingSystem.ServiceLayer
                 case (msgType.OBJ):
                     ans += "object";
                     break;
+                case (msgType.ALARM):
+                    ans += "alarm";
+                    break;
             }
             ans += (char)ETB;
             ans += messge.name;

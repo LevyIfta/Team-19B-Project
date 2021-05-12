@@ -9,7 +9,8 @@ namespace TradingSystem.ServiceLayer
     public enum msgType
     {
         FUNC,
-        OBJ
+        OBJ,
+        ALARM
     }
     public struct DecodedMessge
     {

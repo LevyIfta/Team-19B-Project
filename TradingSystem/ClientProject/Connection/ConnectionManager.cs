@@ -38,6 +38,7 @@ namespace ClientProject.Connection
                 socket = new Socket(IPAddress.Parse(hostAdress).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 socket.Connect(serverIP);
+                socket.Blocking = true;
                 stream = new NetworkStream(socket);
                 
 
@@ -74,17 +75,18 @@ namespace ClientProject.Connection
             sendMessage(Encoding.ASCII.GetBytes(message));
         }
 
-        public static byte[] readMessage()
+        public static byte[] readMessageCon()
         {
             List<byte> data = new List<byte>();
             try
             {
-                while (stream.DataAvailable)
+                while (true /*stream.DataAvailable*/)
                 {
-                    int current = stream.ReadByte();
-                    if (current == EOT)
+
+                    char c = (char)stream.ReadByte();
+                    if (c == EOT)
                         break;
-                    data.AddRange(BitConverter.GetBytes(current) );
+                    data.Add(Convert.ToByte(c) );
                 }
             }
             catch (ArgumentNullException e)

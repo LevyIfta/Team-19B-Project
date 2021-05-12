@@ -9,7 +9,8 @@ namespace ClientProject.Connection
     enum msgType
     {
         FUNC,
-        OBJ
+        OBJ,
+        ALARM
     }
     struct DecodedMessge
     {

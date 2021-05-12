@@ -37,6 +37,9 @@ namespace ClientProject.Connection
                 case ("object"):
                     ans.type = msgType.OBJ;
                     break;
+                case ("alarm"):
+                    ans.type = msgType.ALARM;
+                    break;
             }
             ans.name = brokenMsg[1];
             ans.param_list = brokenMsg.GetRange(2, brokenMsg.Count-2).ToArray();

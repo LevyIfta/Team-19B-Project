@@ -28,6 +28,26 @@ namespace ClientProject
         {
             ConnectionManager.disconnect();
         }
+
+        private void handleAlarm(DecodedMessge alarm)
+        {
+
+        }
+
+        private DecodedMessge readMessage()
+        {
+            byte[] ans_e = Connection.ConnectionManager.readMessageCon();
+            DecodedMessge ans = Connection.Decoder.decode(ans_e);
+            while(ans.type == msgType.ALARM) //check if msg is alarm
+            {
+                handleAlarm(ans);
+                ans_e = Connection.ConnectionManager.readMessageCon();
+                 ans = Connection.Decoder.decode(ans_e);
+            }
+            return ans;
+        }
+
+
         public bool Login(string username, string password)
         {
             DecodedMessge msg = new DecodedMessge();
@@ -36,8 +56,8 @@ namespace ClientProject
             msg.param_list = new string[] { username, password };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
-            byte[] ans_e = Connection.ConnectionManager.readMessage();
-            DecodedMessge ans_d = Connection.Decoder.decode(ans_e);
+          
+            DecodedMessge ans_d = readMessage();
             bool ans = false;
             if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
             {
@@ -45,7 +65,7 @@ namespace ClientProject
             }
             return ans;
         }
-        public bool Logout()
+        public bool Logoutfunc()
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
@@ -53,8 +73,8 @@ namespace ClientProject
             msg.param_list = new string[] { };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
-            byte[] ans_e = Connection.ConnectionManager.readMessage();
-            DecodedMessge ans_d = Connection.Decoder.decode(ans_e);
+    
+            DecodedMessge ans_d = readMessage();
             bool ans = false;
             if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
             {
@@ -66,12 +86,12 @@ namespace ClientProject
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
-            msg.name = "login";
+            msg.name = "username";
             msg.param_list = new string[] { };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
-            byte[] ans_e = Connection.ConnectionManager.readMessage();
-            DecodedMessge ans_d = Connection.Decoder.decode(ans_e);
+
+            DecodedMessge ans_d = readMessage();
             string ans = "guest";
             if (ans_d.type == msgType.OBJ && ans_d.name == "string")
             {
@@ -88,8 +108,8 @@ namespace ClientProject
             msg.param_list = new string[] { username, password };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
-            byte[] ans_e = Connection.ConnectionManager.readMessage();
-            DecodedMessge ans_d = Connection.Decoder.decode(ans_e);
+
+            DecodedMessge ans_d = readMessage();
             bool ans = false;
             if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
             {
@@ -106,8 +126,8 @@ namespace ClientProject
             msg.param_list = new string[] { username, storename };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
-            byte[] ans_e = Connection.ConnectionManager.readMessage();
-            DecodedMessge ans_d = Connection.Decoder.decode(ans_e);
+       
+            DecodedMessge ans_d = readMessage();
             bool ans = false;
             if(ans_d.type == msgType.OBJ && ans_d.name == "bool")
             {
@@ -119,13 +139,15 @@ namespace ClientProject
         public string test()
         {
             DecodedMessge msg = new DecodedMessge();    
-            msg.type = msgType.OBJ;
-            msg.name = "basket";
-            msg.param_list = new string[] { "item1", "item2", "item3", "item4"};
+            msg.type = msgType.FUNC;
+            msg.name = "fail";
+            msg.param_list = new string[] { "zzz"};
 
             byte[] enc = Connection.Encoder.encode(msg);
 
             Connection.ConnectionManager.sendMessage(enc);
+ 
+            DecodedMessge ans_d = readMessage();
             return "blup";
         }
 

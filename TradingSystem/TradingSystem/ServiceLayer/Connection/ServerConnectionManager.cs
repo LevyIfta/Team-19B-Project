@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using TradingSystem;
+using TradingSystem.BuissnessLayer;
+
 namespace TradingSystem.ServiceLayer
 {
     static class ServerConnectionManager
@@ -18,24 +20,13 @@ namespace TradingSystem.ServiceLayer
         private static int hostPort;
         private static int serverPort = 8888; //default
         public static string ipAdress = "192.168.56.1";
-        private static NetworkStream stream;
+        
         private static TcpClient client;
         private static Dictionary<Thread, Socket> threads;
         
-        private static void act(DecodedMessge msg)
+        private static DecodedMessge act(DecodedMessge msg)
         {
-<<<<<<< HEAD
-            if(msg.type == msgType.FUNC)
-            {
-                switch(msg.name)
-                {
-                    case ("register") :
-                        TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
-                        break;
-                }
-            }
-            
-=======
+
             bool ans = false;
             string ans1 = "";
             string ans_d = "";
@@ -52,8 +43,9 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "bool";
                         msg_send.param_list = new string[] { ans_d };
-                        byte[] enc_r = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
-                        ServerConnectionManager.sendMessage(enc_r);
+     
+                      //  byte[] enc_r = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                     //   ServerConnectionManager.sendMessage(enc_r);
                         break;
                     case ("login"):
                         ans = TradingSystem.ServiceLayer.UserController.login(msg.param_list[0], msg.param_list[1]);
@@ -63,8 +55,8 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "bool";
                         msg_send.param_list = new string[] { ans_d };
-                        byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
-                        ServerConnectionManager.sendMessage(enc_l);
+                     //   byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                       // ServerConnectionManager.sendMessage(enc_l);
                         break;
                     case ("get online user"):
                         TradingSystem.ServiceLayer.UserController.getCorrentOnlineUser();
@@ -74,8 +66,8 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string";
                         msg_send.param_list = new string[] { ans1 };
-                        byte[] enc_name = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
-                        ServerConnectionManager.sendMessage(enc_name);
+                    //    byte[] enc_name = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                //        ServerConnectionManager.sendMessage(enc_name);
                         break;
                     case ("logout"):
                         ans = TradingSystem.ServiceLayer.UserController.logout();
@@ -85,8 +77,8 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "bool";
                         msg_send.param_list = new string[] { ans_d };
-                        byte[] enc_lo = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
-                        ServerConnectionManager.sendMessage(enc_lo);
+                     //   byte[] enc_lo = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                    //    ServerConnectionManager.sendMessage(enc_lo);
                         break;
                     case ("save product"): // Products : "name1:15 name2:30 ..."
                         TradingSystem.ServiceLayer.UserController.saveProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], StringToDictionary(msg.param_list[3]));
@@ -108,8 +100,8 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "bool";
                         msg_send.param_list = new string[] { ans_d };
-                        byte[] enc_os = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
-                        ServerConnectionManager.sendMessage(enc_os);
+                       // byte[] enc_os = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
+                       // ServerConnectionManager.sendMessage(enc_os);
                         break;
                     case ("purchase"): // string username, string paymentName
                         TradingSystem.ServiceLayer.UserController.checkPrice(msg.param_list[0]);
@@ -160,13 +152,32 @@ namespace TradingSystem.ServiceLayer
                     case ("get all feedbacks"): //string storeName, string productName, string manufacturer
                         TradingSystem.ServiceLayer.UserController.getAllFeedbacks(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         break;
+                    case ("username"): 
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string";
+                        msg_send.param_list = new string[] { UserController.getUserName() };
+                        break;
+
                 }
             }
+
+            return msg_send;
         }
 
-        private static void sendMessage(byte[] enc)
+        private static void sendMessage(byte[] enc, NetworkStream stream)
         {
-            throw new NotImplementedException();
+            try
+            {
+                stream.Write(enc, 0, enc.Length);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("ArgumentNullException: {0}", e);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException: {0}", e);
+            }
         }
 
         private static Dictionary<string, int> StringToDictionary(string str)
@@ -189,12 +200,28 @@ namespace TradingSystem.ServiceLayer
                 list.Add(pre);
             }
             return list;
->>>>>>> master
+
         }
+
+        private static void sendAlarms(NetworkStream stream)
+        {
+            aUser u = UserController.user;
+            while(!UserController.isAlarmsEmpty())
+            {
+                DecodedMessge msg = new DecodedMessge();
+                msg.type = msgType.ALARM;
+                Tuple<string, string> content = UserController.fetchAlarm();
+                msg.name = content.Item1;
+                msg.param_list = new string[] { content.Item2 };
+                sendMessage(Encoder.encode(msg), stream);
+            }
+        }
+
 
         private static void threadsMain(object socketPar)
         {
             Socket socket = (Socket)socketPar;
+            socket.Blocking = true;
             NetworkStream stream = new NetworkStream(socket);
             
             List<byte> data = new List<byte>();
@@ -205,7 +232,10 @@ namespace TradingSystem.ServiceLayer
                     char c = (char)stream.ReadByte();
                     if (c == EOT)
                     {
-                        act(Decoder.decode(data.ToArray()));
+                        DecodedMessge response =  act(Decoder.decode(data.ToArray()));
+                        sendAlarms(stream);
+                        byte[] enc_os = TradingSystem.ServiceLayer.Encoder.encode(response);
+                        ServerConnectionManager.sendMessage(enc_os, stream);
                         data = new List<byte>();
                     }
                     else
@@ -246,6 +276,8 @@ namespace TradingSystem.ServiceLayer
             }
           
         }
+
+
 
         public static void disconnect()
         {

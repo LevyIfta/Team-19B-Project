@@ -13,6 +13,8 @@ namespace TradingSystem.BuissnessLayer
         public string userName { get; set; }
         public ShoppingCart myCart { get; set; }
 
+        public Queue<Tuple<string, string>> alarms { get; set; } = new Queue<Tuple<string, string>>();
+
         public ShoppingCart getMyCart()
         {
             if (myCart == null)
@@ -38,13 +40,13 @@ namespace TradingSystem.BuissnessLayer
         public bool saveProduct(ShoppingBasket basket1)
         {
             bool match = false;
-            if(myCart == null)
+            if (myCart == null)
             {
                 myCart = new ShoppingCart(this);
             }
             foreach (ShoppingBasket basket2 in myCart.baskets)
             {
-                if(!match && basket2.store.Equals(basket1.store))
+                if (!match && basket2.store.Equals(basket1.store))
                 {
                     match = true;
                     basket2.margeBasket(basket1);
@@ -167,6 +169,22 @@ namespace TradingSystem.BuissnessLayer
         protected virtual void update()
         {
             return;
+        }
+
+
+        public virtual void addAlarm(string title, string description)
+        {
+            this.alarms.Enqueue(new Tuple<string, string>(title, description));
+        }
+
+        public virtual Tuple<string, string> fetchAlarm()
+        {
+            return this.alarms.Dequeue();
+        }
+
+        public virtual bool isAlarmsEmpty()
+        {
+            return this.alarms.Count == 0;
         }
     }
 }

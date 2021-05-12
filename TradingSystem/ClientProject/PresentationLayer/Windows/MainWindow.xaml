@@ -21,7 +21,7 @@
                 <Label x:Name="UserNameHello" Content="{Binding Path=userhello}" Height="auto" HorizontalAlignment="Right" Margin="0,0,-541,0" Width="162"/>
             </Border>
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="252">
-                <Button x:Name="logout" Content="logout" Click="login_register_Click" Margin="34,0,0,0" HorizontalAlignment="Left" Width="63"/>
+                <Button x:Name="logoutz" Content="logout" Click="login_register_Click" Margin="34,0,0,0" HorizontalAlignment="Left" Width="63"/>
             </Border>
         </DockPanel>
 
@@ -30,8 +30,8 @@
                 <DockPanel>
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="0,0,5,0">
                         <Label>
-                            <Image Height="50" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\team19b-logo-icon.png"></Image>
-                        </Label>
+                          <!--  <Image Height="50" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\team19b-logo-icon.png"></Image>
+                        -->  </Label>
                     </StackPanel>
                     <StackPanel x:Name="radioButtonPanel" Margin="0,0,20,0">
                         <Label x:Name="SearchLabel" Content="Search by:" Height="auto"/>
@@ -40,8 +40,8 @@
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="0,0,20,0">
                         <Button Click="Search">
-                            <Image Height="{Binding ActualHeight, ElementName=SearchLabel}" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\magnifying-glass-icon.png"></Image>
-                        </Button>
+                       <!--     <Image Height="{Binding ActualHeight, ElementName=SearchLabel}" Source="C:\Users\Almogi\Desktop\TradingSystem\Team-19B-Project\TradingSystem\ClientProject\Resources\magnifying-glass-icon.png"></Image>
+                        --></Button>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Right" Margin="0,10,20,20">
                         <Grid >
