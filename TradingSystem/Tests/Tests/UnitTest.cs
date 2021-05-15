@@ -11,26 +11,31 @@ namespace Tests
     [TestClass]
     public class UserAccessUnitTest
     {
-        private static Bridge.Bridge bridge;
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
+            /*
             bridge = Driver.getBridge();
             bridge.register("user1", "Password1");
             bridge.register("user2", "Password2");
+            */
         }
 
         [TestMethod]
         public void loginTestGood()
         {
-            bridge.logout();
+            // init usernames and passes
+            string username1 = "AbD1", username2 = "QwEr2", fake1 = "fake1", fake2 = "fake2";
+            string pass1 = "123Xx456", pass2 = "465Ss789", fakePass1 = "111", fakePass2 = "789";
+            // register
+            UserServices.register(username1, pass1);
+            UserServices.register(username2, pass2);
+            // try to login twice
+            aUser u1 = UserServices.login(username1, pass1);
+            Assert.IsNotNull(u1);
 
-            Assert.AreEqual(bridge.getUserName(), "guest", "default user is nt guest");
-            Assert.IsTrue(bridge.login("user1", "Password1"));
-            Assert.IsTrue(bridge.isUserLoggedIn("user1"), "user is not considerd logged in");
-            Assert.AreEqual(bridge.getUserName(), "user1", "wrong logged user");
-
-            bridge.logout(); //clean up
+            aUser u2 = UserServices.login(username2, pass2);
+            Assert.IsNotNull(u2);
 
         }
 
@@ -62,13 +67,14 @@ namespace Tests
             Assert.IsNotNull(UserServices.login("newUser1", "newPassword1"), "user was not properly saved");
             Assert.IsNull(UserServices.login("newUser1", "fakePassword1"), "wrong password found as exist");
 
-            Assert.IsTrue(bridge.register("newUser2", "newPassword1"), "faild to register as a valid user(existing password)");
-            Assert.IsTrue(bridge.isUserExist("newUser2", "newPassword1"), "user was not properly saved (existing password)");
+            Assert.IsTrue(UserServices.register("newUser2", "newPassword1"), "faild to register as a valid user(existing password)");
+            Assert.IsNotNull(UserServices.login("newUser2", "newPassword1"), "user was not properly saved (existing password)");
         }
 
         [TestMethod]
         public void registerTestBad()
         {
+            UserServices.register("user1", "Password1");
             Assert.IsFalse(UserServices.register("user1", "Password1"), "managed to register as an alread existing user (same password)");
             Assert.IsFalse(UserServices.register("user1", "Password2"), "managed to register with an existig username (different passwords)");
             Assert.IsNull(UserServices.login("user1", "Password2"), "exisint user with different passworrd considerd to exist");
@@ -94,25 +100,18 @@ namespace Tests
             Assert.IsNotNull(UserServices.login(username, pass));
         }
 
-        [ClassCleanup]
-        public static void classCleanUp()
-        {
-            bridge.logout();
-        }
-
-
     }
 
     [TestClass]
     public class BasketTests
     {
-        private static Bridge.Bridge bridge;
         private static ProductInfo prod1, prod2;
 
 
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
+            /*
             bridge = Driver.getBridge();
             bridge.register("basket1", "Basket1");
             bridge.login("basket1", "Basket1");
@@ -132,13 +131,9 @@ namespace Tests
             bridge.addProducts(basket);
 
             bridge.logout();
+            */
         }
-
-        [ClassCleanup]
-        public static void classCleanUp()
-        {
-            bridge.logout();    
-        }
+        
 
         [TestMethod]
         public void saveProductTest()
@@ -206,9 +201,6 @@ namespace Tests
     [TestClass]
     public class StoreTests
     {
-        private static ProductInfo prod1;
-        private static ProductInfo prod2;
-        private static Bridge.Bridge bridge;
         private static ProductInfo product1;
         private static ProductInfo product2;
         private static string store1Name;
@@ -216,19 +208,22 @@ namespace Tests
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
-            bridge = Driver.getBridge();
-            bridge.register("store1", "Store1");
-            bridge.register("store2", "Store2");
-            bridge.login("store1", "Store1");
-            bridge.openStore("Store1");
-
+            string username = "ShopOwner11", pass = "123xX321";
+            bool ownerReg = UserServices.register(username, pass);
+            // create 2 stores
+            // login
+            Member owner = (Member)UserServices.login(username, pass);
+            // init names
             store1Name = "store1_";
             store2Name = "store2_";
-            bridge.openStore(store1Name);
-            bridge.openStore(store2Name);
-            // add some produts
+            // establish the stroes
+            owner.EstablishStore(store1Name);
+            owner.EstablishStore(store2Name);
+            // init product infos
             product1 = ProductInfo.getProductInfo("Batman Costume", "clothing", "FairytaleLand");
             product2 = ProductInfo.getProductInfo("Wireless keyboard", "computer accessories", "Logitech");
+            // add some produts
+            /*
 
             ProductInfo newInfo1 = ProductInfo.getProductInfo("item1", "cat", "man");
 
@@ -247,16 +242,11 @@ namespace Tests
             basket.products.Add(items2);
 
             bridge.addInventory(basket);
-
-
+            
+            */
 
         }
-
-        [ClassCleanup]
-        public static void classCleanUp()
-        {
-            bridge.logout();
-        }
+        
 
 
         [TestMethod]
@@ -297,61 +287,6 @@ namespace Tests
             Assert.IsNotNull(store, "could not find an existing store: " + storeName);
             Assert.IsNull(Stores.searchStore("this store does not exist"));
         }
-        
-        /*
-        [TestMethod]
-        public void addInventoryTest()
-        {
-            string storeOwnerName = "StoreOwner", storeOwnerPass = "123Xx456";
-            bool ownerReg = UserServices.register(storeOwnerName, storeOwnerPass);
-            aUser storeOwner = UserServices.login(storeOwnerName, storeOwnerPass);
-            Stores.addStore("store1", (Member)storeOwner);
-            Store store = Stores.searchStore("store1");
-
-            //setup
-            ProductInfo newInfo3 = ProductInfo.getProductInfo("item3", "cat", "manInv");
-            ProductInfo newInfo4 = ProductInfo.getProductInfo("item4", "cat", "manInv");
-
-            Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
-            
-            ShoppingBasket basket = new ShoppingBasket(store, (Member)bridge.getUser());
-            basket.products.Add(items3);
-            basket.products.Add(items4);
-
-            ICollection<Product> inventory = store.inventory;
-            bridge.addInventory(basket);
-            int count = inventory.Count;
-            Assert.IsTrue(bridge.isProductExist("item3", "manInv"), "new product doesnt exist");
-
-
-            Assert.IsTrue(inventory.Contains(items3), "failed to save one of the items");
-            Assert.IsTrue(inventory.Contains(items4), "failed to save one of the items");
-            Assert.IsFalse(inventory.Contains(null), "saved a null item");
-            //Assert.AreSame(inventory.Count, count + 2, "count update wrong");
-            foreach (Product item in store.inventory)
-            {
-                if (item.info.Equals(newInfo3))
-                    Assert.AreEqual(item.amount, 5, "failed to update the item amount properly");
-                if (item.info.Equals(newInfo4))
-                    Assert.AreEqual(item.amount, 2, "failed to update the item amount properly");
-            }
-
-            count += 2;
-            bridge.addInventory(basket);
-            Assert.AreEqual(inventory.Count, count, "count update wrong(add more of exising product");
-            
-            foreach (Product item in store.inventory)
-            {
-                if (item.info.Equals(newInfo3))
-                    Assert.AreEqual(item.amount, 10, "failed to update the item amount properly(2nd add)");
-                if (item.info.Equals(newInfo4))
-                    Assert.AreEqual(item.amount, 4, "failed to update the item amount properly(2nd add)");
-            }
-            
-
-
-        }
-        */
         
         [TestMethod]
         public void parallelPurchase()
@@ -426,11 +361,10 @@ namespace Tests
             string storeName = "Ali Shop3";
 
             aUser owner = UserServices.login(ownerUsername, ownerPass);
-            Stores.addStore(storeName, (Member)owner);
             // establish a new store
+            Stores.addStore(storeName, (Member)owner);
 
-            
-            Store aliShop = bridge.getStore(storeName);
+            Store aliShop = Stores.searchStore(storeName);
             // add products to the strore
             aliShop.addProduct("Bamba", "Food", "Osem");
             // set the price of the product
@@ -541,6 +475,7 @@ namespace Tests
         
     }
 
+    /*
     [TestClass]
     public class StoresTest
     {
@@ -571,21 +506,24 @@ namespace Tests
         
         
     }
+    */
 
     [TestClass]
-    class ReciptTests
+    public class ReciptTests
     {
-        private static Bridge.Bridge bridge;
+        aUser user1, user2;
+        string username1 = "AliKB", username2 = "Bader", pass1 = "123xX456", pass2 = "456xX789";
+        string storeName;
         private static ProductInfo prod1, prod2;
+        private static bool isInit = false;
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
-            bridge = Driver.getBridge();
-            bridge.register("recipt1", "Recipt1");
-            bridge.register("recipt2", "Recipt2");
-            bridge.login("recipt2", "Recipt2");
-            bridge.openStore("StoreRecipt1");
-            bridge.openStore("StoreRecipt2");
+            UserServices.register("recipt1", "Recipt1");
+            UserServices.register("recipt2", "Recipt2");
+            aUser u = UserServices.login("recipt2", "Recipt2");
+            u.EstablishStore("StoreRecipt1");
+            u.EstablishStore("StoreRecipt2");
             ProductInfo newInfo1 =  ProductInfo.getProductInfo("item1", "cat", "man");
 
             ProductInfo newInfo2 =  ProductInfo.getProductInfo("item2", "cat2", "man2");
@@ -598,10 +536,10 @@ namespace Tests
             Product items1 = new Product(prod1, 2, 5), items2 = new Product(prod2, 2, 5);
 
 
-            ShoppingBasket basket = new ShoppingBasket(bridge.getStore("StoreRecipt1"), (Member)bridge.getUser());
+            ShoppingBasket basket = new ShoppingBasket(Stores.searchStore("StoreRecipt1"), (Member)u);
             basket.products.Add(items1);
             basket.products.Add(items2);
-
+            /*
             bridge.addInventory(basket);
 
 
@@ -610,57 +548,144 @@ namespace Tests
             bridge.addProducts(basket);
             bridge.purchase("Credit");
 
-
-        }
-
-        [ClassCleanup]
-        public static void classCleanUp()
-        {
-            bridge.logout();
+    */
+    
+            isInit = true;
         }
 
         [TestMethod]
+        public void TestAll()
+        {
+            // this fuction initializes all the needed arguments 
+            // and runs all tests
+            // register twice and login from two different users
+            bool user1reg = UserServices.register(username1, pass1);
+            bool user2reg = UserServices.register(username2, pass2);
+            // login
+            user1 = UserServices.login(username1, pass1);
+            user2 = UserServices.login(username2, pass2);
+            // establish a new store
+            storeName = "Makolet";
+            Stores.addStore(storeName, (Member)user1);
+            Store aliShop = Stores.searchStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 30);
+            // add products to shopping carts
+            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
+            user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 18, 0));
+            // purchase
+            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
+            ICollection<Receipt> receipts2 = user2.purchase(new CreditCard());
+            // test 
+            userReciptTestGood();
+            userReciptTestBad();
+            storeReciptsTest();
+        }
+        
+
         public void userReciptTestGood()
         {
-            Receipt reciept = bridge.GetRecieptByUser("StoreRecipt1", "recipt1", new System.DateTime());
-            Assert.AreEqual(reciept.username, "recipt1", "the username is wrong");
-            Assert.AreEqual(reciept.store.name, "StoreRecipt1", "the store name is wrong");
-            Assert.AreEqual(reciept.actualProducts.Count, 2, "saved wrong product list");
+            bool user1HasReceipt = false, user2HasReceipt = false;
+            // check if the receipts that the user holds contain the receipt from the previous purchase
+            ICollection<Receipt> u1Receipts = ((Member)user1).reciepts;
+            ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
+            // check for first user
+            foreach (Receipt receipt in u1Receipts)
+            {
+                Assert.AreEqual(receipt.username, username1, "the username is wrong");
+                if (receipt.store.name.Equals(storeName) & receipt.actualProducts.Count == 1)
+                {
+                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
+                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem"))
+                        & products.First.Value.amount == 12)
+                    {
+                        user1HasReceipt = true;
+                    }
+                }
+            }
+            // check for user 2
+            foreach (Receipt receipt in u2Receipts)
+            {
+                Assert.AreEqual(receipt.username, username2, "the username is wrong");
+                if (receipt.store.name.Equals(storeName) & receipt.actualProducts.Count == 1)
+                {
+                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u2Receipts);
+                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem"))
+                        & products.First.Value.amount == 18)
+                    {
+                        user2HasReceipt = true;
+                    }
+                }
+            }
+
+            Assert.IsTrue(user1HasReceipt);
+            Assert.IsTrue(user2HasReceipt);
         }
 
-
-        [TestMethod]
+        
         public void userReciptTestBad()
         {
-            bridge.logout();
-            bridge.login("recipt2", "Recipt2");
+            // check if one of the users got the wrong receipt
+            ICollection<Receipt> u1Receipts = ((Member)user1).reciepts;
+            ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
 
-            Receipt reciept = bridge.GetRecieptByUser("StoreRecipt1", "recipt2", new System.DateTime());
-            Assert.IsNull(reciept, "managed to get recpit from wong user");
-            //clean up
-            bridge.logout();
-            bridge.login("recipt1", "Recipt1");
+            foreach (Receipt receipt in u1Receipts)
+                Assert.AreNotEqual(receipt.username, username2, "user1 got user2's receipt");
 
+            foreach (Receipt receipt in u2Receipts)
+                Assert.AreNotEqual(receipt.username, username1, "user2 got user1's receipt");
         }
-
-        [TestMethod]
-        public void storeReciptTestGood()
+        
+        public void storeReciptsTest()
         {
-            bridge.logout();
-            bridge.login("recipt2", "Recipt2");
+            bool user1HasReceipt = false, user2HasReceipt = false;
 
-            Receipt reciept = bridge.GetRecieptByStore("StoreRecipt1", "recipt1", new System.DateTime());
-            Assert.AreEqual(reciept.username, "recipt1", "the username is wrong");
-            Assert.AreEqual(reciept.store.name, "StoreRecipt1", "the store name is wrong");
-            Assert.AreEqual(reciept.actualProducts.Count, 2, "saved wrong product list");
-            //clean up
-            bridge.logout();
-            bridge.login("recipt1", "Recipt1");
+            ICollection<Receipt> u1Receipts = ((Member)user1).reciepts;
+            ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
 
+            Store store = Stores.searchStore(storeName);
+            ICollection<Receipt> storeReceipts = store.getAllReceipts();
+            // check if the store has both receipts
+            foreach (Receipt receipt in storeReceipts)
+            {
+                Assert.AreEqual(receipt.store.name, storeName, "wrong store name. expected: " + store.name + ", actual: " + receipt.store.name);
+                Assert.AreEqual(receipt.actualProducts.Count, 1);
+                Assert.IsTrue(receipt.username.Equals(username1) | receipt.username.Equals(username2));
+                
+                if (receipt.username.Equals(username1))
+                {
+                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
+                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem"))
+                        & products.First.Value.amount == 12)
+                    {
+                        user1HasReceipt = true;
+                    }
+                }
+
+                if (receipt.username.Equals(username2))
+                {
+                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
+                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem"))
+                        & products.First.Value.amount == 18)
+                    {
+                        user2HasReceipt = true;
+                    }
+                }
+            }
+
+            Assert.IsTrue(user1HasReceipt);
+            Assert.IsTrue(user2HasReceipt);
         }
 
-
-        [TestMethod]
+        /*
         public void storeReciptTestBad()
         {
             bridge.logout();
@@ -674,7 +699,6 @@ namespace Tests
             bridge.login("recipt1", "Recipt1");
 
         }
-
+        */
     }
-
 }
