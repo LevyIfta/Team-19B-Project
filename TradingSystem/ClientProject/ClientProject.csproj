@@ -60,6 +60,7 @@
     <Compile Include="Connection\Decoder.cs" />
     <Compile Include="Connection\Encoder.cs" />
     <Compile Include="PresentationLayer\Windows\ANotifyPropChange.cs" />
+    <Compile Include="PresentationLayer\Windows\aWindow.cs" />
     <Compile Include="PresentationLayer\Windows\Controller.cs" />
     <Compile Include="PresentationLayer\DataContext\StoreDataContext.cs" />
     <Compile Include="PresentationLayer\DataContext\UserDataContext.cs" />

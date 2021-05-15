@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClientProject.Connection;
+using System.Windows;
+using WPF_Trial2.PresentationLayer.Windows;
 
 namespace ClientProject
 {
@@ -31,7 +33,15 @@ namespace ClientProject
 
         private void handleAlarm(DecodedMessge alarm)
         {
-
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                Window mainwindow = Application.Current.MainWindow;
+                if (mainwindow is MainWindow)
+                    ((MainWindow)mainwindow).getAlarm(alarm.name, alarm.param_list[0]);
+                if (mainwindow is LoginWindow)
+                    ((LoginWindow)mainwindow).getAlarm(alarm.name, alarm.param_list[0]);
+                if (mainwindow is RegistrationWindow)
+                    ((RegistrationWindow)mainwindow).getAlarm(alarm.name, alarm.param_list[0]);
+            }));
         }
 
         private DecodedMessge readMessage()
@@ -87,7 +97,7 @@ namespace ClientProject
             Connection.ConnectionManager.Connect();
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
-            msg.name = "username";
+            msg.name = "get online user name";
             msg.param_list = new string[] { };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);

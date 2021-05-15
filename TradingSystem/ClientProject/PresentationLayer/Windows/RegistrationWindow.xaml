@@ -20,8 +20,8 @@
                 <ImageBrush ImageSource="Fonts/SignUp.png" Stretch="UniformToFill" />
             </Grid.Background>
 
-            <Label Content="Email:" FontFamily="{StaticResource Caviar Dreams}"  HorizontalAlignment="Left" Margin="129.333,170,0,0" VerticalAlignment="Top" Height="24" Width="40" Grid.Column="2"/>
-            <TextBox x:Name="email" Background="{StaticResource BackgroungTextBoxU}" BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Left" Height="22" Margin="131.333,193,0,0" TextWrapping="Wrap" Text="{Binding email, Mode=TwoWay}" VerticalAlignment="Top" Width="131" Grid.Column="2" >
+            <Label Content="User name:" FontFamily="{StaticResource Caviar Dreams}" Margin="129,170,156,0" VerticalAlignment="Top" Height="24" Grid.Column="2"/>
+            <TextBox x:Name="username" Background="{StaticResource BackgroungTextBoxU}" BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Left" Height="22" Margin="131.333,193,0,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" VerticalAlignment="Top" Width="131" Grid.Column="2" >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="4"/>
@@ -54,7 +54,7 @@
                 </Button.Background>
             </Button>
             <Label Content="Already in Kanban?" FontFamily="{StaticResource Error}" Grid.Column="2" HorizontalAlignment="Left" Margin="109.333,376,0,0" VerticalAlignment="Top" Width="139"/>
-            <Label x:Name="emailmsgname" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=emailmsg}" HorizontalAlignment="Left" Margin="167.333,170,0,0" VerticalAlignment="Top" Width="136" Height="27" RenderTransformOrigin="0.5,0.5" Grid.Column="2">
+            <Label x:Name="usermsgname" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=usermsg}" HorizontalAlignment="Left" Margin="-154,168,-65,0" VerticalAlignment="Top" Width="272" Height="27" RenderTransformOrigin="0.5,0.5" Grid.Column="3" Grid.ColumnSpan="2">
                 <Label.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -64,10 +64,10 @@
                     </TransformGroup>
                 </Label.RenderTransform>
             </Label>
-            <Label x:Name="passwordmsgname" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=passwordmsg}" HorizontalAlignment="Left" Margin="193.333,214,0,0" VerticalAlignment="Top" Width="150" Height="25" Grid.Column="2"/>
-            <Label x:Name="emailvalid"  Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=emailvalid}" HorizontalAlignment="Left" Margin="317.333,134,0,0" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="4" Grid.Column="2" Height="53" Panel.ZIndex="1"/>
-            <Label x:Name="passwordvalid" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=passwordvalid}" HorizontalAlignment="Left" Margin="315.333,183,0,0" VerticalAlignment="Top" Width="182" Grid.Column="2" Height="64" Grid.ColumnSpan="4" Panel.ZIndex="1"/>
+            <Label x:Name="passwordmsgname" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=passwordmsg}" HorizontalAlignment="Left" Margin="-163,214,-62,0" VerticalAlignment="Top" Width="278" Height="25" Grid.Column="3" Grid.ColumnSpan="2"/>
+            <Label x:Name="msgvalid" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=msgvalid}" HorizontalAlignment="Left" Margin="124,302,0,0" VerticalAlignment="Top" Width="150" Height="25" Grid.Column="2"/>
             <Label Content="Password confirm:" FontFamily="{StaticResource Caviar Dreams}" HorizontalAlignment="Left" Margin="129.333,259,0,0" VerticalAlignment="Top" Height="24" Width="105" Grid.Column="2"/>
+
 
 
 

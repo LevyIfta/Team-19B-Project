@@ -41,7 +41,7 @@
                     <ImageBrush ImageSource="Fonts\Buttom.png"/>
                 </Button.Background>
             </Button>
-            <Label x:Name="emailmsgname" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=emailmsg}" HorizontalAlignment="Left" Margin="170.333,175,0,0" VerticalAlignment="Top" Width="136" Height="27" RenderTransformOrigin="0.5,0.5" Grid.Column="2">
+            <Label x:Name="emailmsgname" Foreground="{StaticResource TextColorErrorU}" FontFamily="{StaticResource Error}" Content="{Binding Path=usermsg}" HorizontalAlignment="Left" Margin="207,176,0,0" VerticalAlignment="Top" Width="136" Height="27" RenderTransformOrigin="0.5,0.5" Grid.Column="2">
                 <Label.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

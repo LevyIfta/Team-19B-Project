@@ -59,6 +59,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
     {
         static Controller controler = Controller.GetController();
         UserDataName user = new UserDataName();
+        public string username = "guest1";
         private class searchString : INotifyPropertyChanged
         {
             private String search;
@@ -90,15 +91,17 @@ namespace WPF_Trial2.PresentationLayer.Windows
         //private UserDataContext userDataContext;
         private List<StoreDataContext> storesDataContexts;
         private searchString searchStr;
+        public List<string> alarms;
 
         public MainWindow()
         {
             //this.userDataContext = new UserDataContext();
+            this.alarms = new List<string>();
             this.DataContext = user;
-            user.userhello = "hello, guest";
+            user.userhello = "hello, " + username;
             //string ans = controler.getUserName();
             //if (ans != null)
-                //user.userhello = ans;
+            //user.userhello = ans;
             //this.UserNameHello = ans;
             this.storesDataContexts = new List<StoreDataContext>();
             this.searchStr = new searchString();
@@ -149,13 +152,26 @@ namespace WPF_Trial2.PresentationLayer.Windows
 
         private void OpenStore(object sender, RoutedEventArgs e)
         {
-            bool ans = controler.OpenStore("1", "2");
+            bool ans = true;
+            if (user.storename.Length > 0)
+                ans = controler.OpenStore(username, user.storename);
+            else
+            {
+                user.storemsg = "Store name Empty";
+            }
+            user.storename = "";
+            if (!ans)
+            {
+                user.storemsg = "Store can't open";
+            }
+            else
+            {
+                user.storemsg = "Store open!!!";
+            }
         }
 
         private void login_register_Click(object sender, RoutedEventArgs e)
         {
-    
-            
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             App.Current.MainWindow = loginWindow;
@@ -172,7 +188,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
             }
             else
             {
-                user.userhello = "guest";
+                user.userhello = "hello, guest";
             }
             //loginWindow.ShowDialog();
         }
@@ -197,6 +213,11 @@ namespace WPF_Trial2.PresentationLayer.Windows
                     user.storemsg = "the store is open!";
                 }
             }
+        }
+
+        public void getAlarm(string title, string des)
+        {
+            this.alarms.Add(des);
         }
     }
 }

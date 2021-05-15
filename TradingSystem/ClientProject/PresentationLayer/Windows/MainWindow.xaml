@@ -15,7 +15,7 @@
 
         <DockPanel x:Name="TopPanel" Background="CornflowerBlue" Height="auto" VerticalAlignment="Top" DockPanel.Dock="Top">
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="162">
-                <Button x:Name="login_register" Background="LightSlateGray" FontFamily="{StaticResource Buttom}" Content="Login\Register" Click="login_register_Click" Width="99" HorizontalAlignment="Right" Margin="0,0,-808,0"/>
+                <Button x:Name="login_register" Background="LightSlateGray" FontFamily="{StaticResource Buttom}" Content="Login and registration" Click="login_register_Click" Width="129" HorizontalAlignment="Right" Margin="0,0,-808,0"/>
             </Border>
             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderBrush="Gray" BorderThickness="0.4" Width="162">
                 <Label x:Name="UserNameHello" FontFamily="{StaticResource Caviar Dreams}" Content="{Binding Path=userhello}" Height="auto" HorizontalAlignment="Right" Margin="0,0,-541,0" Width="162"/>

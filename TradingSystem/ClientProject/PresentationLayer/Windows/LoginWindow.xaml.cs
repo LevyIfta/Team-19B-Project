@@ -91,12 +91,13 @@ namespace WPF_Trial2.PresentationLayer.Windows
         
     }
 
-    public partial class LoginWindow : Window
+    public partial class LoginWindow
     {
         //private UserDataContext userDataContext;
         UserData user = new UserData();
         List<string> errors;
 
+        string msgFailed = "";
         static Controller controler = Controller.GetController();
 
         
@@ -138,16 +139,24 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 bool ans = controler.Login(user.username, user.password);
                 if (!ans)
                 {
+                    user.msgvalid = "Login Faild";
                     user.usermsg = "";
                     user.password = "";
-                    user.msgvalid = "Login Faild";
+                    string[] check1 = msgFailed.Split(' ');
+                    if(check1[0].Equals("password"))
+                        user.passwordmsg = msgFailed;
+                    else
+                        user.usermsg = msgFailed;
                 }
                 else
                 {
+                    //string username = controler.getUserName();
                     MainWindow window1 = new MainWindow();
                     window1.Show();
                     App.Current.MainWindow = window1;
-                    this.Close();
+                    window1.username = user.username;
+                    ((MainWindow)Application.Current.MainWindow).username = user.username;
+                    //this.Close();
                 }
             }
             
@@ -159,9 +168,9 @@ namespace WPF_Trial2.PresentationLayer.Windows
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             //bool ans = controler.Register(user.username, user.password);
-            //registration window = new registration();
-            //window.Show();
-            //App.Current.MainWindow = window;
+            RegistrationWindow window = new RegistrationWindow();
+            window.Show();
+            App.Current.MainWindow = window;
             this.Close();
         }
 
@@ -174,6 +183,14 @@ namespace WPF_Trial2.PresentationLayer.Windows
             this.Close();
         }
 
-        
+        public void getAlarm(string title, string des)
+        {
+            if(title.Equals("login failed"))
+            {
+                msgFailed = des;
+            }
+        }
+
+
     }
 }

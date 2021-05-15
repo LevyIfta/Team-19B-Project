@@ -23,7 +23,7 @@ namespace TradingSystem.ServiceLayer
                 user.addAlarm("login failed", ans[1]);
                 return false;
             }
-            user = BuissnessLayer.UserServices.getUser(username);
+            UserController.user = BuissnessLayer.UserServices.getUser(username);
             user.addAlarm("logged in", "you did it");
             return true;
 
@@ -50,7 +50,7 @@ namespace TradingSystem.ServiceLayer
         }
         public static string getCorrentOnlineUserName()
         {
-            return user.getUserName();
+            return UserController.user.getUserName();
         }
         public static bool register(string userName, string password)
         {
@@ -230,7 +230,7 @@ namespace TradingSystem.ServiceLayer
 
         public static string getUserName()
         {
-            return user.getUserName();
+            return UserController.user.getUserName();
         }
 
         public static Tuple<string, string> fetchAlarm()

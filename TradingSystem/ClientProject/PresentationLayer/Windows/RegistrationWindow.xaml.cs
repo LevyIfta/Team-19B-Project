@@ -18,14 +18,14 @@ namespace WPF_Trial2.PresentationLayer.Windows
 {
     class UserDataR : ANotifyPropChange
     {
-        private String Usernamer;
+        private String Username;
 
         public String username
         {
-            get { return Usernamer; }
+            get { return Username; }
             set
             {
-                Usernamer = value;
+                Username = value;
                 OnPropertyChanged();
             }
         }
@@ -73,6 +73,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 OnPropertyChanged();
             }
         }
+        /*
         private String Passwordvalid;
 
         public String passwordvalid
@@ -84,7 +85,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 OnPropertyChanged();
             }
         }
-
+        */
         private String PasswordC;
 
         public String passwordC
@@ -102,6 +103,8 @@ namespace WPF_Trial2.PresentationLayer.Windows
     {
         UserDataR user = new UserDataR();
         List<string> errors;
+
+        string msgFailed = "";
         static Controller controler = Controller.GetController();
         public RegistrationWindow()
         {
@@ -114,7 +117,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
             user.usermsg = "";
             user.msgvalid = "";
             user.passwordmsg = "";
-            user.passwordvalid = "";
+            //user.passwordvalid = "";
         }
         private void ButtomCheck() // textbox valid check 
         {
@@ -146,15 +149,28 @@ namespace WPF_Trial2.PresentationLayer.Windows
                     user.usermsg = "User name empty";
                 if (errors.Contains("Password empty"))
                     user.passwordmsg = "Password empty";
+                if (errors.Contains("PasswordC empty"))
+                    user.passwordmsg = "Password confirm empty";
+                if (errors.Contains("Password isn't confirm"))
+                    user.passwordmsg = "Passwords must match";
             }
             if (insertValid)
             {
                 bool ans = controler.Register(user.username, user.password);
                 if (!ans)
                 {
+                    user.msgvalid = "Registretion Faild";
                     user.usermsg = "";
                     user.password = "";
-                    user.msgvalid = "Registretion Faild";
+                    string[] check1 = msgFailed.Split(' ');
+                    if (check1[0].Equals("password"))
+                        user.passwordmsg = msgFailed;
+                    else
+                        user.usermsg = msgFailed;
+                }
+                else
+                {
+                    user.msgvalid = "Registretion Succeeded";
                 }
             }
         }
@@ -165,6 +181,13 @@ namespace WPF_Trial2.PresentationLayer.Windows
             window.Show();
             App.Current.MainWindow = window;
             this.Close();
+        }
+        public void getAlarm(string title, string des)
+        {
+            if (title.Equals("register"))
+            {
+                msgFailed = des;
+            }
         }
     }
 }
