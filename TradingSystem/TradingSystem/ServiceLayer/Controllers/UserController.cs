@@ -23,7 +23,7 @@ namespace TradingSystem.ServiceLayer
                 user.addAlarm("login failed", ans[1]);
                 return false;
             }
-            UserController.user = BuissnessLayer.UserServices.getUser(username);
+            user = BuissnessLayer.UserServices.getUser(username);
             user.addAlarm("logged in", "you did it");
             return true;
 

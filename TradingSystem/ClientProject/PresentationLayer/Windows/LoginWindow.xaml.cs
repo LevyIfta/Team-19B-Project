@@ -137,6 +137,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
             if(insertValid)
             {
                 bool ans = controler.Login(user.username, user.password);
+                //controler.getUserName();
                 if (!ans)
                 {
                     user.msgvalid = "Login Faild";
@@ -155,8 +156,8 @@ namespace WPF_Trial2.PresentationLayer.Windows
                     window1.Show();
                     App.Current.MainWindow = window1;
                     window1.username = user.username;
-                    ((MainWindow)Application.Current.MainWindow).username = user.username;
-                    //this.Close();
+                    //((MainWindow)Application.Current.MainWindow).username = user.username;
+                    this.Close();
                 }
             }
             

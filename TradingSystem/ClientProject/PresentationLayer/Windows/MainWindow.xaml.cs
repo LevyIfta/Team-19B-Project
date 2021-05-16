@@ -154,7 +154,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
         {
             bool ans = true;
             if (user.storename.Length > 0)
-                ans = controler.OpenStore(username, user.storename);
+                ans = controler.OpenStore("almog", user.storename);
             else
             {
                 user.storemsg = "Store name Empty";
@@ -201,7 +201,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
             }
             else
             {
-                bool ans = controler.OpenStore(user.userhello, user.storename);
+                bool ans = controler.OpenStore("almog", user.storename);
                 if (!ans)
                 {
                     user.storename = "";
