@@ -59,7 +59,8 @@ namespace WPF_Trial2.PresentationLayer.Windows
     {
         static Controller controler = Controller.GetController();
         UserDataName user = new UserDataName();
-        public string username = "guest1";
+        public string username = WindowManager.username;
+        
         private class searchString : INotifyPropertyChanged
         {
             private String search;
@@ -148,14 +149,24 @@ namespace WPF_Trial2.PresentationLayer.Windows
         private void Search(object sender, RoutedEventArgs e)
         {
             //this.button1.Content = this.searchStr.Search;
+            
         }
 
         private void OpenStore(object sender, RoutedEventArgs e)
         {
-            //if()
+            Store loginWindow = new Store();
+            loginWindow.Show();
+            App.Current.MainWindow = loginWindow;
         }
 
         private void login_register_Click(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            App.Current.MainWindow = loginWindow;
+            this.Close();
+        }
+        private void logout(object sender, RoutedEventArgs e)
         {
             Main1 m1 = new Main1();
             m1.Show();
@@ -183,27 +194,6 @@ namespace WPF_Trial2.PresentationLayer.Windows
             //loginWindow.ShowDialog();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            if(user.storename == null)
-            {
-                user.storemsg = "insert store name";
-            }
-            else
-            {
-                bool ans = controler.OpenStore("almog", user.storename);
-                if (!ans)
-                {
-                    user.storename = "";
-                    user.storemsg = "the name is already taken";
-                }
-                else
-                {
-                    user.storename = "";
-                    user.storemsg = "the store is open!";
-                }
-            }
-        }
 
         public void getAlarm(string title, string des)
         {

@@ -126,7 +126,7 @@ namespace Tests.Bridge
 
         public bool login(string userName, string password)
         {
-            return UserController.login(userName, password);
+            return UserController.login(userName, password)[0] == "true";
         }
 
         public void logout()

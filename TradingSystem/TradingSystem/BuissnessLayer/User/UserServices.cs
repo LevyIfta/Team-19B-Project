@@ -11,12 +11,21 @@ namespace TradingSystem.BuissnessLayer
 {
     public static class UserServices
     {
+        
         public static ICollection<aUser> Users { get; private set; } = new List<aUser>();
         public static ICollection<string> onlineUsers { get; private set; } = new List<string>();
         public static ICollection<string> offlineUsers { get; private set; } = new List<string>() ;
-
+        static UserServices()
+        {
+            UserServices.register("admin", "Admin1");
+            //Users.Add(new Admin("admin", "Admin1"));
+        }
         // menu functions
         // users
+        public static aUser getAdmin() 
+        {
+            return getUser("admin");
+        }
         public static string[] login(string username, string password)
         {
             if (onlineUsers.Contains(username))

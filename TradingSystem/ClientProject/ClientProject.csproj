@@ -113,9 +113,13 @@
     <Compile Include="PresentationLayer\Windows\RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PresentationLayer\Windows\Store.xaml.cs">
+      <DependentUpon>Store.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PresentationLayer\Windows\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PresentationLayer\Windows\WindowManager.cs" />
     <Compile Include="SLdataObjects\SLbasket.cs" />
     <Compile Include="SLdataObjects\SLemployee.cs" />
     <Compile Include="SLdataObjects\SLproduct.cs" />
@@ -138,6 +142,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="PresentationLayer\Windows\RegistrationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PresentationLayer\Windows\Store.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

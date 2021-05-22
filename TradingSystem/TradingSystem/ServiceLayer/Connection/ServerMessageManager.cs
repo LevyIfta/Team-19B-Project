@@ -90,7 +90,7 @@ namespace TradingSystem.ServiceLayer
 
                 }
             }
-            catch(Exception e)
+            catch(NotImplementedException e)
             {
                 socket.Close();
                 throw e;
@@ -184,9 +184,9 @@ namespace TradingSystem.ServiceLayer
                         //   ServerConnectionManager.sendMessage(enc_r);
                         break;
                     case ("login"):
-                        ans = TradingSystem.ServiceLayer.UserController.login(msg.param_list[0], msg.param_list[1]);
+                        string[] ans2 = TradingSystem.ServiceLayer.UserController.login(msg.param_list[0], msg.param_list[1]);
                         ans_d = "false";
-                        if (ans)
+                        if (ans2[0].Equals("true"))
                             ans_d = "true";
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "bool";
@@ -247,7 +247,10 @@ namespace TradingSystem.ServiceLayer
                         TradingSystem.ServiceLayer.UserController.browseProducts(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         break;
                     case ("browse store"):
-                        TradingSystem.ServiceLayer.UserController.browseStore(msg.param_list[0], msg.param_list[1]);
+                        ans_d = TradingSystem.ServiceLayer.UserController.browseStore(msg.param_list[0], msg.param_list[1]);
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string";
+                        msg_send.param_list = new string[] { ans_d };
                         break;
                     case ("get receipts in store"):
                         TradingSystem.ServiceLayer.UserController.getReceiptsHistory(msg.param_list[0], msg.param_list[1]);

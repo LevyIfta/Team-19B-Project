@@ -29,22 +29,22 @@ namespace TradingSystem.ServiceLayer
         }
         
 
-        public static bool login(string username, string password)
+        public static string[] login(string username, string password)
         {
             //     DirAppend.AddToLogger("user " + username + " login", Result.Log);
         
             string[] ans = BuissnessLayer.UserServices.login(username, password);
             if (ans[0].Equals("false"))
             {
-                user.addAlarm("login failed", ans[1]);
-                return false;
+                UserServices.getAdmin().addAlarm("login failed", ans[1]);
+                return ans;
             }
 
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
             alarmThread.Abort();
             alarmThread= user.estblishAlarmHandler(olduser.getAlarmParams(),  olduser.getAlarmLock(), alarmHandler);
-            return true;
+            return ans;
 
         }
 
@@ -165,7 +165,10 @@ namespace TradingSystem.ServiceLayer
 
         public static string browseStore(string username, string storeName)
         {
-            return BuissnessLayer.UserServices.browseStore(username,storeName).name;
+            var ans = BuissnessLayer.UserServices.browseStore(username, storeName);
+            if (ans == null)
+                return "";
+            return ans.name;
         }
 
         public static ICollection<SLreceipt> getReceiptsHistory(string username, string storeName)

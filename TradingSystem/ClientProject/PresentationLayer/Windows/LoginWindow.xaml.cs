@@ -152,6 +152,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 else
                 {
                     //string username = controler.getUserName();
+                    WindowManager.username = user.username;
                     MainWindow window1 = new MainWindow();
                     window1.Show();
                     App.Current.MainWindow = window1;

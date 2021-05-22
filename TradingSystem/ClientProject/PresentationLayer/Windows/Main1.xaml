@@ -45,10 +45,33 @@
                     </Style>
                 </ListView.ItemContainerStyle>
 
-                <ListViewItem x:Name="ItemProducts" Height="60">
+                <ListViewItem x:Name="Actions" Height="60" >
                     <StackPanel Orientation="Horizontal">
-                        <fa5:SvgAwesome Foreground="white" Margin="10,0,0,0" Width="20px" Icon="Solid_BoxOpen" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <TextBlock Text="Productos" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 10"/>
+                        <extToolkit:DropDownButton FlowDirection="RightToLeft" Background="#3b3c40" Width="107" Height="27" Padding="8,8,8,8" Margin="5,5,10,5" HorizontalAlignment="Right" >
+
+                            <TextBlock Text="Actions" Foreground="white" HorizontalAlignment="Left" VerticalAlignment="Center" Width="49"/>
+                            <extToolkit:DropDownButton.DropDownContent>
+
+                                <ListView FlowDirection="RightToLeft" ItemsSource="{Binding MyActions, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="#3b3c40" Foreground="White" >
+
+                                    <ListViewItem  Height="60">
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa5:SvgAwesome Foreground="white" Margin="10,0,0,0" Width="20px" Icon="Solid_UsersCog" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <Button Content="Open Store" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 10" Click="open_store"/>
+                                        </StackPanel>
+                                    </ListViewItem>
+                                    <ListViewItem  Height="60">
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa5:SvgAwesome Foreground="white" Margin="10,0,0,0" Width="20px" Icon="Solid_SignOutAlt" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <Button Content="login" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 10"/>
+                                        </StackPanel>
+                                    </ListViewItem>
+
+
+
+                                </ListView>
+                            </extToolkit:DropDownButton.DropDownContent>
+                        </extToolkit:DropDownButton>
                     </StackPanel>
                 </ListViewItem>
                 <ListViewItem x:Name="ItemClients" Height="60">
@@ -57,10 +80,10 @@
                         <TextBlock Text="Clientes" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 10"/>
                     </StackPanel>
                 </ListViewItem>
-                <ListViewItem x:Name="ItemSales" Height="60">
+                <ListViewItem x:Name="MyCart" Height="60">
                     <StackPanel Orientation="Horizontal">
                         <fa5:SvgAwesome Foreground="white" Margin="10,0,0,0" Width="20px" Icon="Solid_CartPlus" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <TextBlock Text="Ventas" VerticalAlignment="Center"  Margin="20 10"/>
+                        <TextBlock Text="My Cart" VerticalAlignment="Center"  Margin="20 10"/>
                     </StackPanel>
                 </ListViewItem>
                 <ListViewItem x:Name="ItemImports" Height="60">
@@ -72,7 +95,7 @@
                 <ListViewItem x:Name="ItemStats" Height="60">
                     <StackPanel Orientation="Horizontal">
                         <fa5:SvgAwesome Foreground="white" Margin="10,0,0,0" Width="20px" Icon="Solid_ChartPie" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <TextBlock Text="Estadísticas" VerticalAlignment="Center"  Margin="20 10"/>
+                        <TextBlock Text="Chart" VerticalAlignment="Center"  Margin="20 10"/>
                     </StackPanel>
                 </ListViewItem>
 
@@ -95,7 +118,7 @@
                     <fa5:SvgAwesome Foreground="Black" Margin="0,0,0,0" Width="20px" Icon="Solid_Bars" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </Button>
                 <!--Logo title-->
-                <TextBlock HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="22">Sistema Informático</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="22">Tradin System</TextBlock>
                 <!--Notification Image Button-->
 
                 <extToolkit:DropDownButton FlowDirection="RightToLeft" Background="White" Width="50px" Height="40px" Padding="8,8,8,8" Margin="5,5,70,5" HorizontalAlignment="Right" >

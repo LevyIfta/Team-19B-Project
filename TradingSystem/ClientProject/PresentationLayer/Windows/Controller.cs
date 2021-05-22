@@ -131,6 +131,24 @@ namespace ClientProject
             return ans;
         }
 
+        public string GetStore(string username, string storename)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            msg.type = msgType.FUNC;
+            msg.name = "browse store";
+            msg.param_list = new string[] { username, storename };
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            string ans = "";
+            if (ans_d.type == msgType.OBJ && ans_d.name == "string")
+            {
+                ans = ans_d.param_list[0];
+            }
+            return ans;
+        }
+
         public string test()
         {
             DecodedMessge msg = new DecodedMessge();    

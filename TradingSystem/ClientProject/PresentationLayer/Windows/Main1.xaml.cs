@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -12,17 +13,35 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPF_Trial2.PresentationLayer.DataContext;
+using ClientProject;
 
 namespace WPF_Trial2.PresentationLayer.Windows
 {
-    /// <summary>
-    /// Interaction logic for Main1.xaml
-    /// </summary>
+    class Actions : ANotifyPropChange
+    {
+        private List<ListViewItem> MyActions;
+
+        public List<ListViewItem> myActions
+        {
+            get { return MyActions; }
+            set
+            {
+                MyActions = value;
+                OnPropertyChanged();
+            }
+        }
+
+    }
     public partial class Main1 : Window
     {
+        public List<ListViewItem> actionslist { get; set; }
+        Actions actions = new Actions();
         public Main1()
         {
             InitializeComponent();
+            this.DataContext = actions;
+            
         }
 
         private void ToggleMenu(object sender, RoutedEventArgs e)
@@ -72,6 +91,14 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 default:
                     break;
             }
+        }
+
+        private void open_store(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            App.Current.MainWindow = loginWindow;
+            this.Close();
         }
 
     }

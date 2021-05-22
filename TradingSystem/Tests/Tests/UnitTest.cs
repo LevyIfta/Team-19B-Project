@@ -37,7 +37,7 @@ namespace Tests
             // try to login twice
             aUser u = UserServices.getUser(username1);
             //string[] usr = UserServices.login(username1, pass1);
-            Assert.IsTrue(UserController.login(username1, pass1));
+            //Assert.IsTrue(UserController.login(username1, pass1));
             string[] usr2 = UserServices.login(username2, pass2);
             Assert.IsTrue(usr2[0].Equals("true"));
             UserServices.logout("QwEr2");
