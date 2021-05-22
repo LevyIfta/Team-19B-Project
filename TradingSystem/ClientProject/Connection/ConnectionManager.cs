@@ -13,7 +13,7 @@ namespace ClientProject.Connection
 
         public static readonly int EOT = 4;
 
-        private static string hostAdress = "192.168.1.13"; // 56.1
+        private static string hostAdress = "192.168.56.1"; // 56.1
         private static int serverPort = 8888; //default
         public static string serveradress= "192.168.56.1";
         public static IPEndPoint serverIP;

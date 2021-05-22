@@ -147,27 +147,12 @@ namespace WPF_Trial2.PresentationLayer.Windows
 
         private void Search(object sender, RoutedEventArgs e)
         {
-            this.button1.Content = this.searchStr.Search;
+            //this.button1.Content = this.searchStr.Search;
         }
 
         private void OpenStore(object sender, RoutedEventArgs e)
         {
-            bool ans = true;
-            if (user.storename.Length > 0)
-                ans = controler.OpenStore("almog", user.storename);
-            else
-            {
-                user.storemsg = "Store name Empty";
-            }
-            user.storename = "";
-            if (!ans)
-            {
-                user.storemsg = "Store can't open";
-            }
-            else
-            {
-                user.storemsg = "Store open!!!";
-            }
+            //if()
         }
 
         private void login_register_Click(object sender, RoutedEventArgs e)
@@ -218,6 +203,16 @@ namespace WPF_Trial2.PresentationLayer.Windows
         public void getAlarm(string title, string des)
         {
             this.alarms.Add(des);
+        }
+
+        private void storeName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void searchBarBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+                   
         }
     }
 }
