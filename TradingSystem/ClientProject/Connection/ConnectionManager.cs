@@ -41,6 +41,7 @@ namespace ClientProject.Connection
                 socket.Blocking = true;
                 stream = new NetworkStream(socket);
                 
+                
 
             }
             catch (ArgumentNullException e)
@@ -82,11 +83,12 @@ namespace ClientProject.Connection
             {
                 while (true /*stream.DataAvailable*/)
                 {
-
+                 
                     char c = (char)stream.ReadByte();
                     if (c == EOT)
                         break;
-                    data.Add(Convert.ToByte(c) );
+                    data.Add(Convert.ToByte(c));
+                    
                 }
             }
             catch (ArgumentNullException e)

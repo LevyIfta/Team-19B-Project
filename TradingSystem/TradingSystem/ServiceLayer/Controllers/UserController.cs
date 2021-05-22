@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer;
 
@@ -11,20 +12,38 @@ namespace TradingSystem.ServiceLayer
     {
         [ThreadStatic]
         public static aUser user = new Guest();
+        [ThreadStatic]
+        private static Thread alarmThread;
 
 
+        private static Func<object, bool> alarmHandler;
+
+        public static void init(Func<object, bool> alarmhandler)
+        {
+           
+            alarmHandler = alarmhandler;
+        }
+        public static void threadInit()
+        {
+            user = new Guest();
+        }
+        
 
         public static bool login(string username, string password)
         {
-       //     DirAppend.AddToLogger("user " + username + " login", Result.Log);
+            //     DirAppend.AddToLogger("user " + username + " login", Result.Log);
+        
             string[] ans = BuissnessLayer.UserServices.login(username, password);
             if (ans[0].Equals("false"))
             {
                 user.addAlarm("login failed", ans[1]);
                 return false;
             }
+
+            aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
-            user.addAlarm("logged in", "you did it");
+            alarmThread.Abort();
+            alarmThread= user.estblishAlarmHandler(olduser.getAlarmParams(),  olduser.getAlarmLock(), alarmHandler);
             return true;
 
         }
@@ -37,7 +56,11 @@ namespace TradingSystem.ServiceLayer
                 //       DirAppend.AddToLogger("user " + user.getUserName() + " logout", Result.Log);
                 if (UserServices.logout(user.getUserName()))
                 {
+                    aUser olduser = user;
                     user = new Guest();
+                    alarmThread.Abort();
+                    alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
+
                     return true;
                 }
             }
@@ -241,6 +264,10 @@ namespace TradingSystem.ServiceLayer
         public static bool isAlarmsEmpty()
         {
             return user.isAlarmsEmpty();
+        }
+        public static void estblishAlarmHandler(object queue, object waitEvent, AutoResetEvent alarmLock)
+        {
+            alarmThread =  user.estblishAlarmHandler(queue, waitEvent, alarmLock, alarmHandler);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ClientProject.Connection;
 using System.Windows;
 using WPF_Trial2.PresentationLayer.Windows;
+using System.Threading;
 
 namespace ClientProject
 {
@@ -16,7 +17,8 @@ namespace ClientProject
 
         private Controller()
         {
-
+            Thread alarmthread = new Thread(new ThreadStart( Alarmanager.start ));
+            alarmthread.Start();
         }
 
         public static Controller GetController()
@@ -28,33 +30,15 @@ namespace ClientProject
 
         public void disconnect()
         {
+            
             ConnectionManager.disconnect();
         }
 
-        private void handleAlarm(DecodedMessge alarm)
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                Window mainwindow = Application.Current.MainWindow;
-                if (mainwindow is MainWindow)
-                    ((MainWindow)mainwindow).getAlarm(alarm.name, alarm.param_list[0]);
-                if (mainwindow is LoginWindow)
-                    ((LoginWindow)mainwindow).getAlarm(alarm.name, alarm.param_list[0]);
-                if (mainwindow is RegistrationWindow)
-                    ((RegistrationWindow)mainwindow).getAlarm(alarm.name, alarm.param_list[0]);
-            }));
-        }
 
         private DecodedMessge readMessage()
         {
-            byte[] ans_e = Connection.ConnectionManager.readMessageCon();
-            DecodedMessge ans = Connection.Decoder.decode(ans_e);
-            while(ans.type == msgType.ALARM) //check if msg is alarm
-            {
-                handleAlarm(ans);
-                ans_e = Connection.ConnectionManager.readMessageCon();
-                 ans = Connection.Decoder.decode(ans_e);
-            }
-            return ans;
+           
+            return Alarmanager.getMsg();
         }
 
 
