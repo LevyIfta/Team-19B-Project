@@ -157,11 +157,16 @@ namespace WPF_Trial2.PresentationLayer.Windows
 
         private void login_register_Click(object sender, RoutedEventArgs e)
         {
+            Main1 m1 = new Main1();
+            m1.Show();
+            App.Current.MainWindow = m1;
+            this.Close();
+            /*
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             App.Current.MainWindow = loginWindow;
             this.Close();
-            
+            */
             //loginWindow.ShowDialog();
         }
         private void logoutf(object sender, RoutedEventArgs e)
