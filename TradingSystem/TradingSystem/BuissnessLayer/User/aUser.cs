@@ -5,15 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.BuissnessLayer.commerce;
+using System.Threading;
 
 namespace TradingSystem.BuissnessLayer
 {
     public abstract class aUser
     {
+
+      
         public string userName { get; set; }
         public ShoppingCart myCart { get; set; }
 
         public Queue<Tuple<string, string>> alarms { get; set; } = new Queue<Tuple<string, string>>();
+
+        public AutoResetEvent alarmLock = new AutoResetEvent(false);
+        private object[] alarmthreadParams;
 
         public ShoppingCart getMyCart()
         {
@@ -174,17 +180,53 @@ namespace TradingSystem.BuissnessLayer
 
         public virtual void addAlarm(string title, string description)
         {
-            this.alarms.Enqueue(new Tuple<string, string>(title, description));
+            lock (alarms)
+            {
+                this.alarms.Enqueue(new Tuple<string, string>(title, description));
+                alarmLock.Set();
+            }
         }
 
         public virtual Tuple<string, string> fetchAlarm()
         {
-            return this.alarms.Dequeue();
+            lock (alarms)
+            {
+                return this.alarms.Dequeue();
+            }
         }
 
         public virtual bool isAlarmsEmpty()
         {
             return this.alarms.Count == 0;
+        }
+
+        public AutoResetEvent getAlarmLock()
+        {
+            return this.alarmLock;
+        }
+        public object[] getAlarmParams()
+        {
+            return this.alarmthreadParams;
+        }
+        public Thread estblishAlarmHandler(object queue, object waitEvent, AutoResetEvent alarmLock, Func<object, bool> alarmHandler)
+        {
+            this.alarmLock = alarmLock;
+            object[] parameters = new object[] { null, queue, waitEvent, alarmLock, new Func<bool>(isAlarmsEmpty), new Func<Tuple<string, string>>(fetchAlarm) };
+            Thread th = new Thread(new ThreadStart(() => { alarmHandler(parameters); }));
+            this.alarmthreadParams = new object[] { null, queue, waitEvent };
+            th.Start();
+            alarmLock.Set();
+            return th;
+        }
+        public Thread estblishAlarmHandler(object[] parametersPartial,   AutoResetEvent alarmLock, Func<object, bool> alarmHandler)
+        {
+            this.alarmLock = alarmLock;
+            object[] parameters = new object[] {parametersPartial[0], parametersPartial[1], parametersPartial[2], alarmLock, new Func<bool>(isAlarmsEmpty), new Func<Tuple<string, string>>(fetchAlarm) };
+            Thread th = new Thread(new ThreadStart(() => { alarmHandler(parameters); }));
+            this.alarmthreadParams = parametersPartial;
+            th.Start();
+            alarmLock.Set();
+            return th;
         }
     }
 }
