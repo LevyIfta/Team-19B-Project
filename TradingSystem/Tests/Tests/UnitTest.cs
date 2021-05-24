@@ -284,11 +284,9 @@ namespace Tests
                 {
                     Thread.Sleep(3000);
                     flag &= (receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null));
-                    //Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
+                  
                     // check for amount
                     flag &= aliShop.searchProduct("Bamba", "Osem").amount == 8;
-                    //Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
-                    //Assert.IsTrue(false);
                 });
 
             purchase1.Start();
