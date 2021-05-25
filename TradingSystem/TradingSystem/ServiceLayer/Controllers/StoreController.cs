@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace TradingSystem.ServiceLayer
 {
@@ -33,6 +34,11 @@ namespace TradingSystem.ServiceLayer
             }
             return null;
             
+        }
+
+        internal Store GetStoreById(Guid storeId)
+        {
+            throw new NotImplementedException();
         }
 
         public static SLstore searchStore(string storeName)

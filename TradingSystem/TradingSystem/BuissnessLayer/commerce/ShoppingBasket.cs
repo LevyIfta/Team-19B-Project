@@ -31,6 +31,12 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.store = new Store(StoreDAL.getStore(shoppingBasketData.storeName));
             this.owner = UserServices.getUser(shoppingBasketData.useName);
         }
+
+        public Dictionary<Product, int> GetDictionaryProductQuantity()
+        {
+            return null;
+        }
+
         public double checkPrice()
         {
             return store.calcPrice(products);

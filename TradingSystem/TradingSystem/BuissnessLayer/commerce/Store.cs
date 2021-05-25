@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce.Rules.policy;
+using TradingSystem.BuissnessLayer.commerce.Rules.Discount;
+using TradingSystem.BuissnessLayer.commerce.Rules;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -20,6 +23,12 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public Member founder { get; private set; }
 
+
+        private Policy _policy;
+        private ICollection<Discount> _discounts;
+        internal Policy Policy { get => _policy; set => _policy = value; }
+        public ICollection<Discount> Discounts { get => _discounts; set => _discounts = value; }
+
         public Store(string name, Member founder)
         {
             this.name = name;
@@ -29,13 +38,16 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
+            this.Discounts = new HashSet<Discount>();
+
+            this._policy = new Policy();
         }
 
         public Store(StoreData storeData)
         {
             this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder);
-            
+
             // fill the collections
             this.fillReceipts();
             this.fillInventory();
@@ -114,7 +126,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
                 {
                     p.price = newPrice;
-                    
+
                     // update DB
                     ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                     return true;
@@ -367,5 +379,106 @@ namespace TradingSystem.BuissnessLayer.commerce
                         p.amount -= product.amount;
             }
         }
+
+
+
+        public double ApplyDiscounts(ShoppingBasket shoppingBasket)
+        {
+            var availableDiscounts = Discounts.Select(d => d.ApplyDiscounts(shoppingBasket));
+            //chose the max value of an available discount
+            try
+            {
+                return availableDiscounts.Max();
+            }
+            catch   // no discount is available
+            {
+                return 0;
+            }
+        }
+
+        //use case 12 
+        public bool CheckPolicy(ShoppingBasket shoppingBasket)
+        {
+            return Policy.Check(shoppingBasket);
+        }
+
+        public void SetPolicy(string userID, Policy policy)
+        {
+            if (false)
+                return;
+            this.Policy = policy;
+        }
+
+        public Policy GetPolicy()
+        {
+            return Policy;
+        }
+
+        public Guid AddRule(string userID, Rule rule)
+        {
+            //Have no permission to do the action
+            if (false)
+                return new Guid();
+            _policy.AddRule(rule);
+            return rule.GetId();
+        }
+
+        public void RemoveRule(string userID)
+        {
+            //Have no permission to do the action
+            if (false)
+                return;
+            _policy.RemoveRule();
+        }
+
+
+
+        public Guid AddDiscount(string userID, Discount discount)
+        {
+            //check if Have no permission to do the action
+            if (false)
+                return new Guid();
+            Discounts.Add(discount);
+            return discount.Id;
+        }
+
+        public Guid RemoveDiscount(string userID, Guid discountId)
+        {
+            //Have no permission to do the action
+            if (false)
+                return new Guid();
+            Discount d = GetDiscountById(discountId);
+            if (d != null)
+            {    //remove old discount if exists
+                Discounts.Remove(d);
+            }
+            return discountId;
+        }
+
+
+
+
+        public Discount GetDiscountById(Guid discountId)
+        {
+            IEnumerable<Discount> discounts = Discounts.Where(discount => discount.Id.Equals(discountId));
+            return discounts.FirstOrDefault();
+        }
+
+        public IRule GetRuleById(Guid ruleId)
+        {
+            if (this.Policy.Rule.GetId().Equals(ruleId))
+            {
+                return this.Policy.Rule;
+            }
+            return null;
+        }
+
+        public IRule GetDiscountRuleById(Guid ruleId)
+        {
+            return Discounts.Where(d => d.GetRule().GetId().Equals(ruleId)).FirstOrDefault().GetRule();
+        }
+
+
+
     }
 }
