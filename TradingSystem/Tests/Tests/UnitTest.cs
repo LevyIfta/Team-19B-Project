@@ -6,6 +6,7 @@ using TradingSystem.BuissnessLayer;
 using System.Linq;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.ServiceLayer;
+using System.Threading;
 
 namespace Tests
 {
@@ -150,10 +151,10 @@ namespace Tests
         public static void classInit(TestContext context)
         {
             string username = "ShopOwner11", pass = "123xX321";
-            bool ownerReg = UserController.register(username, pass);
+            UserServices.register(username, pass);
             // create 2 stores
             // login
-            UserController.login(username, pass);
+            UserServices.login(username, pass);
             Member owner = (Member)UserServices.getUser(username);
             // init names
             store1Name = "store1_";
@@ -261,12 +262,37 @@ namespace Tests
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             // purchase
-            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
-            ICollection<Receipt> receipts2 = user2.purchase(new CreditCard());
 
-            Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
-            // check for amount
-            Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
+            ICollection<Receipt> receipts1 = new LinkedList<Receipt>();
+            ICollection<Receipt> receipts2 = null;
+            bool flag = true;
+
+            Thread purchase1 = new Thread(() =>
+            {
+                Thread.Sleep(2000);
+                receipts1 = user1.purchase(new CreditCard());
+            }),
+                purchase2 = new Thread(() =>
+                {
+                    Thread.Sleep(2000);
+                    receipts2 = user2.purchase(new CreditCard());
+                }),
+                assertThread = new Thread(() =>
+                {
+                    Thread.Sleep(3000);
+                    flag &= (receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null));
+
+                    // check for amount
+                    flag &= aliShop.searchProduct("Bamba", "Osem").amount == 8;
+                });
+
+            purchase1.Start();
+            purchase2.Start();
+            assertThread.Start();
+
+            Thread.Sleep(3500);
+            Assert.IsTrue(flag);
+
             UserServices.logout("AliKB");
         }
 
@@ -303,6 +329,7 @@ namespace Tests
             ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 8);
+            Assert.AreEqual(user1.getBasket(aliShop).products.Count, 0);
         }
 
         [TestMethod]
@@ -338,6 +365,8 @@ namespace Tests
             ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 20);
+            Assert.AreNotEqual(user1.getBasket(aliShop).products.Count, 0);
+            Assert.IsNull(receipts1);
         }
 
         [TestMethod]
