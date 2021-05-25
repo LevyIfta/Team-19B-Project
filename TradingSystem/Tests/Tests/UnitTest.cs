@@ -366,6 +366,7 @@ namespace Tests
             ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 8);
+            Assert.AreEqual(user1.getBasket(aliShop).products.Count, 0);
         }
 
         [TestMethod]
@@ -401,6 +402,8 @@ namespace Tests
             ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 20);
+            Assert.AreNotEqual(user1.getBasket(aliShop).products.Count, 0);
+            Assert.IsNull(receipts1);
         }
 
         [TestMethod]

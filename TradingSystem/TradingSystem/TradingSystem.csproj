@@ -56,6 +56,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BuissnessLayer\commerce\feedbackSystem.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\CategoryDiscountCalculator.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\ConditionDiscount.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\Discount.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\DiscountCalc.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\IDiscount.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\ProductDiscountCalculator.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Discount\StoreDiscountCalc.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\IRule.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\MarketRules.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\policy\Policy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Rule.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\RulesCreator.cs" />
     <Compile Include="BuissnessLayer\commerce\Stores.cs" />
     <Compile Include="BuissnessLayer\commerce\Immediate.cs" />
     <Compile Include="BuissnessLayer\Result.cs" />
