@@ -12,7 +12,6 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         {
 
         }
-
         public Rule CreateUserAgeRule(string username, int ageLessThan = int.MaxValue, int ageGreaterEQThan = 0)
         {
             return new Rule(new Func<ShoppingBasket, bool>((ShoppingBasket basket) =>

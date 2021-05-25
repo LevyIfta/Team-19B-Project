@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.Discount
 {
-    interface IDiscount
+    public interface IDiscount
     {
          double CalcDiscount(ShoppingBasket shoppingBasket);
 

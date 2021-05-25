@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
-    class Rule : IRule
+    public class Rule : IRule
     {
         //Function gets a products and it's quantities and return legal or not
         Func<ShoppingBasket, bool> _r;

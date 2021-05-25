@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
-    interface IRule
+    public interface IRule
     {
         bool Check(ShoppingBasket shoppingBasket);
         Guid GetId();

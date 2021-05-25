@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.Discount
 {
-    class Discount
+    public class Discount
     {
         private Guid _id;
 
