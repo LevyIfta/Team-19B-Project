@@ -6,6 +6,9 @@ using TradingSystem.BuissnessLayer;
 using System.Linq;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.ServiceLayer;
+using System;
+using System.Threading;
+using System.Timers;
 
 namespace Tests
 {
@@ -150,10 +153,11 @@ namespace Tests
         public static void classInit(TestContext context)
         {
             string username = "ShopOwner11", pass = "123xX321";
-            bool ownerReg = UserController.register(username, pass);
+            //bool ownerReg = 
+            UserServices.register(username, pass);
             // create 2 stores
             // login
-            UserController.login(username, pass);
+            UserServices.login(username, pass);
             Member owner = (Member)UserServices.getUser(username);
             // init names
             store1Name = "store1_";
@@ -261,12 +265,71 @@ namespace Tests
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             // purchase
-            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
-            ICollection<Receipt> receipts2 = user2.purchase(new CreditCard());
 
-            Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
+            ICollection<Receipt> receipts1 = new LinkedList<Receipt>();
+            ICollection<Receipt> receipts2 = null;
+            bool flag = true;
+
+            Thread purchase1 = new Thread(() =>
+            {
+                Thread.Sleep(2000);
+                receipts1 = user1.purchase(new CreditCard());
+            }),
+                purchase2 = new Thread(() =>
+                {
+                    Thread.Sleep(2000);
+                    receipts2 = user2.purchase(new CreditCard());
+                }),
+                assertThread = new Thread(() =>
+                {
+                    Thread.Sleep(3000);
+                    flag &= (receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null));
+                  
+                    // check for amount
+                    flag &= aliShop.searchProduct("Bamba", "Osem").amount == 8;
+                });
+
+            purchase1.Start();
+            purchase2.Start();
+            assertThread.Start();
+
+            Thread.Sleep(3500);
+            Assert.IsTrue(flag);
+            
+            /*
+            System.Timers.Timer purchase1, purchase2, assert;
+            // Create a timer with a two second interval.
+            purchase1 = new System.Timers.Timer(2000);
+            purchase2 = new System.Timers.Timer(2000);
+            assert = new System.Timers.Timer(3000);
+
+            // Hook up the Elapsed event for the timer. 
+            purchase1.Elapsed += (s, e) => receipts1 = user1.purchase(new CreditCard());
+            purchase2.Elapsed += (s, e) => receipts2 = user2.purchase(new CreditCard());
+            assert.Elapsed += (s, e) =>
+            {
+                Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
+                // check for amount
+                Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
+            };
+
+            purchase1.AutoReset = false;
+            purchase2.AutoReset = false;
+
+            purchase1.Enabled = true;
+            purchase2.Enabled = true;
+
+            purchase1.Start();
+            purchase2.Start();
+            assert.Start();
+
+            Thread.Sleep(3500);*/
+            //receipts1 = user1.purchase(new CreditCard());
+            //receipts2 = user2.purchase(new CreditCard());
+
+            //Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
             // check for amount
-            Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
+            //Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
             UserServices.logout("AliKB");
         }
 
