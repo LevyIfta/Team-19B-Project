@@ -252,6 +252,15 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "string";
                         msg_send.param_list = new string[] { ans_d };
                         break;
+                    case ("search store"):
+                        ans_d = "";
+                        var temp = StoreController.searchStore(msg.param_list[0]);
+                        if (temp != null)
+                            ans_d = temp.storeName;
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string";
+                        msg_send.param_list = new string[] { ans_d };
+                        break;
                     case ("get receipts in store"):
                         TradingSystem.ServiceLayer.UserController.getReceiptsHistory(msg.param_list[0], msg.param_list[1]);
                         break;

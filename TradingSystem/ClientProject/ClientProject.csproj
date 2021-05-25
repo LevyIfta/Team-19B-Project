@@ -116,6 +116,9 @@
     <Compile Include="PresentationLayer\Windows\Store.xaml.cs">
       <DependentUpon>Store.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PresentationLayer\Windows\StoreWindow.xaml.cs">
+      <DependentUpon>StoreWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PresentationLayer\Windows\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PresentationLayer\Windows\Store.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PresentationLayer\Windows\StoreWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

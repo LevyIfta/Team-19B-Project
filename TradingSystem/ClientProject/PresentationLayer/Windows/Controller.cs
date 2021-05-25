@@ -7,6 +7,7 @@ using ClientProject.Connection;
 using System.Windows;
 using WPF_Trial2.PresentationLayer.Windows;
 using System.Threading;
+using System.Windows.Controls;
 
 namespace ClientProject
 {
@@ -148,6 +149,47 @@ namespace ClientProject
             }
             return ans;
         }
+        public string SearchStore(string storeName)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            // init message fields
+            msg.type = msgType.FUNC;
+            msg.name = "search store";
+            msg.param_list = new string[] { storeName };
+            // encode and send message
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            string ans = "";
+
+            if (ans_d.type == msgType.OBJ && ans_d.name == "string")
+            {
+                ans = ans_d.param_list[0];
+            }
+            return ans;
+        }
+        public ICollection<string> SearchStores(string storeName)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            // init message fields
+            msg.type = msgType.FUNC;
+            msg.name = "search stores";
+            msg.param_list = new string[] { storeName };
+            // encode and send message
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            bool ans = false;
+            ICollection<string> stores = new LinkedList<string>();
+
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            {
+                ans = ans_d.param_list[0] == "true";
+            }
+            return stores;
+        }
 
         public string test()
         {
@@ -163,7 +205,10 @@ namespace ClientProject
             DecodedMessge ans_d = readMessage();
             return "blup";
         }
-
+        public ICollection<SLproduct> searchProduct(string storeName, string productName, string category, string manufacturer, double minPrice, TextBox maxPrice)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

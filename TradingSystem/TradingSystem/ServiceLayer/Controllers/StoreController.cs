@@ -10,24 +10,29 @@ namespace TradingSystem.ServiceLayer
     {
         public static SLstore makeSLstore(BuissnessLayer.commerce.Store store)
         {
-            Object[] parameters = new Object[SLstore.PARAMETER_COUNT];
-            ICollection<string> ownerNames = new List<string>();
-            foreach (BuissnessLayer.aUser owner in store.owners)
+            if(store != null)
             {
-                ownerNames.Add(owner.getUserName());
+                Object[] parameters = new Object[SLstore.PARAMETER_COUNT];
+                ICollection<string> ownerNames = new List<string>();
+                foreach (BuissnessLayer.aUser owner in store.owners)
+                {
+                    ownerNames.Add(owner.getUserName());
+                }
+                ICollection<string> managerNames = new List<string>();
+                foreach (BuissnessLayer.aUser manager in store.managers)
+                {
+                    managerNames.Add(manager.getUserName());
+                }
+                parameters[0] = store.name;
+                parameters[1] = ProductController.makeSLreceiptCollection(store.receipts);
+                parameters[2] = ProductController.makeSLproductCollection(store.inventory);
+                parameters[3] = ownerNames;
+                parameters[4] = managerNames;
+                parameters[5] = store.founder.userName;
+                return (new SLstore(parameters));
             }
-            ICollection<string> managerNames = new List<string>();
-            foreach (BuissnessLayer.aUser manager in store.managers)
-            {
-                managerNames.Add(manager.getUserName());
-            }
-            parameters[0] = store.name;
-            parameters[1] = ProductController.makeSLreceiptCollection(store.receipts);
-            parameters[2] = ProductController.makeSLproductCollection(store.inventory);
-            parameters[3] = ownerNames;
-            parameters[4] = managerNames;
-            parameters[5] = store.founder.userName;
-            return (new SLstore(parameters));
+            return null;
+            
         }
 
         public static SLstore searchStore(string storeName)

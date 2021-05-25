@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPF_Trial2.PresentationLayer.DataContext;
 using ClientProject;
+using ClientProject.PresentationLayer.Windows;
 
 namespace WPF_Trial2.PresentationLayer.Windows
 {
@@ -54,13 +55,26 @@ namespace WPF_Trial2.PresentationLayer.Windows
                 OnPropertyChanged();
             }
         }
+
+        private String Searchmsg;
+
+        public String searchmsg
+        {
+            get { return Searchmsg; }
+            set
+            {
+                Searchmsg = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public partial class MainWindow : Window
     {
         static Controller controler = Controller.GetController();
         UserDataName user = new UserDataName();
         public string username = WindowManager.username;
-        
+        string msgFailed = "";
+
         private class searchString : INotifyPropertyChanged
         {
             private String search;
@@ -93,7 +107,13 @@ namespace WPF_Trial2.PresentationLayer.Windows
         private List<StoreDataContext> storesDataContexts;
         private searchString searchStr;
         public List<string> alarms;
+        private enum SearchOption
+        {
+            PRODUCT,
+            STORE
+        }
 
+        private SearchOption searchOption;
         public MainWindow()
         {
             //this.userDataContext = new UserDataContext();
@@ -131,9 +151,9 @@ namespace WPF_Trial2.PresentationLayer.Windows
         }
         private void TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (this.searchBarBox.Text.Length < 1)
+            //if (this.searchBarBox.Text.Length < 1)
             {
-                this.searchBarText.Visibility = Visibility.Visible;
+                //this.searchBarText.Visibility = Visibility.Visible;
             }
             
         }
@@ -149,7 +169,67 @@ namespace WPF_Trial2.PresentationLayer.Windows
         private void Search(object sender, RoutedEventArgs e)
         {
             //this.button1.Content = this.searchStr.Search;
+            string searchVal = this.SearchValue.Text;
             
+            switch (this.searchOption)
+            {
+                case SearchOption.PRODUCT:
+                    searchByProduct(searchVal);
+                    break;
+                case SearchOption.STORE:
+                    searchStore(searchVal);
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void searchStore(string storeName)
+        {
+            string store = controler.SearchStore(storeName);
+            if (store != null && !store.Equals(""))
+            {
+                // show in list and then click on the name open window
+                StoreWindow storeWindow = new StoreWindow(store);
+                storeWindow.Show();
+                App.Current.MainWindow = storeWindow;
+            }
+            else
+            {
+                this.user.searchmsg = "insert name";
+                
+            }
+        }
+        private void searchByStore(string storeName)
+        {
+            ICollection<string> stores = controler.SearchStores(storeName);
+
+            if (stores != null)
+                foreach (string store in stores)
+                {
+                    var button = new Button() { Content = store };
+                    button.Click += openStoreWindow;
+                    this.ContentMain.Children.Add(button);
+                }
+
+        }
+        private void openStoreWindow(object sender, RoutedEventArgs e)
+        {
+            string storeName = (e.Source as Button).Content.ToString();
+            controler.SearchStores(storeName);
+        }
+        private void searchByProduct(string searchVal)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ByProduct_Checked(object sender, RoutedEventArgs e)
+        {
+            this.searchOption = SearchOption.PRODUCT;
+        }
+
+        private void ByStore_Checked(object sender, RoutedEventArgs e)
+        {
+            this.searchOption = SearchOption.STORE;
         }
 
         private void OpenStore(object sender, RoutedEventArgs e)
@@ -200,14 +280,6 @@ namespace WPF_Trial2.PresentationLayer.Windows
             this.alarms.Add(des);
         }
 
-        private void storeName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void searchBarBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-                   
-        }
+       
     }
 }

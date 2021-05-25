@@ -26,6 +26,8 @@ namespace WPF_Trial2.PresentationLayer.Windows
         public Store()
         {
             InitializeComponent();
+            this.DataContext = user;
+            user.storemsg = "start";
         }
         private void button_Click(object sender, RoutedEventArgs e)
         {
