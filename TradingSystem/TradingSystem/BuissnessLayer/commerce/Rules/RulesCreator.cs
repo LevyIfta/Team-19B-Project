@@ -35,7 +35,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         private bool ProductWeightLessThan(ShoppingBasket basket, Guid productId, double quantityLessThan)
         {
             double counter = 0;
-            foreach (var p_q in basket.GetDictionaryProductQuantity())
+        /*    foreach (var p_q in basket.GetDictionaryProductQuantity())
             {
                 var product = p_q.Key;
                 var quantity = p_q.Value;
@@ -43,7 +43,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
                 {
                     counter += product.Weight * quantity;
                 }
-            }
+            }*/ // todo
             return counter < quantityLessThan;
         }
         public Rule CreateProductRule(Guid productId, int quantityLessThan = int.MaxValue, int quantityGreaterEQThan = 0)
@@ -56,7 +56,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         private bool ProductLessThan(ShoppingBasket basket, Guid productId, int quantityLessThan)
         {
             int counter = 0;
-            foreach (var p_q in basket.GetDictionaryProductQuantity())
+         /*   foreach (var p_q in basket.GetDictionaryProductQuantity())
             {
                 var product = p_q.Key;
                 var quantity = p_q.Value;
@@ -64,7 +64,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
                 {
                     counter += quantity;
                 }
-            }
+            }*/ //todo
             return counter < quantityLessThan;
         }
 
@@ -78,7 +78,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         private bool CategoryLessThan(ShoppingBasket basket, string category, int quantityLessThan)
         {
             int counter = 0;
-            foreach (var p_q in basket.GetDictionaryProductQuantity())
+        /*   foreach (var p_q in basket.GetDictionaryProductQuantity())
             {
                 var product = p_q.Key;
                 var quantity = p_q.Value;
@@ -86,7 +86,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
                 {
                     counter += quantity;
                 }
-            }
+            }*/ //todo
             return counter < quantityLessThan;
         }
         public Rule CreateStorePriceRule(double priceLessThan = int.MaxValue, double priceGreaterEQThan = 0)
@@ -99,12 +99,12 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         private bool StorePriceLessThan(ShoppingBasket basket, double priceLessThan)
         {
             double counter = 0;
-            foreach (var p_q in basket.GetDictionaryProductQuantity())
+       /*     foreach (var p_q in basket.GetDictionaryProductQuantity())
             {
                 var product = p_q.Key;
                 var quantity = p_q.Value;
                 counter += product.Price * quantity;
-            }
+            }*/ //todo
             return counter < priceLessThan;
         }
         public Rule CreateStoreRule(int quantityLessThan = int.MaxValue, int quantityGreaterEQThan = 0)
@@ -117,12 +117,12 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         private bool StoreLessThan(ShoppingBasket basket, int quantityLessThan)
         {
             int counter = 0;
-            foreach (var p_q in basket.GetDictionaryProductQuantity())
+          /*  foreach (var p_q in basket.GetDictionaryProductQuantity())
             {
                 var product = p_q.Key;
                 var quantity = p_q.Value;
                 counter += quantity;
-            }
+            }*/ //todo
             return counter < quantityLessThan;
         }
 

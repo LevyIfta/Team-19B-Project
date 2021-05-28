@@ -18,12 +18,12 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.Discount
         private double Calc(ShoppingBasket basket, double percent)
         {
             double discount = 0;
-            foreach (var p_q in basket.GetDictionaryProductQuantity())
+         /*   foreach (var p_q in basket.GetDictionaryProductQuantity())
             {
                 var product = p_q.Key;
                 var quantity = p_q.Value;
                 discount += quantity * product.Price * percent;
-            }
+            }*/ //todo
             return discount;
         }
 

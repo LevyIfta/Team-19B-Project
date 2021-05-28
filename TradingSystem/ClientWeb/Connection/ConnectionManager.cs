@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClientProject.Connection
+namespace ClientWeb.Connection
 {
+    
     static class ConnectionManager
     {
 
@@ -15,15 +18,16 @@ namespace ClientProject.Connection
 
         private static string hostAdress = "192.168.56.1"; // 56.1
         private static int serverPort = 8888; //default
+        private static int hostPort = 1234;
         public static string serveradress= "192.168.56.1";
         public static IPEndPoint serverIP;
-        private static NetworkStream stream;
+        private static SslStream stream;
         private static Socket socket;
 
 
         static ConnectionManager()
             {
-               // Connect();
+                Connect();
             }
 
         /// <summary>
@@ -39,7 +43,8 @@ namespace ClientProject.Connection
 
                 socket.Connect(serverIP);
                 socket.Blocking = true;
-                stream = new NetworkStream(socket);
+
+                stream = new SslStream(new NetworkStream(socket));
                 
                 
 
@@ -102,10 +107,6 @@ namespace ClientProject.Connection
             return data.ToArray();
         }
 
-        public static bool peek()
-        {
-            return stream.DataAvailable;
-        }
     
 
         public static void disconnect()

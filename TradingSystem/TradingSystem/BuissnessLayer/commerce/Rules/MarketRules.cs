@@ -37,7 +37,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
 
     class MarketRules
     {
-        private RulesCreator rulesCreator;
+     /*   private RulesCreator rulesCreator;
         private IMarketStores marketStores;
 
         private static readonly Lazy<MarketRules>
@@ -227,6 +227,6 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
                     break;
             }
             return d;
-        }
+        }*/
     }
 }

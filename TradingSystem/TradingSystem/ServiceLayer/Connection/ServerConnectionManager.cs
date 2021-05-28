@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -21,12 +22,12 @@ namespace TradingSystem.ServiceLayer
         private static int serverPort = 8888; //default
         public static string ipAdress = "192.168.56.1";
         
-        private static TcpClient client;
-        private static Dictionary<Thread, Socket> threads = new Dictionary<Thread, Socket>();
+        private static TcpListener listner;
+        private static Dictionary<Thread, TcpClient> threads = new Dictionary<Thread, TcpClient>();
         
        
 
-        public static void sendMessage(byte[] enc, NetworkStream stream)
+        public static void sendMessage(byte[] enc, SslStream stream)
         {
             
             try
@@ -46,25 +47,25 @@ namespace TradingSystem.ServiceLayer
 
     
 
-        private static Socket listner;
+ 
         public static void init()
         {
 
             UserController.init(new Func<object, bool>(ServerMessageManager.AlarmHandler));
-            listner = new Socket(IPAddress.Parse(ipAdress).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAdress), 8888);
             
+           
+            listner = new TcpListener(IPAddress.Parse(ipAdress), serverPort);
+
             try
             {
-                listner.Bind(endPoint);
-                listner.Listen(10);
+                listner.Start();
                 while (true)
                 {
                     
-                    Socket Handler = listner.Accept();
+                    TcpClient client = listner.AcceptTcpClient();
                     Thread th = new Thread(new ParameterizedThreadStart(ServerMessageManager.threadsMain));
-                    threads.Add(th, Handler);
-                    th.Start(Handler);
+                    threads.Add(th, client);
+                    th.Start(client);
 
                 }
             }
@@ -79,7 +80,7 @@ namespace TradingSystem.ServiceLayer
 
         public static void disconnect()
         {
-            listner.Close();
+            listner.Stop();
             
         }
 

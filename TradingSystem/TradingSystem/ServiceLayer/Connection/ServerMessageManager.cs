@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -62,8 +63,8 @@ namespace TradingSystem.ServiceLayer
         private static void messagesHandler(object parameters)
         {
             object[] input = (object[])parameters;
-            Socket socket = (Socket)input[0];
-            NetworkStream stream = new NetworkStream(socket);
+        
+            SslStream stream = (SslStream)input[0];
             Queue<DecodedMessge> qwewe = (Queue<DecodedMessge>)input[1];
             AutoResetEvent waitEvent = (AutoResetEvent)input[2];
 
@@ -92,7 +93,7 @@ namespace TradingSystem.ServiceLayer
             }
             catch(NotImplementedException e)
             {
-                socket.Close();
+                stream.Close();
                 throw e;
             }
         }
@@ -100,26 +101,29 @@ namespace TradingSystem.ServiceLayer
         private static void sendHandler(object parameters)
         {
             object[] input = (object[])parameters;
-            Socket socket = (Socket)input[0];
-            NetworkStream stream = new NetworkStream(socket);
+            SslStream stream = (SslStream)input[0];
+
             Queue<DecodedMessge> qwewe = (Queue<DecodedMessge>)input[1];
             AutoResetEvent waitEvent = (AutoResetEvent)input[2];
             while (true)
             {
                 while (qwewe.Count == 0)
                     waitEvent.WaitOne();
-                ServerConnectionManager.sendMessage(Encoder.encode(qwewe.Dequeue()), stream);
+                lock (qwewe)
+                {
+                    ServerConnectionManager.sendMessage(Encoder.encode(qwewe.Dequeue()), stream);
+                }
             }
 
         }
 
 
-        public static void threadsMain(object socketPar)
+        public static void threadsMain(object client)
         {
 
             UserController.threadInit();
-            Socket socket = (Socket)socketPar;
-            socket.Blocking = true;
+            TcpClient socket = (TcpClient)client;
+            SslStream stream = new SslStream(socket.GetStream());
 
             AutoResetEvent waitEvent = new AutoResetEvent(false);
             Queue<DecodedMessge> qwewe = new Queue<DecodedMessge>();
@@ -127,7 +131,7 @@ namespace TradingSystem.ServiceLayer
             //Thread alarmHandler = new Thread(new ParameterizedThreadStart(AlarmHandler));
             Thread sendhandler = new Thread(new ParameterizedThreadStart(sendHandler));
 
-            object[] parameters = new object[] { socket, qwewe, waitEvent };
+            object[] parameters = new object[] { stream, qwewe, waitEvent };
             //alarmHandler.Start(parameters);
             UserController.estblishAlarmHandler(qwewe, waitEvent, alarmLock);
             sendhandler.Start(parameters);
