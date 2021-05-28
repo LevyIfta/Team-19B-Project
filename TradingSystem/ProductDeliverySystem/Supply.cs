@@ -7,7 +7,7 @@ using TradingSystem;
 
 namespace ProductDeliverySystem
 {
-    static class Supply
+    public static class Supply
     {
         private static ICollection<string> StoreList;
         public static bool OrderPackage(string storeName, string userName, string address, string orderInfo)
@@ -18,10 +18,10 @@ namespace ProductDeliverySystem
                 return false;
             if (!StoreList.Contains(storeName))
                 return false;
-            string[] product = orderInfo.Split("_");
+            string[] product = orderInfo.Split('_');
             for (int i = 0; i < product.Length; i++)
             {
-                string[] info = product[i].Split("$");
+                string[] info = product[i].Split('$');
                 if (info.Length != 2)
                     return false;
                 if (containNumber(info[0]) || containLatter(info[1]))

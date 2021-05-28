@@ -192,7 +192,7 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool register(string userName, string password)
+        public string[] register(string userName, string password)
         {
             if (realBridge != null)
                 return this.realBridge.register(userName, password);

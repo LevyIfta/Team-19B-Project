@@ -79,7 +79,7 @@ namespace TradingSystem.BuissnessLayer
             if (!checkPasswordValid(password))
                 return false;*/
             MemberDAL.addMember(new MemberData(username, password, age, gender));
-            Users.Add(new Member(username, password, age, gender));
+            Users.Add(new Member(username, password, age, gender, ""));
             offlineUsers.Add(username);
             return true;
         }

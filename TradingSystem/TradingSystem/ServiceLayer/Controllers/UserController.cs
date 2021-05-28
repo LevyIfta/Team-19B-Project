@@ -36,10 +36,10 @@ namespace TradingSystem.ServiceLayer
             string[] ans = BuissnessLayer.UserServices.login(username, password);
             if (ans[0].Equals("false"))
             {
-                UserServices.getAdmin().addAlarm("login failed", ans[1]);
+                //UserServices.getAdmin().addAlarm("login failed", ans[1]);
                 return ans;
             }
-
+            
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
             alarmThread.Abort();
@@ -75,17 +75,17 @@ namespace TradingSystem.ServiceLayer
         {
             return UserController.user.getUserName();
         }
-        public static bool register(string userName, string password)
+        public static string[] register(string userName, string password)
         {
 
             string[] ans = BuissnessLayer.UserServices.register(userName, password);
             if(ans[0].Equals("true"))
             {
             //    DirAppend.AddToLogger("new user register", Result.Log);
-                return true;
+                return ans;
             }
-            user.addAlarm("register", ans[1]);
-            return false;
+            //user.addAlarm("register", ans[1]);
+            return ans;
         }
 
         public static bool saveProduct(string userName, string storeName, string manufacturer, Dictionary<string, int> product)

@@ -15,6 +15,7 @@ namespace TradingSystem.BuissnessLayer
         public string password { get; set; }
         public double age { get; set; }
         public string gender { get; set; }
+        public string address { get; set; }
 
         public ICollection<Receipt> reciepts { get; set; }
         public basePermmision permmisions { get; set; }
@@ -26,15 +27,17 @@ namespace TradingSystem.BuissnessLayer
             this.password = password;
             this.age = -1;
             this.gender = "nun";
+            this.address = "";
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
         }
-        public Member(string username, string password, double age, string gender) : base()
+        public Member(string username, string password, double age, string gender, string address) : base()
         {
             this.userName = username;
             this.password = password;
             this.age = age;
             this.gender = gender;
+            this.address = address;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
         }
@@ -59,7 +62,14 @@ namespace TradingSystem.BuissnessLayer
         {
             return gender;
         }
-
+        public override string getAddress()
+        {
+            return address;
+        }
+        public override void addReceipt(Receipt receipt)
+        {
+            reciepts.Add(receipt);
+        }
         override
         public object todo(PersmissionsTypes func, object[] args)
         {
@@ -98,7 +108,7 @@ namespace TradingSystem.BuissnessLayer
             ICollection<Receipt> list = new List<Receipt>();
             foreach (ShoppingBasket basket in getMyCart().baskets)
             {
-                Receipt receipt = basket.store.executePurchase(basket, payment);
+                Receipt receipt = null; // basket.store.executePurchase(basket);
                 if (receipt == null)
                     return null;
                 list.Add(receipt);
