@@ -5,7 +5,7 @@ using TradingSystem;
 
 
 
-namespace ProductDeliverySystem
+namespace SupplySystem
 {
     public static class Supply
     {

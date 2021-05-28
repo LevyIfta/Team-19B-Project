@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{275E07E5-E961-412E-8F7B-79D26A87B711}</ProjectGuid>
+    <ProjectGuid>{B15AA9DE-93DF-4EAD-BBA8-33592A2AE7AC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>PaymentSystem</RootNamespace>
-    <AssemblyName>PaymentSystem</AssemblyName>
+    <RootNamespace>SupplySystem</RootNamespace>
+    <AssemblyName>SupplySystem</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -44,10 +44,16 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Verification.cs" />
+    <Compile Include="Supply.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TradingSystem\TradingSystem.csproj">
+      <Project>{553860d7-eaaf-410c-b033-8f3db937157b}</Project>
+      <Name>TradingSystem</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
