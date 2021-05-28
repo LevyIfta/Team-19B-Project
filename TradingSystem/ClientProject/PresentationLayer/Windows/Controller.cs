@@ -96,7 +96,7 @@ namespace ClientProject
             return ans;
         }
 
-        public bool Register(string username, string password)
+        public string[] Register(string username, string password)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
@@ -106,12 +106,11 @@ namespace ClientProject
             Connection.ConnectionManager.sendMessage(enc);
 
             DecodedMessge ans_d = readMessage();
-            bool ans = false;
-            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            if (ans_d.type == msgType.OBJ && ans_d.name == "string[]")
             {
-                ans = ans_d.param_list[0] == "true";
+                return ans_d.param_list;
             }
-            return ans;
+            return null;
         }
 
         public bool OpenStore(string username, string storename)

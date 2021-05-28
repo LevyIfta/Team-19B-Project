@@ -155,7 +155,7 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool register(string userName, string password)
+        public string[] register(string userName, string password)
         {
             return UserController.register(userName, password);
         }

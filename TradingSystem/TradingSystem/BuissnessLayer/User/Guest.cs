@@ -31,7 +31,7 @@ namespace TradingSystem.BuissnessLayer
             ICollection<Receipt> list = new List<Receipt>();
             foreach (ShoppingBasket basket in getMyCart().baskets)
             {
-                Receipt receipt = basket.store.executePurchase(basket, payment);
+                Receipt receipt = null; // basket.store.executePurchase(basket, payment);
                 if (receipt == null)
                     return null;
             }

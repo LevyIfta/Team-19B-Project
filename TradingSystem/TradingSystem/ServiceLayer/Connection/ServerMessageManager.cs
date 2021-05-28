@@ -176,13 +176,10 @@ namespace TradingSystem.ServiceLayer
                 switch (msg.name)
                 {
                     case ("register"):
-                        ans = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
-                        ans_d = "false";
-                        if (ans)
-                            ans_d = "true";
+                        string[] ans_r = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
                         msg_send.type = msgType.OBJ;
-                        msg_send.name = "bool";
-                        msg_send.param_list = new string[] { ans_d };
+                        msg_send.name = "string[]";
+                        msg_send.param_list = ans_r;
 
                         //  byte[] enc_r = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
                         //   ServerConnectionManager.sendMessage(enc_r);

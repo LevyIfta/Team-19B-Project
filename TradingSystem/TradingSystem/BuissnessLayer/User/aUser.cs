@@ -36,7 +36,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return "nun";
         }
-
+        public virtual string getAddress()
+        {
+            return "";
+        }
 
         public virtual object todo(PersmissionsTypes func, object[] args)
         {
@@ -83,6 +86,10 @@ namespace TradingSystem.BuissnessLayer
         public ShoppingBasket getBasket(Store store)
         {
             return myCart.getBasket(store);
+        }
+        public virtual void addReceipt(Receipt receipt)
+        {
+            
         }
 
         public ShoppingCart getCart()

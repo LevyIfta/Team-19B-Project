@@ -11,7 +11,7 @@ namespace Tests.Bridge
     {
         //unit tests
         bool login(string userName, string password);
-        bool register(string userName, string password);
+        string[] register(string userName, string password);
         void logout();
         aUser getUser();
         string getUserName();

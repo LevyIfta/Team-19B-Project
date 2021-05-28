@@ -150,7 +150,7 @@ namespace Tests
         public static void classInit(TestContext context)
         {
             string username = "ShopOwner11", pass = "123xX321";
-            bool ownerReg = UserController.register(username, pass);
+            bool ownerReg = UserController.register(username, pass)[0].Equals("true");
             // create 2 stores
             // login
             UserController.login(username, pass);
@@ -196,7 +196,7 @@ namespace Tests
         {
             string storeOwnerName = "StoreOwner_", storeOwnerPass = "123Xx456";
             string storeName = null;
-            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass);
+            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
             UserServices.login(storeOwnerName, storeOwnerPass);
             aUser storeOwner = UserServices.getUser(storeOwnerName);
             // try to create a store  with an empty name
@@ -209,7 +209,7 @@ namespace Tests
         {
             string storeOwnerName = "StoreOwner", storeOwnerPass = "123Xx456";
             string storeName = "createStoreTestBad_store1";
-            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass);
+            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
             UserServices.login(storeOwnerName, storeOwnerPass);
             aUser storeOwner = UserServices.getUser(storeOwnerName);
             Stores.addStore(storeName, (Member)storeOwner);
@@ -225,7 +225,7 @@ namespace Tests
         {
             string storeOwnerName = "StoreOwner_1", storeOwnerPass = "123Xx456";
             string storeName = "searchStoreTestGood_store1";
-            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass);
+            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
             UserServices.login(storeOwnerName, storeOwnerPass);
             aUser storeOwner = UserServices.getUser(storeOwnerName);
             Stores.addStore(storeName, (Member)storeOwner);
@@ -240,8 +240,8 @@ namespace Tests
         public void parallelPurchase()
         {
             // register twice and login from two different users
-            bool user1reg = UserController.register("AliKB", "123xX456");
-            bool user2reg = UserController.register("Bader", "456xX789");
+            bool user1reg = UserController.register("AliKB", "123xX456")[0].Equals("true");
+            bool user2reg = UserController.register("Bader", "456xX789")[0].Equals("true");
             // login
             UserServices.login("AliKB", "123xX456");
             aUser user1 = UserServices.getUser("AliKB");
@@ -277,7 +277,7 @@ namespace Tests
             string username1 = "StoreOwner1";
             string pass1 = "123xX456";
             // register and login
-            bool ownerReg = UserController.register(username1, pass1);
+            bool ownerReg = UserController.register(username1, pass1)[0].Equals("true");
             UserServices.login(username1, pass1);
             aUser storeOwner = UserServices.getUser(username1);
             // establish a new store
@@ -294,7 +294,7 @@ namespace Tests
             string username = "AliKSB";
             string pass = "123xX456";
 
-            bool user1reg = UserController.register(username, pass);
+            bool user1reg = UserController.register(username, pass)[0].Equals("true");
             UserServices.login(username, pass);
             aUser user1 = UserServices.getUser(username);
             // try to buy 12 bamba - less that overall
@@ -311,7 +311,7 @@ namespace Tests
         {
             // register
             string ownerUsername = "AliBB", ownerPass = "123Xx123";
-            bool reg = UserController.register(ownerUsername, ownerPass);
+            bool reg = UserController.register(ownerUsername, ownerPass)[0].Equals("true");
             string storeName = "Ali Shop3";
 
             UserServices.login(ownerUsername, ownerPass);
@@ -330,7 +330,7 @@ namespace Tests
             string username = "AliKSBa";
             string pass = "123xX456";
 
-            bool user1reg = UserController.register(username, pass);
+            bool user1reg = UserController.register(username, pass)[0].Equals("true");
             UserServices.login(username, pass);
             aUser user1 = UserServices.getUser(username);
             // try to buy 22 bamba - more that overall
@@ -616,8 +616,8 @@ namespace Tests
             // this fuction initializes all the needed arguments 
             // and runs all tests
             // register twice and login from two different users
-            bool user1reg = UserController.register(username1, pass1);
-            bool user2reg = UserController.register(username2, pass2);
+            bool user1reg = UserController.register(username1, pass1)[0].Equals("true");
+            bool user2reg = UserController.register(username2, pass2)[0].Equals("true");
             // login
             UserServices.login(username1, pass1);
             user1 = UserServices.getUser(username1);
