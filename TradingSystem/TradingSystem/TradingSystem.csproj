@@ -201,6 +201,13 @@
       <Project>{275e07e5-e961-412e-8f7b-79d26a87b711}</Project>
       <Name>PaymentSystem</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SupplySystem\SupplySystem.csproj">
+      <Project>{b15aa9de-93df-4ead-bba8-33592a2ae7ac}</Project>
+      <Name>SupplySystem</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Cert.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -27,6 +27,7 @@ namespace ClientWeb
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("wreeeee");
             Controller.GetController().test();
         }
     }

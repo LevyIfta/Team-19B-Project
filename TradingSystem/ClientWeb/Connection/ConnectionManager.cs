@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Net.WebSockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace ClientWeb.Connection
         public static IPEndPoint serverIP;
         private static SslStream stream;
         private static Socket socket;
+        private static string serverName = Environment.MachineName;
 
 
         static ConnectionManager()
@@ -35,28 +37,34 @@ namespace ClientWeb.Connection
         /// </summary>
         public static void Connect()
         {
-            try
-            {
+        /*    try
+            {*/
          
                 serverIP = new IPEndPoint(IPAddress.Parse(serveradress), serverPort);
                 socket = new Socket(IPAddress.Parse(hostAdress).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
+           
                 socket.Connect(serverIP);
                 socket.Blocking = true;
 
-                stream = new SslStream(new NetworkStream(socket));
+                stream = new SslStream(new NetworkStream(socket), false, new RemoteCertificateValidationCallback((object sender,
+              X509Certificate certificate,
+              X509Chain chain,
+              SslPolicyErrors sslPolicyErrors) => true ), null);
+                stream.AuthenticateAsClient(serverName);
                 
                 
 
-            }
+         /*   }
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("ArgumentNullException: {0}", e);
+                
             }
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
-            }
+            }*/
         }
 
 
