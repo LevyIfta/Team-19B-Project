@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
 
+
 namespace TradingSystem.BuissnessLayer.commerce
 {
     public static class Stores
 
     {
         public static Dictionary<string, Store> stores = new Dictionary<string, Store>();
+        public static Dictionary<string, Store> storesClose = new Dictionary<string, Store>();
         public static bool addStore(string storeName, Member founder)
         {
             Store newStore = new Store(storeName, founder);
@@ -58,6 +60,24 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (store.searchProduct(productName, manufacturer) != null)
                     result.Add(store, store.searchProduct(productName, category, manufacturer, minPrice, maxPrice));
             return result;
+        }
+        public static bool closeStore(Store store)
+        {
+            if ((store == null) || !stores.ContainsKey(store.name))
+                return false;
+            storesClose.Add(store.name, store);
+            stores.Remove(store.name);
+            // SuppluSystem.Supply.remove
+            return true;
+        }
+        public static bool reopenStore(Store store)
+        {
+            if ((store == null) || stores.ContainsKey(store.name))
+                return false;
+            stores.Add(store.name, store);
+            storesClose.Remove(store.name);
+            // SupplySystem.Supply.open
+            return true;
         }
 
     }

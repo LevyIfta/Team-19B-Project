@@ -101,7 +101,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
-        public virtual ICollection<Receipt> purchase(PaymentMethod payment)
+        public virtual string[] purchase(string creditNumber, string validity, string cvv)
         {
             return null;
         }
@@ -175,6 +175,8 @@ namespace TradingSystem.BuissnessLayer
         {
             return null;
         }
+        
+        
 
         /// <summary>
         /// call everytime you chane anything in the user data

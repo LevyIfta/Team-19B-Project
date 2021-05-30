@@ -178,11 +178,11 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public ICollection<SLreceipt> purchase(string paymentName)
+        public string[] purchase(string creditNumber, string validity, string cvv)
         {
             if (realBridge != null)
             {
-                return this.realBridge.purchase(paymentName);
+                return this.realBridge.purchase(creditNumber, validity, cvv);
             }
             throw new NotImplementedException();
         }

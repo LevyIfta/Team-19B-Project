@@ -13,7 +13,7 @@ namespace TradingSystem.DataLayer
         public string password { get; set; }
         public double age { get; set; }
         public string gender { get; set; }
-
+        public string address { get; set; }
         //CONSTRUCTORS
         public MemberData(string userName, string password)
         {
@@ -21,13 +21,15 @@ namespace TradingSystem.DataLayer
             this.password = password;
             this.age = -1;
             this.gender = "nun";
+            this.address = "";
         }
-        public MemberData(string userName, string password, double age, string gender)
+        public MemberData(string userName, string password, double age, string gender, string address)
         {
             this.userName = userName;
             this.password = password;
             this.age = age;
             this.gender = gender;
+            this.address = address;
         }
 
         //EQUALS

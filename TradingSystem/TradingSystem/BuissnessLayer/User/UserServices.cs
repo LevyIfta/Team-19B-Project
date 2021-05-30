@@ -64,24 +64,34 @@ namespace TradingSystem.BuissnessLayer
             if(fullans[1].Length < 3)
             {
                 MemberDAL.addMember(new MemberData(username, password));
-                Users.Add(new Member(username, password));
+                if (username.Equals("admin"))
+                    Users.Add(new Admin(username, password));
+                else
+                    Users.Add(new Member(username, password));
                 offlineUsers.Add(username);
                 fullans[0] = "true";
             }
             return fullans;
         }
-        public static bool register(string username, string password, double age, string gender)
+        public static string[] register(string username, string password, double age, string gender, string address)
         {
-            if (MemberDAL.isExist(username))
-                return false;
-           /* if (!checkUserNameValid(username))
-                return false;
-            if (!checkPasswordValid(password))
-                return false;*/
-            MemberDAL.addMember(new MemberData(username, password, age, gender));
-            Users.Add(new Member(username, password, age, gender, ""));
-            offlineUsers.Add(username);
-            return true;
+            string[] fullans = new string[2]
+;            if (MemberDAL.isExist(username))
+                return new string[] { "false", "user already exist" };
+            fullans[1] = checkUserNameValid(username) + ":";
+            fullans[1] += checkPasswordValid(password);
+            fullans[0] = "false";
+            if(fullans[1].Length < 3)
+            {
+                MemberDAL.addMember(new MemberData(username, password, age, gender, address));
+                if (username.Equals("admin"))
+                    Users.Add(new Admin(username, password));
+                else
+                    Users.Add(new Member(username, password, age, gender, address));
+                offlineUsers.Add(username);
+                fullans[0] = "true";
+            }
+            return fullans;
         }
         // aUser
         public static bool saveProduct(string username, string storeName, string manufacturer, Dictionary<string, int> product)
@@ -121,15 +131,16 @@ namespace TradingSystem.BuissnessLayer
         {
             return getUser(username).checkPrice();
         }
-        public static ICollection<Receipt> purchase(string username, string paymentName)
+        public static string[] purchase(string username, string creditNumber, string validity, string cvv)
         {
+            /*
             PaymentMethod p = null;
             switch (paymentName)
             {
                 case "Immediate":
                     p = new Immediate();
                     break;
-                /*case "Offer":
+                case "Offer":
                     p = new Offer();
                     break;
                 case "Auction":
@@ -137,9 +148,9 @@ namespace TradingSystem.BuissnessLayer
                     break;
                 case "Raffle":
                     p = new Raffle();
-                    break;*/
-            }
-            return getUser(username).purchase(p);
+                    break;
+            }*/
+            return getUser(username).purchase(creditNumber, validity, cvv);
         }
         public static Dictionary<Store, Product> browseProducts(string username, string productName, string manufacturer)
         {
@@ -279,6 +290,26 @@ namespace TradingSystem.BuissnessLayer
                 }
             }
             return true;
+        }
+        public static bool closeStore(string username, string storeName)
+        {
+            Store store = Stores.searchStore(storeName);
+            if (store.isManager(username) || store.isOwner(username))
+            {
+                return Stores.closeStore(store);
+            }
+            else
+                return false;
+        }
+        public static bool reopenStore(string username, string storeName)
+        {
+            Store store = Stores.searchStore(storeName);
+            if (store.isManager(username) || store.isOwner(username))
+            {
+                return Stores.reopenStore(store);
+            }
+            else
+                return false;
         }
 
         private static string checkUserNameValid(string username)

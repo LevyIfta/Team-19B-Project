@@ -59,16 +59,21 @@ namespace Tests
             d["item2"] = 10;
             bridge.saveProducts(bridge.getUserName(), "Store1", "manu1", d);
             double amount = bridge.checkPrice(bridge.getUserName());
-            ICollection<SLreceipt> ans = bridge.purchase("Immediate");
+            string[] ans = bridge.purchase("111111111111", "11/22", "123");
             Store store1 = bridge.getStore("Store1");
             bridge.logout();
-            Store store2 = bridge.getStore("Store1");
-            Assert.IsTrue(ans.Count > 0, "empty receipt");
-
-            foreach(SLreceipt re in ans)
+            //Store store2 = bridge.getStore("Store1");
+            Assert.IsNotNull(ans, "empty receipt");
+            if(ans != null)
             {
-                Assert.IsTrue(re.storeName.Equals("Store1"), "different store");
-                Assert.IsTrue(re.price == amount, "different amount");
+                Assert.IsTrue(ans[0].Equals("true"), "error in purchse");
+                if(ans[0].Equals("true"))
+                {
+                    string[] arr = ans[1].Split('$');
+                    Assert.IsTrue(arr[1].Equals("Store1"), "different store");
+                    Assert.IsTrue(arr[2].Equals(amount + ""), "different amount");
+                }
+                
             }
             Assert.IsFalse(bridge.isUserLoggedIn("Member1"), "user should not be logged in");
             Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "did not remove correct amount of items from inventory");
@@ -83,11 +88,13 @@ namespace Tests
             d["item2"] = 10;
             Store store1 = bridge.getStore("Store1");
             bridge.saveProducts(bridge.getUserName(), "Store1", "manu1", d);
+            /*
             ICollection<SLreceipt> ans = bridge.purchase("Immediate");
             bridge.logout();
             Assert.IsTrue(ans == null, "receipt should be empty");
             Assert.IsFalse(bridge.isUserLoggedIn("Member2"), "user should not be logged in");
             Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "should not change the inventory if the purchase is invalid");//should not process the purchase because there are not enough of the product in the store
+            */
         }
     }
 
