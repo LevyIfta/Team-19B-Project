@@ -17,6 +17,7 @@ namespace TradingSystem.BuissnessLayer
         public ShoppingCart myCart { get; set; }
 
         public Queue<Tuple<string, string>> alarms { get; set; } = new Queue<Tuple<string, string>>();
+        public ICollection<Receipt> reciepts { get; set; }
 
         public AutoResetEvent alarmLock = new AutoResetEvent(false);
         private object[] alarmthreadParams;
@@ -89,7 +90,7 @@ namespace TradingSystem.BuissnessLayer
         }
         public virtual void addReceipt(Receipt receipt)
         {
-            
+            reciepts.Add(receipt);
         }
 
         public ShoppingCart getCart()
@@ -125,7 +126,7 @@ namespace TradingSystem.BuissnessLayer
         }
         public virtual ICollection<Receipt> getPurchHistory()
         {
-            return null;
+            return reciepts;
         }
         public virtual bool addNewProduct(string storeName, string productName, double price, int amount, string category, string manufacturer)
         {

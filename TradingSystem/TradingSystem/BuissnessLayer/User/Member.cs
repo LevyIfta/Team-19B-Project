@@ -17,7 +17,7 @@ namespace TradingSystem.BuissnessLayer
         public string gender { get; set; }
         public string address { get; set; }
 
-        public ICollection<Receipt> reciepts { get; set; }
+        
         public basePermmision permmisions { get; set; }
 
 
@@ -65,10 +65,6 @@ namespace TradingSystem.BuissnessLayer
         public override string getAddress()
         {
             return address;
-        }
-        public override void addReceipt(Receipt receipt)
-        {
-            reciepts.Add(receipt);
         }
         override
         public object todo(PersmissionsTypes func, object[] args)
@@ -189,10 +185,7 @@ namespace TradingSystem.BuissnessLayer
             }
             return false;
         }
-        public override ICollection<Receipt> getPurchHistory()
-        {
-            return reciepts;
-        }
+        
         public override bool addNewProduct(string storeName, string productName, double price, int amount, string category, string manufacturer)
         {
             object[] args = new object[] { storeName , productName, price, amount, category, manufacturer };
