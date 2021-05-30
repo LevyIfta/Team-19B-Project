@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer
 {
-    public static class FeedbackDAL
+    static class FeedbackDAL
     {
         private static List<FeedbackData> feedbacks = new List<FeedbackData>();
 

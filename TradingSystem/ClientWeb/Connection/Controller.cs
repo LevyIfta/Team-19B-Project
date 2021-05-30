@@ -44,7 +44,7 @@ namespace ClientWeb
         }
 
 
-        public string[] Login(string username, string password)
+        public bool Login(string username, string password)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
@@ -54,11 +54,12 @@ namespace ClientWeb
             Connection.ConnectionManager.sendMessage(enc);
           
             DecodedMessge ans_d = readMessage();
-            if (ans_d.type == msgType.OBJ && ans_d.name == "string[]")
+            bool ans = false;
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
             {
-                return ans_d.param_list;
+                ans = ans_d.param_list[0] == "true";
             }
-            return null;
+            return ans;
         }
         public bool Logoutfunc()
         {

@@ -36,10 +36,10 @@ namespace TradingSystem.ServiceLayer
             string[] ans = BuissnessLayer.UserServices.login(username, password);
             if (ans[0].Equals("false"))
             {
-                UserServices.getAdmin().addAlarm("login failed", ans[1]);
+                //UserServices.getAdmin().addAlarm("login failed", ans[1]);
                 return ans;
             }
-
+            
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
             alarmThread.Abort();
@@ -75,17 +75,29 @@ namespace TradingSystem.ServiceLayer
         {
             return UserController.user.getUserName();
         }
-        public static bool register(string userName, string password)
+        public static string[] register(string userName, string password)
         {
 
             string[] ans = BuissnessLayer.UserServices.register(userName, password);
             if(ans[0].Equals("true"))
             {
             //    DirAppend.AddToLogger("new user register", Result.Log);
-                return true;
+                return ans;
             }
-            user.addAlarm("register", ans[1]);
-            return false;
+            //user.addAlarm("register", ans[1]);
+            return ans;
+        }
+        public static string[] register(string userName, string password, double age, string gender, string address)
+        {
+
+            string[] ans = BuissnessLayer.UserServices.register(userName, password, age, gender, address);
+            if (ans[0].Equals("true"))
+            {
+                //    DirAppend.AddToLogger("new user register", Result.Log);
+                return ans;
+            }
+            //user.addAlarm("register", ans[1]);
+            return ans;
         }
 
         public static bool saveProduct(string userName, string storeName, string manufacturer, Dictionary<string, int> product)
@@ -125,31 +137,75 @@ namespace TradingSystem.ServiceLayer
             return BuissnessLayer.UserServices.checkPrice(username);
         }
 
-        public static ICollection<SLreceipt> purchase(string username, string paymentName)
+        public static string[] purchase(string username, string creditNumber, string validity, string cvv)
         {
-            ICollection<BuissnessLayer.commerce.Receipt> temp = BuissnessLayer.UserServices.purchase(username, paymentName);
-            ICollection<SLreceipt> receipts = new List<SLreceipt>();
-            if(temp == null)
+            string[] temp = BuissnessLayer.UserServices.purchase(username, creditNumber, validity, cvv);
+            if (temp == null || temp[0].Equals("false"))
+                return temp;
+            ICollection<SLreceipt> list = new List<SLreceipt>();
+            for (int i=1; i<temp.Length; i++)
             {
-                return null;
+                list.Add(ProductController.makeReceipt(convertReceipt(temp[i])));
             }
-            foreach (BuissnessLayer.commerce.Receipt receipt in temp)
-            {                
-                receipts.Add(ProductController.makeReceipt(receipt));
-                ICollection<BuissnessLayer.Member> storeOwners = receipt.store.getOwners();
-                foreach (BuissnessLayer.Member owner in storeOwners)
-                {
-                    string msg = username + "has bought the following products from the store " + receipt.store.name + ":";
-                    ICollection<BuissnessLayer.commerce.Product> products = receipt.getProducts();
-                    foreach (BuissnessLayer.commerce.Product product in products)
-                    {
-                        msg += "\n" + product.info.name + " by " + product.info.manufacturer + " X" + product.amount; //how to add product amount?
-                    }
-                    owner.addAlarm("Purchased products", msg);
-                }
-            }
+
        //     DirAppend.AddToLogger("user " + user.getUserName() + " just purchase his cart", Result.Log);
-            return receipts;
+            return ReceiptsToStringArray(list);
+        }
+        private static string[] ReceiptsToStringArray(ICollection<SLreceipt> receipts)
+        {
+            string[] ans = new string[receipts.Count];
+            int i = 0;
+            foreach (SLreceipt receipt in receipts)
+            {
+                ans[i] += ReceiptToString(receipt);
+                i++;
+            }
+            return ans;
+        }
+        private static string ReceiptToString(SLreceipt receipt)
+        {
+            string ans = "";
+            foreach (SLproduct pro in receipt.products)
+            {
+                ans += ProductToString(pro) + "&";
+            }
+            if (ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1); // delete the & in the end
+            return receipt.userName + "$" + receipt.storeName + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptID + "$" + ans;
+        }
+        private static string feedbackToString(Dictionary<string, string> dic) // username : comment
+        {
+            string ans = "";
+            foreach (string user in dic.Keys)
+            {
+                ans += user + "#" + dic[user] + "_";
+            }
+            if (ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1); // delete the _ in the end
+            return ans; // almog#what i think_gal#what he think
+        }
+        private static string ProductToString(SLproduct pro)
+        { // product name^price^manu^category^amount^feedback
+            return pro.productName + "^" + pro.price + "^" + pro.manufacturer + "^" + pro.category + "^" + pro.amount + "^" + feedbackToString(pro.feedbacks);
+        } // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
+        private static BuissnessLayer.commerce.Receipt convertReceipt(string receipt)
+        {
+            BuissnessLayer.commerce.Receipt ans = new BuissnessLayer.commerce.Receipt();
+            string[] arr = receipt.Split('$');
+            ans.username = arr[0];
+            ans.store = BuissnessLayer.commerce.Stores.searchStore(arr[1]);
+            ans.price = double.Parse(arr[2]);
+            ans.date = Convert.ToDateTime(arr[3]);
+            ans.receiptId = int.Parse(arr[4]);
+            string[] pro = arr[5].Split('=');
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            for (int i=0; i<pro.Length; i++)
+            {
+                string[] info = pro[i].Split('<');
+                dic[int.Parse(info[0])] = int.Parse(info[1]);
+            }
+            ans.products = dic;
+            return ans;
         }
 
         public static Dictionary<string,SLproduct> browseProducts(string username, string productName, string manufacturer)
@@ -228,19 +284,7 @@ namespace TradingSystem.ServiceLayer
 
         public static bool hireNewStoreManager(string username, string storeName, string userToHire)
         {
-            bool ans = BuissnessLayer.UserServices.hireNewStoreManager(username, storeName, userToHire);
-            if (ans)
-            {
-                List<string> strPersmissions = new List<string>();
-                ICollection<BuissnessLayer.User.Permmisions.PersmissionsTypes> permissions = ((BuissnessLayer.Member)BuissnessLayer.UserServices.getUser(userToHire)).GetPermissions(storeName);
-                foreach (BuissnessLayer.User.Permmisions.PersmissionsTypes perm in permissions)
-                {
-                    strPersmissions.Add(BuissnessLayer.User.Permmisions.aPermission.who(perm));
-                }
-                string msg = UserController.alarmMessage(username, "a manager", strPersmissions, storeName);
-                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Hired as manager", msg);
-            }
-            return ans;
+            return BuissnessLayer.UserServices.hireNewStoreManager(username, storeName, userToHire);
         }
 
         public static bool editManagerPermissions(string username, string storeName, string userToHire, List<string> Permissions)
@@ -250,46 +294,12 @@ namespace TradingSystem.ServiceLayer
 
         public static bool hireNewStoreOwner(string username, string storeName, string userToHire, List<string> Permissions)
         {
-            bool ans = BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions);
-            if (ans)
-            {
-                string msg = UserController.alarmMessage(username, "an owner", Permissions, storeName);
-                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Hired as owner", msg);
-            }         
-            return ans;
-        }
-
-        private static string alarmMessage(string sourceName, string managerOrOwner, List<string> permissions, string storeName)
-        {
-            string msg = sourceName + " has added you as " + managerOrOwner + " with the following permissions:";
-            foreach (string perm in permissions)
-            {
-                msg += "\n" + perm;
-            }  
-            msg += "\n" + "to the store: " + storeName;
-            return msg;
+            return BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions);
         }
 
         public static bool removeManager(string username, string storeName, string userToHire)
         {
-            bool ans = BuissnessLayer.UserServices.removeManager(username, storeName, userToHire);
-            if (ans)
-            {
-                string msg = username + " has removed you from being a manager of the store " + storeName;
-                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Fired as manager", msg);
-            }
-            return ans;
-        }
-
-        public static bool removeOwner(string username, string storeName, string userToHire)
-        {
-            bool ans = BuissnessLayer.UserServices.removeOwner(username, storeName, userToHire);
-            if (ans)
-            {
-                string msg = username + " has removed you from being an owner of the store " + storeName;
-                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Fired as owner", msg);
-            }
-            return ans;
+            return BuissnessLayer.UserServices.removeManager(username, storeName, userToHire);
         }
 
         public static bool leaveFeedback(string username, string storeName, string productName, string manufacturer, string comment)
@@ -301,7 +311,14 @@ namespace TradingSystem.ServiceLayer
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
         }
-
+        public static bool closeStore(string username, string storeName)
+        {
+            return UserServices.closeStore(username, storeName);
+        }
+        public static bool reopenStore(string username, string storeName)
+        {
+            return UserServices.reopenStore(username, storeName);
+        }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {

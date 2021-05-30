@@ -311,10 +311,12 @@ namespace TradingSystem.ServiceLayer
                         break;
                     case ("login"):
                         ans_a = TradingSystem.ServiceLayer.UserController.login(msg.param_list[0], msg.param_list[1]);
-                        
+                        ans_d = "false";
+                        if (ans_a[0].Equals("true"))
+                            ans_d = "true";
                         msg_send.type = msgType.OBJ;
-                        msg_send.name = "string[]";
-                        msg_send.param_list = ans_a;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
                         //   byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
                         // ServerConnectionManager.sendMessage(enc_l);
                         break;

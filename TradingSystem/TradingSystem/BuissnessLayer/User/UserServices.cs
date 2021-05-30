@@ -22,7 +22,7 @@ namespace TradingSystem.BuissnessLayer
         }
         // menu functions
         // users
-        public static aUser getAdmin()
+        public static aUser getAdmin() 
         {
             return getUser("admin");
         }
@@ -203,10 +203,6 @@ namespace TradingSystem.BuissnessLayer
         public static bool removeManager(string username, string storeName, string userToHire)
         {
             return getUser(username).removeManager(storeName, userToHire);
-        }
-        public static bool removeOwner(string username, string storeName, string userToHire)
-        {
-            return getUser(username).removeOwner(storeName, userToHire);
         }
         public static ICollection<aUser> getInfoEmployees(string username, string storeName)
         {
