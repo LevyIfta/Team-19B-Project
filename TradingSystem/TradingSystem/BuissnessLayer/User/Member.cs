@@ -15,8 +15,9 @@ namespace TradingSystem.BuissnessLayer
         public string password { get; set; }
         public double age { get; set; }
         public string gender { get; set; }
+        public string address { get; set; }
 
-        public ICollection<Receipt> reciepts { get; set; }
+        
         public basePermmision permmisions { get; set; }
 
 
@@ -26,15 +27,17 @@ namespace TradingSystem.BuissnessLayer
             this.password = password;
             this.age = -1;
             this.gender = "nun";
+            this.address = "";
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
         }
-        public Member(string username, string password, double age, string gender) : base()
+        public Member(string username, string password, double age, string gender, string address) : base()
         {
             this.userName = username;
             this.password = password;
             this.age = age;
             this.gender = gender;
+            this.address = address;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
         }
@@ -59,7 +62,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return gender;
         }
-
+        public override string getAddress()
+        {
+            return address;
+        }
         override
         public object todo(PersmissionsTypes func, object[] args)
         {
@@ -93,25 +99,52 @@ namespace TradingSystem.BuissnessLayer
             return true;
         }
 
-        public override ICollection<Receipt> purchase(PaymentMethod payment)
+        public override string[] purchase(string creditNumber, string validity, string cvv)
         {
             ICollection<Receipt> list = new List<Receipt>();
             foreach (ShoppingBasket basket in getMyCart().baskets)
             {
-                Receipt receipt = basket.store.executePurchase(basket, payment);
-                if (receipt == null)
+                string[] ans = basket.store.executePurchase(basket, creditNumber, validity, cvv);
+                if (ans == null || ans[0].Equals("false"))
                     return null;
+                Receipt receipt = GetReceiptNow(ans[1]);
                 list.Add(receipt);
             }
-            return list;
+            string[] arr = new string[list.Count + 1];
+            arr[0] = "true";
+            int i = 1;
+            foreach(Receipt receipt in list)
+            {
+                arr[i] = convertReceipt(receipt);
+                i++;
+            }
+            return arr;
+        }
+        private string convertReceipt(Receipt receipt)
+        {
+            string ans = "";
+            foreach (int id in receipt.products.Keys)
+            {
+                ans += id + "<" + receipt.products[id] + "=";
+            }
+            if(ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1);
+            return receipt.username + "$" + receipt.store.name + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptId + "$" + ans;
+        }//receipt -> user$store$price$date$id$products. products -> pro1&pro2&pro3 -> proInfo^feedback -> feedback_feedback -> user#comment
+        private Receipt GetReceiptNow(string id)
+        {
+            foreach (Receipt receipt in reciepts)
+            {
+                string check = "" + receipt.receiptId;
+                if (check.Equals(id))
+                    return receipt;
+            }
+            return null;
         }
         public bool editPermission(string storeName, string userSponser, aPermission permission)
         {
-            if (!removePermission(storeName, userName))
-                return false;
             addPermission(permission);
             return true;
-            
         }
         public void addPermission(aPermission permission)
         {
@@ -152,10 +185,7 @@ namespace TradingSystem.BuissnessLayer
             }
             return false;
         }
-        public override ICollection<Receipt> getPurchHistory()
-        {
-            return reciepts;
-        }
+        
         public override bool addNewProduct(string storeName, string productName, double price, int amount, string category, string manufacturer)
         {
             object[] args = new object[] { storeName , productName, price, amount, category, manufacturer };
@@ -256,6 +286,8 @@ namespace TradingSystem.BuissnessLayer
             }
             return ans;
         }
+        
+        
         public static Member dataToObject(MemberData data)
         {
             if(data == null)

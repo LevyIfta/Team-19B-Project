@@ -17,6 +17,7 @@ namespace TradingSystem.BuissnessLayer
         public ShoppingCart myCart { get; set; }
 
         public Queue<Tuple<string, string>> alarms { get; set; } = new Queue<Tuple<string, string>>();
+        public ICollection<Receipt> reciepts { get; set; }
 
         public AutoResetEvent alarmLock = new AutoResetEvent(false);
         private object[] alarmthreadParams;
@@ -36,7 +37,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return "nun";
         }
-
+        public virtual string getAddress()
+        {
+            return "";
+        }
 
         public virtual object todo(PersmissionsTypes func, object[] args)
         {
@@ -84,6 +88,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return myCart.getBasket(store);
         }
+        public virtual void addReceipt(Receipt receipt)
+        {
+            reciepts.Add(receipt);
+        }
 
         public ShoppingCart getCart()
         {
@@ -94,7 +102,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
-        public virtual ICollection<Receipt> purchase(PaymentMethod payment)
+        public virtual string[] purchase(string creditNumber, string validity, string cvv)
         {
             return null;
         }
@@ -118,7 +126,7 @@ namespace TradingSystem.BuissnessLayer
         }
         public virtual ICollection<Receipt> getPurchHistory()
         {
-            return null;
+            return reciepts;
         }
         public virtual bool addNewProduct(string storeName, string productName, double price, int amount, string category, string manufacturer)
         {
@@ -168,6 +176,8 @@ namespace TradingSystem.BuissnessLayer
         {
             return null;
         }
+        
+        
 
         /// <summary>
         /// call everytime you chane anything in the user data

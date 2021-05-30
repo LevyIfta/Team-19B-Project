@@ -145,9 +145,9 @@ namespace Tests.Bridge
             return UserController.EstablishStore(getUserName(), storeName);
         }
 
-        public ICollection<SLreceipt> purchase(string paymentName)
+        public string[] purchase(string creditNumber, string validity, string cvv)
         {
-            return UserController.purchase(getUserName(), paymentName);
+            return UserController.purchase(getUserName(), creditNumber, validity, cvv);
         }
 
         public void purchase(ShoppingBasket basket)
@@ -155,7 +155,7 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool register(string userName, string password)
+        public string[] register(string userName, string password)
         {
             return UserController.register(userName, password);
         }

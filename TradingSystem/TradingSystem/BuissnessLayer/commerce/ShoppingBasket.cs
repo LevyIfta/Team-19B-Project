@@ -44,7 +44,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public Receipt purchase(PaymentMethod payment)
         {
-            return store.executePurchase(this, payment);
+            return null; //store.executePurchase(this, payment);
         }
         public void margeBasket(ShoppingBasket basket)
         {

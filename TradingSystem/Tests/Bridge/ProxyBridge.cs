@@ -178,11 +178,11 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public ICollection<SLreceipt> purchase(string paymentName)
+        public string[] purchase(string creditNumber, string validity, string cvv)
         {
             if (realBridge != null)
             {
-                return this.realBridge.purchase(paymentName);
+                return this.realBridge.purchase(creditNumber, validity, cvv);
             }
             throw new NotImplementedException();
         }
@@ -192,7 +192,7 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool register(string userName, string password)
+        public string[] register(string userName, string password)
         {
             if (realBridge != null)
                 return this.realBridge.register(userName, password);

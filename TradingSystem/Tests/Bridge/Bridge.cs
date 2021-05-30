@@ -11,7 +11,7 @@ namespace Tests.Bridge
     {
         //unit tests
         bool login(string userName, string password);
-        bool register(string userName, string password);
+        string[] register(string userName, string password);
         void logout();
         aUser getUser();
         string getUserName();
@@ -39,7 +39,7 @@ namespace Tests.Bridge
         Receipt GetRecieptByUser(string storeName, string userName, DateTime Date);
         Receipt GetRecieptByStore(string storeName, string userName, DateTime Date);
         double checkPrice(string username);
-        ICollection<SLreceipt> purchase(string paymentName);
+        string[] purchase(string creditNumber, string validity, string cvv);
 
         void purchase(ShoppingBasket basket);
 

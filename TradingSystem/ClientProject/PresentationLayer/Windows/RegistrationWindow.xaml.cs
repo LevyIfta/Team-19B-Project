@@ -156,7 +156,7 @@ namespace WPF_Trial2.PresentationLayer.Windows
             }
             if (insertValid)
             {
-                bool ans = controler.Register(user.username, user.password);
+                bool ans = false; // controler.Register(user.username, user.password)[0].Equals("true");
                 if (!ans)
                 {
                     user.msgvalid = "Registretion Faild";

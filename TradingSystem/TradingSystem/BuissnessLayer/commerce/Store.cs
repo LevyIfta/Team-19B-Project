@@ -5,6 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer;
+using PaymentSystem;
+
+
+
+
+
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -156,64 +162,70 @@ namespace TradingSystem.BuissnessLayer.commerce
             return price;
         }
 
-        public Receipt executePurchase(ShoppingBasket basket, PaymentMethod paymentMethod)
+        public string[] executePurchase(ShoppingBasket basket, string creditNumber, string validity, string cvv)
         {
             ICollection<Product> products = basket.products;
-            Receipt receipt = null;
             // lock the store for purchase
+            Receipt receipt;
             lock (this.purchaseLock)
             {
                 // check for amounts validation
-                if (checkAmounts(products) & checkPolicies(basket))
+                string policy = checkPolicies(basket);
+                if (policy.Length == 0)
+                    return new string[] { "false", policy };
+                if (!checkAmounts(products))
+                    return new string[] { "false", "not enough items in stock" };
+                if(PaymentSystem.Verification.Pay(basket.owner.userName, creditNumber, validity, cvv))
+                    return new string[] { "false", "payment not approved" };
+                if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), ""))
+                    return new string[] { "false", "supply not approved" };
+                receipt = validPurchase(basket);
+                if (!basket.owner.userName.Equals("guest"))
                 {
-                    receipt = validPurchase(basket, paymentMethod, receipt);
-                    // update the origin store
-                    Stores.stores[this.name].inventory = this.inventory;
-                    Stores.stores[this.name].receipts = this.receipts;
+                    receipt.save();
                 }
-            }
-
-            return receipt;
-        }
-
-        private Receipt validPurchase(ShoppingBasket basket, PaymentMethod paymentMethod, Receipt receipt)
-        {
-            // calc the price
-            double price = calcPrice(basket.products);
-            // request for payment
-            if (paymentMethod.pay(price))
-            {
-                // create the receipt
-                receipt = new Receipt();
-                // the payment was successful
-                foreach (Product product in basket.products)
-                    foreach (Product localProduct in this.inventory)
-                    {
-                        if (localProduct.info.Equals(product.info))
-                        {
-                            localProduct.amount -= product.amount;
-                            // update amount in DB
-                            localProduct.update(this.name);
-                            // add the products to receipt
-                            receipt.products.Add(localProduct.info.id, product.amount);
-                            // 
-                            receipt.actualProducts.Add(new Product(localProduct));
-                            // leave feedback
-                            product.info.leaveFeedback(basket.owner.userName, "");
-                            // update feedback in DB
-                            FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
-                        }
-                        //StoresData.getStore(this.name).removeProducts(product.toDataObject());
-                        product.info.roomForFeedback(basket.owner.userName);
-                    }
-
+                basket.owner.addReceipt(receipt);
                 // clean the basket
                 basket.clean();
                 // update basket in DB
                 basket.update();
-                // fill receipt fields
-                receipt = fillReceipt(receipt, price);
+                // update the origin store
+                Stores.stores[this.name].inventory = this.inventory;
+                Stores.stores[this.name].receipts = this.receipts;
             }
+
+            return new string[] { "true", "" + receipt.receiptId }; ;
+        }
+
+        private Receipt validPurchase(ShoppingBasket basket)
+        {
+            // calc the price
+            double price = calcPrice(basket.products);
+            Receipt receipt = new Receipt();
+            // request for payment
+            // the payment was successful
+            foreach (Product product in basket.products)
+                foreach (Product localProduct in this.inventory)
+                {
+                    if (localProduct.info.Equals(product.info))
+                    {
+                        localProduct.amount -= product.amount;
+                        // update amount in DB
+                        localProduct.update(this.name);
+                        // add the products to receipt
+                        receipt.products.Add(localProduct.info.id, product.amount);
+                        // 
+                        receipt.actualProducts.Add(new Product(localProduct));
+                        // leave feedback
+                        product.info.leaveFeedback(basket.owner.userName, "");
+                        // update feedback in DB
+                        FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                    }
+                    //StoresData.getStore(this.name).removeProducts(product.toDataObject());
+                    product.info.roomForFeedback(basket.owner.userName);
+                }
+            // fill receipt fields
+            receipt = fillReceipt(receipt, price);
             return receipt;
         }
 
@@ -225,14 +237,12 @@ namespace TradingSystem.BuissnessLayer.commerce
             receipt.price = price;
             // save the receipt
             this.receipts.Add(receipt);
-            // add receipt to DB
-            receipt.save();
             return receipt;
         }
 
-        private bool checkPolicies(ShoppingBasket basket)
+        private string checkPolicies(ShoppingBasket basket)
         {
-            return true;
+            return "";
         }
 
         private bool checkAmounts(ICollection<Product> products)

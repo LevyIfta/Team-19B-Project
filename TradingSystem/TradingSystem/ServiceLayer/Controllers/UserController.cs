@@ -141,7 +141,6 @@ namespace TradingSystem.ServiceLayer
                 {
                     string msg = username + "has bought the following products from the store " + receipt.store.name + ":";
                     ICollection<BuissnessLayer.commerce.Product> products = receipt.getProducts();
-
                     foreach (BuissnessLayer.commerce.Product product in products)
                     {
                         msg += "\n" + product.info.name + " by " + product.info.manufacturer + " X" + product.amount; //how to add product amount?
