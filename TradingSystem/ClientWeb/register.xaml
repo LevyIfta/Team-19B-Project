@@ -1,0 +1,31 @@
+﻿<Page x:Class="ClientWeb.register"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ClientWeb"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="register">
+
+    <Grid Background="LightBlue">
+        <Grid Margin="262,71,260,10">
+            <Label x:Name="label" Content="user name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox" Height="23" Margin="127,14,31,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <Label x:Name="label1" Content="password:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox1" Height="23" Margin="127,45,31,0" TextWrapping="Wrap" Text="{Binding password, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <Label x:Name="label2" Content="confirm password:" HorizontalAlignment="Left" Margin="0,72,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox2" Height="23" Margin="127,76,31,0" TextWrapping="Wrap" Text="{Binding passwordC, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <Label x:Name="label3" Content="age:" HorizontalAlignment="Left" Margin="21,103,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="label4" Content="gender" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.11,-0.254"/>
+            <Label x:Name="label5" Content="address:" HorizontalAlignment="Left" Margin="15,165,0,178" d:LayoutOverrides="Height"/>
+            <Label x:Name="label6" Content="{Binding usermsg, Mode=TwoWay}" Margin="15,0,31,52" VerticalAlignment="Bottom" RenderTransformOrigin="-0.648,-1.265" Height="87"/>
+            <TextBox x:Name="textBox3" Height="23" Margin="127,107,31,0" TextWrapping="Wrap" Text="{Binding age, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox4" Height="23" Margin="127,138,31,0" TextWrapping="Wrap" Text="{Binding gender, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox5" Margin="127,169,31,177" TextWrapping="Wrap" Text="{Binding address, Mode=TwoWay}"/>
+            <Button x:Name="button" Content="sign up" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="button_Click"/>
+            <Button x:Name="button1" Content="login" HorizontalAlignment="Left" Margin="15,0,0,10" VerticalAlignment="Bottom" Width="75" Click="button1_Click"/>
+        </Grid>
+
+    </Grid>
+</Page>

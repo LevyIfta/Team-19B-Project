@@ -315,7 +315,7 @@ namespace TradingSystem.ServiceLayer
                         if (ans_a[0].Equals("true"))
                             ans_d = "true";
                         msg_send.type = msgType.OBJ;
-                        msg_send.name = "bool";
+                        msg_send.name = "string[]";
                         msg_send.param_list = new string[] { ans_d };
                         //   byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
                         // ServerConnectionManager.sendMessage(enc_l);

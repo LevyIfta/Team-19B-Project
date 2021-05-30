@@ -63,6 +63,87 @@ namespace ClientWeb
             }
         }
     }
+    class UserR : ANotifyPropChange
+    {
+        private String Usernamer;
+
+        public String username
+        {
+            get { return Usernamer; }
+            set
+            {
+                Usernamer = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private String Password;
+
+        public String password
+        {
+            get { return Password; }
+            set
+            {
+                Password = value;
+                OnPropertyChanged();
+            }
+        }
+        private String PasswordC;
+
+        public String passwordC
+        {
+            get { return PasswordC; }
+            set
+            {
+                PasswordC = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Usermsg;
+
+        public String usermsg
+        {
+            get { return Usermsg; }
+            set
+            {
+                Usermsg = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Age;
+
+        public String age
+        {
+            get { return Age; }
+            set
+            {
+                Age = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Gender;
+
+        public String gender
+        {
+            get { return Gender; }
+            set
+            {
+                Gender = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Address;
+
+        public String address
+        {
+            get { return Address; }
+            set
+            {
+                Address = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public class PageController
     {
