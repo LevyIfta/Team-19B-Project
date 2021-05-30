@@ -193,6 +193,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return getUser(username).removeManager(storeName, userToHire);
         }
+        public static bool removeOwner(string username, string storeName, string userToHire)
+        {
+            return getUser(username).removeOwner(storeName, userToHire);
+        }
         public static ICollection<aUser> getInfoEmployees(string username, string storeName)
         {
             return getUser(username).getInfoEmployees(storeName);

@@ -209,7 +209,7 @@ namespace TradingSystem.BuissnessLayer
         public override bool removeOwner(string storeName, string username)
         {
             object[] args = new object[] { storeName, username, this.userName };
-            return (bool)todo(PersmissionsTypes.RemoveManager, args);
+            return (bool)todo(PersmissionsTypes.RemoveOwner, args);
         }
         public override ICollection<aUser> getInfoEmployees(string storeName)
         {

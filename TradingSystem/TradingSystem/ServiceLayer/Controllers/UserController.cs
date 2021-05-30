@@ -136,6 +136,18 @@ namespace TradingSystem.ServiceLayer
             foreach (BuissnessLayer.commerce.Receipt receipt in temp)
             {                
                 receipts.Add(ProductController.makeReceipt(receipt));
+                ICollection<BuissnessLayer.Member> storeOwners = receipt.store.getOwners();
+                foreach (BuissnessLayer.Member owner in storeOwners)
+                {
+                    string msg = username + "has bought the following products from the store " + receipt.store.name + ":";
+                    ICollection<BuissnessLayer.commerce.Product> products = receipt.getProducts();
+
+                    foreach (BuissnessLayer.commerce.Product product in products)
+                    {
+                        msg += "\n" + product.info.name + " by " + product.info.manufacturer + " X" + product.amount; //how to add product amount?
+                    }
+                    owner.addAlarm("Purchased products", msg);
+                }
             }
        //     DirAppend.AddToLogger("user " + user.getUserName() + " just purchase his cart", Result.Log);
             return receipts;
@@ -217,7 +229,19 @@ namespace TradingSystem.ServiceLayer
 
         public static bool hireNewStoreManager(string username, string storeName, string userToHire)
         {
-            return BuissnessLayer.UserServices.hireNewStoreManager(username, storeName, userToHire);
+            bool ans = BuissnessLayer.UserServices.hireNewStoreManager(username, storeName, userToHire);
+            if (ans)
+            {
+                List<string> strPersmissions = new List<string>();
+                ICollection<BuissnessLayer.User.Permmisions.PersmissionsTypes> permissions = ((BuissnessLayer.Member)BuissnessLayer.UserServices.getUser(userToHire)).GetPermissions(storeName);
+                foreach (BuissnessLayer.User.Permmisions.PersmissionsTypes perm in permissions)
+                {
+                    strPersmissions.Add(BuissnessLayer.User.Permmisions.aPermission.who(perm));
+                }
+                string msg = UserController.alarmMessage(username, "a manager", strPersmissions, storeName);
+                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Hired as manager", msg);
+            }
+            return ans;
         }
 
         public static bool editManagerPermissions(string username, string storeName, string userToHire, List<string> Permissions)
@@ -227,12 +251,46 @@ namespace TradingSystem.ServiceLayer
 
         public static bool hireNewStoreOwner(string username, string storeName, string userToHire, List<string> Permissions)
         {
-            return BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions);
+            bool ans = BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions);
+            if (ans)
+            {
+                string msg = UserController.alarmMessage(username, "an owner", Permissions, storeName);
+                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Hired as owner", msg);
+            }         
+            return ans;
+        }
+
+        private static string alarmMessage(string sourceName, string managerOrOwner, List<string> permissions, string storeName)
+        {
+            string msg = sourceName + " has added you as " + managerOrOwner + " with the following permissions:";
+            foreach (string perm in permissions)
+            {
+                msg += "\n" + perm;
+            }  
+            msg += "\n" + "to the store: " + storeName;
+            return msg;
         }
 
         public static bool removeManager(string username, string storeName, string userToHire)
         {
-            return BuissnessLayer.UserServices.removeManager(username, storeName, userToHire);
+            bool ans = BuissnessLayer.UserServices.removeManager(username, storeName, userToHire);
+            if (ans)
+            {
+                string msg = username + " has removed you from being a manager of the store " + storeName;
+                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Fired as manager", msg);
+            }
+            return ans;
+        }
+
+        public static bool removeOwner(string username, string storeName, string userToHire)
+        {
+            bool ans = BuissnessLayer.UserServices.removeOwner(username, storeName, userToHire);
+            if (ans)
+            {
+                string msg = username + " has removed you from being an owner of the store " + storeName;
+                BuissnessLayer.UserServices.getUser(userToHire).addAlarm("Fired as owner", msg);
+            }
+            return ans;
         }
 
         public static bool leaveFeedback(string username, string storeName, string productName, string manufacturer, string comment)
