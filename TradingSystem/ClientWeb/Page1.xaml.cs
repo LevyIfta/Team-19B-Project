@@ -20,14 +20,42 @@ namespace ClientWeb
     /// </summary>
     public partial class Page1 : Page
     {
+        UserData userInfo = new UserData();
+        string username;
         public Page1()
         {
             InitializeComponent();
+            this.DataContext = userInfo;
+            string username = PageController.username;
+            userInfo.username = "hello, " + username;
+            //Controller.GetController().test();
+        }
+        private void checkMember()
+        {
+            if (username.Equals("admin"))
+            {
+                register.Visibility = Visibility.Collapsed;
+                login.Visibility = Visibility.Collapsed;
+            }
+            else if (username.Equals("guest"))
+            {
+                logout.Visibility = Visibility.Collapsed;
+                openStore.Visibility = Visibility.Collapsed;
+                myCart.Visibility = Visibility.Collapsed;
+                Receipts.Visibility = Visibility.Collapsed;
+                user.Visibility = Visibility.Collapsed;
+                stores.Visibility = Visibility.Collapsed;
+            }
+            else if(username.Length > 0)
+            {
+                register.Visibility = Visibility.Collapsed;
+                login.Visibility = Visibility.Collapsed;
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void openStore_Click(object sender, RoutedEventArgs e)
         {
-            Controller.GetController().test();
+
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.BuissnessLayer.User;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -19,6 +20,7 @@ namespace TradingSystem.BuissnessLayer
 
         
         public basePermmision permmisions { get; set; }
+        public List<Message> messages { get; set; }
 
 
         public Member(string username, string password) : base()
@@ -30,6 +32,7 @@ namespace TradingSystem.BuissnessLayer
             this.address = "";
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
+            this.messages = new List<Message>();
         }
         public Member(string username, string password, double age, string gender, string address) : base()
         {
@@ -40,14 +43,19 @@ namespace TradingSystem.BuissnessLayer
             this.address = address;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
+            this.messages = new List<Message>();
         }
 
         public Member(MemberData member)
         {
             this.userName = member.userName;
             this.password = member.password;
+            this.age = member.age;
+            this.gender = member.gender;
+            this.address = member.address;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
+            this.messages = new List<Message>();
         }
 
         public override string getUserName()
@@ -285,6 +293,14 @@ namespace TradingSystem.BuissnessLayer
                 list.Add(aPermission.who(corrent.who()));
             }
             return ans;
+        }
+        public static void sendMessage(string StoreToSend, string UserToSend, string Message)
+        {
+            
+        }
+        public static void reciveMessage(string UserToSend, string Message)
+        {
+
         }
         
         
