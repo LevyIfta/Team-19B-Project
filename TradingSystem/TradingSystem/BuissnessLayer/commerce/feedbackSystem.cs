@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
-    class feedbackSystem
+    public class feedbackSystem
     {
         public static bool leaveFeedback(string userName, string productName, string manufacturer, string comment)
         {

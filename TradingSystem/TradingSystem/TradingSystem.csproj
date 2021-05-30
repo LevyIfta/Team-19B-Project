@@ -72,6 +72,7 @@
     <Compile Include="BuissnessLayer\commerce\Immediate.cs" />
     <Compile Include="BuissnessLayer\Result.cs" />
     <Compile Include="BuissnessLayer\User\Admin.cs" />
+    <Compile Include="BuissnessLayer\User\Message.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editManagerPermissions.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editProduct.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\getInfoEmployees.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="BuissnessLayer\User\UserServices.cs" />
     <Compile Include="DataLayer\DataAccess\BasketDAL.cs" />
     <Compile Include="DataLayer\DataAccess\FeedbackDAL.cs" />
+    <Compile Include="DataLayer\DataAccess\MessageDAL.cs" />
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\AdminPermissionDAL.cs" />
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\OwnerPermissionDAL.cs" />
     <Compile Include="DataLayer\DataAccess\PermissionsDAL\RemoveManagerPermissionDAL.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="DataLayer\DataAccess\StoreDAL.cs" />
     <Compile Include="DataLayer\DataObjects\FeedbackData.cs" />
     <Compile Include="DataLayer\DataObjects\MemberData.cs" />
+    <Compile Include="DataLayer\DataObjects\MessageData.cs" />
     <Compile Include="DataLayer\DataObjects\PermissionsData\AddProductPermissionData.cs" />
     <Compile Include="DataLayer\DataObjects\PermissionsData\AdminPermissionData.cs" />
     <Compile Include="DataLayer\DataObjects\PermissionsData\EditManagerPermissionData.cs" />
