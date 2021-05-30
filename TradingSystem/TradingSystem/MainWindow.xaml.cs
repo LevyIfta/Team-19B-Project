@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace TradingSystem
 {
     /// <summary>
@@ -23,6 +24,7 @@ namespace TradingSystem
     {
         public MainWindow()
         {
+          
             InitializeComponent();
             
             new Thread(new ThreadStart( ServiceLayer.ServerConnectionManager.init)).Start();

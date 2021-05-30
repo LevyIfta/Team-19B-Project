@@ -63,6 +63,7 @@ namespace TradingSystem.ServiceLayer
                 {
                     
                     TcpClient client = listner.AcceptTcpClient();
+                    
                     Thread th = new Thread(new ParameterizedThreadStart(ServerMessageManager.threadsMain));
                     threads.Add(th, client);
                     th.Start(client);

@@ -15,7 +15,12 @@ namespace ClientWeb.Connection
 
         private static void handleAlarm(DecodedMessge alarm)
         {
-            MessageBox.Show(alarm.param_list[0], alarm.name);
+            MessageBox.Show( alarm.param_list[0],  alarm.name);
+
+        }
+        private static void brah(System.Windows.Controls.Page p)
+        {
+            
         }
 
         public static void start()
@@ -30,6 +35,10 @@ namespace ClientWeb.Connection
                 {
                     lock (nonAlarmMsg)
                     {
+       
+                        MessageBox.Show("not an alaram: return value " + ans.name, ans.param_list[0]);
+
+
                         nonAlarmMsg.Enqueue(ans);
                         waitlock.Set();
                     }
