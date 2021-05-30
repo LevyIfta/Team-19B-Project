@@ -180,6 +180,10 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), ""))
                     return new string[] { "false", "supply not approved" };
                 receipt = validPurchase(basket);
+                if (!basket.owner.userName.Equals("guest"))
+                {
+                    receipt.save();
+                }
                 basket.owner.addReceipt(receipt);
                 // clean the basket
                 basket.clean();
@@ -233,8 +237,6 @@ namespace TradingSystem.BuissnessLayer.commerce
             receipt.price = price;
             // save the receipt
             this.receipts.Add(receipt);
-            // add receipt to DB
-            receipt.save();
             return receipt;
         }
 
