@@ -87,6 +87,18 @@ namespace TradingSystem.ServiceLayer
             //user.addAlarm("register", ans[1]);
             return ans;
         }
+        public static string[] register(string userName, string password, double age, string gender, string address)
+        {
+
+            string[] ans = BuissnessLayer.UserServices.register(userName, password, age, gender, address);
+            if (ans[0].Equals("true"))
+            {
+                //    DirAppend.AddToLogger("new user register", Result.Log);
+                return ans;
+            }
+            //user.addAlarm("register", ans[1]);
+            return ans;
+        }
 
         public static bool saveProduct(string userName, string storeName, string manufacturer, Dictionary<string, int> product)
         {
@@ -125,20 +137,75 @@ namespace TradingSystem.ServiceLayer
             return BuissnessLayer.UserServices.checkPrice(username);
         }
 
-        public static ICollection<SLreceipt> purchase(string username, string paymentName)
+        public static string[] purchase(string username, string creditNumber, string validity, string cvv)
         {
-            ICollection<BuissnessLayer.commerce.Receipt> temp = BuissnessLayer.UserServices.purchase(username, paymentName);
-            ICollection<SLreceipt> receipts = new List<SLreceipt>();
-            if(temp == null)
+            string[] temp = BuissnessLayer.UserServices.purchase(username, creditNumber, validity, cvv);
+            if (temp == null || temp[0].Equals("false"))
+                return temp;
+            ICollection<SLreceipt> list = new List<SLreceipt>();
+            for (int i=1; i<temp.Length; i++)
             {
-                return null;
+                list.Add(ProductController.makeReceipt(convertReceipt(temp[i])));
             }
-            foreach (BuissnessLayer.commerce.Receipt receipt in temp)
-            {                
-                receipts.Add(ProductController.makeReceipt(receipt));
-            }
+
        //     DirAppend.AddToLogger("user " + user.getUserName() + " just purchase his cart", Result.Log);
-            return receipts;
+            return ReceiptsToStringArray(list);
+        }
+        private static string[] ReceiptsToStringArray(ICollection<SLreceipt> receipts)
+        {
+            string[] ans = new string[receipts.Count];
+            int i = 0;
+            foreach (SLreceipt receipt in receipts)
+            {
+                ans[i] += ReceiptToString(receipt);
+                i++;
+            }
+            return ans;
+        }
+        private static string ReceiptToString(SLreceipt receipt)
+        {
+            string ans = "";
+            foreach (SLproduct pro in receipt.products)
+            {
+                ans += ProductToString(pro) + "&";
+            }
+            if (ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1); // delete the & in the end
+            return receipt.userName + "$" + receipt.storeName + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptID + "$" + ans;
+        }
+        private static string feedbackToString(Dictionary<string, string> dic) // username : comment
+        {
+            string ans = "";
+            foreach (string user in dic.Keys)
+            {
+                ans += user + "#" + dic[user] + "_";
+            }
+            if (ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1); // delete the _ in the end
+            return ans; // almog#what i think_gal#what he think
+        }
+        private static string ProductToString(SLproduct pro)
+        { // product name^price^manu^category^amount^feedback
+            return pro.productName + "^" + pro.price + "^" + pro.manufacturer + "^" + pro.category + "^" + pro.amount + "^" + feedbackToString(pro.feedbacks);
+        } // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
+        private static BuissnessLayer.commerce.Receipt convertReceipt(string receipt)
+        {
+            BuissnessLayer.commerce.Receipt ans = new BuissnessLayer.commerce.Receipt();
+            string[] arr = receipt.Split('$');
+            ans.username = arr[0];
+            ans.store = BuissnessLayer.commerce.Stores.searchStore(arr[1]);
+            ans.price = double.Parse(arr[2]);
+            ans.date = Convert.ToDateTime(arr[3]);
+            ans.receiptId = int.Parse(arr[4]);
+            string[] pro = arr[5].Split('=');
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            for (int i=0; i<pro.Length; i++)
+            {
+                string[] info = pro[i].Split('<');
+                dic[int.Parse(info[0])] = int.Parse(info[1]);
+            }
+            ans.products = dic;
+            return ans;
         }
 
         public static Dictionary<string,SLproduct> browseProducts(string username, string productName, string manufacturer)
@@ -244,7 +311,14 @@ namespace TradingSystem.ServiceLayer
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
         }
-
+        public static bool closeStore(string username, string storeName)
+        {
+            return UserServices.closeStore(username, storeName);
+        }
+        public static bool reopenStore(string username, string storeName)
+        {
+            return UserServices.reopenStore(username, storeName);
+        }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {

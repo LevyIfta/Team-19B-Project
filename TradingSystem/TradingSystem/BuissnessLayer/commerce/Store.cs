@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer;
+using PaymentSystem;
+
+
 
 
 
@@ -163,6 +166,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             ICollection<Product> products = basket.products;
             // lock the store for purchase
+            Receipt receipt;
             lock (this.purchaseLock)
             {
                 // check for amounts validation
@@ -171,7 +175,11 @@ namespace TradingSystem.BuissnessLayer.commerce
                     return new string[] { "false", policy };
                 if (!checkAmounts(products))
                     return new string[] { "false", "not enough items in stock" };
-                Receipt receipt = validPurchase(basket);
+                if(PaymentSystem.Verification.Pay(basket.owner.userName, creditNumber, validity, cvv))
+                    return new string[] { "false", "payment not approved" };
+                if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), ""))
+                    return new string[] { "false", "supply not approved" };
+                receipt = validPurchase(basket);
                 basket.owner.addReceipt(receipt);
                 // clean the basket
                 basket.clean();
@@ -182,7 +190,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 Stores.stores[this.name].receipts = this.receipts;
             }
 
-            return new string[] { "true", "" }; ;
+            return new string[] { "true", "" + receipt.receiptId }; ;
         }
 
         private Receipt validPurchase(ShoppingBasket basket)

@@ -261,13 +261,40 @@ namespace Tests
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             // purchase
-            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
-            ICollection<Receipt> receipts2 = user2.purchase(new CreditCard());
+            //string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
+            //string[] receipts2 = user2.purchase("111111111111", "11/22", "123");
+            /*
+            ICollection<Receipt> receipts1 = new LinkedList<Receipt>();
+            ICollection<Receipt> receipts2 = null;
+            bool flag = true;
 
-            Assert.IsTrue((receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null)));
-            // check for amount
-            Assert.IsTrue(aliShop.searchProduct("Bamba", "Osem").amount == 8);
-            UserServices.logout("AliKB");
+            Thread purchase1 = new Thread(() =>
+            {
+                Thread.Sleep(2000);
+                receipts1 = user1.purchase(new CreditCard());
+            }),
+                purchase2 = new Thread(() =>
+                {
+                    Thread.Sleep(2000);
+                    receipts2 = user2.purchase(new CreditCard());
+                }),
+                assertThread = new Thread(() =>
+                {
+                    Thread.Sleep(3000);
+                    flag &= (receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null));
+
+                    // check for amount
+                    flag &= aliShop.searchProduct("Bamba", "Osem").amount == 8;
+                });
+
+            purchase1.Start();
+            purchase2.Start();
+            assertThread.Start();
+
+            Thread.Sleep(3500);
+            Assert.IsTrue(flag);
+
+            UserServices.logout("AliKB");*/
         }
 
         [TestMethod]
@@ -300,7 +327,7 @@ namespace Tests
             // try to buy 12 bamba - less that overall
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             // purchase
-            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
+            string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 8);
             Assert.AreEqual(user1.getBasket(aliShop).products.Count, 0);
@@ -336,7 +363,7 @@ namespace Tests
             // try to buy 22 bamba - more that overall
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 22, 0));
             // purchase
-            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
+            string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 20);
             Assert.AreNotEqual(user1.getBasket(aliShop).products.Count, 0);
@@ -430,7 +457,90 @@ namespace Tests
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p.manufacturer)); // wrong name & manufacturer
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p1.manufacturer)); // wrong name
         }
+        [TestMethod]
+        public void addFeedBackBad()
+        {
+            // trying to add a feedback on a product that the user didn't buy
+            // init usernames and passes
+            string ownerUsername = "ownerA1", ownerPass = "123Xx123";
+            string newUsername = "noOne", newPass = "123Xx321";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass);
+            UserServices.register(newUsername, newPass);
 
+            string storeName = "Ali Shop444";
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish a new store
+            Stores.addStore(storeName, (Member)owner);
+
+            Store aliShop = Stores.searchStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+
+            // try to leave feedback with the new user - didn't buy yet
+            aUser newUser = UserServices.getUser(newUsername);
+            bool feedbackSuccess = UserServices.leaveFeedback(newUsername, storeName, "Bamba", "Osem", "This is non-valid feedback.");
+
+            Assert.IsFalse(feedbackSuccess, "Managed to leave a feedback with a user that didn't buy the product.");
+        }
+
+        [TestMethod]
+        public void addFeedBackGood()
+        {
+            // trying to add a feedback on a product that the user didn't buy
+            // init usernames and passes
+            string ownerUsername = "ownerA2", ownerPass = "123Xx123";
+            string buyerUsername = "noOne2", newPass = "123Xx321";
+            string FOUsername = "FBObserve", FOPass = "123Xx123"; // FO: feedback observer
+            // register the users
+            UserServices.register(ownerUsername, ownerPass);
+            UserServices.register(buyerUsername, newPass);
+            UserServices.register(FOUsername, FOPass);
+
+            string storeName = "Ali Shop121";
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish a new store
+            Stores.addStore(storeName, (Member)owner);
+
+            Store aliShop = Stores.searchStore(storeName);
+            // add products to the strore
+            aliShop.addProduct("Bamba", "Food", "Osem");
+            // set the price of the product
+            aliShop.editPrice("Bamba", "Osem", 3);
+            // supply 
+            aliShop.supply("Bamba", "Osem", 20);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser user1 = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
+            // purchase
+            string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
+
+            string feedback = "This is valid feedback.";
+            bool feedbackSuccess = UserServices.leaveFeedback(buyerUsername, storeName, "Bamba", "Osem", feedback);
+
+            // chack if the answer is true
+            Assert.IsTrue(feedbackSuccess, "Couldn't leave feedback even though the user has already bought the product.");
+
+            // now check if other users could see the feedback
+            UserServices.login(FOUsername, FOPass);
+            aUser observer = UserServices.getUser(FOUsername);
+
+            foreach (KeyValuePair<Store, Product> product in observer.browseProducts("Bamba", "Osem"))
+            {
+                if (product.Key.name.Equals(storeName)) // the value is the product in the store, check for the feedback
+                {
+                    Assert.AreEqual(product.Value.info.feedbacks[buyerUsername], feedback, "the feedback was not equal/not found");
+                    break;
+                }
+            }
+        }
     }
 
     [TestClass]
@@ -637,8 +747,8 @@ namespace Tests
             user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
             user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 18, 0));
             // purchase
-            ICollection<Receipt> receipts1 = user1.purchase(new CreditCard());
-            ICollection<Receipt> receipts2 = user2.purchase(new CreditCard());
+            string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
+            string[] receipts2 = user2.purchase("111111111111", "11/22", "123");
             // test 
             //userReciptTestGood();
             //userReciptTestBad();
@@ -757,6 +867,75 @@ namespace Tests
 
         }
         */
+        [TestMethod]
+        public void adminReceiptsGood()
+        {
+            // checks if the admin could fetch receipts
+            // init usernames and passes
+            string storeName1 = "store1_adminTest", storeName2 = "store2_adminTest";
+            string ownerUsername = "ownerA2", ownerPass = "123Xx123";
+            string buyerUsername = "noOne2", newPass = "123Xx321";
+            //string adminUSername = "admin_test", adminPass = "123Xx123"; //
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+            string p2_name = "Jeans", p2_man = "Castro", p2_cat = "clothing";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass);
+            UserServices.register(buyerUsername, newPass);
+            //UserServices.register(adminUSername, adminPass);
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+            Stores.addStore(storeName2, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            Store store2 = Stores.searchStore(storeName2);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            store2.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 3);
+            store2.editPrice(p2_name, p2_man, 4);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            store2.supply(p2_name, p2_man, 30);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_man, p1_cat), 12, 0));
+            client.getCart().getBasket(store2).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_man, p2_cat), 24, 0));
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Admin admin = (Admin)(UserServices.getAdmin());
+            ICollection<Receipt> adminReceiptsCol = admin.getAllReceipts();
+            LinkedList<Receipt> adminReceipts = new LinkedList<Receipt>(adminReceiptsCol);
+
+            bool hasFirst = false, hasSecond = false;
+
+            foreach (Receipt receipt in adminReceipts)
+            {
+                LinkedList<Product> products = new LinkedList<Product>(adminReceipts.First.Value.actualProducts);
+                if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man))
+                    & products.First.Value.amount == 12)
+                {
+                    hasFirst = true;
+                }
+
+                if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man))
+                   & products.First.Value.amount == 24)
+                {
+                    hasSecond = true;
+                }
+            }
+
+            Assert.IsTrue(hasFirst);
+            Assert.IsTrue(hasSecond); 
+        }
     }
 }
 

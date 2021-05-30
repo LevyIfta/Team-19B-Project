@@ -26,16 +26,24 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
 
-        public override ICollection<Receipt> purchase(PaymentMethod payment)
+        public override string[] purchase(string creditNumber, string validity, string cvv)
         { // only Immediate and Offer
-            ICollection<Receipt> list = new List<Receipt>();
+            ICollection<string> list = new List<string>();
             foreach (ShoppingBasket basket in getMyCart().baskets)
             {
-                Receipt receipt = null; // basket.store.executePurchase(basket, payment);
-                if (receipt == null)
+                string[] ans = basket.store.executePurchase(basket, creditNumber, validity, cvv);
+                if (ans == null || ans[0].Equals("false"))
                     return null;
+                list.Add(ans[1]);
             }
-            return list;
+            string[] arr = new string[list.Count];
+            int i = 0;
+            foreach (string receipt in list)
+            {
+                arr[i] = receipt;
+                i++;
+            }
+            return arr;
         }
 
 

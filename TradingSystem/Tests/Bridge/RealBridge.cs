@@ -145,9 +145,9 @@ namespace Tests.Bridge
             return UserController.EstablishStore(getUserName(), storeName);
         }
 
-        public ICollection<SLreceipt> purchase(string paymentName)
+        public string[] purchase(string creditNumber, string validity, string cvv)
         {
-            return UserController.purchase(getUserName(), paymentName);
+            return UserController.purchase(getUserName(), creditNumber, validity, cvv);
         }
 
         public void purchase(ShoppingBasket basket)
