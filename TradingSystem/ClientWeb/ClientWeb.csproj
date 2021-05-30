@@ -76,6 +76,14 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="login.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="openStore.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Page1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,12 +98,19 @@
     <Compile Include="Connection\DecodedMessge.cs" />
     <Compile Include="Connection\Decoder.cs" />
     <Compile Include="Connection\Encoder.cs" />
+    <Compile Include="login.xaml.cs">
+      <DependentUpon>login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="openStore.xaml.cs">
+      <DependentUpon>openStore.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Page1.xaml.cs">
       <DependentUpon>Page1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PageController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
