@@ -8,7 +8,20 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="myStores">
 
-    <Grid>
-        
+    <Grid Background="LightBlue">
+        <Label x:Name="label" Content="my stores" HorizontalAlignment="Left" Margin="358,31,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,31,40,0" VerticalAlignment="Top"/>
+        <Grid Margin="308,96,315,94">
+            <DockPanel Margin="10">
+                <StackPanel Name="StackList" DockPanel.Dock="Right" Margin="10,0,10,26">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="0,0,0,10" />
+                        </Style>
+                    </StackPanel.Resources>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+
     </Grid>
 </Page>

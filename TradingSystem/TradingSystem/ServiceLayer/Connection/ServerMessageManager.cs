@@ -313,7 +313,7 @@ namespace TradingSystem.ServiceLayer
                 switch (msg.name)
                 {
                     case ("register"):
-                        var ans_r = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
+                        var ans_r = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1], double.Parse(msg.param_list[2]), msg.param_list[3], msg.param_list[4]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string[]";
                         msg_send.param_list = ans_r;
