@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
-    public interface IRule
+    interface iPolicy
     {
-        bool Check(ShoppingBasket shoppingBasket);
-        Guid GetId();
-        Rule AndRules(IRule additionalRule);
+        bool isValid(ICollection<Product> products);
     }
 }

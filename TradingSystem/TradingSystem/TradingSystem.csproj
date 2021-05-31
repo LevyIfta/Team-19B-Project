@@ -56,20 +56,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BuissnessLayer\commerce\feedbackSystem.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\CategoryDiscountCalculator.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\ConditionDiscount.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\Discount.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\DiscountCalc.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\IDiscount.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\ProductDiscountCalculator.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Discount\StoreDiscountCalc.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\IRule.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\MarketRules.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\policy\Policy.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Rule.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\RulesCreator.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\AndPolicy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\BasePolicy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\iPolicy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\OrPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Stores.cs" />
     <Compile Include="BuissnessLayer\commerce\Immediate.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\XorPolicy.cs" />
     <Compile Include="BuissnessLayer\Result.cs" />
     <Compile Include="BuissnessLayer\User\Admin.cs" />
     <Compile Include="BuissnessLayer\User\Permmisions\editManagerPermissions.cs" />
@@ -205,6 +198,9 @@
       <Project>{b15aa9de-93df-4ead-bba8-33592a2ae7ac}</Project>
       <Name>SupplySystem</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BuissnessLayer\commerce\Rules\Discount\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
