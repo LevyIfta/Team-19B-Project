@@ -6,6 +6,7 @@ using TradingSystem.BuissnessLayer;
 using System.Linq;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.ServiceLayer;
+using TradingSystem.BuissnessLayer.User.Permmisions;
 
 namespace Tests
 {
@@ -935,6 +936,193 @@ namespace Tests
 
             Assert.IsTrue(hasFirst);
             Assert.IsTrue(hasSecond); 
+        }
+    }
+
+    [TestClass]
+    public class PermissionsTests
+    {
+        private static string storeName1;
+        private static string ownerName1; private static string ownerPassword1;
+        private static double age1; private static string gender1; private static string address1;
+        private static string storeName2;
+        private static string ownerName2; private static string ownerPassword2;
+        private static double age2; private static string gender2; private static string address2;
+        private static ProductInfo p1;
+        private static ProductInfo p2;
+        private static ProductInfo p3;
+        private static ProductInfo pToRemove;
+        private static double price1;
+        private static double price2;
+        private static double price3;
+        private static double priceToRemove;
+        private static int amount1;
+        private static int amount2;
+        private static int amount3;
+        private static int amountToRemove;
+
+
+        [ClassInitialize]
+        public static void classInit(TestContext context)
+        {
+            storeName1 = "bestStore";
+            ownerName1 = "storeOwner111"; ownerPassword1 = "1A2b3C4d";
+            age1 = 30.0; gender1 = "m"; address1 = "thisAddress";
+            p1 = ProductInfo.getProductInfo("spoon", "category11", "spoonCompany");
+
+            storeName2 = "secondBest";
+            ownerName2 = "storeOwner222"; ownerPassword2 = "1a2B3c4D";
+            age2 = 31; gender2 = "f"; address2 = "nowhere";
+            p2 = ProductInfo.getProductInfo("fork", "category11", "forksForLife");
+            p3 = ProductInfo.getProductInfo("knife", "category11", "company121");
+            pToRemove = ProductInfo.getProductInfo("removethis", "category2", "company 211");
+            price1 = 3.99;
+            price2 = 3.99;
+            price3 = 4.99;
+            priceToRemove = 10.99;
+            amount1 = 10;
+            amount2 = 15;
+            amount3 = 30;
+            amountToRemove = 100;
+            //registration of users
+            UserServices.register(ownerName1, ownerPassword1, age1, gender1, address1);
+            UserServices.register(ownerName2, ownerPassword2, age2, gender2, address2);
+
+            //login
+            UserServices.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            Member owner2 = (Member)UserServices.getUser(ownerName2);
+            //establish store
+            owner1.EstablishStore(storeName1);
+            owner2.EstablishStore(storeName2);
+        }
+
+
+        [TestMethod]
+        public void addProductPermissionGood()
+        {
+            UserServices.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+
+            bool passTest = owner1.addNewProduct(storeName1, p1.name, price1, amount1, p1.category, p1.manufacturer);
+            passTest &= owner1.addNewProduct(storeName1, p2.name, price2, amount2, p2.category, p2.manufacturer);
+            bool hasPermission = false;
+            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
+            {
+                if (p == PersmissionsTypes.AddProduct)
+                    hasPermission = true;
+            }
+
+
+            Assert.IsTrue(passTest & hasPermission);
+            Assert.IsNull(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount);
+            //Assert.IsNull(Stores.searchStore(storeName1).searchProduct(p2.name, p2.manufacturer).amount);
+
+            UserServices.logout(ownerName1);
+        }
+
+        [TestMethod]
+        public void addProductPermissionBad()
+        {
+            UserServices.login(ownerName2, ownerPassword2);
+            Member owner2 = (Member)UserServices.getUser(ownerName2);
+
+            bool wrongStore = owner2.addNewProduct(storeName1, p1.name, price1, amount1, p1.category, p1.manufacturer);
+            Assert.IsFalse(wrongStore);//did not establish this store, and is not at any managment position. has no permissions at all.
+
+            owner2.removePermission(storeName2, null);//removes all permissions from the user
+            bool noPermission = owner2.addNewProduct(storeName2, p2.name, price2, amount2, p2.category, p2.manufacturer);
+            Assert.IsFalse(noPermission);//user has no "addNewProduct" Permission.
+
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
+            {
+                owner2.addPermission(aPermission.who(p, storeName2, null));//return all permissions to storeOwner
+            }
+
+            UserServices.logout(ownerName2);
+        }
+
+        [TestMethod]
+        public void editProductPermissionGood()
+        {
+            UserServices.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+
+            bool passedPreConds = owner1.addNewProduct(storeName1, p3.name, price3, amount3, p3.category, p3.manufacturer);
+            if (passedPreConds)
+            {
+                bool hasPermission = false;
+                foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
+                {
+                    if (p == PersmissionsTypes.EditProduct)
+                        hasPermission = true;
+                }
+
+                Assert.IsTrue(hasPermission, "asd");
+
+                double newPrice = 6.99;
+                bool passTest = owner1.editProduct(storeName1, p3.name, newPrice, p3.manufacturer);
+
+                Assert.IsTrue(passTest, "ere");
+                Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p3.name, p3.manufacturer).price, newPrice);
+            }
+
+            UserServices.logout(ownerName1);
+
+        }
+
+        [TestMethod]
+        public void editProductPermissionBad()
+        {
+            UserServices.login(ownerName2, ownerPassword2);
+            Member owner2 = (Member)UserServices.getUser(ownerName2);
+
+            ProductInfo p5 = ProductInfo.getProductInfo("error", "none", "empty");
+            double newPrice = 1.99;
+            bool passTest = owner2.editProduct(storeName2, p5.name, newPrice, p5.manufacturer);
+
+            Assert.IsFalse(passTest);//product does not exist in the inventory
+
+            passTest = owner2.editProduct(storeName1, p1.name, newPrice, p1.manufacturer);
+
+            Assert.IsFalse(passTest);//owner2 have no permissions over store "storeName1"
+            Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).price, price1);//price should not change in case of unauthorized use.
+
+            UserServices.logout(ownerName2);
+        }
+
+        [TestMethod]
+        public void removeProductPermissionGood()
+        {
+            UserServices.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+
+            bool hasPermission = false;
+            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
+            {
+                if (p == PersmissionsTypes.RemoveProduct)
+                    hasPermission = true;
+            }
+
+            Assert.IsTrue(hasPermission);
+            bool passTest = owner1.removeProduct(storeName1, pToRemove.name, pToRemove.manufacturer);
+
+            Assert.IsTrue(passTest);
+            Assert.IsNull(Stores.searchStore(storeName1).searchProduct(pToRemove.name, pToRemove.manufacturer));
+        }
+
+        [TestMethod]
+        public void removeProductPermissionBad()
+        {
+            UserServices.login(ownerName2, ownerPassword2);
+            Member owner2 = (Member)UserServices.getUser(ownerName2);
+
+            ProductInfo p5 = ProductInfo.getProductInfo("error", "none", "empty");
+            bool passTest = owner2.removeProduct(storeName1, p1.name, p1.manufacturer);
+
+            Assert.IsFalse(passTest);//does not have the permission to do so.
+            Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
         }
     }
 }
