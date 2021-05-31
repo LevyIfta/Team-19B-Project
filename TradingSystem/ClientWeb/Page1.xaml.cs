@@ -100,10 +100,8 @@ namespace ClientWeb
 
         private void stores_Click(object sender, RoutedEventArgs e)
         {
-
             myStores m = new myStores();
             NavigationService.Navigate(m);
-
         }
     }
 }

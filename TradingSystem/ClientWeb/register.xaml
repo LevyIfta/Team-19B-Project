@@ -9,7 +9,7 @@
       Title="register">
 
     <Grid Background="LightBlue">
-        <Grid Margin="262,71,260,10">
+        <Grid Margin="259,71,260,177" RenderTransformOrigin="0.516,0.699">
             <Label x:Name="label" Content="user name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="textBox" Height="23" Margin="127,14,31,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" VerticalAlignment="Top"/>
             <Label x:Name="label1" Content="password:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
@@ -18,14 +18,17 @@
             <TextBox x:Name="textBox2" Height="23" Margin="127,76,31,0" TextWrapping="Wrap" Text="{Binding passwordC, Mode=TwoWay}" VerticalAlignment="Top"/>
             <Label x:Name="label3" Content="age:" HorizontalAlignment="Left" Margin="21,103,0,0" VerticalAlignment="Top"/>
             <Label x:Name="label4" Content="gender" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.11,-0.254"/>
-            <Label x:Name="label5" Content="address:" HorizontalAlignment="Left" Margin="15,165,0,178" d:LayoutOverrides="Height"/>
-            <Label x:Name="label6" Content="{Binding usermsg, Mode=TwoWay}" Margin="15,0,31,52" VerticalAlignment="Bottom" RenderTransformOrigin="-0.648,-1.265" Height="87"/>
+
             <TextBox x:Name="textBox3" Height="23" Margin="127,107,31,0" TextWrapping="Wrap" Text="{Binding age, Mode=TwoWay}" VerticalAlignment="Top"/>
             <TextBox x:Name="textBox4" Height="23" Margin="127,138,31,0" TextWrapping="Wrap" Text="{Binding gender, Mode=TwoWay}" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBox5" Margin="127,169,31,177" TextWrapping="Wrap" Text="{Binding address, Mode=TwoWay}"/>
-            <Button x:Name="button" Content="sign up" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="button_Click"/>
-            <Button x:Name="button1" Content="login" HorizontalAlignment="Left" Margin="15,0,0,10" VerticalAlignment="Bottom" Width="75" Click="button1_Click"/>
-        </Grid>
+            <Label x:Name="label5" Content="address:" HorizontalAlignment="Left" Margin="15,0,0,10" VerticalAlignment="Bottom"/>
+            <TextBox x:Name="textBox5" Height="23" Margin="130,0,31,9" TextWrapping="Wrap" Text="{Binding address, Mode=TwoWay}" VerticalAlignment="Bottom"/>
 
+
+        </Grid>
+        <Button x:Name="button1" Content="login" HorizontalAlignment="Left" Margin="281,0,0,53" VerticalAlignment="Bottom" Width="75" Click="button1_Click"/>
+        <Label x:Name="label6" Content="{Binding usermsg, Mode=TwoWay}" Margin="270,0,276,73" VerticalAlignment="Bottom" RenderTransformOrigin="-0.648,-1.265" Height="87"/>
+        <Label x:Name="label7" Content="Registration" Margin="367,27,350,0" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="sign up" HorizontalAlignment="Right" Margin="0,0,260,53" VerticalAlignment="Bottom" Width="75" Click="button_Click"/>
     </Grid>
 </Page>

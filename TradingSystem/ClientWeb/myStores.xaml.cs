@@ -23,6 +23,24 @@ namespace ClientWeb
         public myStores()
         {
             InitializeComponent();
+            Button b1 = new Button();
+            b1.Click += button1_Click;
+            b1.Content = "name1";
+            this.StackList.Children.Add(b1);
+            Button b2 = new Button();
+            b2.Click += button1_Click;
+            b2.Content = "name2";
+            this.StackList.Children.Add(b2);
+        }
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            login l = new login();
+            NavigationService.Navigate(l);
+        }
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            register l = new register();
+            NavigationService.Navigate(l);
         }
     }
 }

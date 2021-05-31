@@ -55,8 +55,8 @@ namespace TradingSystem.BuissnessLayer
 
         public static string[] register(string username, string password)
         {
-            string[] fullans = new string[2]
-;            if (MemberDAL.isExist(username))
+            string[] fullans = new string[2];
+            if (MemberDAL.isExist(username))
                 return new string[] { "false", "user already exist" };
             fullans[1] = checkUserNameValid(username) + ":";
             fullans[1] += checkPasswordValid(password);
