@@ -140,12 +140,9 @@ namespace Tests
         [TestMethod]
         public void adminTestBad()
         {
-            string username = "notAdmin", pass = "newPas00s";
-            UserServices.register(username, pass);
+            string username = "admin", pass = "Admin1";
             string[] user = UserServices.login(username, pass);
-
         }
-
     }
 
     [TestClass]
