@@ -137,6 +137,15 @@ namespace Tests
             UserController.logout();
         }
 
+        [TestMethod]
+        public void adminTestBad()
+        {
+            string username = "notAdmin", pass = "newPas00s";
+            UserServices.register(username, pass);
+            string[] user = UserServices.login(username, pass);
+
+        }
+
     }
 
     [TestClass]
