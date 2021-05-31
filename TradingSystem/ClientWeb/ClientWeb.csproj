@@ -31,7 +31,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -76,9 +76,36 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="myCart.xaml.cs">
+      <DependentUpon>myCart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="myReceipts.xaml.cs">
+      <DependentUpon>myReceipts.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="myStores.xaml.cs">
+      <DependentUpon>myStores.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="register.xaml.cs">
+      <DependentUpon>register.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Store.xaml.cs">
+      <DependentUpon>Store.xaml</DependentUpon>
+    </Compile>
     <Page Include="login.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="myCart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="myReceipts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="myStores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="openStore.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -108,6 +135,14 @@
       <DependentUpon>Page1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="register.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Store.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PageController.cs" />

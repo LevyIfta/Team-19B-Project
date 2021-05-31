@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +15,13 @@ using TradingSystem.BuissnessLayer;
 
 namespace TradingSystem.ServiceLayer
 {
+    
     class ServerMessageManager
     {
 
         public static readonly int EOT = 4;
 
+        private static readonly string certPath = "C:/Users/Iftah/Desktop/Cert.txt";
         /// <summary>
         /// input:array parameters:
         /// 0: socket. unused
@@ -124,7 +128,14 @@ namespace TradingSystem.ServiceLayer
             UserController.threadInit();
             TcpClient socket = (TcpClient)client;
             SslStream stream = new SslStream(socket.GetStream());
+            //  X509Certificate certificate = new X509Certificate();
+            //  stream.AuthenticateAsServer(certificate, false, System.Security.Authentication.SslProtocols.Default, false);
+            string certificate_String = "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";
+            var privateKeyBytes = Convert.FromBase64String(certificate_String);
+            var pfxPassword = "TradePassword";
+            X509Certificate2 cert = new X509Certificate2(privateKeyBytes, pfxPassword);
 
+            stream.AuthenticateAsServer(cert, false, System.Security.Authentication.SslProtocols.Default, false);
             AutoResetEvent waitEvent = new AutoResetEvent(false);
             Queue<DecodedMessge> qwewe = new Queue<DecodedMessge>();
             AutoResetEvent alarmLock = new AutoResetEvent(false);
@@ -302,7 +313,7 @@ namespace TradingSystem.ServiceLayer
                 switch (msg.name)
                 {
                     case ("register"):
-                        var ans_r = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1]);
+                        var ans_r = TradingSystem.ServiceLayer.UserController.register(msg.param_list[0], msg.param_list[1], double.Parse(msg.param_list[2]), msg.param_list[3], msg.param_list[4]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string[]";
                         msg_send.param_list = ans_r;
@@ -315,7 +326,7 @@ namespace TradingSystem.ServiceLayer
                         if (ans_a[0].Equals("true"))
                             ans_d = "true";
                         msg_send.type = msgType.OBJ;
-                        msg_send.name = "bool";
+                        msg_send.name = "string[]";
                         msg_send.param_list = new string[] { ans_d };
                         //   byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
                         // ServerConnectionManager.sendMessage(enc_l);

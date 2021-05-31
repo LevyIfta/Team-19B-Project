@@ -16,61 +16,68 @@ using System.Windows.Shapes;
 namespace ClientWeb
 {
     /// <summary>
-    /// Interaction logic for login.xaml
+    /// Interaction logic for register.xaml
     /// </summary>
-    public partial class login : Page
+    public partial class register : Page
     {
-        UserData user = new UserData();
+        UserR user = new UserR();
         List<string> errors;
         static Controller controler = Controller.GetController();
-        public login()
+        public register()
         {
             InitializeComponent();
             this.DataContext = user;
         }
-        private void CleanButton()
-        {
-            errors = new List<string>();
-            user.usermsg = "";
-        }
         private void ButtomCheck() // textbox valid check 
         {
+            String pass = "c";
+            String passC = "t";
             if (user.username == null)
                 errors.Add("User name empty");
             if (user.password == null)
                 errors.Add("Password empty");
+            else
+                pass = user.password;
+            if (user.passwordC == null)
+                errors.Add("PasswordC empty");
+            else
+                passC = user.passwordC;
+            if (!(pass.Equals(passC)) & (pass != "c") & (passC != "t"))
+                errors.Add("Password isn't confirm");
         }
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            CleanButton();
             bool insertValid = true;
             if (errors.Count > 0)
             {
                 insertValid = false;
                 if (errors.Contains("User name empty"))
                     user.usermsg = "User name empty";
+                if (errors.Contains("Password empty"))
+                    user.usermsg += " Password empty";
+                if (errors.Contains("PasswordC empty"))
+                    user.usermsg += " Password confirm empty";
+                if (errors.Contains("Password isn't confirm"))
+                    user.usermsg += " Passwords must match";
             }
             if (insertValid)
             {
-                bool bAns = controler.Login(user.username, user.password);
-                string[] ans = { "false", user.username };
-                if (bAns)
-                {
-                    ans[0] = "true";
-                }
+                string[] ans = controler.Register(user.username, user.password);
                 if (ans != null && ans[0].Equals("true"))
                 {
-                    PageController.username = user.username;
-                    Page1 page1 = new Page1();
-                    NavigationService.Navigate(page1);
+                    user.usermsg = "Registretion Su";
                 }
                 else
                 {
-                    user.loginname = "";
-                    user.password = "";
-                    user.usermsg = ans[1];
+                    user.usermsg = "Registretion Faild\n" + ans[1];
                 }
             }
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            login l = new login();
+            NavigationService.Navigate(l);
         }
     }
 }
