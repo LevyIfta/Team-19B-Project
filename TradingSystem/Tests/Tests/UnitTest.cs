@@ -954,6 +954,9 @@ namespace Tests
         private static string storeName2;
         private static string ownerName2; private static string ownerPassword2;
         private static double age2; private static string gender2; private static string address2;
+        private static string hiredManagerName; private static string hiredManagerPassword;
+        private static double age3; private static string gender3; private static string address3;
+
         private static ProductInfo p1;
         private static ProductInfo p2;
         private static ProductInfo p3;
@@ -979,6 +982,10 @@ namespace Tests
             storeName2 = "secondBest";
             ownerName2 = "storeOwner222"; ownerPassword2 = "1a2B3c4D";
             age2 = 31; gender2 = "f"; address2 = "nowhere";
+
+            hiredManagerName = "hiredManager1"; hiredManagerPassword = "hiRed11";
+            age3 = 25; gender3 = "m"; address3 = "thePlace";
+
             p2 = ProductInfo.getProductInfo("fork", "category11", "forksForLife");
             p3 = ProductInfo.getProductInfo("knife", "category11", "company121");
             pToRemove = ProductInfo.getProductInfo("removethis", "category2", "company 211");
@@ -993,6 +1000,7 @@ namespace Tests
             //registration of users
             UserServices.register(ownerName1, ownerPassword1, age1, gender1, address1);
             UserServices.register(ownerName2, ownerPassword2, age2, gender2, address2);
+            UserServices.register(hiredManagerName, hiredManagerPassword, age3, gender3, address3);
 
             //login
             UserServices.login(ownerName1, ownerPassword1);
@@ -1070,7 +1078,7 @@ namespace Tests
                 double newPrice = 6.99;
                 bool passTest = owner1.editProduct(storeName1, p3.name, newPrice, p3.manufacturer);
 
-                Assert.IsTrue(passTest, "ere");
+                Assert.IsTrue(passTest, "ere");//fails because Store.Inventory never updates when using AddProduct.
                 Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p3.name, p3.manufacturer).price, newPrice);
             }
 
@@ -1116,6 +1124,9 @@ namespace Tests
 
             Assert.IsTrue(passTest);
             Assert.IsNull(Stores.searchStore(storeName1).searchProduct(pToRemove.name, pToRemove.manufacturer));
+
+            UserServices.logout(ownerName1);
+
         }
 
         [TestMethod]
@@ -1129,7 +1140,55 @@ namespace Tests
 
             Assert.IsFalse(passTest);//does not have the permission to do so.
             Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
+
+            UserServices.logout(ownerName2);
+
         }
+
+        [TestMethod]
+        public void HireNewStoreManagerGood()
+        {
+            UserServices.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            bool hasPermission = false;
+            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
+            {
+                if (p == PersmissionsTypes.HireNewStoreManager)
+                    hasPermission = true;
+            }
+
+            Assert.IsTrue(hasPermission);
+
+            bool passTest = owner1.hireNewStoreManager(storeName1, hiredManagerName);
+
+            Assert.IsTrue(passTest);
+            Assert.IsTrue(Stores.searchStore(storeName1).isManager(hiredManagerName));
+
+            UserServices.logout(ownerName1);
+
+            UserServices.login(hiredManagerName, hiredManagerPassword);
+            Member hiredManager = (Member)UserServices.getUser(hiredManagerName);
+
+            hasPermission = false;
+            bool noPermission = false;
+
+            foreach (PersmissionsTypes p in hiredManager.GetPermissions(storeName1))
+            {
+                if (p == PersmissionsTypes.GetInfoEmployees)
+                    hasPermission = true;
+                if (p == PersmissionsTypes.AddProduct || p == PersmissionsTypes.HireNewStoreOwner)
+                    noPermission = true;
+            }
+            Assert.IsTrue(hasPermission);
+            Assert.IsFalse(noPermission);
+        }
+
+        [TestMethod]
+        public void HireNewStoreManagerBad()
+        {
+
+        }
+
     }
 }
 
