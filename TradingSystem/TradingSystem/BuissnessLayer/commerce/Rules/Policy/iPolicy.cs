@@ -9,5 +9,6 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
     interface iPolicy
     {
         bool isValid(ICollection<Product> products, aUser user);
+
     }
 }

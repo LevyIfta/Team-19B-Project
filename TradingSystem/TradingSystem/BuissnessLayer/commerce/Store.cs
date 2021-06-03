@@ -385,10 +385,32 @@ namespace TradingSystem.BuissnessLayer.commerce
             }
         }
 
+
+        //OK
         public void addAgePolicy(string name, string category, string man, int age)
         {
             iPolicy policy = new BasePolicy(ProductInfo.getProductInfo(name, category, man), (Product p, aUser u) => u.getAge() >= age);
             this.purchasePolicies.Add(policy);
         }
+
+
+        //Check system Time restricts
+        public void addTimePolicy(string name, string category, string man, double time)
+        {
+            iPolicy policy = new BasePolicy(ProductInfo.getProductInfo(name, category, man), (Product p, aUser u) => DateTime.Now.ToString().CompareTo(time) > 0);
+            this.purchasePolicies.Add(policy);
+        }
+
+
+        public void addWieghtPolicy(ShoppingBasket basket)
+        {
+          //TODO
+   
+        }
+
+
+
+
+
     }
 }
