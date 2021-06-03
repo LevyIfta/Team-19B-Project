@@ -9,22 +9,23 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
     class BasePolicy : iPolicy
     {
 
-        public ProductInfo subject { get; set; }
+        //public ProductInfo subject { get; set; }
         //public int amount { get; set; }
         public Func<Product, aUser, bool> predicate { get; set; }
+        public Func<Product, bool> isRelevant;
         public bool Default { get; set; }
         
-        public BasePolicy(ProductInfo subject, Func<Product, aUser, bool> pred)
+        public BasePolicy(Func<Product, bool> isRelevant, Func<Product, aUser, bool> pred)
         {
-            this.subject = subject;
+            this.isRelevant = isRelevant;
             //this.amount = amount;
             this.predicate = pred;
             this.Default = true;
         }
 
-        public BasePolicy(ProductInfo subject, Func<Product, aUser, bool> pred, bool isRequired)
+        public BasePolicy(Func<Product, bool> isRelevant, Func<Product, aUser, bool> pred, bool isRequired)
         {
-            this.subject = subject;
+            this.isRelevant = isRelevant;
             //this.amount = amount;
             this.predicate = pred;
             this.Default = !isRequired;
@@ -54,8 +55,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         {
             foreach (Product item in products)
             {
-                if (item.info.Equals(subject))
-                    //return predicate(item.amount, this.amount);
+                if (this.isRelevant(item))
                     return predicate(item, user);
             }
             return this.Default;

@@ -387,28 +387,42 @@ namespace TradingSystem.BuissnessLayer.commerce
 
 
         //OK
-        public void addAgePolicy(string name, string category, string man, int age)
+        public void addAgePolicyByProduct(string name, string category, string man, int age)
         {
-            iPolicy policy = new BasePolicy(ProductInfo.getProductInfo(name, category, man), (Product p, aUser u) => u.getAge() >= age);
+            iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= age);
             this.purchasePolicies.Add(policy);
         }
 
+        public void addAgePolicyByCategory(string category, int age)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= age);
+            this.purchasePolicies.Add(policy);
+        }
 
         //Check system Time restricts
-        public void addTimePolicy(string name, string category, string man, double time)
+        public void addTimePolicyByProduct(string name, string category, string man, int hour)
         {
-            iPolicy policy = new BasePolicy(ProductInfo.getProductInfo(name, category, man), (Product p, aUser u) => DateTime.Now.ToString().CompareTo(time) > 0);
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= hour);
             this.purchasePolicies.Add(policy);
         }
 
-
-        public void addWieghtPolicy(ShoppingBasket basket)
+        public void addTimePolicyByCategory(string category, int hour)
         {
-          //TODO
-   
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Hour <= hour);
+            this.purchasePolicies.Add(policy);
         }
 
+        public void addMaxAmountPolicy(string name, string category, string man, int maxAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount <= maxAmount);
+            this.purchasePolicies.Add(policy);
+        }
 
+        public void addMinAmountPolicy(string name, string category, string man, int minAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount >= minAmount);
+            this.purchasePolicies.Add(policy);
+        }
 
 
 

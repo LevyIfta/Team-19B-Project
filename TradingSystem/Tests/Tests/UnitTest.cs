@@ -1136,7 +1136,7 @@ namespace Tests
     public class PolicyTests
     {
         [TestMethod]
-        public void agePolicy()
+        public void ProductAgePolicyGood()
         {
             // init usernames and passes
             string storeName1 = "store_agePolicy";//, storeName2 = "store2_adminTest";
@@ -1169,7 +1169,7 @@ namespace Tests
             store1.supply(p1_name, p1_man, 20);
             //store2.supply(p2_name, p2_man, 30);
 
-            store1.addAgePolicy(p1_name, p1_cat, p1_man, 18);
+            store1.addAgePolicyByProduct(p1_name, p1_cat, p1_man, 18);
 
             UserServices.login(buyerUsername, newPass);
             aUser client = UserServices.getUser(buyerUsername);
@@ -1183,6 +1183,17 @@ namespace Tests
             Assert.AreEqual(receipts1[0], "false", "managed to buy bamba with age = 17");
             Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
         }
+
+        [TestMethod]
+        public void ProductAgePolicyBad() { }
+
+        [TestMethod]
+        public void CategoryAgePolicyGood() { }
+
+        [TestMethod]
+        public void CategoryAgePolicyBad() { }
+
+
 
 
     }
