@@ -1131,5 +1131,60 @@ namespace Tests
             Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
         }
     }
+
+    [TestClass]
+    public class PolicyTests
+    {
+        [TestMethod]
+        public void agePolicy()
+        {
+            // init usernames and passes
+            string storeName1 = "store_agePolicy";//, storeName2 = "store2_adminTest";
+            string ownerUsername = "owner_agePolicy", ownerPass = "123Xx123";
+            string buyerUsername = "noOne_agePolicy", newPass = "123Xx321";
+            //string adminUSername = "admin_test", adminPass = "123Xx123"; //
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+            //string p2_name = "Jeans", p2_man = "Castro", p2_cat = "clothing";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 15, "female", "TA");
+            //UserServices.register(adminUSername, adminPass);
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+            //Stores.addStore(storeName2, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            //Store store2 = Stores.searchStore(storeName2);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            //store2.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 3);
+            //store2.editPrice(p2_name, p2_man, 4);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            //store2.supply(p2_name, p2_man, 30);
+
+            store1.addAgePolicy(p1_name, p1_cat, p1_man, 18);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
+            //client.getCart().getBasket(store2).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_man, p2_cat), 24, 0));
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Assert.AreEqual(receipts1[0], "false", "managed to buy bamba with age = 17");
+            Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
+        }
+
+
+    }
 }
 

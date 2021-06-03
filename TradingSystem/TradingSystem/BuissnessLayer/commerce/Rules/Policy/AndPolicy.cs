@@ -17,9 +17,9 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
             this.policy2 = pol2;
         }
 
-        public bool isValid(ICollection<Product> products)
+        public bool isValid(ICollection<Product> products, aUser user)
         {
-            return this.policy1.isValid(products) && this.policy2.isValid(products);
+            return this.policy1.isValid(products, user) && this.policy2.isValid(products, user);
         }
     }
 }

@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer;
 using PaymentSystem;
-
-
-
-
-
+using TradingSystem.BuissnessLayer.commerce.Rules;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -24,6 +20,9 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ICollection<Member> managers { get; private set; }
         private Object purchaseLock = new Object();
 
+        private ICollection<iPolicy> discountPolicies;
+        private ICollection<iPolicy> purchasePolicies;
+
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
@@ -35,6 +34,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
+
+            this.discountPolicies = new LinkedList<iPolicy>();
+            this.purchasePolicies = new LinkedList<iPolicy>();
         }
 
         public Store(StoreData storeData)
@@ -171,7 +173,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 // check for amounts validation
                 string policy = checkPolicies(basket);
-                if (policy.Length == 0)
+                if (policy.Length != 0)
                     return new string[] { "false", policy };
                 if (!checkAmounts(products))
                     return new string[] { "false", "not enough items in stock" };
@@ -242,7 +244,12 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         private string checkPolicies(ShoppingBasket basket)
         {
-            return "";
+            bool flag = true;
+
+            foreach (iPolicy policy in this.purchasePolicies)
+                flag &= policy.isValid(basket.products, basket.owner);
+
+            return flag ? "" : "Policy err";
         }
 
         private bool checkAmounts(ICollection<Product> products)
@@ -376,6 +383,12 @@ namespace TradingSystem.BuissnessLayer.commerce
                     if (p.info.Equals(product.info) & p.amount >= product.amount)
                         p.amount -= product.amount;
             }
+        }
+
+        public void addAgePolicy(string name, string category, string man, int age)
+        {
+            iPolicy policy = new BasePolicy(ProductInfo.getProductInfo(name, category, man), (Product p, aUser u) => u.getAge() >= age);
+            this.purchasePolicies.Add(policy);
         }
     }
 }
