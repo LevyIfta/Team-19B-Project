@@ -22,7 +22,7 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         public virtual object todo(PersmissionsTypes func, object[] args)
         {
             if (next == null)
-                return null;
+                return false;
             return next.todo(func, args);
         }
         public void addPermission(aPermission permission)
