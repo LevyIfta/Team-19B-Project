@@ -387,26 +387,26 @@ namespace TradingSystem.BuissnessLayer.commerce
 
 
         //OK
-        public void addAgePolicyByProduct(string name, string category, string man, int age)
+        public void addAgePolicyByProduct(string name, string category, string man, int minAge)
         {
-            iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= age);
+            iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= minAge);
             this.purchasePolicies.Add(policy);
         }
 
-        public void addAgePolicyByCategory(string category, int age)
+        public void addAgePolicyByCategory(string category, int minAge)
         {
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= age);
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= minAge);
             this.purchasePolicies.Add(policy);
         }
 
         //Check system Time restricts
-        public void addTimePolicyByProduct(string name, string category, string man, int hour)
+        public void addDailyPolicyByProduct(string name, string category, string man, int maxHour)
         {
-            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= hour);
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= maxHour);
             this.purchasePolicies.Add(policy);
         }
 
-        public void addTimePolicyByCategory(string category, int hour)
+        public void addDailyPolicyByCategory(string category, int hour)
         {
             iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Hour <= hour);
             this.purchasePolicies.Add(policy);
@@ -422,6 +422,38 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount >= minAmount);
             this.purchasePolicies.Add(policy);
+        }
+
+        public bool addWeeklyTimePolicyByCategory(string category, int minDay, int minHour, int maxDay, int maxHour)
+        {
+            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return false;
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+        public bool addWeeklyTimePolicyByProduct(string name, string category, string man, int minDay, int minHour, int maxDay, int maxHour)
+        {
+            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return false;
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+        public bool addDateTimePolicyByCategory(string category, DateTime minDate, DateTime maxDate)
+        {
+            if (minDate > maxDate) return false;
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (p, u)=>DateTime.Now < minDate | DateTime.Now > maxDate);
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+        public bool addDateTimePolicyByProduct(string name, string category, string man, DateTime minDate, DateTime maxDate)
+        {
+            if (minDate > maxDate) return false;
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (p, u) => DateTime.Now < minDate | DateTime.Now > maxDate);
+            this.purchasePolicies.Add(policy);
+            return true;
         }
 
 
