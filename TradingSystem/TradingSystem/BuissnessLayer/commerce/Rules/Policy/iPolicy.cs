@@ -6,9 +6,22 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
-    interface iPolicy
+    public abstract class iPolicy
     {
-        bool isValid(ICollection<Product> products, aUser user);
+        public List<iPolicy> policies = new List<iPolicy>();
+        public abstract bool isValid(ICollection<Product> products, aUser user);
+
+        public void addPolicy(iPolicy policy)
+        {
+            this.policies.Add(policy);
+        }
+
+        public bool removePolicy()
+        {
+            if (this.policies.Count == 0) return false;
+            this.policies.Remove(this.policies[this.policies.Count - 1]);
+            return true;
+        }
 
     }
 }

@@ -8,18 +8,18 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
     class AndPolicy : iPolicy
     {
-        public iPolicy policy1 { get; set; }
-        public iPolicy policy2 { get; set; }
-
-        public AndPolicy(iPolicy pol1, iPolicy pol2)
+        public AndPolicy()
         {
-            this.policy1 = pol1;
-            this.policy2 = pol2;
+            this.policies = new List<iPolicy>();
         }
 
-        public bool isValid(ICollection<Product> products, aUser user)
+        public override bool isValid(ICollection<Product> products, aUser user)
         {
-            return this.policy1.isValid(products, user) && this.policy2.isValid(products, user);
+            foreach (iPolicy policy in this.policies)
+                if (!policy.isValid(products, user))
+                    return false;
+            // all the policies are valid
+            return true;
         }
     }
 }
