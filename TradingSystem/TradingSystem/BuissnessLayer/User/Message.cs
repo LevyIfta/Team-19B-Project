@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer.DataAccess;
 
 namespace TradingSystem.BuissnessLayer.User
 {
@@ -20,6 +21,11 @@ namespace TradingSystem.BuissnessLayer.User
             this.StoreToSend = StoreToSend;
             this.UserToSend = UserToSend;
             this.Msg = Message;
+        }
+
+        public bool sendMessage(string SenderName, string StoreToSend, string UserToSend, string Message)
+        {
+            return false;
         }
         
     }
