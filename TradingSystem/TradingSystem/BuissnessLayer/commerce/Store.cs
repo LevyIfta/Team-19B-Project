@@ -165,6 +165,8 @@ namespace TradingSystem.BuissnessLayer.commerce
             return price;
         }
 
+        public string executeOfferPurchase(aUser user, Product product, string creditNumber, string validity, string cvv) { return null; }
+
         public string[] executePurchase(ShoppingBasket basket, string creditNumber, string validity, string cvv)
         {
             ICollection<Product> products = basket.products;
@@ -584,6 +586,12 @@ namespace TradingSystem.BuissnessLayer.commerce
                 orPolicy.addPolicy(policy);
 
             return orPolicy;
+        }
+
+        public void offer(OfferRequest request)
+        {
+            // notify the relevant owners/managers
+
         }
 
     }
