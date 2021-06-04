@@ -58,11 +58,11 @@
     <Compile Include="BuissnessLayer\commerce\feedbackSystem.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\AndPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\BasePolicy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\ConditioningPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\iPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\OrPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Stores.cs" />
     <Compile Include="BuissnessLayer\commerce\Immediate.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\Policy\XorPolicy.cs" />
     <Compile Include="BuissnessLayer\Result.cs" />
     <Compile Include="BuissnessLayer\User\Admin.cs" />
     <Compile Include="BuissnessLayer\User\Message.cs" />

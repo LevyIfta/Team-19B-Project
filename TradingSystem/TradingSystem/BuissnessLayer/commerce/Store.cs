@@ -7,6 +7,7 @@ using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer;
 using PaymentSystem;
 using TradingSystem.BuissnessLayer.commerce.Rules;
+using TradingSystem.BuissnessLayer.commerce.Rules.Policy;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -386,7 +387,9 @@ namespace TradingSystem.BuissnessLayer.commerce
         }
 
 
-        //OK
+
+        
+
         public void addAgePolicyByProduct(string name, string category, string man, int minAge)
         {
             iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= minAge);
@@ -398,8 +401,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= minAge);
             this.purchasePolicies.Add(policy);
         }
-
-        //Check system Time restricts
+        
         public void addDailyPolicyByProduct(string name, string category, string man, int maxHour)
         {
             iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= maxHour);
@@ -412,15 +414,27 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.purchasePolicies.Add(policy);
         }
 
-        public void addMaxAmountPolicy(string name, string category, string man, int maxAmount)
+        public void addMaxAmountPolicyByProduct(string name, string category, string man, int maxAmount)
         {
             iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount <= maxAmount);
             this.purchasePolicies.Add(policy);
         }
 
-        public void addMinAmountPolicy(string name, string category, string man, int minAmount)
+        public void addMinAmountPolicyByProduct(string name, string category, string man, int minAmount)
         {
             iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount >= minAmount);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addMaxAmountPolicyByCategory(string category, int maxAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => p.amount <= maxAmount);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addMinAmountPolicyByCategory(string category, int minAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => p.amount >= minAmount);
             this.purchasePolicies.Add(policy);
         }
 
@@ -456,7 +470,121 @@ namespace TradingSystem.BuissnessLayer.commerce
             return true;
         }
 
+        public void addCondetioningPolicyByProductAmount(string name, string category, string man, int minAmount, iPolicy condition) {
+            iPolicy policy = new ConditioningPolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)) && p.amount >= minAmount);
 
+            // add the condition(s)
+            policy.addPolicy(condition);
+
+            this.purchasePolicies.Add(policy);
+        }
+
+
+
+        public iPolicy generateAgePolicyByProduct(string name, string category, string man, int minAge)
+        {
+            iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= minAge);
+            return policy;
+        }
+
+        public iPolicy generateAgePolicyByCategory(string category, int minAge)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= minAge);
+            return policy;
+        }
+
+        public iPolicy generateDailyPolicyByProduct(string name, string category, string man, int maxHour)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= maxHour);
+            return policy;
+        }
+
+        public iPolicy generateDailyPolicyByCategory(string category, int hour)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Hour <= hour);
+            return policy;
+        }
+
+        public iPolicy generateMaxAmountPolicyByProduct(string name, string category, string man, int maxAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount <= maxAmount);
+            return policy;
+        }
+
+        public iPolicy generateMinAmountPolicyByProduct(string name, string category, string man, int minAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount >= minAmount);
+            return policy;
+        }
+
+        public iPolicy generateMaxAmountPolicyByCategory(string category, int maxAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => p.amount <= maxAmount);
+            return policy;
+        }
+
+        public iPolicy generateMinAmountPolicyByCategory(string category, int minAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => p.amount >= minAmount);
+            return policy;
+        }
+
+        public iPolicy generateWeeklyTimePolicyByCategory(string category, int minDay, int minHour, int maxDay, int maxHour)
+        {
+            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return null;
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
+            this.purchasePolicies.Add(policy);
+            return policy;
+        }
+
+        public iPolicy generateWeeklyTimePolicyByProduct(string name, string category, string man, int minDay, int minHour, int maxDay, int maxHour)
+        {
+            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return null;
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
+            this.purchasePolicies.Add(policy);
+            return policy;
+        }
+
+        public iPolicy generateDateTimePolicyByCategory(string category, DateTime minDate, DateTime maxDate)
+        {
+            if (minDate > maxDate) return null;
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (p, u) => DateTime.Now < minDate | DateTime.Now > maxDate);
+            this.purchasePolicies.Add(policy);
+            return policy;
+        }
+
+        public iPolicy generateDateTimePolicyByProduct(string name, string category, string man, DateTime minDate, DateTime maxDate)
+        {
+            if (minDate > maxDate) return null;
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (p, u) => DateTime.Now < minDate | DateTime.Now > maxDate);
+            this.purchasePolicies.Add(policy);
+            return policy;
+        }
+
+
+        
+        public iPolicy generateAndPolicy(ICollection<iPolicy> policies) {
+            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
+
+            iPolicy andPolicy = new AndPolicy();
+
+            foreach (iPolicy policy in policies)
+                andPolicy.addPolicy(policy);
+
+            return andPolicy;
+        }
+
+        public iPolicy generateOrPolicy(ICollection<iPolicy> policies)
+        {
+            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
+
+            iPolicy orPolicy = new OrPolicy();
+
+            foreach (iPolicy policy in policies)
+                orPolicy.addPolicy(policy);
+
+            return orPolicy;
+        }
 
     }
 }

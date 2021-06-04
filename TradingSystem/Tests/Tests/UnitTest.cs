@@ -1343,8 +1343,29 @@ namespace Tests
             Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
         }
 
+        [TestMethod]
+        public void ProductDailyPolicyGood() { }
 
+        [TestMethod]
+        public void ProductDailyPolicyBad() { }
 
+        [TestMethod]
+        public void CategoryDailyPolicyGood() { }
+
+        [TestMethod]
+        public void CategoryDailyPolicyBad() { }
+
+        [TestMethod]
+        public void ProductMaxAmountPolicyGood() { }
+
+        [TestMethod]
+        public void ProductMaxAmountPolicyBad() { }
+
+        [TestMethod]
+        public void CategoryMaxAmountPolicyGood() { }
+
+        [TestMethod]
+        public void CategoryMaxAmountPolicyBad() { }
 
     }
 }
