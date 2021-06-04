@@ -106,7 +106,7 @@ namespace TradingSystem.BuissnessLayer
             {
                 string[] ans = basket.store.executePurchase(basket, creditNumber, validity, cvv);
                 if (ans == null || ans[0].Equals("false"))
-                    return null;
+                    return ans;
                 Receipt receipt = GetReceiptNow(ans[1]);
                 list.Add(receipt);
             }

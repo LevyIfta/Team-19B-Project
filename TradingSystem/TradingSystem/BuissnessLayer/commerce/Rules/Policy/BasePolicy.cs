@@ -9,27 +9,29 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
     class BasePolicy : iPolicy
     {
 
-        public ProductInfo subject { get; set; }
-        public int amount { get; set; }
-        public Func<int, int, bool> predicate { get; set; }
+        //public ProductInfo subject { get; set; }
+        //public int amount { get; set; }
+        public Func<Product, aUser, bool> predicate { get; set; }
+        public Func<Product, bool> isRelevant;
         public bool Default { get; set; }
-
-        public BasePolicy(ProductInfo subject, int amount, Func<int, int, bool> pred)
+        
+        public BasePolicy(Func<Product, bool> isRelevant, Func<Product, aUser, bool> pred)
         {
-            this.subject = subject;
-            this.amount = amount;
+            this.isRelevant = isRelevant;
+            //this.amount = amount;
             this.predicate = pred;
             this.Default = true;
         }
 
-        public BasePolicy(ProductInfo subject, int amount, Func<int, int, bool> pred, bool isRequired)
+        public BasePolicy(Func<Product, bool> isRelevant, Func<Product, aUser, bool> pred, bool isRequired)
         {
-            this.subject = subject;
-            this.amount = amount;
+            this.isRelevant = isRelevant;
+            //this.amount = amount;
             this.predicate = pred;
             this.Default = !isRequired;
         }
 
+        /*
         public static bool LargerThan(int a, int b )
         {
             return a > b;
@@ -47,14 +49,14 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
         {
             return a <= b;
         }
+        */
 
-
-        public bool isValid(ICollection<Product> products)
+        public bool isValid(ICollection<Product> products, aUser user)
         {
             foreach (Product item in products)
             {
-                if (item.info.Equals(subject))
-                    return predicate(item.amount, this.amount);
+                if (this.isRelevant(item))
+                    return predicate(item, user);
             }
             return this.Default;
         }

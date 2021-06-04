@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer;
 using PaymentSystem;
-
-
-
-
-
+using TradingSystem.BuissnessLayer.commerce.Rules;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -24,6 +20,9 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ICollection<Member> managers { get; private set; }
         private Object purchaseLock = new Object();
 
+        private ICollection<iPolicy> discountPolicies;
+        private ICollection<iPolicy> purchasePolicies;
+
         public Member founder { get; private set; }
 
         public Store(string name, Member founder)
@@ -35,6 +34,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
+
+            this.discountPolicies = new LinkedList<iPolicy>();
+            this.purchasePolicies = new LinkedList<iPolicy>();
         }
 
         public Store(StoreData storeData)
@@ -171,7 +173,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 // check for amounts validation
                 string policy = checkPolicies(basket);
-                if (policy.Length == 0)
+                if (policy.Length != 0)
                     return new string[] { "false", policy };
                 if (!checkAmounts(products))
                     return new string[] { "false", "not enough items in stock" };
@@ -242,7 +244,12 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         private string checkPolicies(ShoppingBasket basket)
         {
-            return "";
+            bool flag = true;
+
+            foreach (iPolicy policy in this.purchasePolicies)
+                flag &= policy.isValid(basket.products, basket.owner);
+
+            return flag ? "" : "Policy err";
         }
 
         private bool checkAmounts(ICollection<Product> products)
@@ -377,5 +384,79 @@ namespace TradingSystem.BuissnessLayer.commerce
                         p.amount -= product.amount;
             }
         }
+
+
+        //OK
+        public void addAgePolicyByProduct(string name, string category, string man, int minAge)
+        {
+            iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= minAge);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addAgePolicyByCategory(string category, int minAge)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= minAge);
+            this.purchasePolicies.Add(policy);
+        }
+
+        //Check system Time restricts
+        public void addDailyPolicyByProduct(string name, string category, string man, int maxHour)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= maxHour);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addDailyPolicyByCategory(string category, int hour)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Hour <= hour);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addMaxAmountPolicy(string name, string category, string man, int maxAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount <= maxAmount);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addMinAmountPolicy(string name, string category, string man, int minAmount)
+        {
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount >= minAmount);
+            this.purchasePolicies.Add(policy);
+        }
+
+        public bool addWeeklyTimePolicyByCategory(string category, int minDay, int minHour, int maxDay, int maxHour)
+        {
+            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return false;
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+        public bool addWeeklyTimePolicyByProduct(string name, string category, string man, int minDay, int minHour, int maxDay, int maxHour)
+        {
+            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return false;
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+        public bool addDateTimePolicyByCategory(string category, DateTime minDate, DateTime maxDate)
+        {
+            if (minDate > maxDate) return false;
+            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (p, u)=>DateTime.Now < minDate | DateTime.Now > maxDate);
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+        public bool addDateTimePolicyByProduct(string name, string category, string man, DateTime minDate, DateTime maxDate)
+        {
+            if (minDate > maxDate) return false;
+            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (p, u) => DateTime.Now < minDate | DateTime.Now > maxDate);
+            this.purchasePolicies.Add(policy);
+            return true;
+        }
+
+
+
     }
 }

@@ -52,7 +52,7 @@ namespace ClientWeb
             }
             if (insertValid)
             {
-                bool bAns = controler.Login(user.username, user.password);
+                bool bAns = controler.Login(user.username, user.password)[0].Equals("true");
                 string[] ans = { "false", user.username };
                 if (bAns)
                 {
