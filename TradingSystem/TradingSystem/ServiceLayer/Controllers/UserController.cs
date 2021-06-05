@@ -42,8 +42,8 @@ namespace TradingSystem.ServiceLayer
             
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
-            alarmThread.Abort();
-            alarmThread= user.estblishAlarmHandler(olduser.getAlarmParams(),  olduser.getAlarmLock(), alarmHandler);
+            //alarmThread.Abort();
+            //alarmThread= user.estblishAlarmHandler(olduser.getAlarmParams(),  olduser.getAlarmLock(), alarmHandler);
             return ans;
 
         }
@@ -58,8 +58,8 @@ namespace TradingSystem.ServiceLayer
                 {
                     aUser olduser = user;
                     user = new Guest();
-                    alarmThread.Abort();
-                    alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
+                    //alarmThread.Abort();
+                    //alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
 
                     return true;
                 }
