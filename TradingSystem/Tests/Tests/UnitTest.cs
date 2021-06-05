@@ -7,6 +7,8 @@ using System.Linq;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.ServiceLayer;
 using TradingSystem.BuissnessLayer.User.Permmisions;
+using System.Threading;
+using System;
 
 namespace Tests
 {
@@ -157,10 +159,10 @@ namespace Tests
         public static void classInit(TestContext context)
         {
             string username = "ShopOwner11", pass = "123xX321";
-            bool ownerReg = UserController.register(username, pass)[0].Equals("true");
+            bool ownerReg = UserServices.register(username, pass)[0].Equals("true");
             // create 2 stores
             // login
-            UserController.login(username, pass);
+            UserServices.login(username, pass);
             Member owner = (Member)UserServices.getUser(username);
             // init names
             store1Name = "store1_";
@@ -171,32 +173,7 @@ namespace Tests
             // init product infos
             product1 = ProductInfo.getProductInfo("Batman Costume", "clothing", "FairytaleLand");
             product2 = ProductInfo.getProductInfo("Wireless keyboard", "computer accessories", "Logitech");
-            // add some produts
-            /*
-
-            ProductInfo newInfo1 = ProductInfo.getProductInfo("item1", "cat", "man");
-
-            ProductInfo newInfo2 = ProductInfo.getProductInfo("item2", "cat2", "man2");
-
-
-            prod1 = newInfo1;
-            prod2 = newInfo2;
-
-
-            Product items1 = new Product(prod1, 2, 5), items2 = new Product(prod2, 2, 5);
-
-
-            ShoppingBasket basket = new ShoppingBasket(bridge.getStore("Store1"), (Member)bridge.getUser());
-            basket.products.Add(items1);
-            basket.products.Add(items2);
-
-            bridge.addInventory(basket);
-            
-            */
-
         }
-
-
 
         [TestMethod]
         public void createStoreTestGood()
@@ -232,7 +209,7 @@ namespace Tests
         {
             string storeOwnerName = "StoreOwner_1", storeOwnerPass = "123Xx456";
             string storeName = "searchStoreTestGood_store1";
-            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
+            bool ownerReg = UserServices.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
             UserServices.login(storeOwnerName, storeOwnerPass);
             aUser storeOwner = UserServices.getUser(storeOwnerName);
             Stores.addStore(storeName, (Member)storeOwner);
@@ -240,15 +217,15 @@ namespace Tests
 
             Assert.IsNotNull(store, "could not find an existing store: " + storeName);
             Assert.IsNull(Stores.searchStore("this store does not exist"));
-            UserController.logout();
+            //UserController.logout();
         }
 
         [TestMethod]
         public void parallelPurchase()
         {
             // register twice and login from two different users
-            bool user1reg = UserController.register("AliKB", "123xX456")[0].Equals("true");
-            bool user2reg = UserController.register("Bader", "456xX789")[0].Equals("true");
+            bool user1reg = UserServices.register("AliKB", "123xX456")[0].Equals("true");
+            bool user2reg = UserServices.register("Bader", "456xX789")[0].Equals("true");
             // login
             UserServices.login("AliKB", "123xX456");
             aUser user1 = UserServices.getUser("AliKB");
@@ -270,27 +247,33 @@ namespace Tests
             // purchase
             //string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
             //string[] receipts2 = user2.purchase("111111111111", "11/22", "123");
-            /*
+
             ICollection<Receipt> receipts1 = new LinkedList<Receipt>();
             ICollection<Receipt> receipts2 = null;
+
+            string[] receipts1String = null, receipts2String = null;
             bool flag = true;
 
             Thread purchase1 = new Thread(() =>
             {
                 Thread.Sleep(2000);
-                receipts1 = user1.purchase(new CreditCard());
+                receipts1String = user1.purchase("111111111111", "11/22", "123");
             }),
                 purchase2 = new Thread(() =>
                 {
                     Thread.Sleep(2000);
-                    receipts2 = user2.purchase(new CreditCard());
+                    receipts2String = user2.purchase("111111111111", "11/22", "123");
                 }),
                 assertThread = new Thread(() =>
                 {
                     Thread.Sleep(3000);
+                    // convert the receipts string arrays to receipts collections
+                    receipts1 = receipts1String[0] == "false" ? null : convertReceiptsArray(receipts1String);
+                    receipts2 = receipts2String[0] == "false" ? null : convertReceiptsArray(receipts2String);
+
                     flag &= (receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null));
 
-                    // check for amount
+                    // check for amount in the store
                     flag &= aliShop.searchProduct("Bamba", "Osem").amount == 8;
                 });
 
@@ -301,7 +284,34 @@ namespace Tests
             Thread.Sleep(3500);
             Assert.IsTrue(flag);
 
-            UserServices.logout("AliKB");*/
+            UserServices.logout("AliKB");
+        }
+
+        private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
+        {
+            ICollection<Receipt> receipts = new LinkedList<Receipt>();
+            // receiptsString[0] contains the answer
+            for (int i = 1; i < receiptsString.Length; i++)
+                receipts.Add(convertReceipt(receiptsString[i]));
+
+            return receipts;
+        }
+
+        private Receipt convertReceipt(string receiptString)
+        {
+            Receipt receipt = new Receipt();
+
+            string[] splitReceipt = receiptString.Split('$');
+            // username&storename$price$date$receiptId$<products>
+            receipt.username = splitReceipt[0];
+            receipt.store = Stores.searchStore(splitReceipt[1]);
+            receipt.price = double.Parse(splitReceipt[2]);
+            receipt.date = Convert.ToDateTime(splitReceipt[3]);
+            receipt.receiptId = int.Parse(splitReceipt[4]);
+            // the products - todo
+
+
+            return receipt;
         }
 
         [TestMethod]
@@ -311,7 +321,7 @@ namespace Tests
             string username1 = "StoreOwner1";
             string pass1 = "123xX456";
             // register and login
-            bool ownerReg = UserController.register(username1, pass1)[0].Equals("true");
+            bool ownerReg = UserServices.register(username1, pass1)[0].Equals("true");
             UserServices.login(username1, pass1);
             aUser storeOwner = UserServices.getUser(username1);
             // establish a new store
@@ -328,7 +338,7 @@ namespace Tests
             string username = "AliKSB";
             string pass = "123xX456";
 
-            bool user1reg = UserController.register(username, pass)[0].Equals("true");
+            bool user1reg = UserServices.register(username, pass)[0].Equals("true");
             UserServices.login(username, pass);
             aUser user1 = UserServices.getUser(username);
             // try to buy 12 bamba - less that overall
@@ -345,7 +355,7 @@ namespace Tests
         {
             // register
             string ownerUsername = "AliBB", ownerPass = "123Xx123";
-            bool reg = UserController.register(ownerUsername, ownerPass)[0].Equals("true");
+            bool reg = UserServices.register(ownerUsername, ownerPass)[0].Equals("true");
             string storeName = "Ali Shop3";
 
             UserServices.login(ownerUsername, ownerPass);
@@ -364,7 +374,7 @@ namespace Tests
             string username = "AliKSBa";
             string pass = "123xX456";
 
-            bool user1reg = UserController.register(username, pass)[0].Equals("true");
+            bool user1reg = UserServices.register(username, pass)[0].Equals("true");
             UserServices.login(username, pass);
             aUser user1 = UserServices.getUser(username);
             // try to buy 22 bamba - more that overall
@@ -374,7 +384,7 @@ namespace Tests
             // check for the amounts
             Assert.AreEqual(aliShop.searchProduct("Bamba", "Osem").amount, 20);
             Assert.AreNotEqual(user1.getBasket(aliShop).products.Count, 0);
-            Assert.IsNull(receipts1);
+            Assert.AreEqual(receipts1[0], "false", "The receipt tells that the purchase had done.");
         }
 
         [TestMethod]
@@ -688,7 +698,6 @@ namespace Tests
         string username1 = "AliKB", username2 = "Bader", pass1 = "123xX456", pass2 = "456xX789";
         string storeName;
         private static ProductInfo prod1, prod2;
-        private static bool isInit = false;
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
@@ -723,8 +732,7 @@ namespace Tests
             bridge.purchase("Credit");
 
     */
-
-            isInit = true;
+    
         }
 
         [TestMethod]
@@ -733,8 +741,8 @@ namespace Tests
             // this fuction initializes all the needed arguments 
             // and runs all tests
             // register twice and login from two different users
-            bool user1reg = UserController.register(username1, pass1)[0].Equals("true");
-            bool user2reg = UserController.register(username2, pass2)[0].Equals("true");
+            bool user1reg = UserServices.register(username1, pass1, 25, "Male", "Be'er Sheva")[0].Equals("true");
+            bool user2reg = UserServices.register(username2, pass2, 30, "Female", "Tel Aviv")[0].Equals("true");
             // login
             UserServices.login(username1, pass1);
             user1 = UserServices.getUser(username1);
@@ -757,9 +765,10 @@ namespace Tests
             string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
             string[] receipts2 = user2.purchase("111111111111", "11/22", "123");
             // test 
-            //userReciptTestGood();
-            //userReciptTestBad();
-            //storeReciptsTest();
+            userReciptTestGood();
+            userReciptTestBad();
+            storeReciptsTest();
+            adminReceiptsGood();
         }
 
 
@@ -799,7 +808,7 @@ namespace Tests
             }
 
             Assert.IsTrue(user1HasReceipt);
-            //Assert.IsTrue(user2HasReceipt);
+            Assert.IsTrue(user2HasReceipt);
         }
 
 
@@ -859,22 +868,6 @@ namespace Tests
             Assert.IsTrue(user2HasReceipt);
         }
 
-        /*
-        public void storeReciptTestBad()
-        {
-            bridge.logout();
-            bridge.login("recipt2", "Recipt2");
-
-
-            Receipt reciept = bridge.GetRecieptByUser("StoreRecipt2", "recipt1", new System.DateTime());
-            Assert.IsNull(reciept, "managed to get recpit from wrong store");
-            //clean up
-            bridge.logout();
-            bridge.login("recipt1", "Recipt1");
-
-        }
-        */
-        [TestMethod]
         public void adminReceiptsGood()
         {
             // checks if the admin could fetch receipts
@@ -942,6 +935,33 @@ namespace Tests
 
             Assert.IsTrue(hasFirst);
             Assert.IsTrue(hasSecond); 
+        }
+
+        private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
+        {
+            ICollection<Receipt> receipts = new LinkedList<Receipt>();
+            // receiptsString[0] contains the answer
+            for (int i = 1; i < receiptsString.Length; i++)
+                receipts.Add(convertReceipt(receiptsString[i]));
+
+            return receipts;
+        }
+
+        private Receipt convertReceipt(string receiptString)
+        {
+            Receipt receipt = new Receipt();
+
+            string[] splitReceipt = receiptString.Split('$');
+            // username&storename$price$date$receiptId$<products>
+            receipt.username = splitReceipt[0];
+            receipt.store = Stores.searchStore(splitReceipt[1]);
+            receipt.price = double.Parse(splitReceipt[2]);
+            receipt.date = Convert.ToDateTime(splitReceipt[3]);
+            receipt.receiptId = int.Parse(splitReceipt[4]);
+            // the products - todo
+
+
+            return receipt;
         }
     }
 
