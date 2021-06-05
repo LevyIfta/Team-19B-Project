@@ -501,8 +501,8 @@ namespace Tests
         public void parallelPurchase()
         {
             // register twice and login from two different users
-            bool user1reg = UserController.register("AliKB", "123xX456")[0].Equals("true");
-            bool user2reg = UserController.register("Bader", "456xX789")[0].Equals("true");
+            bool user1reg = UserController.register("AliKB", "123xX456", 12, "f", "some address")[0].Equals("true");
+            bool user2reg = UserController.register("Bader", "456xX789", 12, "f", "some address")[0].Equals("true");
             // login
             UserServices.login("AliKB", "123xX456");
             aUser user1 = UserServices.getUser("AliKB");
@@ -565,7 +565,7 @@ namespace Tests
             string username1 = "StoreOwner1";
             string pass1 = "123xX456";
             // register and login
-            bool ownerReg = UserController.register(username1, pass1)[0].Equals("true");
+            bool ownerReg = UserController.register(username1, pass1, 12, "f", "some address")[0].Equals("true");
             UserServices.login(username1, pass1);
             aUser storeOwner = UserServices.getUser(username1);
             // establish a new store
@@ -582,7 +582,7 @@ namespace Tests
             string username = "AliKSB";
             string pass = "123xX456";
 
-            bool user1reg = UserController.register(username, pass)[0].Equals("true");
+            bool user1reg = UserController.register(username, pass, 12, "f", "some address")[0].Equals("true");
             UserServices.login(username, pass);
             aUser user1 = UserServices.getUser(username);
             // try to buy 12 bamba - less that overall
@@ -599,7 +599,7 @@ namespace Tests
         {
             // register
             string ownerUsername = "AliBB", ownerPass = "123Xx123";
-            bool reg = UserController.register(ownerUsername, ownerPass)[0].Equals("true");
+            bool reg = UserController.register(ownerUsername, ownerPass, 12, "f", "some address")[0].Equals("true");
             string storeName = "Ali Shop3";
 
             UserServices.login(ownerUsername, ownerPass);
@@ -618,7 +618,7 @@ namespace Tests
             string username = "AliKSBa";
             string pass = "123xX456";
 
-            bool user1reg = UserController.register(username, pass)[0].Equals("true");
+            bool user1reg = UserController.register(username, pass, 12, "f", "some address")[0].Equals("true");
             UserServices.login(username, pass);
             aUser user1 = UserServices.getUser(username);
             // try to buy 22 bamba - more that overall
@@ -726,8 +726,8 @@ namespace Tests
             string ownerUsername = "ownerA1", ownerPass = "123Xx123";
             string newUsername = "noOne", newPass = "123Xx321";
             // register the users
-            UserServices.register(ownerUsername, ownerPass);
-            UserServices.register(newUsername, newPass);
+            UserServices.register(ownerUsername, ownerPass, 12, "f", "some address");
+            UserServices.register(newUsername, newPass, 12, "f", "some address");
 
             string storeName = "Ali Shop444";
 
@@ -756,9 +756,9 @@ namespace Tests
             string buyerUsername = "noOne2", newPass = "123Xx321";
             string FOUsername = "FBObserve", FOPass = "123Xx123"; // FO: feedback observer
             // register the users
-            UserServices.register(ownerUsername, ownerPass);
-            UserServices.register(buyerUsername, newPass);
-            UserServices.register(FOUsername, FOPass);
+            UserServices.register(ownerUsername, ownerPass, 12, "f", "some address");
+            UserServices.register(buyerUsername, newPass, 12, "f", "some address");
+            UserServices.register(FOUsername, FOPass, 12, "f", "some address");
 
             string storeName = "Ali Shop121";
 
@@ -807,7 +807,7 @@ namespace Tests
         public void purchasePaymentSystemBad()
         {
             string username = "user1", pass = "user1", storename = "store1", prodName = "bamba", prodMan = "osem";
-            UserServices.register(username, pass);
+            UserServices.register(username, pass, 12, "f", "some address");
             Member user1 = (Member)UserServices.getUser(username);
             user1.EstablishStore(storename);
             Store store1 = Stores.searchStore(storename);
@@ -822,7 +822,7 @@ namespace Tests
         public void purchaseSupplySystemBad()
         {
             string username = "user1", pass = "user1", storename = "store1", prodName = "bamba", prodMan = "osem";
-            UserServices.register(username, pass);
+            UserServices.register(username, pass, 12, "f", "some address");
             Member user1 = (Member)UserServices.getUser(username);
             user1.EstablishStore(storename);
             Store store1 = Stores.searchStore(storename);
@@ -1322,15 +1322,15 @@ namespace Tests
             bool wrongStore = owner2.addNewProduct(storeName1, p1.name, price1, amount1, p1.category, p1.manufacturer);
             Assert.IsFalse(wrongStore);//did not establish this store, and is not at any managment position. has no permissions at all.
 
-            //owner2.removePermission(storeName2, null);//removes all permissions from the user
-            //bool noPermission = owner2.addNewProduct(storeName2, p2.name, price2, amount2, p2.category, p2.manufacturer);
-            //Assert.IsFalse(noPermission);//user has no "addNewProduct" Permission.
+            owner2.removePermission(storeName2, null);//removes all permissions from the user
+            bool noPermission = owner2.addNewProduct(storeName2, p2.name, price2, amount2, p2.category, p2.manufacturer);
+            Assert.IsFalse(noPermission);//user has no "addNewProduct" Permission.
 
-            //Member owner1 = (Member)UserServices.getUser(ownerName1);
-            //foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
-            //{
-                //owner2.addPermission(aPermission.who(p, storeName2, null));//return all permissions to storeOwner
-            //}
+            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
+            {
+                owner2.addPermission(aPermission.who(p, storeName2, null));//return all permissions to storeOwner
+            }
 
             UserServices.logout(ownerName2);
         }
