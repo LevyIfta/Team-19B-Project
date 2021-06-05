@@ -22,7 +22,7 @@ namespace TradingSystem.BuissnessLayer
         }
         // menu functions
         // users
-        public static aUser getAdmin() 
+        public static aUser getAdmin()
         {
             return getUser("admin");
         }
