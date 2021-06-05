@@ -13,6 +13,10 @@ namespace Tests
     [TestClass]
     public class UserAccessUnitTest
     {
+        private Member owner;
+        private Member user1;
+        private Member user2;
+
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
@@ -21,6 +25,27 @@ namespace Tests
             bridge.register("user1", "Password1");
             bridge.register("user2", "Password2");
             */
+            
+        }
+
+        [TestInitialize]
+        public void testInit()
+        {
+            string username0 = "onwer", pass0 = "owner1";
+            string username1 = "manager1", pass1 = "manager1";
+            string username2 = "manager2", pass2 = "manager2";
+            UserServices.register(username0, pass0);
+            UserServices.register(username1, pass1);
+            UserServices.register(username2, pass2);
+            Member owner = (Member)UserServices.getUser(username0);
+            Member user1 = (Member)UserServices.getUser(username1);
+            Member user2 = (Member)UserServices.getUser(username2);
+        }
+
+        [TestCleanup]
+        public void testClean()
+        {
+
         }
 
         [TestMethod]
@@ -72,7 +97,6 @@ namespace Tests
             Assert.IsTrue(u5[0].Equals("false"), "managed to login with fake username");
             UserController.logout();
         }
-
 
         [TestMethod]
         public void registerTestGood()
@@ -139,11 +163,244 @@ namespace Tests
         }
 
         [TestMethod]
-        public void adminTestBad()
+        public void establishStoreTestGood()
         {
-            string username = "admin", pass = "Admin1";
-            string[] user = UserServices.login(username, pass);
+            string storename1 = "store1", storename2 = "store2";
+            Assert.IsTrue(owner.EstablishStore(storename1));
+            Assert.IsNotNull(StoreController.searchStore(storename1));
+            SLstore store = StoreController.searchStore(storename1);
+            Assert.IsTrue(store.founderName.Equals(owner.userName));
+            Assert.IsFalse(owner.EstablishStore(storename1));
+            Assert.IsTrue(owner.EstablishStore(storename2));
         }
+
+        [TestMethod]
+        public void establishStoreTestBad()
+        {
+            string storename1 = "store1", storename2 = "store2";
+            owner.EstablishStore(storename1);
+            Assert.IsFalse(owner.EstablishStore(storename1));
+            Assert.IsFalse(user1.EstablishStore(storename1));
+            Assert.IsFalse(UserServices.EstablishStore("notRealName", storename2));
+        }
+
+        [TestMethod]
+        public void editManagerPermissionsTestGood()
+        {
+            string storename="store1";
+            owner.EstablishStore(storename);
+            owner.hireNewStoreManager(storename, user1.userName);
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            permissionList.Add(PersmissionsTypes.EditProduct);
+            Assert.IsTrue(owner.editManagerPermissions(storename, user1.userName, permissionList));
+            Assert.IsTrue(user1.addNewProduct(storename, "bamba", 5.9, 5, "snacks", "osem"));
+            Assert.IsTrue(user1.editProduct(storename, "bamba", 5.5, "osem"));
+        }
+
+        [TestMethod]
+        public void editManagerPermissionsTestBad1()
+        {//edit permissions of unhired member
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            permissionList.Add(PersmissionsTypes.EditProduct);
+            Assert.IsFalse(owner.editManagerPermissions(storename, user1.userName, permissionList));
+        }
+
+        [TestMethod]
+        public void editManagerPermissionsTestBad2()
+        {//edit permission of manager hired by different owner
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            Stores.searchStore(storename).addManager(user1);
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            permissionList.Add(PersmissionsTypes.EditProduct);
+            Assert.IsFalse(owner.editManagerPermissions(storename, user1.userName, permissionList));
+        }
+
+        [TestMethod]
+        public void editManagerPermissionsTestBad3()
+        {//edit permissions of manager in different store
+            string storename = "store1", wrongstore = "store2";
+            owner.EstablishStore(storename);
+            owner.hireNewStoreManager(storename, user1.userName);
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            permissionList.Add(PersmissionsTypes.EditProduct);
+            Assert.IsFalse(owner.editManagerPermissions(wrongstore, user1.userName, permissionList));
+        }
+
+        [TestMethod]
+        public void ownerGetInfoEmployeesTestGood()
+        {
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            owner.hireNewStoreManager(storename, user1.userName);
+            Stores.searchStore(storename).addManager(user2);
+            Assert.IsTrue(owner.getInfoEmployees(storename).Contains(user1));
+            Assert.IsTrue(owner.getInfoEmployees(storename).Contains(user2));
+            Assert.IsTrue(owner.getInfoEmployees(storename).Contains(owner));
+        }
+
+        [TestMethod]
+        public void ownerGetInfoEmployeesTestBad()
+        {
+            string storename = "store1", wrongstore = "store2";
+            owner.EstablishStore(storename);
+            owner.hireNewStoreManager(storename, user1.userName);
+            Assert.IsFalse(owner.getInfoEmployees(wrongstore).Contains(user1));
+            Assert.IsNull(user1.getInfoEmployees(storename));
+        }
+
+        [TestMethod]
+        public void hireNewStoreOwnerTestGood()
+        {
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            permissionList.Add(PersmissionsTypes.HireNewStoreManager);
+            owner.hireNewStoreOwner(storename, user1.userName, permissionList);
+            Assert.IsTrue(user1.GetPermissions(storename).Contains(PersmissionsTypes.AddProduct));
+            Assert.IsTrue(user1.hireNewStoreManager(storename, user2.userName));
+        }
+
+        [TestMethod]
+        public void hireNewStoreOwnerTestBad()
+        {
+            string storename = "store1", wroongstore = "store2";
+            owner.EstablishStore(storename);
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            permissionList.Add(PersmissionsTypes.HireNewStoreManager);
+            Assert.IsFalse(owner.hireNewStoreOwner(wroongstore, user1.userName, permissionList));
+            owner.hireNewStoreOwner(storename, user1.userName, permissionList);
+            Assert.IsFalse(user1.GetPermissions(storename).Contains(PersmissionsTypes.RemoveProduct));
+        }
+
+        [TestMethod]
+        public void removeManagerTestGood()
+        {
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            owner.hireNewStoreManager(storename, user1.userName);
+            List<string> permissionList = new List<string>();
+            permissionList.Add("AddProduct");
+            UserController.editManagerPermissions(owner.userName, storename, user1.userName, permissionList);
+            Assert.IsTrue(owner.removeManager(storename, user1.userName));
+            Assert.IsTrue(user1.GetAllPermissions().Count == 0);
+            Assert.IsFalse(owner.getInfoEmployees(storename).Contains(user1));
+        }
+
+        [TestMethod]
+        public void removeManagerTestBad1()
+        {//remove manager you didnt assign
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            Stores.searchStore(storename).addManager(user1);
+            Assert.IsFalse(owner.removeManager(storename, user1.userName));
+        }
+
+        [TestMethod]
+        public void removeManagerTestBad2()
+        {//remove non-manager
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            Assert.IsFalse(owner.removeManager(storename, user1.userName));
+            owner.hireNewStoreManager(storename, user1.userName);
+            owner.removeManager(storename, user1.userName);
+            Assert.IsFalse(owner.removeManager(storename, user1.userName));
+        }
+
+        [TestMethod]
+        public void removeManagerTestBad3()
+        {//remove manager from wrong store
+            string storename = "store1", wrongstore = "store2";
+            owner.EstablishStore(storename);
+            owner.hireNewStoreManager(storename, user1.userName);
+            Assert.IsFalse(owner.removeManager(wrongstore, user1.userName));
+        }
+
+        [TestMethod]
+        public void removeOwnerTestGood()
+        {
+            string storename = "store1";   
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            owner.EstablishStore(storename);
+            owner.hireNewStoreOwner(storename, user1.userName, permissionList);
+            Assert.IsTrue(owner.removeOwner(storename, user1.userName));
+            Assert.IsTrue(user1.GetAllPermissions().Count == 0);
+            Assert.IsFalse(Stores.searchStore(storename).isOwner(user1.userName));
+        }
+
+        [TestMethod]
+        public void removeOwnerTestBad1()
+        {//remove owner you didn't assign
+            string storename = "store1";
+            owner.EstablishStore(storename);
+            Stores.searchStore(storename).addOwner(user1);
+            Assert.IsFalse(owner.removeOwner(storename, user1.userName));
+        }
+
+        [TestMethod]
+        public void removeOwnerTestBad2()
+        {//remove non-manager
+            string storename = "store1";
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            owner.EstablishStore(storename);
+            Assert.IsFalse(owner.removeOwner(storename, user1.userName));
+            owner.hireNewStoreOwner(storename, user1.userName, permissionList);
+            owner.removeOwner(storename, user1.userName);
+            Assert.IsFalse(owner.removeOwner(storename, user1.userName));
+        }
+
+        [TestMethod]
+        public void removeOwnerTestBad3()
+        {//remove manager from wrong store
+            string storename = "store1", wrongstore = "store2";
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.AddProduct);
+            owner.EstablishStore(storename);
+            owner.hireNewStoreOwner(storename, user1.userName, permissionList);
+            Assert.IsFalse(owner.removeManager(wrongstore, user1.userName));
+        }
+
+        [TestMethod]
+        public void removeOwnerTestDeep()
+        {
+            string storename = "store1";
+            List<PersmissionsTypes> permissionList = new List<PersmissionsTypes>();
+            permissionList.Add(PersmissionsTypes.HireNewStoreManager);
+            owner.EstablishStore(storename);
+            owner.hireNewStoreOwner(storename, user1.userName, permissionList);
+            user1.hireNewStoreManager(storename, user2.userName);
+            Assert.IsTrue(owner.removeOwner(storename, user1.userName));
+            Assert.IsFalse(owner.getInfoEmployees(storename).Contains(user1));
+            Assert.IsFalse(Stores.searchStore(storename).isOwner(user1.userName));
+            Assert.IsFalse(owner.getInfoEmployees(storename).Contains(user2));
+            Assert.IsFalse(Stores.searchStore(storename).isManager(user2.userName));
+        }
+
+        [TestMethod]
+        public void noPermissionTest()
+        {
+            string storename = "store1", productName = "bamba", productManuf = "osem";
+            owner.EstablishStore(storename);
+            Assert.IsFalse(user1.addNewProduct(storename, productName, 5.9, 5, "snacks", productManuf));
+            Assert.IsFalse(Stores.searchStore(storename).isProductExist(productName, productManuf));
+            owner.hireNewStoreManager(storename, user1.userName);
+            Assert.IsFalse(user1.hireNewStoreManager(storename, user2.userName));
+            Assert.IsFalse(Stores.searchStore(storename).isManager(user2.userName));
+        }
+
+
+
+
     }
 
     [TestClass]
@@ -196,7 +453,17 @@ namespace Tests
 
         }
 
+        [TestInitialize]
+        public void testInit()
+        {
+            
+        }
 
+        [TestCleanup]
+        public void testClean()
+        {
+
+        }
 
         [TestMethod]
         public void createStoreTestGood()
@@ -211,6 +478,7 @@ namespace Tests
             Assert.IsNull(Stores.searchStore(storeName), "found a store with a null name");
             UserController.logout();
         }
+
         [TestMethod]
         public void createStoreTestBad()
         {
@@ -438,7 +706,7 @@ namespace Tests
             Stores.searchStore(store1Name).addProduct(p2.name, p2.category, p2.manufacturer);
             Stores.searchStore(store2Name).addProduct(p1.name, p1.category, p1.manufacturer);
             Stores.searchStore(store2Name).addProduct(p2.name, p2.category, p2.manufacturer);
-            // supply stores with illegal amoounts
+            // supply stores with illegal amounts
             Assert.IsFalse(Stores.searchStore(store1Name).supply(p1.name, p1.manufacturer, -5));
             Assert.IsFalse(Stores.searchStore(store1Name).supply(p2.name, p2.manufacturer, -3));
             Assert.IsFalse(Stores.searchStore(store2Name).supply(p1.name, p1.manufacturer, -9));
@@ -464,6 +732,7 @@ namespace Tests
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p.manufacturer)); // wrong name & manufacturer
             Assert.IsNull(Stores.searchStore(store2Name).searchProduct(p.name, p1.manufacturer)); // wrong name
         }
+
         [TestMethod]
         public void addFeedBackBad()
         {
@@ -548,6 +817,39 @@ namespace Tests
                 }
             }
         }
+
+        [TestMethod]
+        public void purchasePaymentSystemBad()
+        {
+            string username = "user1", pass = "user1", storename = "store1", prodName = "bamba", prodMan = "osem";
+            UserServices.register(username, pass);
+            Member user1 = (Member) UserServices.getUser(username);
+            user1.EstablishStore(storename);
+            Store store1 = Stores.searchStore(storename);
+            user1.addNewProduct(storename, prodName, 5.5, 100, "snacks", prodMan);
+            Product prod1 = store1.searchProduct(prodName, prodMan);
+            ShoppingBasket basket1 = new ShoppingBasket(store1, user1);
+            basket1.addProduct(prod1);
+            Assert.IsTrue(store1.executePurchase(basket1,"abcd", "abcd", "abcd")[1].Equals("payment not approved"));
+        }
+
+        [TestMethod]
+        public void purchaseSupplySystemBad()
+        {
+            string username = "user1", pass = "user1", storename = "store1", prodName = "bamba", prodMan = "osem";
+            UserServices.register(username, pass);
+            Member user1 = (Member)UserServices.getUser(username);
+            user1.EstablishStore(storename);
+            Store store1 = Stores.searchStore(storename);
+            user1.addNewProduct(storename, prodName, 5.5, 100, "snacks", prodMan);
+            Product prod1 = store1.searchProduct(prodName, prodMan);
+            ShoppingBasket basket1 = new ShoppingBasket(store1, user1);
+            basket1.addProduct(prod1);
+            user1.address = "2";
+            Assert.IsTrue(store1.executePurchase(basket1, "1234567812345678", "01/99", "111")[1].Equals("supply not approved"));
+        }
+
+
     }
 
     [TestClass]
