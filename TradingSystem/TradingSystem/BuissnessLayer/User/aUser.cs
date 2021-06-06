@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.BuissnessLayer.commerce;
 using System.Threading;
+using TradingSystem.BuissnessLayer.User;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -181,7 +182,11 @@ namespace TradingSystem.BuissnessLayer
         {
             return null;
         }
-
+        public virtual bool sendMessage(Message message)
+        {
+            return false;
+        }
+        
 
         /// <summary>
         /// call everytime you chane anything in the user data
