@@ -265,12 +265,15 @@ namespace TradingSystem.BuissnessLayer
             aPermission corrent = permmisions;
             string storeName = "";
             bool first = true;
+            bool firstfirst = true;
             Dictionary<string, ICollection<string>> ans = new Dictionary<string, ICollection<string>>();
             ICollection<string> list = new List<string>();
             while (corrent.next != null)
             {
+                //if (corrent.store.Equals(""))
+                    //storeName = corrent.store;
                 corrent = corrent.next;
-                if (corrent.store.Equals(""))
+                if(firstfirst)
                     storeName = corrent.store;
                 if (!(storeName.Equals(corrent.store)))
                 {

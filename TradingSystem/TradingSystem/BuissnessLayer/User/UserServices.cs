@@ -287,7 +287,7 @@ namespace TradingSystem.BuissnessLayer
             }
             return persmissions;
         }
-        public static string[] GetMyStores(string username, string storeName)
+        public static string[] GetMyStores(string username)
         {
             aUser temp = getUser(username);
             if (temp == null)

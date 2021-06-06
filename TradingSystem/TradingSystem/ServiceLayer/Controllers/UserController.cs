@@ -443,11 +443,11 @@ namespace TradingSystem.ServiceLayer
                 return null;
             return UserServices.GetPermissions(username, storeName);
         }
-        public static string[] GetMyStores(string username, string storeName)
+        public static string[] GetMyStores(string username)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return null;
-            return UserServices.GetMyStores(username, storeName);
+            return UserServices.GetMyStores(username);
         }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)

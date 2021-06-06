@@ -563,13 +563,13 @@ namespace ClientWeb
             }
             return null;
         }
-        public string[] GetMyStore(string username, string storename)
+        public string[] GetMyStore(string username)
         {
             DecodedMessge msg = new DecodedMessge();
             // init message fields
             msg.type = msgType.FUNC;
             msg.name = "get my stores";
-            msg.param_list = new string[] { username, storename };
+            msg.param_list = new string[] { username };
             // encode and send message
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);

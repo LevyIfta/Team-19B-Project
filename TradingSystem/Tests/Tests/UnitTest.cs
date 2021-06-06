@@ -171,10 +171,10 @@ namespace Tests
             UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename1);
             Assert.IsFalse(UserController.EstablishStore(user1,storename1));
-
+            UserController.logout();
             UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.EstablishStore(user2, storename1));
-
+            UserController.logout();
             Assert.IsFalse(UserServices.EstablishStore("notRealUserName", storename2));
         }
 
@@ -208,7 +208,7 @@ namespace Tests
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
             UserController.editManagerPermissions(user1, storename, user2, permissionList);
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -226,11 +226,10 @@ namespace Tests
             permissionList.Add("EditProduct");
             permissionList.Add("EditManagerPermissions");
             UserController.hireNewStoreOwner(owner1, storename, owner2, permissionList);
-
+            UserController.logout();
             UserController.login(owner2, "qweE1");
             Assert.IsFalse(UserController.editManagerPermissions(owner2, storename, manager, permissionList));
-
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -246,7 +245,7 @@ namespace Tests
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
             Assert.IsFalse(UserController.editManagerPermissions(user1,wrongstore, user2, permissionList));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -258,10 +257,10 @@ namespace Tests
             UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
-
-
+            UserController.logout();
+            UserController.login(user2, "qweE1");
             Assert.IsTrue(UserController.getInfoEmployees(user2,storename).ElementAt(0).userName.Equals(user2));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -275,10 +274,10 @@ namespace Tests
             Assert.IsNull(UserController.getInfoEmployees(user1, storename)); //owner not his own employee
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsNull(UserController.getInfoEmployees(user1, wrongstore)); //store doesnt exist
-
-
+            UserController.logout();
+            UserController.login(user2, "qweE1");
             Assert.IsNull(UserController.getInfoEmployees(user2,storename)); //no permissions
-
+            UserController.logout();
 
         }
 
@@ -294,10 +293,11 @@ namespace Tests
             permissionList.Add("AddProduct");
             permissionList.Add("HireNewStoreManager");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-            Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Contains("AddProduct"));
-            Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Contains("HireNewStoreManager"));
-            Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Count == 2);
-
+            var ma = UserServices.getUser(user1).GetAllPermissions();
+            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Contains("AddProduct"));
+            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Contains("HireNewStoreManager"));
+            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Count == 2);
+            UserController.logout();
         }
 
         [TestMethod]
@@ -315,7 +315,7 @@ namespace Tests
             Assert.IsFalse(UserController.hireNewStoreOwner(user1, storename, wronguser, permissionList)); //user doesnt exist
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.hireNewStoreOwner(user1, storename, user2, permissionList)); //hire already hired user
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -333,7 +333,7 @@ namespace Tests
             Assert.IsTrue(UserController.removeManager(user1, storename, user2));
             Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Count == 0);
             Assert.IsFalse(UserController.getInfoEmployees(user1, storename).Count == 0);
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -347,10 +347,10 @@ namespace Tests
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             UserController.hireNewStoreManager(user1, storename, user3);
-
-
+            UserController.logout();
+            UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.removeManager(user2, storename, user3));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -370,7 +370,7 @@ namespace Tests
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.removeManager(user1, storename, user2)); //user remove manager on owner
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -383,7 +383,7 @@ namespace Tests
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsFalse(UserController.removeManager(user1, wrongstore, user2));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -400,7 +400,7 @@ namespace Tests
             Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
             Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Count == 0);
             Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -416,10 +416,10 @@ namespace Tests
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             UserController.hireNewStoreOwner(user1, storename, user3, permissionList);
-
-
+            UserController.logout();
+            UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.removeOwner(user2, storename, user3));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -439,8 +439,7 @@ namespace Tests
             Assert.IsFalse(UserController.removeOwner(user1, storename, user2)); //remove manager that was already removed
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsFalse(UserController.removeOwner(user1, storename, user2)); //user remove owner on manager
-
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -455,7 +454,7 @@ namespace Tests
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.removeOwner(user1, wrongstore, user2));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -470,16 +469,16 @@ namespace Tests
             UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-
-
+            UserController.logout();
+            UserController.login(user2, "qweE1");
             UserController.hireNewStoreManager(user2, storename, user3);
-
+            UserController.logout();
             UserController.login(user1, "qweE1");
             Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
             Assert.IsFalse(UserController.getInfoEmployees(user1, storename).Count == 0);
             Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
             Assert.IsFalse(StoreController.searchStore(storename).managerNames.Contains(user3));
-
+            UserController.logout();
         }
 
         [TestMethod]
@@ -491,11 +490,11 @@ namespace Tests
             UserController.register(user2, "qweE1", 99, "male", "rotb 2");
             UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
-
-
+            UserController.logout();
+            UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.addNewProduct(user2, storename, productName, 5.9, 5, "snacks", productManuf));
             Assert.IsFalse(StoreController.searchStore(storename).inventory.Count == 1);
-
+            UserController.logout();
         }
 
     }

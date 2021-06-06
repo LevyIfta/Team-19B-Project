@@ -532,8 +532,8 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "string";
                         msg_send.param_list = new string[] { UserController.getUserName() };
                         break;
-                    case ("get my stores"): //string username, string storeName
-                        var ans_gms = TradingSystem.ServiceLayer.UserController.GetMyStores(msg.param_list[0], msg.param_list[1]);
+                    case ("get my stores"): //string username
+                        var ans_gms = TradingSystem.ServiceLayer.UserController.GetMyStores(msg.param_list[0]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string[]";
                         msg_send.param_list = ans_gms;
