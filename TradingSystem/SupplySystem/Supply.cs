@@ -22,7 +22,7 @@ namespace SupplySystem
                 string[] info = product[i].Split('$');
                 if (info.Length != 2)
                     return false;
-                if (containNumber(info[0]) || containLatter(info[1]))
+                if (containLatter(info[1]))
                     return false;
             }
             return true;

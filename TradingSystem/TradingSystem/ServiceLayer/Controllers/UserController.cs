@@ -243,10 +243,13 @@ namespace TradingSystem.ServiceLayer
             ans.receiptId = int.Parse(arr[4]);
             string[] pro = arr[5].Split('=');
             Dictionary<int, int> dic = new Dictionary<int, int>();
-            for (int i=0; i<pro.Length; i++)
+            if (pro.Length > 0 && pro[0].Length > 0)
             {
-                string[] info = pro[i].Split('<');
-                dic[int.Parse(info[0])] = int.Parse(info[1]);
+                for (int i = 0; i < pro.Length; i++)
+                {
+                    string[] info = pro[i].Split('<');
+                    dic[int.Parse(info[0])] = int.Parse(info[1]);
+                }
             }
             ans.products = dic;
             return ans;
@@ -310,8 +313,10 @@ namespace TradingSystem.ServiceLayer
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return null;
-            ICollection<BuissnessLayer.aUser> employees = BuissnessLayer.UserServices.getInfoEmployees(username, storeName);
+            ICollection<BuissnessLayer.Member> employees = BuissnessLayer.UserServices.getInfoEmployees(username, storeName);
             ICollection<SLemployee> SLemployees = new List<SLemployee>();
+            if (employees == null)
+                return null;
             foreach (BuissnessLayer.aUser employee in employees)
             {
                 SLemployees.Add(UserController.makeSLemployee(employee));

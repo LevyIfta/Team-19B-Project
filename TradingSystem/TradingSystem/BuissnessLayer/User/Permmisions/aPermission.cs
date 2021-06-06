@@ -35,10 +35,11 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         public static aPermission converPer(string storeName, string userSponser, List<PersmissionsTypes> Permissions)
         {
             aPermission permission = new basePermmision("", "");
+            aPermission corrent = permission;
             foreach (PersmissionsTypes pt in Permissions)
             {
-                permission.next = who(pt, storeName, userSponser);
-                permission = permission.next;
+                corrent.next = who(pt, storeName, userSponser);
+                corrent = corrent.next;
             }
             return permission.next;
         }

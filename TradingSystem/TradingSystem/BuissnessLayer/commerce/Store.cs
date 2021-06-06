@@ -21,8 +21,8 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ICollection<Member> managers { get; private set; }
         private Object purchaseLock = new Object();
 
-        private ICollection<iPolicy> discountPolicies;
-        private ICollection<iPolicy> purchasePolicies;
+        public ICollection<iPolicy> discountPolicies;
+        public ICollection<iPolicy> purchasePolicies;
 
         public Member founder { get; private set; }
 
@@ -180,9 +180,9 @@ namespace TradingSystem.BuissnessLayer.commerce
                     return new string[] { "false", policy };
                 if (!checkAmounts(products))
                     return new string[] { "false", "not enough items in stock" };
-                if(PaymentSystem.Verification.Pay(basket.owner.userName, creditNumber, validity, cvv))
+                if(!PaymentSystem.Verification.Pay(basket.owner.userName, creditNumber, validity, cvv))
                     return new string[] { "false", "payment not approved" };
-                if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), ""))
+                if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), BasketToStringArray(basket)))
                     return new string[] { "false", "supply not approved" };
                 receipt = validPurchase(basket);
                 if (!basket.owner.userName.Equals("guest"))
@@ -200,6 +200,22 @@ namespace TradingSystem.BuissnessLayer.commerce
             }
 
             return new string[] { "true", "" + receipt.receiptId }; ;
+        }
+        private string BasketToStringArray(ShoppingBasket basket)
+        {
+            string ans2 = "";
+            foreach (Product pro in basket.products)
+            {
+                ans2 += ProductToString(pro) + "_";
+            }
+            if (ans2.Length > 0)
+                ans2 = ans2.Substring(0, ans2.Length - 1); // delete the _ in the end
+
+            return ans2; // pro1_pro2_pro3
+        }
+        private string ProductToString(Product pro)
+        {
+            return pro.info.name + "$" + pro.amount;
         }
 
         private Receipt validPurchase(ShoppingBasket basket)
@@ -222,7 +238,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                         // 
                         receipt.actualProducts.Add(new Product(localProduct));
                         // leave feedback
-                        product.info.leaveFeedback(basket.owner.userName, "");
+                        basket.owner.canLeaveFeedback = true;
+                        //product.info.leaveFeedback(basket.owner.userName, "");
                         // update feedback in DB
                         FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
                     }
@@ -231,6 +248,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 }
             // fill receipt fields
             receipt = fillReceipt(receipt, price);
+            receipt.username = basket.owner.userName;
             return receipt;
         }
 

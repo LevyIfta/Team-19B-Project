@@ -240,35 +240,35 @@ namespace TradingSystem.BuissnessLayer
         public static bool hireNewStoreManager(string username, string storeName, string userToHire)
         {
             aUser temp = getUser(username);
-            if (temp == null)
+            if (temp == null || getUser(userToHire) == null)
                 return false;
             return temp.hireNewStoreManager(storeName, userToHire);
         }
         public static bool editManagerPermissions(string username, string storeName, string userToHire, List<string> Permissions)
         {
             aUser temp = getUser(username);
-            if (temp == null)
+            if (temp == null || getUser(userToHire) == null)
                 return false;
             return temp.editManagerPermissions(storeName, userToHire, convertPermission(Permissions));
         }
         public static bool hireNewStoreOwner(string username, string storeName, string userToHire, List<string> Permissions)
         {
             aUser temp = getUser(username);
-            if (temp == null)
+            if (temp == null || getUser(userToHire) == null)
                 return false;
             return temp.hireNewStoreOwner(storeName, userToHire, convertPermission(Permissions));
         }
         public static bool removeManager(string username, string storeName, string userToHire)
         {
             aUser temp = getUser(username);
-            if (temp == null)
+            if (temp == null || getUser(userToHire) == null || username.Equals(userToHire))
                 return false;
             return temp.removeManager(storeName, userToHire);
         }
         public static bool removeOwner(string username, string storeName, string userToHire)
         {
             aUser temp = getUser(username);
-            if (temp == null)
+            if (temp == null || getUser(userToHire) == null || username.Equals(userToHire))
                 return false;
             return temp.removeOwner(storeName, userToHire);
         }
@@ -302,7 +302,7 @@ namespace TradingSystem.BuissnessLayer
             }
             return persmissions;
         }
-        public static ICollection<aUser> getInfoEmployees(string username, string storeName)
+        public static ICollection<Member> getInfoEmployees(string username, string storeName)
         {
             aUser temp = getUser(username);
             if (temp == null)
@@ -310,8 +310,11 @@ namespace TradingSystem.BuissnessLayer
             return temp.getInfoEmployees(storeName);
         }
 
-        public static bool leaveFeedback (string username, string storeName, string productName, string manufacturer, string comment)
+        public static bool leaveFeedback(string username, string storeName, string productName, string manufacturer, string comment)
         {
+            aUser temp = getUser(username);
+            if (!temp.canLeaveFeedback)
+                return false;
             return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.leaveFeedback(username, comment);
         }
 
@@ -386,7 +389,18 @@ namespace TradingSystem.BuissnessLayer
         }
         public static bool removeEmployeesPermission(string storeName, string sponser)
         {
-            foreach (Member user in Users)
+            var mangers = Stores.searchStore(storeName).getManagers();
+            var owners = Stores.searchStore(storeName).owners;
+            foreach (Member user in mangers.ToList())
+            {
+                if (user.removePermission(storeName, sponser))
+                {
+                    Stores.searchStore(storeName).removeManager(user);
+                    Stores.searchStore(storeName).removeOwner(user);
+                }
+            }
+            
+            foreach (Member user in owners.ToList())
             {
                 if (user.removePermission(storeName, sponser))
                 {

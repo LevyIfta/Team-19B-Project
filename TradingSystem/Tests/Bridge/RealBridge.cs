@@ -159,6 +159,10 @@ namespace Tests.Bridge
         {
             return UserController.register(userName, password);
         }
+        public string[] register(string userName, string password, double age, string gender, string address)
+        {
+            return UserController.register(userName, password, age, gender, address);
+        }
         public double checkPrice(string username)
         {
             return UserController.checkPrice(username);
