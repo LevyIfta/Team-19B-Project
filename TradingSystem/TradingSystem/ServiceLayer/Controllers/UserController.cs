@@ -42,8 +42,12 @@ namespace TradingSystem.ServiceLayer
             
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
-            //alarmThread.Abort();
-            //alarmThread= user.estblishAlarmHandler(olduser.getAlarmParams(),  olduser.getAlarmLock(), alarmHandler);
+            if(alarmThread != null)
+            {
+                alarmThread.Abort();
+                alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
+            }
+            
             return ans;
 
         }
@@ -58,8 +62,11 @@ namespace TradingSystem.ServiceLayer
                 {
                     aUser olduser = user;
                     user = new Guest();
-                    //alarmThread.Abort();
-                    //alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
+                    if(alarmThread != null)
+                    {
+                        alarmThread.Abort();
+                        alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
+                    }
 
                     return true;
                 }
@@ -77,7 +84,6 @@ namespace TradingSystem.ServiceLayer
         }
         public static string[] register(string userName, string password)
         {
-
             string[] ans = BuissnessLayer.UserServices.register(userName, password);
             if(ans[0].Equals("true"))
             {
@@ -102,22 +108,38 @@ namespace TradingSystem.ServiceLayer
 
         public static bool saveProduct(string userName, string storeName, string manufacturer, Dictionary<string, int> product)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(userName))
+            {
+                UserServices.addGuest();
+            }
             return BuissnessLayer.UserServices.saveProduct(userName, storeName, manufacturer, product);
         }
 
         public static bool removeProduct(string username, string storeName, string manufacturer, Dictionary<string, int> product)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+            {
+                UserServices.addGuest();
+            }
             return BuissnessLayer.UserServices.removeProduct(username, storeName, manufacturer, product);
         }
 
         public static SLbasket getBasket(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+            {
+                UserServices.addGuest();
+            }
             BuissnessLayer.commerce.ShoppingBasket basket = BuissnessLayer.UserServices.getBasket(username, storeName);
             return ProductController.makeSLbasket(basket);
         }
 
         public static ICollection<SLbasket> getCart(string username)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+            {
+                UserServices.addGuest();
+            }
             BuissnessLayer.commerce.ShoppingCart cart = BuissnessLayer.UserServices.getCart(username);
             ICollection<SLbasket> SLcart = new List<SLbasket>();
             foreach (BuissnessLayer.commerce.ShoppingBasket basket in cart.baskets)
@@ -129,16 +151,26 @@ namespace TradingSystem.ServiceLayer
 
         public static bool EstablishStore(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return BuissnessLayer.UserServices.EstablishStore(username, storeName);
         }
 
         public static double checkPrice(string username)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+            {
+                UserServices.addGuest();
+            }
             return BuissnessLayer.UserServices.checkPrice(username);
         }
 
         public static string[] purchase(string username, string creditNumber, string validity, string cvv)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+            {
+                UserServices.addGuest();
+            }
             string[] temp = BuissnessLayer.UserServices.purchase(username, creditNumber, validity, cvv);
             if (temp == null || temp[0].Equals("false"))
                 return temp;
@@ -252,24 +284,32 @@ namespace TradingSystem.ServiceLayer
 
         public static ICollection<SLreceipt> getReceiptsHistory(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
             ICollection<BuissnessLayer.commerce.Receipt> receipts = BuissnessLayer.UserServices.getReceiptsHistory(username, storeName);
             return ProductController.makeSLreceiptCollection(receipts);
         }
 
         public static ICollection<SLreceipt> getAllReceiptsHistory(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
             ICollection<BuissnessLayer.commerce.Receipt> receipts = BuissnessLayer.UserServices.getAllReceiptsHistory(username, storeName);
             return ProductController.makeSLreceiptCollection(receipts);
         }
 
         public static ICollection<SLreceipt> getAllMyReceiptHistory(string username)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
             ICollection<BuissnessLayer.commerce.Receipt> receipts = BuissnessLayer.UserServices.getAllMyReceiptHistory(username);
             return ProductController.makeSLreceiptCollection(receipts);
         }
 
         public static ICollection<SLemployee> getInfoEmployees(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
             ICollection<BuissnessLayer.aUser> employees = BuissnessLayer.UserServices.getInfoEmployees(username, storeName);
             ICollection<SLemployee> SLemployees = new List<SLemployee>();
             foreach (BuissnessLayer.aUser employee in employees)
@@ -281,21 +321,29 @@ namespace TradingSystem.ServiceLayer
 
         public static bool addNewProduct(string username, string storeName, string productName, double price, int amount, string category, string manufacturer)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return BuissnessLayer.UserServices.addNewProduct(username, storeName, productName, price, amount, category, manufacturer);
         }
 
         public static bool removeProduct(string username, string storeName, string productName, string manufacturer)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return BuissnessLayer.UserServices.removeProduct(username, storeName, productName, manufacturer);
         }
 
         public static bool editProduct(string username, string storeName, string productName, double price, string manufacturer)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return BuissnessLayer.UserServices.editProduct(username, storeName, productName, price, manufacturer);
         }
 
         public static bool hireNewStoreManager(string username, string storeName, string userToHire)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             bool ans = BuissnessLayer.UserServices.hireNewStoreManager(username, storeName, userToHire);
             if (ans)
             {
@@ -313,11 +361,15 @@ namespace TradingSystem.ServiceLayer
 
         public static bool editManagerPermissions(string username, string storeName, string userToHire, List<string> Permissions)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return BuissnessLayer.UserServices.editManagerPermissions(username, storeName, userToHire, Permissions);
         }
 
         public static bool hireNewStoreOwner(string username, string storeName, string userToHire, List<string> Permissions)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             bool ans = BuissnessLayer.UserServices.hireNewStoreOwner(username, storeName, userToHire, Permissions);
             if (ans)
             {
@@ -340,6 +392,8 @@ namespace TradingSystem.ServiceLayer
 
         public static bool removeManager(string username, string storeName, string userToHire)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             bool ans = BuissnessLayer.UserServices.removeManager(username, storeName, userToHire);
             if (ans)
             {
@@ -351,6 +405,8 @@ namespace TradingSystem.ServiceLayer
 
         public static bool removeOwner(string username, string storeName, string userToHire)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             bool ans = BuissnessLayer.UserServices.removeOwner(username, storeName, userToHire);
             if (ans)
             {
@@ -371,11 +427,27 @@ namespace TradingSystem.ServiceLayer
         }
         public static bool closeStore(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return UserServices.closeStore(username, storeName);
         }
         public static bool reopenStore(string username, string storeName)
         {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
             return UserServices.reopenStore(username, storeName);
+        }
+        public static string[] GetPermissions(string username, string storeName)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.GetPermissions(username, storeName);
+        }
+        public static string[] GetMyStores(string username, string storeName)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.GetMyStores(username, storeName);
         }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)

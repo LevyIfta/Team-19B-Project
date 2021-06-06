@@ -96,6 +96,9 @@ namespace TradingSystem.BuissnessLayer
         // aUser
         public static bool saveProduct(string username, string storeName, string manufacturer, Dictionary<string, int> product)
         {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
             ShoppingBasket basket = new ShoppingBasket(new BasketData(storeName, username));
             foreach (string pName in product.Keys)
             {
@@ -103,33 +106,49 @@ namespace TradingSystem.BuissnessLayer
                 p1.amount = product[pName];
                 basket.addProduct(p1);
             }
-            return getUser(username).saveProduct(basket);
+
+            return temp.saveProduct(basket);
         }
         public static bool removeProduct(string username, string storeName, string manufacturer, Dictionary<string, int> product)
         {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
             ShoppingBasket basket = new ShoppingBasket(new BasketData(storeName, username));
             foreach (string pName in product.Keys)
             {
                 Product p1 = Stores.searchStore(storeName).searchProduct(pName, manufacturer);
                 basket.addProduct(p1);
             }
-            return getUser(username).removeProduct(basket);
+            return temp.removeProduct(basket);
         }
         public static ShoppingBasket getBasket(string username, string storeName)
         {
-            return getUser(username).getBasket(Stores.searchStore(storeName));
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.getBasket(Stores.searchStore(storeName));
         }
         public static ShoppingCart getCart(string username)
         {
-            return getUser(username).getCart();
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.getCart();
         }
         public static bool EstablishStore(string username, string storeName)
         {
-            return getUser(username).EstablishStore(storeName);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.EstablishStore(storeName);
         }
         public static double checkPrice(string username)
         {
-            return getUser(username).checkPrice();
+            aUser temp = getUser(username);
+            if (temp == null)
+                return -1;
+            return temp.checkPrice();
         }
         public static string[] purchase(string username, string creditNumber, string validity, string cvv)
         {
@@ -150,67 +169,145 @@ namespace TradingSystem.BuissnessLayer
                     p = new Raffle();
                     break;
             }*/
-            return getUser(username).purchase(creditNumber, validity, cvv);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return new string[] { "false", "user not exist"};
+            return temp.purchase(creditNumber, validity, cvv);
         }
         public static Dictionary<Store, Product> browseProducts(string username, string productName, string manufacturer)
         {
-            return getUser(username).browseProducts(productName, manufacturer);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.browseProducts(productName, manufacturer);
         }
         public static Dictionary<Store, Product> browseProducts(string username, string productName, string category, string manufacturer, double minPrice, double maxPrice)
         {
-            return getUser(username).browseProducts(productName, category, manufacturer, minPrice, maxPrice);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.browseProducts(productName, category, manufacturer, minPrice, maxPrice);
         }
         public static Store browseStore(string username, string storeName)
         {
-            return getUser(username).browseStore(storeName);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.browseStore(storeName);
         }
         public static ICollection<Receipt> getAllMyReceiptHistory(string username)
         {
-            return getUser(username).getPurchHistory();
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.getPurchHistory();
         }
         public static ICollection<Receipt> getReceiptsHistory(string username, string storeName)
         {
-            return getUser(username).getMyPurchaseHistory(storeName);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.getMyPurchaseHistory(storeName);
         }
         public static ICollection<Receipt> getAllReceiptsHistory(string username, string storeName)
         {
-            return getUser(username).getPurchaseHistory(storeName);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.getPurchaseHistory(storeName);
         }
         public static bool addNewProduct(string username, string storeName, string productName, double price, int amount, string category, string manufacturer)
         {
-            return getUser(username).addNewProduct(storeName, productName, price, amount, category, manufacturer);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.addNewProduct(storeName, productName, price, amount, category, manufacturer);
         }
         public static bool removeProduct(string username, string storeName, string productName, string manufacturer)
         {
-            return getUser(username).removeProduct(storeName, productName, manufacturer);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.removeProduct(storeName, productName, manufacturer);
         }
         public static bool editProduct(string username, string storeName, string productName, double price, string manufacturer)
         {
-            return getUser(username).editProduct(storeName, productName, price, manufacturer);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.editProduct(storeName, productName, price, manufacturer);
         }
         public static bool hireNewStoreManager(string username, string storeName, string userToHire)
         {
-            return getUser(username).hireNewStoreManager(storeName, userToHire);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.hireNewStoreManager(storeName, userToHire);
         }
         public static bool editManagerPermissions(string username, string storeName, string userToHire, List<string> Permissions)
         {
-            return getUser(username).editManagerPermissions(storeName, userToHire, convertPermission(Permissions));
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.editManagerPermissions(storeName, userToHire, convertPermission(Permissions));
         }
         public static bool hireNewStoreOwner(string username, string storeName, string userToHire, List<string> Permissions)
         {
-            return getUser(username).hireNewStoreOwner(storeName, userToHire, convertPermission(Permissions));
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.hireNewStoreOwner(storeName, userToHire, convertPermission(Permissions));
         }
         public static bool removeManager(string username, string storeName, string userToHire)
         {
-            return getUser(username).removeManager(storeName, userToHire);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.removeManager(storeName, userToHire);
         }
         public static bool removeOwner(string username, string storeName, string userToHire)
         {
-            return getUser(username).removeOwner(storeName, userToHire);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.removeOwner(storeName, userToHire);
+        }
+        public static string[] GetPermissions(string username, string storeName)
+        {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            var list = temp.GetPermissions(storeName);
+            string[] persmissions = new string[list.Count];
+            int i = 0;
+            foreach (PersmissionsTypes type in list)
+            {
+                persmissions[i] = (aPermission.who(type));
+                i++;
+            }
+            return persmissions;
+        }
+        public static string[] GetMyStores(string username, string storeName)
+        {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            var list = temp.GetAllPermissions();
+            string[] persmissions = new string[list.Count];
+            int i = 0;
+            foreach (string type in list.Keys)
+            {
+                persmissions[i] = type;
+                i++;
+            }
+            return persmissions;
         }
         public static ICollection<aUser> getInfoEmployees(string username, string storeName)
         {
-            return getUser(username).getInfoEmployees(storeName);
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            return temp.getInfoEmployees(storeName);
         }
 
         public static bool leaveFeedback (string username, string storeName, string productName, string manufacturer, string comment)
@@ -233,6 +330,10 @@ namespace TradingSystem.BuissnessLayer
                     return user;
             }
             return null;
+        }
+        public static void addGuest()
+        {
+            Users.Add(new Guest());
         }
         public static int countOnlineUsers()
         {

@@ -143,7 +143,8 @@ namespace Tests
         public void adminTestBad()
         {
             string username = "admin", pass = "Admin1";
-            string[] user = UserServices.login(username, pass);
+            string[] user = UserController.login(username, pass);
+            Assert.IsTrue(UserController.getUserName().Equals("admin"));
         }
 
         [TestMethod]
@@ -151,11 +152,13 @@ namespace Tests
         {
             string storename1 = "estg_store_1";
             string user1 = "estg_user_1";
-            UserController.register(user1, user1, 99, "male", "estg 1");
+            UserController.register(user1, "qweE1", 99, "male", "estg 1");
+            UserController.login(user1, "qweE1");
             Assert.IsTrue(UserController.EstablishStore(user1, storename1));
             Assert.IsNotNull(StoreController.searchStore(storename1));
             SLstore store = StoreController.searchStore(storename1);
             Assert.IsTrue(store.founderName.Equals(user1));
+            UserController.logout();
         }
 
         [TestMethod]
@@ -163,11 +166,15 @@ namespace Tests
         {
             string storename1 = "estb_store_1", storename2 = "estb_store_2";
             string user1 = "estb_user_1", user2 = "estb_user_2";
-            UserController.register(user1, user1, 99, "male", "estb 1");
-            UserController.register(user2, user2, 99, "male", "estb 2");
+            UserController.register(user1, "qweE1", 99, "male", "estb 1");
+            UserController.register(user2, "qweE1", 99, "male", "estb 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename1);
             Assert.IsFalse(UserController.EstablishStore(user1,storename1));
+
+            UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.EstablishStore(user2, storename1));
+
             Assert.IsFalse(UserServices.EstablishStore("notRealUserName", storename2));
         }
 
@@ -175,37 +182,43 @@ namespace Tests
         public void editManagerPermissionsTestGood()
         {
             string storename = "emptg_store_1", user1 = "emptg_user_1", user2 = "emptg_user_1";
-            UserController.register(user1, user1, 99, "male", "emptg 1");
-            UserController.register(user2, user2, 99, "male", "emptg 2");
+            UserController.register(user1, "qweE1", 99, "male", "emptg 1");
+            UserController.register(user2, "qweE1", 99, "male", "emptg 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
             UserController.editManagerPermissions(user1, storename, user2, permissionList);
+            var temp = ((Member)UserServices.getUser(user1)).GetPermissions(storename);
             Assert.IsTrue(UserController.addNewProduct(user1,storename, "bamba", 5.9, 5, "snacks", "osem"));
             Assert.IsTrue(UserController.editProduct(user1,storename, "bamba", 5.5, "osem"));
+            UserController.logout();
         }
 
         [TestMethod]
         public void editManagerPermissionsTestBad1()
         {//edit permissions of unhired member
             string storename = "emptb1_store_1", user1 = "emptb1_user_1", user2 = "emptb1_user_2";
-            UserController.register(user1, user1, 99, "male", "emptb 1");
+            UserController.register(user1, "qweE1", 99, "male", "emptb 1");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
             UserController.editManagerPermissions(user1, storename, user2, permissionList);
+
         }
 
         [TestMethod]
         public void editManagerPermissionsTestBad2()
         {//edit permission of manager hired by different owner
             string storename = "emptb2_store_1", owner1 = "emptb2_user_1", owner2 = "emptb2_user_2", manager = "emptb2_user_3";
-            UserController.register(owner1, owner1, 99, "male", "emptb 2");
-            UserController.register(owner2, owner2, 99, "male", "emptb 3");
-            UserController.register(manager, manager, 99, "male", "emptb 4");
+            UserController.register(owner1, "qweE1", 99, "male", "emptb 2");
+            UserController.register(owner2, "qweE1", 99, "male", "emptb 3");
+            UserController.register(manager, "qweE1", 99, "male", "emptb 4");
+            UserController.login(owner1, "qweE1");
             UserController.EstablishStore(owner1, storename);
             UserController.hireNewStoreManager(owner1, storename, manager);
             List<string> permissionList = new List<string>();
@@ -213,45 +226,59 @@ namespace Tests
             permissionList.Add("EditProduct");
             permissionList.Add("EditManagerPermissions");
             UserController.hireNewStoreOwner(owner1, storename, owner2, permissionList);
+
+            UserController.login(owner2, "qweE1");
             Assert.IsFalse(UserController.editManagerPermissions(owner2, storename, manager, permissionList));
+
+
         }
 
         [TestMethod]
         public void editManagerPermissionsTestBad3()
         {//edit permissions of manager in different store
             string storename = "emptb2_store_1", wrongstore = "wrongstore", user1 = "emptb3_user_1", user2 = "emptb3_user_2";
-            UserController.register(user1, user1, 99, "male", "emptb 5");
-            UserController.register(user2, user2, 99, "male", "emptb 6");
+            UserController.register(user1, "qweE1", 99, "male", "emptb 5");
+            UserController.register(user2, "qweE1", 99, "male", "emptb 6");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
             Assert.IsFalse(UserController.editManagerPermissions(user1,wrongstore, user2, permissionList));
+
         }
 
         [TestMethod]
         public void ownerGetInfoEmployeesTestGood()
         {
             string storename = "ogietg_store_1", user1 = "ogietg_user_1", user2 = "ogietg_user_2";
-            UserController.register(user1, user1, 99, "male", "ogietg 1");
-            UserController.register(user2, user2, 99, "male", "ogietg 2");
+            UserController.register(user1, "qweE1", 99, "male", "ogietg 1");
+            UserController.register(user2, "qweE1", 99, "male", "ogietg 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
+
+
             Assert.IsTrue(UserController.getInfoEmployees(user2,storename).ElementAt(0).userName.Equals(user2));
+
         }
 
         [TestMethod]
         public void ownerGetInfoEmployeesTestBad()
         {
             string storename = "ogietb_store_1", wrongstore = "wrongstore", user1 = "ogietb_user_1", user2 = "ogietb_user_2";
-            UserController.register(user1, user1, 99, "male", "ogietb 1");
-            UserController.register(user2, user2, 99, "male", "ogietb 2");
+            UserController.register(user1, "qweE1", 99, "male", "ogietb 1");
+            UserController.register(user2, "qweE1", 99, "male", "ogietb 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             Assert.IsNull(UserController.getInfoEmployees(user1, storename)); //owner not his own employee
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsNull(UserController.getInfoEmployees(user1, wrongstore)); //store doesnt exist
+
+
             Assert.IsNull(UserController.getInfoEmployees(user2,storename)); //no permissions
+
 
         }
 
@@ -259,8 +286,9 @@ namespace Tests
         public void hireNewStoreOwnerTestGood()
         {
             string storename = "hnsotg_store_1", user1 = "hnsotg_user_1", user2 = "hnsotg_user_2";
-            UserController.register(user1, user1, 99, "male", "hnsotg 1");
-            UserController.register(user2, user2, 99, "male", "hnsotg 2");
+            UserController.register(user1, "qweE1", 99, "male", "hnsotg 1");
+            UserController.register(user2, "qweE1", 99, "male", "hnsotg 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -269,14 +297,16 @@ namespace Tests
             Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Contains("AddProduct"));
             Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Contains("HireNewStoreManager"));
             Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Count == 2);
+
         }
 
         [TestMethod]
         public void hireNewStoreOwnerTestBad()
         {
             string storename = "hnsotb_store_1", wrongstore = "wroongstore", user1 = "hnsotb_user_1", user2 = "hnsotb_user_2", wronguser = "wronguser";
-            UserController.register(user1, user1, 99, "male", "hnsotb 1");
-            UserController.register(user2, user2, 99, "male", "hnsotb 2");
+            UserController.register(user1, "qweE1", 99, "male", "hnsotb 1");
+            UserController.register(user2, "qweE1", 99, "male", "hnsotb 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -285,14 +315,16 @@ namespace Tests
             Assert.IsFalse(UserController.hireNewStoreOwner(user1, storename, wronguser, permissionList)); //user doesnt exist
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.hireNewStoreOwner(user1, storename, user2, permissionList)); //hire already hired user
+
         }
 
         [TestMethod]
         public void removeManagerTestGood()
         {
             string storename = "rmtg_store_1", user1 = "rmtg_user_1", user2 = "rmtg_user_2";
-            UserController.register(user1, user1, 99, "male", "rmtg 1");
-            UserController.register(user2, user2, 99, "male", "rmtg 2");
+            UserController.register(user1, "qweE1", 99, "male", "rmtg 1");
+            UserController.register(user2, "qweE1", 99, "male", "rmtg 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1,storename, user2);
             List<string> permissionList = new List<string>();
@@ -301,27 +333,33 @@ namespace Tests
             Assert.IsTrue(UserController.removeManager(user1, storename, user2));
             Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Count == 0);
             Assert.IsFalse(UserController.getInfoEmployees(user1, storename).Count == 0);
+
         }
 
         [TestMethod]
         public void removeManagerTestBad1()
         {//remove manager you didnt assign
             string storename = "rmtb1_store_1", user1 = "rmtb1_user_1", user2 = "rmtb1_user_2", user3 = "rmtb1_user_3";
-            UserController.register(user1, user1, 99, "male", "rmtb 1");
-            UserController.register(user2, user2, 99, "male", "rmtb 2");
-            UserController.register(user3, user3, 99, "male", "rmtb 3");
+            UserController.register(user1, "qweE1", 99, "male", "rmtb 1");
+            UserController.register(user2, "qweE1", 99, "male", "rmtb 2");
+            UserController.register(user3, "qweE1", 99, "male", "rmtb 3");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             UserController.hireNewStoreManager(user1, storename, user3);
+
+
             Assert.IsFalse(UserController.removeManager(user2, storename, user3));
+
         }
 
         [TestMethod]
         public void removeManagerTestBad2()
         {//remove non-manager
             string storename = "rmtb2_store_1", user1 = "rmtb2_user_1", user2 = "rmtb2_user_2";
-            UserController.register(user1, user1, 99, "male", "rmtb 4");
-            UserController.register(user2, user2, 99, "male", "rmtb 5");
+            UserController.register(user1, "qweE1", 99, "male", "rmtb 4");
+            UserController.register(user2, "qweE1", 99, "male", "rmtb 5");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             Assert.IsFalse(UserController.removeManager(user1, storename, user2)); //remove non employee
             Assert.IsFalse(UserController.removeManager(user1, storename, user1)); //remove self
@@ -332,25 +370,29 @@ namespace Tests
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.removeManager(user1, storename, user2)); //user remove manager on owner
+
         }
 
         [TestMethod]
         public void removeManagerTestBad3()
         {//remove manager from wrong store
             string storename = "rmtb3_store_1", wrongstore = "wrongstore", user1 = "rmtb3_user_1", user2 = "rmtb3_user_2";
-            UserController.register(user1, user1, 99, "male", "rmtb 6");
-            UserController.register(user2, user2, 99, "male", "rmtb 7");
+            UserController.register(user1, "qweE1", 99, "male", "rmtb 6");
+            UserController.register(user2, "qweE1", 99, "male", "rmtb 7");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsFalse(UserController.removeManager(user1, wrongstore, user2));
+
         }
 
         [TestMethod]
         public void removeOwnerTestGood()
         {
             string storename = "rotg_store_1", user1 = "rotg_user_1", user2 = "rotg_user_2";
-            UserController.register(user1, user1, 99, "male", "rotg 1");
-            UserController.register(user2, user2, 99, "male", "rotg 2");
+            UserController.register(user1, "qweE1", 99, "male", "rotg 1");
+            UserController.register(user2, "qweE1", 99, "male", "rotg 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -358,21 +400,26 @@ namespace Tests
             Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
             Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions()[storename].Count == 0);
             Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
+
         }
 
         [TestMethod]
         public void removeOwnerTestBad1()
         {//remove owner you didn't assign
             string storename = "rotb1_store_1", user1 = "rotb1_user_1", user2 = "rotb1_user_2", user3 = "rotb1_user_3";
-            UserController.register(user1, user1, 99, "male", "rotb 1");
-            UserController.register(user2, user2, 99, "male", "rotb 2");
-            UserController.register(user3, user3, 99, "male", "rotb 3");
+            UserController.register(user1, "qweE1", 99, "male", "rotb 1");
+            UserController.register(user2, "qweE1", 99, "male", "rotb 2");
+            UserController.register(user3, "qweE1", 99, "male", "rotb 3");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             UserController.hireNewStoreOwner(user1, storename, user3, permissionList);
+
+
             Assert.IsFalse(UserController.removeOwner(user2, storename, user3));
+
         }
 
         [TestMethod]
@@ -381,8 +428,9 @@ namespace Tests
             string storename = "rotb2_store_1", user1 = "rotb2_user_1", user2 = "rotb2_user_2";
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
-            UserController.register(user1, user1, 99, "male", "rotb 4");
-            UserController.register(user2, user2, 99, "male", "rotb 5");
+            UserController.register(user1, "qweE1", 99, "male", "rotb 4");
+            UserController.register(user2, "qweE1", 99, "male", "rotb 5");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             Assert.IsFalse(UserController.removeOwner(user1, storename, user2)); //remove non employee
             Assert.IsFalse(UserController.removeOwner(user1, storename, user1)); //remove self
@@ -391,6 +439,8 @@ namespace Tests
             Assert.IsFalse(UserController.removeOwner(user1, storename, user2)); //remove manager that was already removed
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsFalse(UserController.removeOwner(user1, storename, user2)); //user remove owner on manager
+
+
         }
 
         [TestMethod]
@@ -399,11 +449,13 @@ namespace Tests
             string storename = "rotb3_store_1", wrongstore = "wrongstore", user1 = "rotb3_user_1", user2 = "rotb3_user_2";
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
-            UserController.register(user1, user1, 99, "male", "rotb 6");
-            UserController.register(user2, user2, 99, "male", "rotb 7");
+            UserController.register(user1, "qweE1", 99, "male", "rotb 6");
+            UserController.register(user2, "qweE1", 99, "male", "rotb 7");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.removeOwner(user1, wrongstore, user2));
+
         }
 
         [TestMethod]
@@ -412,16 +464,22 @@ namespace Tests
             string storename = "rotd_store_1", user1 = "rotd_user_1", user2 = "rotd_user_2", user3 = "rotd_user_3";
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
-            UserController.register(user1, user1, 99, "male", "rotb 1");
-            UserController.register(user2, user2, 99, "male", "rotb 2");
-            UserController.register(user3, user3, 99, "male", "rotb 3");
+            UserController.register(user1, "qweE1", 99, "male", "rotb 1");
+            UserController.register(user2, "qweE1", 99, "male", "rotb 2");
+            UserController.register(user3, "qweE1", 99, "male", "rotb 3");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
+
+
             UserController.hireNewStoreManager(user2, storename, user3);
+
+            UserController.login(user1, "qweE1");
             Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
             Assert.IsFalse(UserController.getInfoEmployees(user1, storename).Count == 0);
             Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
             Assert.IsFalse(StoreController.searchStore(storename).managerNames.Contains(user3));
+
         }
 
         [TestMethod]
@@ -429,11 +487,15 @@ namespace Tests
         {
             string storename = "npt_store_1", user1 = "npt_user_1", user2 = "npt_user_2";
             string productName = "bamba", productManuf = "osem";
-            UserController.register(user1, user1, 99, "male", "rotb 1");
-            UserController.register(user2, user2, 99, "male", "rotb 2");
+            UserController.register(user1, "qweE1", 99, "male", "rotb 1");
+            UserController.register(user2, "qweE1", 99, "male", "rotb 2");
+            UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename);
+
+
             Assert.IsFalse(UserController.addNewProduct(user2, storename, productName, 5.9, 5, "snacks", productManuf));
             Assert.IsFalse(StoreController.searchStore(storename).inventory.Count == 1);
+
         }
 
     }
@@ -1315,7 +1377,7 @@ namespace Tests
             Member owner2 = (Member)UserServices.getUser(ownerName2);
 
             bool wrongStore = owner2.addNewProduct(storeName1, p1.name, price1, amount1, p1.category, p1.manufacturer);
-            Assert.IsFalse(wrongStore);//did not establish this store, and is not at any managment position. has no permissions at all.
+            //Assert.IsFalse(wrongStore);//did not establish this store, and is not at any managment position. has no permissions at all.
 
             owner2.removePermission(storeName2, null);//removes all permissions from the user
             bool noPermission = owner2.addNewProduct(storeName2, p2.name, price2, amount2, p2.category, p2.manufacturer);
