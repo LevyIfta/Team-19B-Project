@@ -21,6 +21,7 @@ namespace TradingSystem.BuissnessLayer
 
         public AutoResetEvent alarmLock = new AutoResetEvent(false);
         private object[] alarmthreadParams;
+        public bool canLeaveFeedback = false;
 
         public ShoppingCart getMyCart()
         {
@@ -168,7 +169,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
-        public virtual ICollection<aUser> getInfoEmployees(string storeName)
+        public virtual ICollection<Member> getInfoEmployees(string storeName)
         {
             return null;
         }

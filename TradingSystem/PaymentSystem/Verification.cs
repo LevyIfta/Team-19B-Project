@@ -16,7 +16,7 @@ namespace PaymentSystem
                 return false;
             if (11 > creditNumber.Length || creditNumber.Length > 19 || cvv.Length != 3)
                 return false;
-            string[] date = validity.Split('.');
+            string[] date = validity.Split('/');
             if (date.Length != 2)
                 return false;
             if (date[0].Length > 3 || date[0].Length == 0 || date[1].Length < 2 || date[1].Length > 4)
