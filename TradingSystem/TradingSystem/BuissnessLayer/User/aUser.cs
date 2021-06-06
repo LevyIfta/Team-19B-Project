@@ -176,8 +176,11 @@ namespace TradingSystem.BuissnessLayer
         {
             return null;
         }
-        
-        
+        public virtual ICollection<PersmissionsTypes> GetPermissions(string storeName)
+        {
+            return null;
+        }
+
 
         /// <summary>
         /// call everytime you chane anything in the user data

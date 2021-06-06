@@ -161,7 +161,7 @@ namespace TradingSystem.BuissnessLayer
 
             while (corrent != null)
             {
-                if (corrent.store.Equals(storeName) && corrent.sponser.Equals(userSponser))
+                if (corrent.store.Equals(storeName) && (corrent.sponser == null || corrent.sponser.Equals(userSponser)))
                 {
                     if (start == null)
                         start = permmisions;
@@ -246,7 +246,7 @@ namespace TradingSystem.BuissnessLayer
             object[] args = new object[] { storeName };
             return (ICollection<aUser>)todo(PersmissionsTypes.GetInfoEmployees, args);
         }
-        public ICollection<PersmissionsTypes> GetPermissions(string storeName)
+        public override ICollection<PersmissionsTypes> GetPermissions(string storeName)
         {
             if (permmisions == null || permmisions.next == null)
                 return null;
