@@ -9,8 +9,8 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
     public class BasePolicy : iPolicy
     {
 
-        //public ProductInfo subject { get; set; }
-        //public int amount { get; set; }
+        public ProductInfo subject { get; set; }
+        public int amount { get; set; }
         public Func<Product, aUser, bool> predicate { get; set; }
         public Func<Product, bool> isRelevant;
         public bool Default { get; set; }

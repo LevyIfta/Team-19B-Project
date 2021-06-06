@@ -9,6 +9,7 @@ using PaymentSystem;
 using TradingSystem.BuissnessLayer.commerce.Rules;
 using TradingSystem.BuissnessLayer.commerce.Rules.Policy;
 using TradingSystem.BuissnessLayer.User;
+using TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -23,7 +24,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ICollection<Message> messages { get; private set; }
         private Object purchaseLock = new Object();
 
-        public ICollection<iPolicy> discountPolicies;
+        public ICollection<iPolicyDiscount> discountPolicies;
         public ICollection<iPolicy> purchasePolicies;
 
         public Member founder { get; private set; }
@@ -38,7 +39,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.owners = new List<Member>();
             this.managers = new List<Member>();
 
-            this.discountPolicies = new LinkedList<iPolicy>();
+            this.discountPolicies = new LinkedList<iPolicyDiscount>();
             this.purchasePolicies = new LinkedList<iPolicy>();
         }
 
@@ -155,7 +156,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return false;
         }
 
-        public double calcPrice(ICollection<Product> products)
+        public double calcPriceBeforeDiscount(ICollection<Product> products)
         {
             double price = 0.0;
 
@@ -163,6 +164,24 @@ namespace TradingSystem.BuissnessLayer.commerce
                 foreach (Product localProduct in this.inventory)
                     if (localProduct.info.Equals(product.info))
                         price += localProduct.price * product.amount;
+
+            return price;
+        }
+
+        public void updatePricesInBasket(ICollection<Product> products)
+        {
+            foreach (Product product in products)
+                foreach (Product localProduct in this.inventory)
+                    if (localProduct.info.Equals(product.info))
+                        product.price = localProduct.price;
+        }
+
+        public double calcPriceAfterDiscount(ICollection<Product> products)
+        {
+            double price = 0.0;
+
+            foreach (Product product in products)
+                price += product.price * product.amount;
 
             return price;
         }
@@ -223,7 +242,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         private Receipt validPurchase(ShoppingBasket basket)
         {
             // calc the price
-            double price = calcPrice(basket.products);
+            double price = calcPriceBeforeDiscount(basket.products);
             Receipt receipt = new Receipt();
             // request for payment
             // the payment was successful
@@ -415,7 +434,15 @@ namespace TradingSystem.BuissnessLayer.commerce
             return true;
         }
 
-
+        public void addSingleDiscountPolicyByProduct(string name, string category, string man, DateTime deadline , double discount_percent)
+        {
+            iPolicyDiscount policy = new baseDiscountPolicy(
+                (Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)),
+                (Product p, double totalPrice)=> true,
+                deadline,
+                discount_percent);
+            this.discountPolicies.Add(policy);
+        }
 
 
         public void addAgePolicyByProduct(string name, string category, string man, int minAge)
@@ -613,6 +640,45 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             return orPolicy;
         }
+
+
+        //Alijb
+        public ConditioningPolicyDiscount generateAndPolicyDisc(ICollection<ConditioningPolicyDiscount> policies)
+        {
+            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
+
+            ConditioningPolicyDiscount andPolicy = new AndPolicyDiscount();
+
+            foreach (ConditioningPolicyDiscount policy in policies)
+                andPolicy.addPolicy(policy);
+
+            return andPolicy;
+        }
+
+        public ConditioningPolicyDiscount generateOrPolicyDisc(ICollection<ConditioningPolicyDiscount> policies)
+        {
+            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
+
+            ConditioningPolicyDiscount orPolicy = new OrPolicyDiscount();
+
+            foreach (ConditioningPolicyDiscount policy in policies)
+                orPolicy.addPolicy(policy);
+
+            return orPolicy;
+        }
+
+        public ConditioningPolicyDiscount generateXorPolicyDisc(ICollection<ConditioningPolicyDiscount> policies)
+        {
+            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
+
+            ConditioningPolicyDiscount XorPolicy = new XorPolicyDiscount();
+
+            foreach (ConditioningPolicyDiscount policy in policies)
+                XorPolicy.addPolicy(policy);
+
+            return XorPolicy;
+        }
+
 
         public void offer(OfferRequest request)
         {

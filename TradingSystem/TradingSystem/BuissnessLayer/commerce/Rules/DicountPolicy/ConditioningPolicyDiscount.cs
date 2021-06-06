@@ -6,7 +6,23 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
-    class ConditioningPolicyDiscount
+    public abstract class ConditioningPolicyDiscount
     {
+
+        public List<ConditioningPolicyDiscount> policies = new List<ConditioningPolicyDiscount>();
+
+        public abstract bool isValid(ICollection<Product> products, double totalPrice);
+
+        public void addPolicy(ConditioningPolicyDiscount policy)
+        {
+            this.policies.Add(policy);
+        }
+
+        public bool removePolicy()
+        {
+            if (this.policies.Count == 0) return false;
+            this.policies.Remove(this.policies[this.policies.Count - 1]);
+            return true;
+        }
     }
 }

@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
-    class MaxPolicyDiscount : iPolicyDiscount
+    class MaxPolicyDiscount : ConditioningPolicyDiscount
     {
-        public bool isValid(ICollection<Product> products)
+
+        public MaxPolicyDiscount()
         {
-            return true;
+            this.policies = new List<ConditioningPolicyDiscount>();
+        }
+
+
+        public override bool isValid(ICollection<Product> products, double totalPrice)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1885,5 +1885,91 @@ namespace Tests
         
 
     }
-}
+
+
+    [TestClass]
+
+
+    public class DiscountPolicyTests
+    {
+
+
+        private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
+        {
+            ICollection<Receipt> receipts = new LinkedList<Receipt>();
+            // receiptsString[0] contains the answer
+            for (int i = 1; i < receiptsString.Length; i++)
+                receipts.Add(convertReceipt(receiptsString[i]));
+
+            return receipts;
+        }
+
+        private Receipt convertReceipt(string receiptString)
+        {
+            Receipt receipt = new Receipt();
+
+            string[] splitReceipt = receiptString.Split('$');
+            // username&storename$price$date$receiptId$<products>
+            receipt.username = splitReceipt[0];
+            receipt.store = Stores.searchStore(splitReceipt[1]);
+            receipt.price = double.Parse(splitReceipt[2]);
+            receipt.date = Convert.ToDateTime(splitReceipt[3]);
+            receipt.receiptId = int.Parse(splitReceipt[4]);
+            // the products - todo
+
+
+            return receipt;
+        }
+
+        [TestMethod]
+        public void SingleDiscountBambaGood()
+        {
+            // init usernames and passes
+            string storeName1 = "store_ProductAgePolicyGood";
+            string ownerUsername = "owner_001", ownerPass = "123Xx123";
+            string buyerUsername = "noOne_001", newPass = "123Xx321";
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+
+
+            store1.addSingleDiscountPolicyByProduct(p1_name, p1_cat, p1_man, DateTime.MaxValue, 10);
+          
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 0));
+
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy bamba with age = 18");
+
+            // check for amounts in the basket and in the store
+            if (receipts1[0].Equals("true"))
+            {
+                Receipt actualReceipt = convertReceipt(receipts1[1]);
+                Assert.AreEqual(actualReceipt.price, 9, "expected 9 the price");
+            }
+
+        }
+    }
+
+    }
 

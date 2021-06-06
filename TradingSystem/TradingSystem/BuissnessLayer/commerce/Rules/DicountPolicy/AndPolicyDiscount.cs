@@ -6,20 +6,18 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
-    class AndPolicyDiscount : iPolicyDiscount
+    class AndPolicyDiscount : ConditioningPolicyDiscount
     {
-        public iPolicyDiscount policy1 { get; set; }
-        public iPolicyDiscount policy2 { get; set; }
-
-        public AndPolicyDiscount(iPolicyDiscount pol1, iPolicyDiscount pol2)
+        public AndPolicyDiscount()
         {
-            this.policy1 = pol1;
-            this.policy2 = pol2;
+            this.policies = new List<ConditioningPolicyDiscount>();
         }
-
-        public bool isValid(ICollection<Product> products)
+        public override bool isValid(ICollection<Product> products, double totalPrice)
         {
-            return this.policy1.isValid(products) && this.policy2.isValid(products);
+            foreach (ConditioningPolicyDiscount policy in this.policies)
+                if (!policy.isValid(products, totalPrice))
+                    return false;
+            return true;
         }
     }
 }

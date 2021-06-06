@@ -34,7 +34,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             
             foreach (ShoppingBasket basket in baskets)
             {
-                ans += basket.store.calcPrice(basket.products);
+                ans += basket.store.calcPriceBeforeDiscount(basket.products);
             }
             return ans;
         }

@@ -39,7 +39,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public double checkPrice()
         {
-            return store.calcPrice(products);
+            return store.calcPriceBeforeDiscount(products);
         }
 
         public Receipt purchase(PaymentMethod payment)
