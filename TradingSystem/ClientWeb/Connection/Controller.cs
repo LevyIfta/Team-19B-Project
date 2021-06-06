@@ -424,7 +424,7 @@ namespace ClientWeb
             }
             return ans;
         }
-        public bool EditProduct(string username, string storename, string productname, string price, string manu)
+        public bool EditPrice(string username, string storename, string productname, string price, string manu)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
@@ -601,6 +601,6 @@ namespace ClientWeb
             throw new NotImplementedException();
         }*/ //todo
 
-
+        
     }
 }

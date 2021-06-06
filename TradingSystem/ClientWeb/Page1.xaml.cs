@@ -100,7 +100,7 @@ namespace ClientWeb
 
         private void stores_Click(object sender, RoutedEventArgs e)
         {
-            myStores m = new myStores();
+            myStores m = new myStores(controler.GetMyStore(username), username);
             NavigationService.Navigate(m);
         }
     }

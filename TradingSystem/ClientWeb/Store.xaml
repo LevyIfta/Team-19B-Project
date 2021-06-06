@@ -9,8 +9,8 @@
       Title="Store">
 
     <Grid Background="LightBlue">
-        <Label x:Name="label" Content="{Binding Path=storename}" Margin="377,24,385,0" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
-        <Grid Margin="203,108,37,23">
+        <Label x:Name="storeNameLabel" Content="{Binding Path=storename}" Margin="377,24,385,0" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
+        <Grid Name="mainGrid" Margin="203,108,37,23">
 
         </Grid>
         <Grid HorizontalAlignment="Left" Margin="20,108,0,23" Width="162">
@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="14*"/>
             </Grid.ColumnDefinitions>
             <DockPanel Margin="10,10,10,-19" Grid.ColumnSpan="2">
-                <StackPanel DockPanel.Dock="Right" Margin="10,0,10,-23">
+                <StackPanel Name="actionsStack" DockPanel.Dock="Right" Margin="10,0,10,-23">
                     <StackPanel.Resources>
                         <Style TargetType="Button">
                             <Setter Property="Margin" Value="0,0,0,5" />

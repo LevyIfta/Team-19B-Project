@@ -683,7 +683,15 @@ namespace TradingSystem.BuissnessLayer.commerce
         public void offer(OfferRequest request)
         {
             // notify the relevant owners/managers
+            foreach(aUser owner in this.owners)
+            {
+                // notify
+            }
 
+            foreach (aUser owner in this.managers)
+            {
+                // notify
+            }
         }
 
     }
