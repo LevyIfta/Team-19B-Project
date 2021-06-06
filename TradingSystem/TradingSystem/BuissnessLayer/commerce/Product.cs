@@ -13,6 +13,8 @@ namespace TradingSystem.BuissnessLayer.commerce
         public int amount { get; set; }
         public double price { get; set; }
 
+        public double discount_percent { get; set; }
+
         public Product(ProductInfo info, int amount, double price)
         {
             this.info = info;
