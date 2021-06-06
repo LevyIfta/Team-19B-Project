@@ -454,6 +454,12 @@ namespace TradingSystem.ServiceLayer
                 return null;
             return UserServices.GetMyStores(username);
         }
+        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
+            return UserServices.sendMessage(username, userToSend, storeToSend, msg);
+        }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {

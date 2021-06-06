@@ -8,6 +8,7 @@ using TradingSystem.BuissnessLayer;
 using PaymentSystem;
 using TradingSystem.BuissnessLayer.commerce.Rules;
 using TradingSystem.BuissnessLayer.commerce.Rules.Policy;
+using TradingSystem.BuissnessLayer.User;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -19,6 +20,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ICollection<Product> inventory { get; private set; }
         public ICollection<Member> owners { get; private set; }
         public ICollection<Member> managers { get; private set; }
+        public ICollection<Message> messages { get; private set; }
         private Object purchaseLock = new Object();
 
         public ICollection<iPolicy> discountPolicies;
@@ -405,10 +407,16 @@ namespace TradingSystem.BuissnessLayer.commerce
                         p.amount -= product.amount;
             }
         }
+        public bool sendMessage(Message message)
+        {
+            if (!message.StoreToSend.Equals(this.name))
+                return false;
+            messages.Add(message);
+            return true;
+        }
 
 
 
-        
 
         public void addAgePolicyByProduct(string name, string category, string man, int minAge)
         {

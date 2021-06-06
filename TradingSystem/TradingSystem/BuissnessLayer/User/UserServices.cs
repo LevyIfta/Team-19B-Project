@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.BuissnessLayer.User.Permmisions;
+using TradingSystem.BuissnessLayer.User;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -429,6 +430,20 @@ namespace TradingSystem.BuissnessLayer
             }
             else
                 return false;
+        }
+        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
+        {
+            if (userToSend != null && userToSend.Length > 0)
+            {
+                aUser temp = getUser(userToSend);
+                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg));
+            }
+            else if (storeToSend != null && storeToSend.Length > 0)
+            {
+                Store temp = Stores.searchStore(storeToSend);
+                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg));
+            }
+            return false;
         }
 
         private static string checkUserNameValid(string username)
