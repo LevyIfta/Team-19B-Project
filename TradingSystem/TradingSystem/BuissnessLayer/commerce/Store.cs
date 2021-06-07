@@ -259,8 +259,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                         // 
                         receipt.actualProducts.Add(new Product(localProduct));
                         // leave feedback
-                        basket.owner.canLeaveFeedback = true;
-                        //product.info.leaveFeedback(basket.owner.userName, "");
+                        //basket.owner.canLeaveFeedback = true;
+                        product.info.leaveFeedback(basket.owner.userName, "");
                         // update feedback in DB
                         FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
                     }

@@ -322,8 +322,8 @@ namespace TradingSystem.BuissnessLayer
         public static bool leaveFeedback(string username, string storeName, string productName, string manufacturer, string comment)
         {
             aUser temp = getUser(username);
-            if (!temp.canLeaveFeedback)
-                return false;
+           /* if (!temp.canLeaveFeedback)
+                return false;*/
             return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.leaveFeedback(username, comment);
         }
 

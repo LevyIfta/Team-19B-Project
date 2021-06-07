@@ -88,9 +88,9 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public bool leaveFeedback(string username, string comment)
         {
-            feedbacks[username] += comment;
-            return true;
-            /*
+          /*  feedbacks[username] += comment;
+            return true;*/
+            
             if (this.feedbacks.ContainsKey(username))
             {
                 if (feedbacks[username].CompareTo("") == 0)
@@ -106,7 +106,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             else
             {
                 return false;
-            }*/
+            }
         }
 
         public string getUserFeeback(string username)
