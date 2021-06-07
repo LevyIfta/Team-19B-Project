@@ -18,6 +18,16 @@ namespace TradingSystem.ServiceLayer
 
         private static Func<object, bool> alarmHandler;
 
+      /*  static UserController()
+        {
+            register("userName1", "Password12");
+            login("userName1", "Password12");
+            EstablishStore("userName1", "Store1");
+            addNewProduct("userName1", "Store1", "pro", 10.1, 10, "cat", "man");
+            logout();
+            
+        }*/
+
         public static void init(Func<object, bool> alarmhandler)
         {
            

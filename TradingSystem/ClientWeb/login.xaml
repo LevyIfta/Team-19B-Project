@@ -17,6 +17,7 @@
             <Button x:Name="button" Content="login" HorizontalAlignment="Right" Margin="0,154,10,170" Width="75" d:LayoutOverrides="Height" Click="button_Click"/>
             <Button x:Name="button1" Content="register" Margin="47,0,55,10" VerticalAlignment="Bottom"/>
             <Label x:Name="label3" Content="{Binding usermsg, Mode=TwoWay}" Margin="20,0,24,52" VerticalAlignment="Bottom" RenderTransformOrigin="-0.734,0.229" Height="91"/>
+            <Button Content="back to main" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="313,273,-211,0" Click="Button_Click_1"/>
 
         </Grid>
         <Label x:Name="label" Content="Login" Margin="372,33,390,0" VerticalAlignment="Top" d:LayoutOverrides="Width"/>

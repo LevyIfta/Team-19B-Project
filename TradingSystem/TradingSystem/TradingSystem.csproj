@@ -69,6 +69,7 @@
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\BasePolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\ConditioningPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\iPolicy.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\Policy\maxPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\Policy\OrPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Stores.cs" />
     <Compile Include="BuissnessLayer\commerce\Immediate.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="DataLayer\DataAccess\ProductsInBasketDAL.cs" />
     <Compile Include="DataLayer\DataAccess\ProductsInReceiptDAL.cs" />
     <Compile Include="DataLayer\DataAccess\ReceiptDAL.cs" />
+    <Compile Include="DataLayer\DataAccess\ShoppingBasketDAL.cs" />
     <Compile Include="DataLayer\DataAccess\StoreDAL.cs" />
     <Compile Include="DataLayer\DataObjects\FeedbackData.cs" />
     <Compile Include="DataLayer\DataObjects\MemberData.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="DataLayer\DataObjects\ProductsInReceiptData.cs" />
     <Compile Include="DataLayer\DataObjects\ReceiptData.cs" />
     <Compile Include="DataLayer\DataObjects\BasketData.cs" />
+    <Compile Include="DataLayer\DataObjects\ShoppingBasketData.cs" />
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
     <Compile Include="ServiceLayer\Connection\ServerConnectionManager.cs" />
     <Compile Include="ServiceLayer\Connection\DecodedMessge.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientWeb.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -101,6 +102,12 @@ namespace ClientWeb
         private void stores_Click(object sender, RoutedEventArgs e)
         {
             myStores m = new myStores(controler.GetMyStore(username), username);
+            NavigationService.Navigate(m);
+        }
+
+        private void browse_Click(object sender, RoutedEventArgs e)
+        {
+            BrowseItems m = new BrowseItems();
             NavigationService.Navigate(m);
         }
     }

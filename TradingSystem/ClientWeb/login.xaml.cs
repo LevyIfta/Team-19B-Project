@@ -72,5 +72,11 @@ namespace ClientWeb
                 }
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Page1 page = new Page1();
+            NavigationService.Navigate(page);
+        }
     }
 }
