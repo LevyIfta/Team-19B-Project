@@ -18,10 +18,11 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.Policy
             this.policy2 = pol2;
         }
 
-        public bool isValid(ICollection<Product> products, aUser user)
-        {
 
-            return true;
+
+        public override bool isValid(ICollection<Product> products, aUser user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

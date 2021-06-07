@@ -18,10 +18,16 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.Policy
             this.policy2 = pol2;
         }
 
-        public bool isValid(ICollection<Product> products, aUser user)
+        /*public bool isValid(ICollection<Product> products, aUser user)
         {
 
-           var a =  Math.Max(this.policy1.isValid(products, user), this.policy2.isValid(products, user))
+            // var a =  Math.Max(this.policy1.isValid(products, user), this.policy2.isValid(products, user))
+            return false;
+        }*/
+
+        public override bool isValid(ICollection<Product> products, aUser user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

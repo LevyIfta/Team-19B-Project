@@ -8,6 +8,7 @@ using System.Windows;
 
 using System.Threading;
 using System.Windows.Controls;
+using ClientWeb.Objects;
 
 namespace ClientWeb
 {
@@ -300,7 +301,7 @@ namespace ClientWeb
             }
             return ans;
         }
-        public string[] BrowseProducts(string username, string productname, string manu)
+        public Dictionary<string, SLproduct> BrowseProducts(string username, string productname, string manu)
         { // products -> product$product$product -> name&amount 
             DecodedMessge msg = new DecodedMessge();
             // init message fields
@@ -314,8 +315,10 @@ namespace ClientWeb
             DecodedMessge ans_d = readMessage();
             if (ans_d.type == msgType.OBJ && ans_d.name == "dictionary product")
             {
-                return ans_d.param_list;
+                return SLproduct.makeObjectsWithStore(ans_d.param_list);
             }
+            else
+                throw new TypeLoadException();
             return null;
         }
         public string[] GetReceiptsHistory(string username, string storename)

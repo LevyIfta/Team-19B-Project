@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.ServiceLayer
+namespace ClientWeb.Objects
 {
  
     public class SLproduct
@@ -96,16 +96,16 @@ namespace TradingSystem.ServiceLayer
             int index = 0;
             while (index < str.Length)
             {
-                int amount = int.Parse(str[index]);         index++;
-                double price = double.Parse(str[index]);    index++;
-                string productname = str[index];            index++;
-                string category = str[index];               index++;
-                string manufacturer = str[index];           index++;
+                int amount = int.Parse(str[index]); index++;
+                double price = double.Parse(str[index]); index++;
+                string productname = str[index]; index++;
+                string category = str[index]; index++;
+                string manufacturer = str[index]; index++;
                 Dictionary<string, string> feedback = new Dictionary<string, string>();
                 bool runner = true;
-                while(runner)
+                while (runner)
                 {
-                    if(str[index][0] == ETX)
+                    if (str[index][0] == ETX)
                     {
                         index++;
                         runner = false;
@@ -130,7 +130,7 @@ namespace TradingSystem.ServiceLayer
             int index = 0;
             while (index < str.Length)
             {
-                string storeName = str[index];      index++;
+                string storeName = str[index]; index++;
                 int amount = int.Parse(str[index]); index++;
                 double price = double.Parse(str[index]); index++;
                 string productname = str[index]; index++;
