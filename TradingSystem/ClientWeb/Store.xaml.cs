@@ -29,7 +29,7 @@ namespace ClientWeb
             InitializeComponent();
 
             this.storeName = storeName;
-            this.username = username;
+            this.username = PageController.username;
             this.storeNameLabel.Content = storeName;
 
             initActionsStack();

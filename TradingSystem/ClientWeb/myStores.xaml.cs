@@ -25,7 +25,7 @@ namespace ClientWeb
         {
             InitializeComponent();
 
-            this.username = username;
+            this.username = PageController.username;
 
             foreach (string storeName in storesNames)
                 addButton(storeName);
@@ -41,7 +41,7 @@ namespace ClientWeb
 
         private void openStoreWindow(string storeName)
         {
-            Store storeWindow = new Store(storeName, username);
+            Store storeWindow = new Store(storeName, PageController.username);
             NavigationService.Navigate(storeWindow);
         }
     }
