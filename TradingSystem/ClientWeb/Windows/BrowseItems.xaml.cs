@@ -21,9 +21,10 @@ namespace ClientWeb.Windows
     /// </summary>
     public partial class BrowseItems : Page
     {
-        private static Controller controller = Controller.GetController();
+        private static Controller controller;
         public BrowseItems()
         {
+            controller = Controller.GetController();
             InitializeComponent();
             string username = controller.getUserName();
             this.userName.Content = username;
@@ -39,7 +40,7 @@ namespace ClientWeb.Windows
             foreach (KeyValuePair<string, SLproduct> item in products)
             {
                 Label lab = new Label();
-                lab.Content = "store: " + item.Key + "   name: " + item.Value.productName + "   manufactorer: " + item.Value.manufacturer;
+                lab.Content = "store: " + item.Key + "   name: " + item.Value.productName + "   manufactorer: " + item.Value.manufacturer + "   price: " + item.Value.price;
 
                 this.ListBox1.Items.Add(lab);
 

@@ -80,7 +80,7 @@ namespace ClientWeb
         }
         public string getUserName()
         {
-            Connection.ConnectionManager.Connect();
+          
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "get online user name";

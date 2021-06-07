@@ -408,7 +408,12 @@ namespace TradingSystem.ServiceLayer
                         var ans_bp = TradingSystem.ServiceLayer.UserController.browseProducts(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "dictionary product";
-                        msg_send.param_list = DictionaryToString(ans_bp); // arr[i] -> store$product -> proInfo^feedback -> feedback_feedback -> user#comment
+                        List<string> lst = new List<string>();
+                        foreach (KeyValuePair<string, SLproduct> item in ans_bp)
+                        {
+                            lst.AddRange(item.Value.toStringarr(item.Key));
+                        }
+                        msg_send.param_list = lst.ToArray();// arr[i] -> store$product -> proInfo^feedback -> feedback_feedback -> user#comment
                         break;
                     case ("browse store"):
                         ans_d = TradingSystem.ServiceLayer.UserController.browseStore(msg.param_list[0], msg.param_list[1]);
