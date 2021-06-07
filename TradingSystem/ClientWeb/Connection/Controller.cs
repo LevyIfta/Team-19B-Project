@@ -281,6 +281,25 @@ namespace ClientWeb
             }
             return null;
         }
+
+        public bool supply(string username, string storeName, string productName, string amount, string manu)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            msg.type = msgType.FUNC;
+            msg.name = "supply product";
+            msg.param_list = new string[] { username, storeName, productName, amount, manu };
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            bool ans = false;
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            {
+                ans = ans_d.param_list[0] == "true";
+            }
+            return ans;
+        }
+
         public string CheckPrice(string username)
         { // products -> product$product$product -> name&amount 
             DecodedMessge msg = new DecodedMessge();

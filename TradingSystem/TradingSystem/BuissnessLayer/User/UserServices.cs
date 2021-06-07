@@ -19,6 +19,7 @@ namespace TradingSystem.BuissnessLayer
         static UserServices()
         {
             UserServices.register("admin", "Admin1");
+            UserServices.register("UserTest", "123Xx123");
             //Users.Add(new Admin("admin", "Admin1"));
         }
         // menu functions
@@ -237,6 +238,13 @@ namespace TradingSystem.BuissnessLayer
             if (temp == null)
                 return false;
             return temp.editProduct(storeName, productName, price, manufacturer);
+        }
+        public static bool supply(string username, string storeName, string productName, int amount, string manufacturer)
+        {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return false;
+            return temp.supply(storeName, productName, amount, manufacturer);
         }
         public static bool hireNewStoreManager(string username, string storeName, string userToHire)
         {
@@ -513,5 +521,6 @@ namespace TradingSystem.BuissnessLayer
             }
             return false;
         }
+
     }
 }

@@ -487,5 +487,12 @@ namespace TradingSystem.ServiceLayer
         {
             alarmThread =  user.estblishAlarmHandler(queue, waitEvent, alarmLock, alarmHandler);
         }
+
+        public static bool supplyProduct(string username, string storeName, string productName, int amount, string manufacturer)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
+            return BuissnessLayer.UserServices.supply(username, storeName, productName, amount, manufacturer);
+        }
     }
 }

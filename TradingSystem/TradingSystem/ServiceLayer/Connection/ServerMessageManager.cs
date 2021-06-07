@@ -476,6 +476,15 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "bool";
                         msg_send.param_list = new string[] { ans_d };
                         break;
+                    case ("supply product"): //string username, string storeName, string productName, int amount, string manufacturer
+                        ans = TradingSystem.ServiceLayer.UserController.supplyProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], int.Parse(msg.param_list[3]), msg.param_list[4]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        break;
                     case ("hire new manager"): //string username, string storeName, string userToHire
                         ans = TradingSystem.ServiceLayer.UserController.hireNewStoreManager(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         ans_d = "false";

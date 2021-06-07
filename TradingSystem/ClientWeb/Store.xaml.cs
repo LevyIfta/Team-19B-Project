@@ -43,6 +43,8 @@ namespace ClientWeb
 
             foreach (string permission in permissions)
                 addPermissionButton(permission);
+            // we assume, for the mean time, that there is no permission for adding a new policy
+            addPermissionButton("AddPolicy");
         }
 
         private void addPermissionButton(string permission)
@@ -57,7 +59,7 @@ namespace ClientWeb
             else
             {
                 Button permissionButtonEditPrice = new Button();
-                permissionButtonEditPrice.Content = "Edit price";
+                permissionButtonEditPrice.Content = "EditPrice";
                 permissionButtonEditPrice.Click += (r, e) => act("EditPrice");
                 this.actionsStack.Children.Add(permissionButtonEditPrice);
 
@@ -72,6 +74,10 @@ namespace ClientWeb
         {
             switch (action)
             {
+                case "AddPolicy":
+                    addPolicy();
+                    break;
+
                 case "AddProduct":
                     addProduct();
                     break;
@@ -121,8 +127,14 @@ namespace ClientWeb
             }
         }
 
+        private void addPolicy()
+        {
+            throw new NotImplementedException();
+        }
+
         private void RemoveOwner()
         {
+            mainGrid.Children.Clear();
             // /xaml objexts to add to grid - to be deleteds
             Label usernameLabel = new Label(), permissionsLabel = new Label();
             TextBox usernameTextBox = new TextBox();
@@ -141,6 +153,7 @@ namespace ClientWeb
 
         private void RemoveProduct()
         {
+            mainGrid.Children.Clear();
             // init UI elements
             Label productNameLabel = new Label(),
                 manLabel = new Label();
@@ -166,6 +179,7 @@ namespace ClientWeb
 
         private void RemoveManager()
         {
+            mainGrid.Children.Clear();
             // /xaml objexts to add to grid - to be deleteds
             Label usernameLabel = new Label();
             TextBox usernameTextBox = new TextBox();
@@ -184,6 +198,7 @@ namespace ClientWeb
 
         private void HireNewStoreOwner()
         {
+            mainGrid.Children.Clear();
             // /xaml objexts to add to grid - to be deleteds
             Label usernameLabel = new Label(), permissionsLabel = new Label();
             TextBox usernameTextBox = new TextBox(), permissionsTextBox = new TextBox();
@@ -204,6 +219,7 @@ namespace ClientWeb
 
         private void HireNewStoreManager()
         {
+            mainGrid.Children.Clear();
             // /xaml objexts to add to grid - to be deleteds
             Label usernameLabel = new Label();
             TextBox usernameTextBox = new TextBox();
@@ -218,11 +234,11 @@ namespace ClientWeb
             };
 
             addToMainGrid(new UIElement[] { usernameLabel, usernameTextBox, actButton });
-
         }
 
         private void GetPurchaseHistory()
         {
+            mainGrid.Children.Clear();
             string[] receipts = controller.GetReceiptsHistory(username, storeName);
             UIElement[] receiptsUIE = convertReceiptsToElements(receipts);
 
@@ -245,27 +261,102 @@ namespace ClientWeb
 
         private void GetInfoEmployees()
         {
-            throw new NotImplementedException();
+            mainGrid.Children.Clear();
+            string[] infoEmp = controller.GetInfoEmployees(username, storeName);
+            UIElement[] infoEmpUIE = new UIElement[infoEmp.Length];
+
+            for(int i = 0; i < infoEmp.Length; i++)
+            {
+                Label infoLabel = new Label();
+                infoLabel.Content = infoEmp[i];
+                infoEmpUIE[i] = infoLabel;
+            }
+
+            addToMainGrid(infoEmpUIE);
         }
 
         private void EditPrice()
         {
-            
+            mainGrid.Children.Clear();
+            // init UI elements
+            Label productNameLabel = new Label(),
+                manLabel = new Label(),
+                priceLabel = new Label();
+
+            TextBox productNameTextBox = new TextBox(),
+                manTextBox = new TextBox(),
+                priceTextBox = new TextBox();
+
+            Button editPrice = new Button();
+
+            // init label names
+            productNameLabel.Content = "Product name:";
+            manLabel.Content = "Manufacturer:";
+            priceLabel.Content = "New price:";
+
+            editPrice.Content = "Edit price";
+
+            addToMainGrid(new UIElement[] { productNameLabel, productNameTextBox, manLabel, manTextBox, priceLabel, priceTextBox });
+
+            editPrice.Click += (r, e) =>
+            {
+                controller.EditPrice(username, storeName, productNameTextBox.Text, priceTextBox.Text,  manTextBox.Text);
+            };
         }
 
         private void supply()
         {
+            mainGrid.Children.Clear();
+            // init UI elements
+            Label productNameLabel = new Label(),
+                manLabel = new Label(),
+                supplyLabel = new Label();
 
+            TextBox productNameTextBox = new TextBox(),
+                manTextBox = new TextBox(),
+                supplyTextBox = new TextBox();
+
+            Button supply = new Button();
+
+            // init label names
+            productNameLabel.Content = "Product name:";
+            manLabel.Content = "Manufacturer:";
+            supplyLabel.Content = "Amount to supply:";
+
+            supply.Content = "Supply";
+
+            addToMainGrid(new UIElement[] { productNameLabel, productNameTextBox, manLabel, manTextBox, supplyLabel, supplyTextBox });
+
+            supply.Click += (r, e) =>
+            {
+                controller.supply(username, storeName, productNameTextBox.Text, supplyTextBox.Text, manTextBox.Text);
+            };
         }
-        
 
         private void EditManagerPermissions()
         {
-            throw new NotImplementedException();
+            mainGrid.Children.Clear();
+            // /xaml objexts to add to grid - to be deleteds
+            Label usernameLabel = new Label(), permissionsLabel = new Label();
+            TextBox usernameTextBox = new TextBox(), permissionsTextBox = new TextBox();
+            Button actButton = new Button();
+
+            usernameLabel.Content = "User to edit:";
+            permissionsLabel.Content = "Permissions";
+
+            actButton.Content = "Edit permissions";
+
+            actButton.Click += (r, e) =>
+            {
+                controller.EditManagerPermissions(username, storeName, usernameTextBox.Text, permissionsTextBox.Text);
+            };
+
+            addToMainGrid(new UIElement[] { usernameLabel, usernameTextBox, actButton });
         }
 
         private void addProduct()
         {
+            mainGrid.Children.Clear();
             // init UI elements
             Label productNameLabel = new Label(),
                 categoryLabel = new Label(),

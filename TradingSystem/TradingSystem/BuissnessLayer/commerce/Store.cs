@@ -686,11 +686,13 @@ namespace TradingSystem.BuissnessLayer.commerce
             foreach(aUser owner in this.owners)
             {
                 // notify
+                owner.addAlarm("Offer request update", request.ToString());
             }
 
-            foreach (aUser owner in this.managers)
+            foreach (aUser manager in this.managers)
             {
                 // notify
+                manager.addAlarm("Offer request update", request.ToString());
             }
         }
 

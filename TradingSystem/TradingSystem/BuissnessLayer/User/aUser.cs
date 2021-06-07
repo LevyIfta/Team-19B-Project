@@ -142,6 +142,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
+        public virtual bool supply(string storeName, string productName, int amount, string manufacturer)
+        {
+            return false;
+        }
         public virtual ICollection<Receipt> getMyPurchaseHistory(string storeName)
         {
             return null;
@@ -247,5 +251,7 @@ namespace TradingSystem.BuissnessLayer
             alarmLock.Set();
             return th;
         }
+
+        
     }
 }

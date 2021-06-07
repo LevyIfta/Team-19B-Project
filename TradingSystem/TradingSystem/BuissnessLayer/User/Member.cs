@@ -223,6 +223,16 @@ namespace TradingSystem.BuissnessLayer
                 return false;
             return (bool)temp;
         }
+        public override bool supply(string storeName, string productName, int amount, string manufacturer)
+        {
+            object[] args = new object[] { storeName, productName, amount, manufacturer };
+            Store store = Stores.searchStore(storeName);
+
+            if (store == null)
+                return false;
+
+            return store.supply(productName, manufacturer, amount);
+        }
         public override bool editManagerPermissions(string storeName, string username, List<PersmissionsTypes> Permissions)
         {
             object[] args = new object[] { storeName, username, this.userName, aPermission.converPer(storeName, this.userName, Permissions) };

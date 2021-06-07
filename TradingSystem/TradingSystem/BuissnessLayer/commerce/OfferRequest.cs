@@ -21,9 +21,20 @@ namespace TradingSystem.BuissnessLayer.commerce
         public Store store;
         public Product product;
         public Status status;
-        
+        public int id;
+        // id generation help fields
+        private static int currentId = -1;
+        private static Object idLocker = new Object();
+
         public OfferRequest(Product product, aUser requester, Store store)
         {
+            // increment id
+            lock (idLocker)
+            {
+                currentId++;
+                this.id = currentId;
+            }
+
             this.product = product;
             this.requester = requester;
             this.store = store;
@@ -78,7 +89,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         private void notifyUser()
         {
-            
+            this.requester.addAlarm("Offer update", this.ToString());
         }
 
         public string purchase(string creditNumber, string validity, string cvv)
@@ -88,6 +99,19 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             this.status = Status.DONE;
             return receipt;
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+
+            output += "Request ID: " + this.id + "\n";
+            output += "Username: " + this.requester.userName + "\n";
+            output += "Product: " + "\n" + this.product.info.ToString() + "\n";
+            output += "Price: " + this.product.price + "\n";
+            output += "Status: " + this.status + "\n";
+
+            return output;
         }
     }
 }
