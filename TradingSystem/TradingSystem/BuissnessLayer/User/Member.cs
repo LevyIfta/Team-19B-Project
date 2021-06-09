@@ -22,6 +22,7 @@ namespace TradingSystem.BuissnessLayer
         public basePermmision permmisions { get; set; }
 
         public ICollection<Message> messages { get; set; }
+        public ICollection<OfferRequest> requests { get; set; }
 
 
         public Member(string username, string password) : base()
@@ -379,6 +380,9 @@ namespace TradingSystem.BuissnessLayer
             MemberDAL.update(new MemberData(userName, password));
         }
 
-
+        public override void addOffer(OfferRequest request)
+        {
+            this.requests.Add(request);
+        }
     }
 }

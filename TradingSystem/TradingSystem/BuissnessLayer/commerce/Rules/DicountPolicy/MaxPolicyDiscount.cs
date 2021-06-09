@@ -14,7 +14,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
             this.policies = new List<ConditioningPolicyDiscount>();
         }
 
-
+        
         public override bool isValid(ICollection<Product> products, double totalPrice)
         {
             throw new NotImplementedException();

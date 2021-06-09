@@ -252,6 +252,9 @@ namespace TradingSystem.BuissnessLayer
             return th;
         }
 
-        
+        public virtual void addOffer(OfferRequest request)
+        {
+            
+        }
     }
 }

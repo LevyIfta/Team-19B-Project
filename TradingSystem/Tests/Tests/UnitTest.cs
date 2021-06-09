@@ -1749,7 +1749,7 @@ namespace Tests
             if (receipts1[0].Equals("true"))
             {
                 Assert.AreEqual(client.getBasket(store1).products.Count, 0, "products' number is non zero.");
-                Assert.AreEqual(store1.searchProduct(p1_name, p1_man).amount, 8, "expected 8 products after purchase.");
+                Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1_name, p1_man).amount, 17, "expected 8 products after purchase.");
             }
         }
 
