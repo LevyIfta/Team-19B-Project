@@ -22,6 +22,7 @@ namespace ClientWeb
     public partial class Store : Page
     {
         private static Controller controller = Controller.GetController();
+        UserData user = new UserData();
         private string storeName;
         private string username;
         public Store(string storeName, string username)
@@ -29,7 +30,7 @@ namespace ClientWeb
             InitializeComponent();
 
             this.storeName = storeName;
-            this.username = PageController.username;
+            this.username = user.username;
             this.storeNameLabel.Content = storeName;
 
             initActionsStack();
@@ -169,7 +170,7 @@ namespace ClientWeb
             productNameLabel.Content = "Product name:";
             manLabel.Content = "Manufacturer:";
 
-            addToMainGrid(new UIElement[] { productNameLabel, productNameTextBox, manLabel, manTextBox});
+            addToMainGrid(new UIElement[] { productNameLabel, productNameTextBox, manLabel, manTextBox });
 
             addProduct.Click += (r, e) =>
             {
@@ -265,7 +266,7 @@ namespace ClientWeb
             string[] infoEmp = controller.GetInfoEmployees(username, storeName);
             UIElement[] infoEmpUIE = new UIElement[infoEmp.Length];
 
-            for(int i = 0; i < infoEmp.Length; i++)
+            for (int i = 0; i < infoEmp.Length; i++)
             {
                 Label infoLabel = new Label();
                 infoLabel.Content = infoEmp[i];
@@ -300,7 +301,7 @@ namespace ClientWeb
 
             editPrice.Click += (r, e) =>
             {
-                controller.EditPrice(username, storeName, productNameTextBox.Text, priceTextBox.Text,  manTextBox.Text);
+                controller.EditPrice(username, storeName, productNameTextBox.Text, priceTextBox.Text, manTextBox.Text);
             };
         }
 
@@ -399,6 +400,11 @@ namespace ClientWeb
         {
             foreach (UIElement element in uIElement)
                 this.mainGrid.Children.Remove(element);
+        }
+
+        private void close_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

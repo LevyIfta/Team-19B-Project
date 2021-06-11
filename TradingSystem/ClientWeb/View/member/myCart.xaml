@@ -8,7 +8,11 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="myCart">
 
-    <Grid>
-        
+    <Grid Background="LightBlue">
+        <Grid HorizontalAlignment="Left" Height="318" Margin="10,132,0,0" VerticalAlignment="Top" Width="381">
+            <DataGrid HorizontalAlignment="Left" Height="318" VerticalAlignment="Top" Width="381"/>
+        </Grid>
+        <Button Content="Procced To checkout" HorizontalAlignment="Left" Margin="550,249,0,0" VerticalAlignment="Top" Width="150" Height="47" Click="Button_Click"/>
+
     </Grid>
 </Page>

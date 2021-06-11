@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientWeb.View.member
+namespace ClientWeb
 {
     /// <summary>
     /// Interaction logic for paymentPage.xaml
@@ -23,6 +23,21 @@ namespace ClientWeb.View.member
         public paymentPage()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxItem_Selected(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

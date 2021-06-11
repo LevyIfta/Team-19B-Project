@@ -24,5 +24,23 @@ namespace ClientWeb
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            register r = new register();
+            NavigationService.Navigate(r);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            login l = new login();
+            NavigationService.Navigate(l);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Page1 p = new Page1();
+            NavigationService.Navigate(p);
+        }
     }
 }

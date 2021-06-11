@@ -1,4 +1,5 @@
-﻿using ClientWeb.Windows;
+﻿using ClientWeb.Objects;
+using ClientWeb.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,24 +23,60 @@ namespace ClientWeb
     public partial class Page1 : Page
     {
         UserData userInfo = new UserData();
-        string username;
+
+
         static Controller controler = Controller.GetController();
+
         public Page1()
         {
+            // mockData data = new mockData();
+
+            userInfo.username = "Ali";
+
             InitializeComponent();
             this.DataContext = userInfo;
-            string username = PageController.username;
+            string username = userInfo.username;
             userInfo.username = "hello, " + username;
+            checkMember();
+
             //Controller.GetController().test();
+
+            //test area
+
+            // bamba ^ 10.3 ^ manu1 ^ food ^ 10 ^ almog#what i think_gal#what he think
+
+            /*
+            controler.Register("aaaa", "Abc123456");
+            string[] a = controler.Login("aaaa", "Abc123456");
+            MessageBox.Show(a[0]);
+            string[] products = new string[] { "bamba", "besli", "ok" };
+
+            this.dataGrid.ItemsSource = products;
+              
+
+            List<Object> mylist = new List<Object>(){
+            new {FirstName="myfirstName1", LastName="mylastName1", Phone="+123-123-123"},
+            new {FirstName="myfirstName2", LastName="mylastName2", Phone="+124-124-124"},
+            new {FirstName="myfirstName3", LastName="mylastName3", Phone="+125-125-125"}
+                };
+
+            this.dataGrid.ItemsSource = mylist;
+          */
+
         }
+
+
+
+
         private void checkMember()
         {
-            if (username.Equals("admin"))
+
+            if (userInfo.username.Equals("admin"))
             {
                 register.Visibility = Visibility.Collapsed;
                 login.Visibility = Visibility.Collapsed;
             }
-            else if (username.Equals("guest"))
+            else if (userInfo.username.Equals("guest"))
             {
                 logout.Visibility = Visibility.Collapsed;
                 openStore.Visibility = Visibility.Collapsed;
@@ -48,7 +85,7 @@ namespace ClientWeb
                 user.Visibility = Visibility.Collapsed;
                 stores.Visibility = Visibility.Collapsed;
             }
-            else if (username.Length > 0)
+            else if (userInfo.username.Length > 0)
             {
                 register.Visibility = Visibility.Collapsed;
                 login.Visibility = Visibility.Collapsed;
@@ -78,7 +115,7 @@ namespace ClientWeb
             bool ans = controler.Logoutfunc();
             if (ans)
             {
-                PageController.username = "guest";
+                userInfo.username = "guest";
                 checkMember();
             }
             else
@@ -101,7 +138,7 @@ namespace ClientWeb
 
         private void stores_Click(object sender, RoutedEventArgs e)
         {
-            myStores m = new myStores(controler.GetMyStore(PageController.username), username);
+            myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
             NavigationService.Navigate(m);
         }
 
@@ -109,6 +146,44 @@ namespace ClientWeb
         {
             BrowseItems m = new BrowseItems();
             NavigationService.Navigate(m);
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            //  string product = this.textBox1.Text;
+            string product = "";
+            string manufacturer = "";
+            Dictionary<string, SLproduct> products = controler.BrowseProducts(userInfo.username, product, manufacturer);
+            foreach (KeyValuePair<string, SLproduct> item in products)
+            {
+
+            }
+
+        }
+
+        private void Row_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Ensure row was clicked and not empty space
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender,
+                                                e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row == null) return;
+
+            row.Item.ToString();
+
+
+
+
+        }
+
+        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

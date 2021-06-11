@@ -20,12 +20,11 @@ namespace ClientWeb
     /// </summary>
     public partial class myStores : Page
     {
-        private string username;
+
+        UserData user = new UserData();
         public myStores(ICollection<string> storesNames, string username)
         {
             InitializeComponent();
-
-            this.username = PageController.username;
 
             foreach (string storeName in storesNames)
                 addButton(storeName);
@@ -41,7 +40,7 @@ namespace ClientWeb
 
         private void openStoreWindow(string storeName)
         {
-            Store storeWindow = new Store(storeName, PageController.username);
+            Store storeWindow = new Store(storeName, user.username);
             NavigationService.Navigate(storeWindow);
         }
     }

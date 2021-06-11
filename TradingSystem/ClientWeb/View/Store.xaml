@@ -35,7 +35,7 @@
                     <Button Name="editemplyee" >editemplyee</Button>
                     <Button Name="feedback" >all feedback</Button>
                     <Button Name="receipts" >all receipts</Button>
-                    <Button Name="close" >close store</Button>
+                    <Button Name="close" Click="close_Click" >close store</Button>
                 </StackPanel>
             </DockPanel>
         </Grid>

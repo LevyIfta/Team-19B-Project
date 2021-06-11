@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using ClientWeb;
 
 namespace ClientWeb
 {
@@ -13,25 +14,14 @@ namespace ClientWeb
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));  
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
     class UserData : ANotifyPropChange
     {
-        private String Usernamer;
-
-        public String username
-        {
-            get { return Usernamer; }
-            set
-            {
-                Usernamer = value;
-                OnPropertyChanged();
-            }
-        }
         private String Username;
 
-        public String loginname
+        public String username
         {
             get { return Username; }
             set
@@ -40,6 +30,7 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+
         private String Password;
 
         public String password
@@ -62,32 +53,8 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
-    }
-    class UserR : ANotifyPropChange
-    {
-        private String Usernamer;
 
-        public String username
-        {
-            get { return Usernamer; }
-            set
-            {
-                Usernamer = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        private String Password;
 
-        public String password
-        {
-            get { return Password; }
-            set
-            {
-                Password = value;
-                OnPropertyChanged();
-            }
-        }
         private String PasswordC;
 
         public String passwordC
@@ -96,17 +63,6 @@ namespace ClientWeb
             set
             {
                 PasswordC = value;
-                OnPropertyChanged();
-            }
-        }
-        private String Usermsg;
-
-        public String usermsg
-        {
-            get { return Usermsg; }
-            set
-            {
-                Usermsg = value;
                 OnPropertyChanged();
             }
         }
@@ -144,10 +100,21 @@ namespace ClientWeb
             }
         }
     }
+}
 
-    public class PageController
+class PageController : ANotifyPropChange
+{
+
+    private String UserName;
+
+    public String username
     {
-        public static string username = "guest";
-
+        get { return UserName; }
+        set
+        {
+            UserName = value;
+            OnPropertyChanged();
+        }
     }
 }
+
