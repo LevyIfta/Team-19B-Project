@@ -31,7 +31,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>24</ApplicationRevision>
+    <ApplicationRevision>26</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -76,46 +76,74 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="myCart.xaml.cs">
+    <Compile Include="FirstPage.xaml.cs">
+      <DependentUpon>FirstPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\member\myCart.xaml.cs">
       <DependentUpon>myCart.xaml</DependentUpon>
     </Compile>
-    <Compile Include="myReceipts.xaml.cs">
+    <Compile Include="View\member\myReceipts.xaml.cs">
       <DependentUpon>myReceipts.xaml</DependentUpon>
     </Compile>
-    <Compile Include="myStores.xaml.cs">
+    <Compile Include="View\member\myStores.xaml.cs">
       <DependentUpon>myStores.xaml</DependentUpon>
     </Compile>
     <Compile Include="Objects\SLproduct.cs" />
-    <Compile Include="register.xaml.cs">
+    <Compile Include="View\Auth\register.xaml.cs">
       <DependentUpon>register.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Store.xaml.cs">
+    <Compile Include="View\member\paymentPage.xaml.cs">
+      <DependentUpon>paymentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\member\recieptPage.xaml.cs">
+      <DependentUpon>recieptPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\member\recieptsPage.xaml.cs">
+      <DependentUpon>recieptsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Store.xaml.cs">
       <DependentUpon>Store.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\BrowseItems.xaml.cs">
       <DependentUpon>BrowseItems.xaml</DependentUpon>
     </Compile>
-    <Page Include="login.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="myCart.xaml">
+    <Page Include="FirstPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="myReceipts.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="myStores.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="openStore.xaml">
+    <Page Include="View\Auth\login.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Page1.xaml">
+    <Page Include="View\member\myCart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\member\myReceipts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\member\myStores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\member\openStore.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\member\paymentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\member\recieptPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\member\recieptsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Page1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -129,21 +157,21 @@
     <Compile Include="Connection\DecodedMessge.cs" />
     <Compile Include="Connection\Decoder.cs" />
     <Compile Include="Connection\Encoder.cs" />
-    <Compile Include="login.xaml.cs">
+    <Compile Include="View\Auth\login.xaml.cs">
       <DependentUpon>login.xaml</DependentUpon>
     </Compile>
-    <Compile Include="openStore.xaml.cs">
+    <Compile Include="View\member\openStore.xaml.cs">
       <DependentUpon>openStore.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Page1.xaml.cs">
+    <Compile Include="View\Page1.xaml.cs">
       <DependentUpon>Page1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="register.xaml">
+    <Page Include="View\Auth\register.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Store.xaml">
+    <Page Include="View\Store.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
