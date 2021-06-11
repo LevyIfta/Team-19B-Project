@@ -52,7 +52,7 @@ namespace ClientWeb
             }
             if (insertValid)
             {
-                bool bAns = controler.Login(user.username, user.password);
+                bool bAns = controler.Login(user.loginname, user.password)[0].Equals("true");
                 string[] ans = { "false", user.username };
                 if (bAns)
                 {
@@ -60,7 +60,7 @@ namespace ClientWeb
                 }
                 if (ans != null && ans[0].Equals("true"))
                 {
-                    PageController.username = user.username;
+                    PageController.username = user.loginname;
                     Page1 page1 = new Page1();
                     NavigationService.Navigate(page1);
                 }
@@ -71,6 +71,12 @@ namespace ClientWeb
                     user.usermsg = ans[1];
                 }
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Page1 page = new Page1();
+            NavigationService.Navigate(page);
         }
     }
 }

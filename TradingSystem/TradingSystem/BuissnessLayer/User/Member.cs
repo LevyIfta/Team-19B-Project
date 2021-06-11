@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.BuissnessLayer.User;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -20,6 +21,9 @@ namespace TradingSystem.BuissnessLayer
         
         public basePermmision permmisions { get; set; }
 
+        public ICollection<Message> messages { get; set; }
+        public ICollection<OfferRequest> requests { get; set; }
+
 
         public Member(string username, string password) : base()
         {
@@ -30,6 +34,7 @@ namespace TradingSystem.BuissnessLayer
             this.address = "";
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
+            this.messages = new List<Message>();
         }
         public Member(string username, string password, double age, string gender, string address) : base()
         {
@@ -40,6 +45,7 @@ namespace TradingSystem.BuissnessLayer
             this.address = address;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
+            this.messages = new List<Message>();
         }
 
         public Member(MemberData member)
@@ -48,6 +54,7 @@ namespace TradingSystem.BuissnessLayer
             this.password = member.password;
             this.reciepts = new List<Receipt>();
             this.myCart = new ShoppingCart(this);
+            this.messages = new List<Message>();
         }
 
         public override string getUserName()
@@ -69,6 +76,8 @@ namespace TradingSystem.BuissnessLayer
         override
         public object todo(PersmissionsTypes func, object[] args)
         {
+            if (permmisions == null)
+                return null;
             return permmisions.todo(func, args);
         }
         override
@@ -76,7 +85,7 @@ namespace TradingSystem.BuissnessLayer
         {
             if (!Stores.addStore(storeName, this))
                 return false;
-            
+            Stores.searchStore(storeName).addOwner(this);
             permmisions = new basePermmision("", null);
             aPermission temp1 = new addProduct(storeName, null);
             aPermission temp2 = new editManagerPermissions(storeName, null);
@@ -87,6 +96,7 @@ namespace TradingSystem.BuissnessLayer
             aPermission temp7 = new hireNewStoreOwner(storeName, null);
             aPermission temp8 = new removeManager(storeName, null);
             aPermission temp9 = new removeProduct(storeName, null);
+            aPermission temp10 = new removeOwner(storeName, null);
             permmisions.addPermission(temp1);
             permmisions.addPermission(temp2);
             permmisions.addPermission(temp3);
@@ -96,6 +106,7 @@ namespace TradingSystem.BuissnessLayer
             permmisions.addPermission(temp7);
             permmisions.addPermission(temp8);
             permmisions.addPermission(temp9);
+            permmisions.addPermission(temp10);
             return true;
         }
 
@@ -104,9 +115,9 @@ namespace TradingSystem.BuissnessLayer
             ICollection<Receipt> list = new List<Receipt>();
             foreach (ShoppingBasket basket in getMyCart().baskets)
             {
-                string[] ans = basket.store.executePurchase(basket, creditNumber, validity, cvv);
+                string[] ans = Stores.searchStore(basket.store.name).executePurchase(basket, creditNumber, validity, cvv);
                 if (ans == null || ans[0].Equals("false"))
-                    return null;
+                    return ans;
                 Receipt receipt = GetReceiptNow(ans[1]);
                 list.Add(receipt);
             }
@@ -157,22 +168,25 @@ namespace TradingSystem.BuissnessLayer
             if (permmisions == null)
                 return false;
             aPermission start = null;
+            aPermission prev = null;
             aPermission corrent = permmisions.next;
 
             while (corrent != null)
             {
-                if (corrent.store.Equals(storeName) && corrent.sponser.Equals(userSponser))
+                if (corrent.store.Equals(storeName) && corrent.sponser != null && corrent.sponser.Equals(userSponser))
                 {
                     if (start == null)
+                    {
                         start = permmisions;
+                        if (prev == null)
+                            prev = permmisions;
+                    }
                 }
                 else
                 {
                     if (start != null)
-                        start = corrent;
-                    else
                     {
-                        start.next = corrent;
+                        prev.next = corrent;
                         return true;
                     }
                 }
@@ -180,7 +194,7 @@ namespace TradingSystem.BuissnessLayer
             }
             if (start != null)
             {
-                start.next = null;
+                prev.next = null;
                 return true;
             }
             return false;
@@ -189,22 +203,44 @@ namespace TradingSystem.BuissnessLayer
         public override bool addNewProduct(string storeName, string productName, double price, int amount, string category, string manufacturer)
         {
             object[] args = new object[] { storeName , productName, price, amount, category, manufacturer };
-            return (bool)todo(PersmissionsTypes.AddProduct, args);
+            var temp = todo(PersmissionsTypes.AddProduct, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
         public override bool removeProduct(string storeName, string productName, string manufacturer)
         {
             object[] args = new object[] { storeName, productName, manufacturer };
-            return (bool)todo(PersmissionsTypes.RemoveProduct, args);
+            var temp = todo(PersmissionsTypes.RemoveProduct, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
         public override bool editProduct(string storeName, string productName, double price, string manufacturer)
         {
             object[] args = new object[] { storeName, productName, price, manufacturer };
-            return (bool)todo(PersmissionsTypes.EditProduct, args);
+            var temp = todo(PersmissionsTypes.EditProduct, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
+        }
+        public override bool supply(string storeName, string productName, int amount, string manufacturer)
+        {
+            object[] args = new object[] { storeName, productName, amount, manufacturer };
+            Store store = Stores.searchStore(storeName);
+
+            if (store == null)
+                return false;
+
+            return store.supply(productName, manufacturer, amount);
         }
         public override bool editManagerPermissions(string storeName, string username, List<PersmissionsTypes> Permissions)
         {
             object[] args = new object[] { storeName, username, this.userName, aPermission.converPer(storeName, this.userName, Permissions) };
-            return (bool)todo(PersmissionsTypes.EditManagerPermissions, args);
+            var temp = todo(PersmissionsTypes.EditManagerPermissions, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
         public override ICollection<Receipt> getMyPurchaseHistory(string storeName)
         {
@@ -219,34 +255,56 @@ namespace TradingSystem.BuissnessLayer
         public override ICollection<Receipt> getPurchaseHistory(string storeName)
         {
             object[] args = new object[] { storeName };
-            return (ICollection<Receipt>)todo(PersmissionsTypes.GetPurchaseHistory, args);
+            var temp = todo(PersmissionsTypes.GetPurchaseHistory, args);
+            if (temp == null)
+                return null;
+            if (temp is bool)
+                return null;
+            return (ICollection<Receipt>)temp;
         }
         public override bool hireNewStoreManager(string storeName, string username)
         {
             object[] args = new object[] { storeName, username, this.userName};
-            return (bool)todo(PersmissionsTypes.HireNewStoreManager, args);
+            var temp = todo(PersmissionsTypes.HireNewStoreManager, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
         public override bool hireNewStoreOwner(string storeName, string username, List<PersmissionsTypes> Permissions)
         {
             object[] args = new object[] { storeName, username, aPermission.converPer(storeName, this.userName, Permissions) };
-            return (bool)todo(PersmissionsTypes.HireNewStoreOwner, args);
+            var temp = todo(PersmissionsTypes.HireNewStoreOwner, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
         public override bool removeManager(string storeName, string username)
         {
             object[] args = new object[] { storeName, username, this.userName };
-            return (bool)todo(PersmissionsTypes.RemoveManager, args);
+            var temp = todo(PersmissionsTypes.RemoveManager, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
         public override bool removeOwner(string storeName, string username)
         {
             object[] args = new object[] { storeName, username, this.userName };
-            return (bool)todo(PersmissionsTypes.RemoveOwner, args);
+            var temp = todo(PersmissionsTypes.RemoveOwner, args);
+            if (temp == null)
+                return false;
+            return (bool)temp;
         }
-        public override ICollection<aUser> getInfoEmployees(string storeName)
+        public override ICollection<Member> getInfoEmployees(string storeName)
         {
             object[] args = new object[] { storeName };
-            return (ICollection<aUser>)todo(PersmissionsTypes.GetInfoEmployees, args);
+            var temp = todo(PersmissionsTypes.GetInfoEmployees, args);
+            if (temp == null)
+                return null;
+            if (temp is bool)
+                return null;
+            return (ICollection<Member>)temp;
         }
-        public ICollection<PersmissionsTypes> GetPermissions(string storeName)
+        public override ICollection<PersmissionsTypes> GetPermissions(string storeName)
         {
             if (permmisions == null || permmisions.next == null)
                 return null;
@@ -265,13 +323,21 @@ namespace TradingSystem.BuissnessLayer
             aPermission corrent = permmisions;
             string storeName = "";
             bool first = true;
+            bool firstfirst = true;
             Dictionary<string, ICollection<string>> ans = new Dictionary<string, ICollection<string>>();
             ICollection<string> list = new List<string>();
+            if (corrent == null)
+                return null;
             while (corrent.next != null)
             {
+                //if (corrent.store.Equals(""))
+                    //storeName = corrent.store;
                 corrent = corrent.next;
-                if (corrent.store.Equals(""))
+                if (firstfirst)
+                {
                     storeName = corrent.store;
+                    firstfirst = false;
+                }
                 if (!(storeName.Equals(corrent.store)))
                 {
                     if(first)
@@ -284,10 +350,17 @@ namespace TradingSystem.BuissnessLayer
                 }
                 list.Add(aPermission.who(corrent.who()));
             }
+            ans[storeName] = list;
             return ans;
         }
-        
-        
+        public override bool sendMessage(Message message)
+        {
+            if (!message.UserToSend.Equals(this.userName))
+                return false;
+            messages.Add(message);
+            return true;
+        }
+
         public static Member dataToObject(MemberData data)
         {
             if(data == null)
@@ -307,6 +380,9 @@ namespace TradingSystem.BuissnessLayer
             MemberDAL.update(new MemberData(userName, password));
         }
 
-
+        public override void addOffer(OfferRequest request)
+        {
+            this.requests.Add(request);
+        }
     }
 }

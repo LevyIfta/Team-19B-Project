@@ -18,7 +18,7 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
                     return false;
                 Stores.searchStore((string)args[0]).removeOwner(((Member)UserServices.getUser((string)args[1])));
                 ((Member)UserServices.getUser((string)args[1])).removePermission((string)args[0], (string)args[2]);
-                UserServices.removeEmployeesPermission((string)args[0], (string)args[2]);
+                UserServices.removeEmployeesPermission((string)args[0], (string)args[1]);
                 return true;
             }
             return base.todo(func, args);

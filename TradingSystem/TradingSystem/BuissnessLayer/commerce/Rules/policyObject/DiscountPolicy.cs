@@ -4,22 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.BuissnessLayer.commerce.Rules
+namespace TradingSystem.BuissnessLayer.commerce.Rules.policyObject
 {
-    class XorPolicy : iPolicy
+    class DiscountPolicy
     {
         public iPolicy policy1 { get; set; }
         public iPolicy policy2 { get; set; }
 
-        public XorPolicy(iPolicy pol1, iPolicy pol2)
+        public DiscountPolicy(iPolicy pol1, iPolicy pol2)
         {
             this.policy1 = pol1;
             this.policy2 = pol2;
         }
 
-        public bool isValid(ICollection<Product> products)
+        /*
+        public iPolicy maxPolicy(iPolicy pol1, iPolicy pol2)
         {
-            return this.policy1.isValid(products) ^ this.policy2.isValid(products);
+            return Math.Max(pol1, pol2);
         }
+        */
+
     }
 }

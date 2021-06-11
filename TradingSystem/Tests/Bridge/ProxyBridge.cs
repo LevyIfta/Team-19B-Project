@@ -198,7 +198,12 @@ namespace Tests.Bridge
                 return this.realBridge.register(userName, password);
             throw new NotImplementedException();
         }
-
+        public string[] register(string userName, string password, double age, string gender, string address)
+        {
+            if (realBridge != null)
+                return this.realBridge.register(userName, password, age, gender, address);
+            throw new NotImplementedException();
+        }
         public void removeInventory(ShoppingBasket basket)
         {
             if (realBridge != null)

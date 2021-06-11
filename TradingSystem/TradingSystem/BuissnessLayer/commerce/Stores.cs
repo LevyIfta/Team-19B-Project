@@ -16,7 +16,9 @@ namespace TradingSystem.BuissnessLayer.commerce
         public static Dictionary<string, Store> storesClose = new Dictionary<string, Store>();
         public static bool addStore(string storeName, Member founder)
         {
+            SupplySystem.Supply.InformStore(storeName);
             Store newStore = new Store(storeName, founder);
+            //newStore.purchasePolicies = new LinkedList<Rules.iPolicy>();
             // check for a name duplicant
             if ((storeName == null | founder == null) || stores.ContainsKey(storeName))
                 return false;

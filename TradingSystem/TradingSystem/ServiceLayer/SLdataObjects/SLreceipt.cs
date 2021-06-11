@@ -8,6 +8,7 @@ namespace TradingSystem.ServiceLayer
 {
     public class SLreceipt
     {
+        private static readonly int BEL = 7;
         public ICollection<SLproduct> products { get; }
         public string storeName { get; }
         public string userName { get; }
@@ -36,5 +37,21 @@ namespace TradingSystem.ServiceLayer
             this.date = (DateTime)parameters[4];
             this.receiptID = (int)parameters[5];
         }
+
+
+        public List<string> toStringList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static  DecodedMessge toMessage(ICollection<SLreceipt> recipts)
+        {
+            DecodedMessge ans = new DecodedMessge();
+            ans.type = msgType.OBJ;
+            ans.name = "recipts";
+            throw new NotImplementedException();
+        }
+
+
     }
 }

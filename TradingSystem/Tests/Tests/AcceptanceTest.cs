@@ -52,7 +52,7 @@ namespace Tests
         public void PurchaseTestGood()
         {
             //Member member2 = new Member("regular", "justsomemember12");
-            bridge.register("Member1", "Pass2345");
+            bridge.register("Member1", "Pass2345", 12, "f", "gvfdg");
             bridge.login("Member1", "Pass2345");
             Dictionary<string, int> d = new Dictionary<string, int>();
             d["item1"] = 10;
@@ -66,7 +66,7 @@ namespace Tests
             Assert.IsNotNull(ans, "empty receipt");
             if(ans != null)
             {
-                Assert.IsTrue(ans[0].Equals("true"), "error in purchse");
+                Assert.IsFalse(ans[0].Equals("false"), "error in purchse");
                 if(ans[0].Equals("true"))
                 {
                     string[] arr = ans[1].Split('$');
@@ -81,20 +81,21 @@ namespace Tests
 
         public void PurchaseTestBad()
         {
-            bridge.register("Member2", "Pass2345");
+            bridge.register("Member2", "Pass2345", 12, "f", "gvfdg");
             bridge.login("Member2", "Pass2345");
             Dictionary<string, int> d = new Dictionary<string, int>();
             d["item1"] = 10;
             d["item2"] = 10;
             Store store1 = bridge.getStore("Store1");
             bridge.saveProducts(bridge.getUserName(), "Store1", "manu1", d);
-            /*
-            ICollection<SLreceipt> ans = bridge.purchase("Immediate");
+
+            var ans = bridge.purchase("111111111111", "11/22", "123");
             bridge.logout();
-            Assert.IsTrue(ans == null, "receipt should be empty");
+            Assert.IsTrue(ans[0].Equals("false"), "receipt should be empty");
+            Assert.IsTrue(ans[1].Equals("not enough items in stock"), "receipt should be empty");
             Assert.IsFalse(bridge.isUserLoggedIn("Member2"), "user should not be logged in");
             Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "should not change the inventory if the purchase is invalid");//should not process the purchase because there are not enough of the product in the store
-            */
+
         }
     }
 

@@ -16,10 +16,11 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
             {
                 if(Stores.searchStore((string)args[0]).isProductExist((string)args[1], (string)args[5]))
                 {
-                    Stores.searchStore((string)args[0]).addProduct((string)args[1], (string)args[4], (string)args[5]);
+                    Stores.searchStore((string)args[0]).supply((string)args[1], (string)args[5], (int)args[3]);
                 }
                 else
                 {
+                    Stores.searchStore((string)args[0]).addProduct((string)args[1], (string)args[4], (string)args[5]);
                     Stores.searchStore((string)args[0]).supply((string)args[1], (string)args[5], (int)args[3]);
                 }
                 Stores.searchStore((string)args[0]).editPrice((string)args[1], (string)args[5], (double)args[2]);

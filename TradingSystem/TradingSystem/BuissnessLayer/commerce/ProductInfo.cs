@@ -88,6 +88,9 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public bool leaveFeedback(string username, string comment)
         {
+          /*  feedbacks[username] += comment;
+            return true;*/
+            
             if (this.feedbacks.ContainsKey(username))
             {
                 if (feedbacks[username].CompareTo("") == 0)
@@ -138,5 +141,18 @@ namespace TradingSystem.BuissnessLayer.commerce
                     return productInfo.name;
             return "";
         }*/
+        public override string ToString()
+        {
+            string output = "";
+
+            output += "ID: " + this.id + "\n";
+            output += "Product name: " + this.name + "\n";
+            output += "Category: " + this.category + "\n";
+            output += "Manufacturer: " + this.manufacturer + "\n";
+
+            return output;
+        }
     }
+    
+
 }

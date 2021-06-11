@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.BuissnessLayer.commerce;
 using System.Threading;
+using TradingSystem.BuissnessLayer.User;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -21,6 +22,7 @@ namespace TradingSystem.BuissnessLayer
 
         public AutoResetEvent alarmLock = new AutoResetEvent(false);
         private object[] alarmthreadParams;
+        public bool canLeaveFeedback = false;
 
         public ShoppingCart getMyCart()
         {
@@ -140,6 +142,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
+        public virtual bool supply(string storeName, string productName, int amount, string manufacturer)
+        {
+            return false;
+        }
         public virtual ICollection<Receipt> getMyPurchaseHistory(string storeName)
         {
             return null;
@@ -168,7 +174,7 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
-        public virtual ICollection<aUser> getInfoEmployees(string storeName)
+        public virtual ICollection<Member> getInfoEmployees(string storeName)
         {
             return null;
         }
@@ -176,7 +182,14 @@ namespace TradingSystem.BuissnessLayer
         {
             return null;
         }
-        
+        public virtual ICollection<PersmissionsTypes> GetPermissions(string storeName)
+        {
+            return null;
+        }
+        public virtual bool sendMessage(Message message)
+        {
+            return false;
+        }
         
 
         /// <summary>
@@ -237,6 +250,11 @@ namespace TradingSystem.BuissnessLayer
             th.Start();
             alarmLock.Set();
             return th;
+        }
+
+        public virtual void addOffer(OfferRequest request)
+        {
+            
         }
     }
 }

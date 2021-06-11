@@ -20,27 +20,29 @@ namespace ClientWeb
     /// </summary>
     public partial class myStores : Page
     {
-        public myStores()
+        private string username;
+        public myStores(ICollection<string> storesNames, string username)
         {
             InitializeComponent();
-            Button b1 = new Button();
-            b1.Click += button1_Click;
-            b1.Content = "name1";
-            this.StackList.Children.Add(b1);
-            Button b2 = new Button();
-            b2.Click += button1_Click;
-            b2.Content = "name2";
-            this.StackList.Children.Add(b2);
+
+            this.username = PageController.username;
+
+            foreach (string storeName in storesNames)
+                addButton(storeName);
         }
-        private void button1_Click(object sender, RoutedEventArgs e)
+
+        private void addButton(string storeName)
         {
-            login l = new login();
-            NavigationService.Navigate(l);
+            Button storeButton = new Button();
+            storeButton.Content = storeName;
+            storeButton.Click += (r, e) => openStoreWindow(storeName);
+            this.StackList.Children.Add(storeButton);
         }
-        private void button2_Click(object sender, RoutedEventArgs e)
+
+        private void openStoreWindow(string storeName)
         {
-            register l = new register();
-            NavigationService.Navigate(l);
+            Store storeWindow = new Store(storeName, PageController.username);
+            NavigationService.Navigate(storeWindow);
         }
     }
 }

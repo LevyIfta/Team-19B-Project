@@ -408,7 +408,12 @@ namespace TradingSystem.ServiceLayer
                         var ans_bp = TradingSystem.ServiceLayer.UserController.browseProducts(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "dictionary product";
-                        msg_send.param_list = DictionaryToString(ans_bp); // arr[i] -> store$product -> proInfo^feedback -> feedback_feedback -> user#comment
+                        List<string> lst = new List<string>();
+                        foreach (KeyValuePair<string, SLproduct> item in ans_bp)
+                        {
+                            lst.AddRange(item.Value.toStringarr(item.Key));
+                        }
+                        msg_send.param_list = lst.ToArray();// arr[i] -> store$product -> proInfo^feedback -> feedback_feedback -> user#comment
                         break;
                     case ("browse store"):
                         ans_d = TradingSystem.ServiceLayer.UserController.browseStore(msg.param_list[0], msg.param_list[1]);
@@ -476,6 +481,15 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "bool";
                         msg_send.param_list = new string[] { ans_d };
                         break;
+                    case ("supply product"): //string username, string storeName, string productName, int amount, string manufacturer
+                        ans = TradingSystem.ServiceLayer.UserController.supplyProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], int.Parse(msg.param_list[3]), msg.param_list[4]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        break;
                     case ("hire new manager"): //string username, string storeName, string userToHire
                         ans = TradingSystem.ServiceLayer.UserController.hireNewStoreManager(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         ans_d = "false";
@@ -531,6 +545,18 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string";
                         msg_send.param_list = new string[] { UserController.getUserName() };
+                        break;
+                    case ("get my stores"): //string username
+                        var ans_gms = TradingSystem.ServiceLayer.UserController.GetMyStores(msg.param_list[0]);
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string[]";
+                        msg_send.param_list = ans_gms;
+                        break;
+                    case ("get my permission on store"): //string username, string storeName
+                        var ans_gmp = TradingSystem.ServiceLayer.UserController.GetPermissions(msg.param_list[0], msg.param_list[1]);
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string[]";
+                        msg_send.param_list = ans_gmp;
                         break;
                 }
             }
