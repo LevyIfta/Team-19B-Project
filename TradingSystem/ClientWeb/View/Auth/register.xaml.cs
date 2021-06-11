@@ -50,7 +50,7 @@ namespace ClientWeb
         {
 
 
-            string[] ans = controler.Register(user.username, user.password);
+            string[] ans = controler.Register(user.username, user.password,user.age,user.gender,user.address);
             //string[] ans = mockData.register();
             if (ans != null && ans[0].Equals("true"))
             {

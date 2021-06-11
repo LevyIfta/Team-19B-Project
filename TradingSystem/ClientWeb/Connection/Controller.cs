@@ -97,12 +97,12 @@ namespace ClientWeb
             return ans;
         }
 
-        public string[] Register(string username, string password)
+        public string[] Register(string username, string password, string age, string gender, string address)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "register";
-            msg.param_list = new string[] { username, password };
+            msg.param_list = new string[] { username, password , age, gender, address };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
 
