@@ -46,5 +46,40 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 
             return XorPolicy;
         }
+
+        public static iPolicyDiscount generateDiscountPolicyByProduct(string productName, string category, string man, double discountPercent, DateTime deadLine)
+        {
+            return new baseDiscountPolicy(p => p.info.Equals(ProductInfo.getProductInfo(productName, category, man)), p => true, deadLine, discountPercent);
+        }
+
+        public static iPolicyDiscount generateDiscountPolicyByCategory(string category, double discountPercent, DateTime deadLine)
+        {
+            return new baseDiscountPolicy(p => p.info.category.Equals(category), p => true, deadLine, discountPercent);
+        }
+        
+        public static ConditioningPolicyDiscount generateMinProductsCondition(string productName, string category, string man, int minAmount)
+        {
+            return new BaseCondition((basket, totalPrice) =>
+            {
+                foreach (Product p in basket.products) if (p.info.Equals(ProductInfo.getProductInfo(productName, category, man)) & p.amount >= minAmount)
+                        return true;
+                return false;
+            });
+        }
+
+        public static ConditioningPolicyDiscount generateMinProductsConditionByCategory(string category, int minAmount)
+        {
+            return new BaseCondition((basket, totalPrice) =>
+            {
+                foreach (Product p in basket.products) if (p.info.category.Equals(category) & p.amount >= minAmount)
+                        return true;
+                return false;
+            });
+        }
+
+        public static ConditioningPolicyDiscount generateMinTotalPriceCondition(double minTotalPrice)
+        {
+            return null;
+        }
     }
 }

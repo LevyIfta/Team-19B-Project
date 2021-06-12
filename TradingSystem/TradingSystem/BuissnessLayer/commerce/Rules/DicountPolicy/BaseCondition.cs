@@ -8,15 +8,15 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
     class BaseCondition : ConditioningPolicyDiscount
     {
-        private Func<ShoppingBasket, bool> predicate;
+        private Func<ShoppingBasket, double, bool> predicate;
 
-        public BaseCondition(Func<ShoppingBasket, bool> predicate)
+        public BaseCondition(Func<ShoppingBasket, double, bool> predicate)
         {
             this.predicate = predicate;
         }
-        public override bool isValid(ShoppingBasket basket)
+        public override bool isValid(ShoppingBasket basket, double totalPrice)
         {
-            return predicate(basket);
+            return predicate(basket, totalPrice);
         }
     }
 }

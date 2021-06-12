@@ -12,10 +12,10 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
         {
             this.policies = new List<ConditioningPolicyDiscount>();
         }
-        public override bool isValid(ShoppingBasket basket)
+        public override bool isValid(ShoppingBasket basket, double totalPrice)
         {
             foreach (ConditioningPolicyDiscount policy in this.policies)
-                if (!policy.isValid(basket))
+                if (!policy.isValid(basket, totalPrice))
                     return false;
             return true;
         }

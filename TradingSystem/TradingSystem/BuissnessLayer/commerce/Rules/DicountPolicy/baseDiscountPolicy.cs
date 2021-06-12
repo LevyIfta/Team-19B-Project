@@ -14,29 +14,29 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
         public double discount_percent { get; set; }
 
         public Func<Product, bool> isRelevant;
-        public Func<Product, double, bool> predicate { get; set; }
+        public Func<Product, bool> predicate { get; set; }
         public bool Default { get; set; }
 
-        public baseDiscountPolicy(Func<Product, bool> isRelevant, Func<Product, double, bool> pred , DateTime deadline ,double discount_percent)
+        public baseDiscountPolicy(Func<Product, bool> isRelevant, Func<Product, bool> pred , DateTime deadline ,double discount_percent)
         {
             this.isRelevant = isRelevant;
-            this.predicate = pred;
+            //this.predicate = pred;
             this.Default = true;
             this.deadline = deadline;
             this.discount_percent = discount_percent;
         }
-        public baseDiscountPolicy(Func<Product, bool> isRelevant, Func<Product, double, bool> pred, bool isRequired)
+        public baseDiscountPolicy(Func<Product, bool> isRelevant, Func<Product, bool> pred, bool isRequired)
         {
             this.isRelevant = isRelevant;
-            this.predicate = pred;
+            //this.predicate = pred;
             this.Default = !isRequired;
         }
 
-        public override double ApplyDiscount(ShoppingBasket basket)
+        public override double ApplyDiscount(ShoppingBasket basket, double totalPrice)
         {
             // check for conditions (if there are any)
             foreach (ConditioningPolicyDiscount condition in this.policies)
-                if (!condition.isValid(basket))
+                if (!condition.isValid(basket, totalPrice))
                     return 0;
 
             double totalDiscount = 0;

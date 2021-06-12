@@ -18,13 +18,13 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
         {
             this.policies.Add(policy);
         }
-        public override double ApplyDiscount(ShoppingBasket basket)
+        public override double ApplyDiscount(ShoppingBasket basket, double totalPrice)
         {
             double maxDiscount = 0;
 
             foreach(iPolicyDiscount discountPolicy in this.policies)
             {
-                maxDiscount = Math.Max(discountPolicy.ApplyDiscount(basket), maxDiscount);
+                maxDiscount = Math.Max(discountPolicy.ApplyDiscount(basket, totalPrice), maxDiscount);
             }
 
             return maxDiscount;

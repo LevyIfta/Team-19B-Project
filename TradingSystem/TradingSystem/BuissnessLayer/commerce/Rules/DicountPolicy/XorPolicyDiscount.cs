@@ -16,12 +16,12 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
         }
 
 
-        public override bool isValid(ShoppingBasket basket)
+        public override bool isValid(ShoppingBasket basket, double totalPrice)
         {
             int trueConds = 0;
 
             foreach (ConditioningPolicyDiscount policy in this.policies)
-                trueConds += policy.isValid(basket) ? 1 : 0;
+                trueConds += policy.isValid(basket, totalPrice) ? 1 : 0;
 
             // only one is valid
             return trueConds == 1;

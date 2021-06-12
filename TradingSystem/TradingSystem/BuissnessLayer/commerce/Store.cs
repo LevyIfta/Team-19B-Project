@@ -189,14 +189,13 @@ namespace TradingSystem.BuissnessLayer.commerce
                         product.price = localProduct.price;
         }
 
-        private double calcTotalDiscount(ShoppingBasket basket)
+        private double calcTotalDiscount(ShoppingBasket basket, double totalPrice)
         {
             double totalDiscount = 0;
 
             foreach (iPolicyDiscount discountPolicy in this.discountPolicies)
-                totalDiscount += discountPolicy.ApplyDiscount(basket);
-            // check for max policies
-
+                totalDiscount += discountPolicy.ApplyDiscount(basket, totalDiscount);
+            
 
 
             return totalDiscount;
@@ -300,7 +299,8 @@ namespace TradingSystem.BuissnessLayer.commerce
         private Receipt validPurchase(ShoppingBasket basket)
         {
             // calc the price
-            double price = calcPriceBeforeDiscount(basket.products) - calcTotalDiscount(basket);
+            double priceBeforeDisc = calcPriceBeforeDiscount(basket.products);
+            double price = priceBeforeDisc - calcTotalDiscount(basket, priceBeforeDisc);
             Receipt receipt = new Receipt();
             // request for payment
             // the payment was successful
@@ -496,7 +496,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             iPolicyDiscount policy = new baseDiscountPolicy(
                 (Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)),
-                (Product p, double totalPrice)=> true,
+                (Product p)=> true,
                 deadline,
                 discount_percent);
             this.discountPolicies.Add(policy);
