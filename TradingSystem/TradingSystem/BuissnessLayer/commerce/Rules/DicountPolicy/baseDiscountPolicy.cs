@@ -17,20 +17,6 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
         public Func<Product, double, bool> predicate { get; set; }
         public bool Default { get; set; }
 
-
-        /*
-        public baseDiscountPolicy(ProductInfo subject, DateTime deadline, int discount_percent , Func<Product, bool> isRelevant, Func<Product, double, bool> pred)
-        {
-            this.subject = subject;
-            this.deadline = deadline;
-            this.discount_percent = discount_percent;
-            this.isRelevant = isRelevant;
-            this.predicate = predicate;
-            this.Default = true;
-
-        }
-        */
-
         public baseDiscountPolicy(Func<Product, bool> isRelevant, Func<Product, double, bool> pred , DateTime deadline ,double discount_percent)
         {
             this.isRelevant = isRelevant;
@@ -46,19 +32,32 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
             this.Default = !isRequired;
         }
 
-        public override void ApplyDiscount(ICollection<Product> products)
+        public override double ApplyDiscount(ShoppingBasket basket)
         {
-            foreach (Product item in products)
+            // check for conditions (if there are any)
+            foreach (ConditioningPolicyDiscount condition in this.policies)
+                if (!condition.isValid(basket))
+                    return 0;
+
+            double totalDiscount = 0;
+            foreach (Product item in basket.products)
             {
                 if (isRelevant(item))
                     if (check_discount_deadline(this.deadline))
                     {
-                        item.price = calculateDiscountPrice(item, this.discount_percent);
+                        // check if the discount doesn't exceed 100% - prevent overdiscount
+                        if (item.discount_percent + this.discount_percent <= 1)
+                        {
+                            item.discount_percent += this.discount_percent;
+                            totalDiscount += this.discount_percent * item.price;
+                        }
                     }
             }
+
+            return totalDiscount;
         }
 
-
+        /*
         public override bool isValid(ICollection<Product> products, double totalprice)
         {
             foreach (Product item in products)
@@ -68,5 +67,6 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
             }
             return this.Default;
         }
+        */
     }
 }

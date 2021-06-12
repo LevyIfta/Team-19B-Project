@@ -57,8 +57,8 @@
     </ApplicationDefinition>
     <Compile Include="BuissnessLayer\commerce\feedbackSystem.cs" />
     <Compile Include="BuissnessLayer\commerce\OfferRequest.cs" />
-    <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\AddPolicyDiscount.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\AndPolicyDiscount.cs" />
+    <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\BaseCondition.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\ConditioningPolicyDiscount.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\baseDiscountPolicy.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\DicountPoliciesGenerator.cs" />

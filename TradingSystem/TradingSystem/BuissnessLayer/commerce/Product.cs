@@ -20,6 +20,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.info = info;
             this.amount = amount;
             this.price = price;
+            this.discount_percent = 0;
         }
 
         public Product(ProductData productData)
@@ -28,6 +29,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.info = ProductInfo.getProductInfo(productInfoData.productName, productInfoData.category, productInfoData.manufacturer);
             this.amount = productData.amount;
             this.price = productData.price;
+            this.discount_percent = 0;
         }
 
         public Product(Product product)
@@ -36,6 +38,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.info = product.info;
             this.amount = product.amount;
             this.price = product.price;
+            this.discount_percent = 0;
         }
         public Product(ProductsInBasketData productsInBasketData)
         {
@@ -43,6 +46,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.info = ProductInfo.getProductInfo(productInfoData.productName, productInfoData.category, productInfoData.manufacturer);
             this.amount = productsInBasketData.amount;
             this.price = 0;
+            this.discount_percent = 0;
         }
 
         public ProductData toDataObject(string storeName)

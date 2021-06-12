@@ -6,18 +6,28 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
-    class MaxPolicyDiscount : ConditioningPolicyDiscount
+    public class MaxPolicyDiscount : iPolicyDiscount
     {
-
+        public new List<iPolicyDiscount> policies;
         public MaxPolicyDiscount()
         {
-            this.policies = new List<ConditioningPolicyDiscount>();
+            this.policies = new List<iPolicyDiscount>();
         }
 
-        
-        public override bool isValid(ICollection<Product> products, double totalPrice)
+        public void addIPolicy(iPolicyDiscount policy)
         {
-            throw new NotImplementedException();
+            this.policies.Add(policy);
+        }
+        public override double ApplyDiscount(ShoppingBasket basket)
+        {
+            double maxDiscount = 0;
+
+            foreach(iPolicyDiscount discountPolicy in this.policies)
+            {
+                maxDiscount = Math.Max(discountPolicy.ApplyDiscount(basket), maxDiscount);
+            }
+
+            return maxDiscount;
         }
     }
 }

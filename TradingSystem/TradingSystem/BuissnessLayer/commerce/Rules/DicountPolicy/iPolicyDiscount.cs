@@ -9,10 +9,10 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
     public abstract class iPolicyDiscount
     {
 
-        public List<iPolicyDiscount> policies = new List<iPolicyDiscount>();
+        public List<ConditioningPolicyDiscount> policies = new List<ConditioningPolicyDiscount>();
 
-        public abstract void ApplyDiscount(ICollection<Product> products);
-        public abstract bool isValid(ICollection<Product> products, double totalprice);
+        public abstract double ApplyDiscount(ShoppingBasket basket);
+        //public abstract bool isValid(ICollection<Product> products, double totalprice);
 
 
         public bool check_discount_deadline(DateTime deadline)
@@ -25,7 +25,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
             return  product.price - (product.price * discount_percent);
         }
 
-        public void addPolicy(iPolicyDiscount policy)
+        public void addPolicy(ConditioningPolicyDiscount policy)
         {
             this.policies.Add(policy);
         }

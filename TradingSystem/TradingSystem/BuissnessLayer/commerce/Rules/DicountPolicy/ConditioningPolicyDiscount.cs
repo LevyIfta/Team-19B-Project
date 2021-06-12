@@ -11,7 +11,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 
         public List<ConditioningPolicyDiscount> policies = new List<ConditioningPolicyDiscount>();
 
-        public abstract bool isValid(ICollection<Product> products, double totalPrice);
+        public abstract bool isValid(ShoppingBasket basket);
 
         public void addPolicy(ConditioningPolicyDiscount policy)
         {

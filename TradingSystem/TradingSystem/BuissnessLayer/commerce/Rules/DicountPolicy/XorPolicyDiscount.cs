@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,12 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
         }
 
 
-        public override bool isValid(ICollection<Product> products, double totalPrice)
+        public override bool isValid(ShoppingBasket basket)
         {
             int trueConds = 0;
 
             foreach (ConditioningPolicyDiscount policy in this.policies)
-                trueConds += policy.isValid(products, totalPrice) ? 1 : 0;
+                trueConds += policy.isValid(basket) ? 1 : 0;
 
             // only one is valid
             return trueConds == 1;

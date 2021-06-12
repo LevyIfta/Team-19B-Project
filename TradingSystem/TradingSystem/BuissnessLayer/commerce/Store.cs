@@ -181,7 +181,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return price;
         }
 
-        public void updatePricesInBasket(ICollection<Product> products)
+        private void updatePricesInBasket(ICollection<Product> products)
         {
             foreach (Product product in products)
                 foreach (Product localProduct in this.inventory)
@@ -189,22 +189,25 @@ namespace TradingSystem.BuissnessLayer.commerce
                         product.price = localProduct.price;
         }
 
-        public double calcPriceAfterDiscount(ICollection<Product> products)
+        private double calcTotalDiscount(ShoppingBasket basket)
         {
-            double price = 0.0;
+            double totalDiscount = 0;
 
-            foreach (Product product in products)
-                price += product.price * product.amount;
+            foreach (iPolicyDiscount discountPolicy in this.discountPolicies)
+                totalDiscount += discountPolicy.ApplyDiscount(basket);
+            // check for max policies
 
-            return price;
+
+
+            return totalDiscount;
         }
+        
 
         public string[] executeOfferPurchase(aUser user, Product product, string creditNumber, string validity, string cvv)
         {  // lock the store for purchase
             Receipt receipt;
             lock (this.purchaseLock)
             {
-                // check for amounts validation
                 string policy = checkPolicies(product);
                 if (policy.Length != 0)
                     return new string[] { "false", policy };
@@ -247,7 +250,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             Receipt receipt;
             lock (this.purchaseLock)
             {
-                // check for amounts validation
+                // check for amounts validation, policies, payment verification and supplyment validation
+                updatePricesInBasket(basket.products);
+                
                 string policy = checkPolicies(basket);
                 if (policy.Length != 0)
                     return new string[] { "false", policy };
@@ -295,7 +300,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         private Receipt validPurchase(ShoppingBasket basket)
         {
             // calc the price
-            double price = calcPriceBeforeDiscount(basket.products);
+            double price = calcPriceBeforeDiscount(basket.products) - calcTotalDiscount(basket);
             Receipt receipt = new Receipt();
             // request for payment
             // the payment was successful
