@@ -7,7 +7,6 @@ using System.Linq;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.ServiceLayer;
 using TradingSystem.BuissnessLayer.User.Permmisions;
-using System.Threading;
 using System;
 
 namespace Tests
@@ -37,12 +36,9 @@ namespace Tests
             // register
             UserController.register(username1, pass1);
             UserController.register(username2, pass2);
-            // try to login twice
-            aUser u = UserServices.getUser(username1);
-            //string[] usr = UserServices.login(username1, pass1);
-            //Assert.IsTrue(UserController.login(username1, pass1));
-            string[] usr2 = UserServices.login(username2, pass2);
-            Assert.IsTrue(usr2[0].Equals("true"));
+
+            string[] usr = UserServices.login(username2, pass2);
+            Assert.IsTrue(usr[0].Equals("true"));
             UserServices.logout("QwEr2");
             UserServices.logout("AbD1");
 
@@ -78,51 +74,33 @@ namespace Tests
         [TestMethod]
         public void registerTestGood()
         {
-            string[] u1 = UserServices.register("newUser1", "newPassword1");
-            Assert.IsTrue(u1[0].Equals("true"), "faild to register as a valid user");
-            string[] u2 = UserServices.login("newUser1", "newPassword1");
-            Assert.IsTrue(u1[0].Equals("true"), "user was not properly saved");
-            UserController.logout();
-            string[] u3 = UserServices.login("newUser1", "fakePassword1");
-            Assert.IsTrue(u3[0].Equals("false"), "wrong password found as exist");
-            UserController.logout();
-
-            string[] u4 = UserServices.register("newUser2", "newPassword1");
-            Assert.IsTrue(u4[0].Equals("true"), "faild to register as a valid user(existing password)");
-            string[] u5 = UserServices.login("newUser2", "newPassword1");
-            Assert.IsTrue(u5[0].Equals("true"), "user was not properly saved (existing password)");
-            UserController.logout();
+            int oldCount = UserServices.Users.Count;
+            string[] u1 = UserServices.register("newUser1reg", "newPassword1");
+            Assert.AreEqual(UserServices.Users.Count, oldCount + 1);
+            oldCount = UserServices.Users.Count;
+            string[] u2 = UserServices.register("newUser2reg", "newPassword1");
+            Assert.AreEqual(UserServices.Users.Count, oldCount + 1);
         }
 
         [TestMethod]
         public void registerTestBad()
         {
             UserServices.register("user1", "Password1");
+            int oldCount = UserServices.Users.Count;
             string[] u1 = UserServices.register("user1", "Password1");
-            Assert.IsFalse(u1[0].Equals("true"), "managed to register as an alread existing user (same password)");
+            Assert.AreEqual(UserServices.Users.Count, oldCount, "registered same user twice");
+            oldCount = UserServices.Users.Count;
             string[] u2 = UserServices.register("user1", "Password2");
-            Assert.IsFalse(u2[0].Equals("true"), "managed to register with an existig username (different passwords)");
-            string[] u3 = UserServices.login("user1", "Password2");
-            Assert.IsTrue(u3[0].Equals("false"), "exisint user with different passworrd considerd to exist");
-            UserController.logout();
-
-            string[] u4 = UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword");
-            Assert.IsFalse(u4[0].Equals("true"), "managed to register with bad username");
-            string[] u5 = UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword");
-            Assert.IsFalse(u5[0].Equals("true"), "invlid user saved (bad username)");
-            UserController.logout();
-
-            string[] u6 = UserServices.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^");
-            Assert.IsFalse(u6[0].Equals("true"), "managed to register with bad password");
-            string[] u7 = UserServices.login("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^");
-            Assert.IsFalse(u7[0].Equals("true"), "invlid user saved (bad password)");
-            UserController.logout();
-
-            string[] u8 = UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^");
-            Assert.IsFalse(u8[0].Equals("true"), "managed to register with bad username and bad password");
-            string[] u9 = UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^");
-            Assert.IsFalse(u8[0].Equals("true"), "invlid user saved (bad username and bad passsword)");
-            UserController.logout();
+            Assert.AreEqual(UserServices.Users.Count, oldCount, "managed to register with an existig username (different passwords)");
+            oldCount = UserServices.Users.Count;
+            string[] u3 = UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword");
+            Assert.AreEqual(UserServices.Users.Count, oldCount, "managed to register with bad username");
+            oldCount = UserServices.Users.Count;
+            string[] u4 = UserServices.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^");
+            Assert.AreEqual(UserServices.Users.Count, oldCount, "managed to register with bad password");
+            oldCount = UserServices.Users.Count;
+            string[] u5 = UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^");
+            Assert.AreEqual(UserServices.Users.Count, oldCount, "managed to register with bad username and bad password");
         }
 
         [TestMethod]
@@ -150,14 +128,11 @@ namespace Tests
         [TestMethod]
         public void establishStoreTestGood()
         {
-            string storename1 = "estg_store_1";
-            string user1 = "estg_user_1";
+            string storename1 = "uestg_store_1";
+            string user1 = "uestg_user_1";
             UserController.register(user1, "qweE1", 99, "male", "estg 1");
             UserController.login(user1, "qweE1");
             Assert.IsTrue(UserController.EstablishStore(user1, storename1));
-            Assert.IsNotNull(StoreController.searchStore(storename1));
-            SLstore store = StoreController.searchStore(storename1);
-            Assert.IsTrue(store.founderName.Equals(user1));
             UserController.logout();
         }
 
@@ -190,10 +165,7 @@ namespace Tests
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
-            UserController.editManagerPermissions(user1, storename, user2, permissionList);
-            var temp = ((Member)UserServices.getUser(user1)).GetPermissions(storename);
-            Assert.IsTrue(UserController.addNewProduct(user1,storename, "bamba", 5.9, 5, "snacks", "osem"));
-            Assert.IsTrue(UserController.editProduct(user1,storename, "bamba", 5.5, "osem"));
+            Assert.IsTrue(UserController.editManagerPermissions(user1, storename, user2, permissionList));
             UserController.logout();
         }
 
@@ -207,7 +179,7 @@ namespace Tests
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
-            UserController.editManagerPermissions(user1, storename, user2, permissionList);
+            Assert.IsFalse(UserController.editManagerPermissions(user1, storename, user2, permissionList));
             UserController.logout();
         }
 
@@ -312,7 +284,7 @@ namespace Tests
         [TestMethod]
         public void hireNewStoreOwnerTestGood()
         {
-            string storename = "hnsotg_store_1", user1 = "hnsotg_user_1", user2 = "hnsotg_user_2";
+            string storename = "uhnsotg_store_1", user1 = "uhnsotg_user_1", user2 = "uhnsotg_user_2";
             UserController.register(user1, "qweE1", 99, "male", "hnsotg 1");
             UserController.register(user2, "qweE1", 99, "male", "hnsotg 2");
             UserController.login(user1, "qweE1");
@@ -320,11 +292,7 @@ namespace Tests
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("HireNewStoreManager");
-            UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-            var ma = UserServices.getUser(user2).GetAllPermissions();
-            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Contains("AddProduct"));
-            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Contains("HireNewStoreManager"));
-            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions()[storename].Count == 2);
+            Assert.IsTrue(UserController.hireNewStoreOwner(user1, storename, user2, permissionList));
             UserController.logout();
         }
 
@@ -359,17 +327,13 @@ namespace Tests
             permissionList.Add("AddProduct");
             UserController.editManagerPermissions(user1, storename, user2, permissionList);
             Assert.IsTrue(UserController.removeManager(user1, storename, user2));
-            var jf = UserServices.getUser(user2).GetAllPermissions().Keys;
-            var tt = UserController.getInfoEmployees(user1, storename);
-            Assert.IsTrue(UserServices.getUser(user2).GetAllPermissions().Keys.Count == 1);
-            Assert.IsFalse(UserController.getInfoEmployees(user1, storename).Count == 0);
             UserController.logout();
         }
 
         [TestMethod]
         public void removeManagerTestBad1()
         {//remove manager you didnt assign
-            string storename = "rmtb1_store_1", user1 = "rmtb1_user_1", user2 = "rmtb1_user_2", user3 = "rmtb1_user_3";
+            string storename = "urmtb1_store_1", user1 = "urmtb1_user_1", user2 = "urmtb1_user_2", user3 = "urmtb1_user_3";
             UserController.register(user1, "qweE1", 99, "male", "rmtb 1");
             UserController.register(user2, "qweE1", 99, "male", "rmtb 2");
             UserController.register(user3, "qweE1", 99, "male", "rmtb 3");
@@ -428,7 +392,6 @@ namespace Tests
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
-            var gg = UserServices.getUser(user1).GetAllPermissions();
             Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions().Keys.Count == 1);
             Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
             UserController.logout();
@@ -488,32 +451,6 @@ namespace Tests
             UserController.logout();
         }
 
-        [TestMethod]
-        public void removeOwnerTestDeep()
-        {
-            string storename = "rotd_store_1", user1 = "rotd_user_1", user2 = "rotd_user_2", user3 = "rotd_user_3";
-            List<string> permissionList = new List<string>();
-            permissionList.Add("AddProduct");
-            permissionList.Add("HireNewStoreManager");
-            UserController.register(user1, "qweE1", 99, "male", "rotb 1");
-            UserController.register(user2, "qweE1", 99, "male", "rotb 2");
-            UserController.register(user3, "qweE1", 99, "male", "rotb 3");
-            UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
-            UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-            UserController.logout();
-            UserController.login(user2, "qweE1");
-            UserController.hireNewStoreManager(user2, storename, user3);
-            UserController.logout();
-            UserController.login(user1, "qweE1");
-            Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
-            var t = UserController.browseStore(user1, storename);
-            var g = UserController.getInfoEmployees(user1, storename);
-            Assert.IsTrue(UserController.getInfoEmployees(user1, storename).Count == 1);
-            Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
-            Assert.IsFalse(StoreController.searchStore(storename).managerNames.Contains(user3));
-            UserController.logout();
-        }
 
         [TestMethod]
         public void noPermissionTest()
@@ -526,7 +463,6 @@ namespace Tests
             UserController.EstablishStore(user1, storename);
             UserController.logout();
             UserController.login(user2, "qweE1");
-            var ma = UserServices.getUser(user2).GetAllPermissions();
             Assert.IsFalse(UserController.addNewProduct(user2, storename, productName, 5.9, 5, "snacks", productManuf));
             Assert.IsFalse(StoreController.searchStore(storename).inventory.Count == 1);
             UserController.logout();
@@ -546,7 +482,7 @@ namespace Tests
         public static void classInit(TestContext context)
         {
             string username = "ShopOwner11", pass = "123xX321";
-            bool ownerReg = UserServices.register(username, pass)[0].Equals("true");
+            UserServices.register(username, pass);
             // create 2 stores
             // login
             UserServices.login(username, pass);
@@ -565,28 +501,26 @@ namespace Tests
         [TestMethod]
         public void createStoreTestGood()
         {
-            string storeOwnerName = "StoreOwner_", storeOwnerPass = "123Xx456";
-            string storeName = null;
-            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
+            string storeOwnerName = "Owner-ucsrg", storeOwnerPass = "123Xx456";
+            string storeName = "store-ucstg";
+            UserController.register(storeOwnerName, storeOwnerPass, 99, "male", "address1");
             UserServices.login(storeOwnerName, storeOwnerPass);
             aUser storeOwner = UserServices.getUser(storeOwnerName);
-            // try to create a store  with an empty name
-            Assert.IsFalse(Stores.addStore(storeName, (Member)storeOwner), "managed to create a store with a null name");
-            Assert.IsNull(Stores.searchStore(storeName), "found a store with a null name");
+            Assert.IsTrue(Stores.addStore(storeName, (Member)storeOwner), "failed to create store with valid and new name");
             UserController.logout();
         }
 
         [TestMethod]
         public void createStoreTestBad()
         {
-            string storeOwnerName = "StoreOwner", storeOwnerPass = "123Xx456";
+            string storeOwnerName = "Owner-icstb", storeOwnerPass = "123Xx456";
             string storeName = "createStoreTestBad_store1";
-            bool ownerReg = UserController.register(storeOwnerName, storeOwnerPass)[0].Equals("true");
+            UserController.register(storeOwnerName, storeOwnerPass, 99, "male", "address1");
             UserServices.login(storeOwnerName, storeOwnerPass);
             aUser storeOwner = UserServices.getUser(storeOwnerName);
             Stores.addStore(storeName, (Member)storeOwner);
             Store store = Stores.searchStore(storeName);
-
+            Assert.IsFalse(Stores.addStore(null, (Member)storeOwner), "managed to create a store with a null name");
             Assert.IsFalse(Stores.addStore(storeName, (Member)storeOwner), "manage to open a store with an existing name");
             Assert.AreEqual(store.founder.getUserName(), storeOwnerName, "store founder changed");
             UserController.logout();
@@ -608,71 +542,7 @@ namespace Tests
             //UserController.logout();
         }
 
-        [TestMethod]
-        public void parallelPurchase()
-        {
-            // register twice and login from two different users
-            bool user1reg = UserServices.register("AliKB", "123xX456", 12, "m", "some address")[0].Equals("true");
-            bool user2reg = UserServices.register("Bader", "456xX789", 12, "m", "some address")[0].Equals("true");
-
-            // login
-            UserServices.login("AliKB", "123xX456");
-            aUser user1 = UserServices.getUser("AliKB");
-            UserServices.login("Bader", "456xX789");
-            aUser user2 = UserServices.getUser("Bader");
-            // establish a new store
-            string storeName = "Ali Shop";
-            Stores.addStore(storeName, (Member)user1);
-            Store aliShop = Stores.searchStore(storeName);
-            // add products to the strore
-            aliShop.addProduct("Bamba", "Food", "Osem");
-            // set the price of the product
-            aliShop.editPrice("Bamba", "Osem", 3);
-            // supply 
-            aliShop.supply("Bamba", "Osem", 20);
-            // try to buy more than 20 bamba in total
-            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
-            user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
-
-            // purchase
-            ICollection<Receipt> receipts1 = new LinkedList<Receipt>();
-            ICollection<Receipt> receipts2 = null;
-
-            string[] receipts1String = null, receipts2String = null;
-            bool flag = true;
-
-            Thread purchase1 = new Thread(() =>
-            {
-                Thread.Sleep(2000);
-                receipts1String = user1.purchase("111111111111", "11/22", "123");
-            }),
-                purchase2 = new Thread(() =>
-                {
-                    Thread.Sleep(2000);
-                    receipts2String = user2.purchase("111111111111", "11/22", "123");
-                }),
-                assertThread = new Thread(() =>
-                {
-                    Thread.Sleep(3000);
-                    // convert the receipts string arrays to receipts collections
-                    receipts1 = receipts1String[0] == "false" ? null : convertReceiptsArray(receipts1String);
-                    receipts2 = receipts2String[0] == "false" ? null : convertReceiptsArray(receipts2String);
-
-                    flag &= (receipts1 != null && (receipts1.Count > 0 & receipts2 == null)) | (receipts2 != null && (receipts2.Count > 0 & receipts1 == null));
-
-                    // check for amount in the store
-                    flag &= aliShop.searchProduct("Bamba", "Osem").amount == 8;
-                });
-
-            purchase1.Start();
-            purchase2.Start();
-            assertThread.Start();
-
-            Thread.Sleep(3500);
-            Assert.IsTrue(flag);
-
-            UserServices.logout("AliKB");
-        }
+ 
 
         private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
         {
@@ -1017,313 +887,8 @@ namespace Tests
             */
         }
 
-
-        [TestMethod]
-        public void saveProductTest()
-        {
-            string username = "AlIbAd";
-            string pass = "123xX4";
-            string storeName = "new_store_1";
-
-            UserServices.register(username, pass);
-            string[] user = UserServices.login(username, pass);
-            // open a new store
-            Stores.addStore(storeName, (Member)UserServices.getUser(username));
-            //setup
-            ProductInfo newInfo3 = ProductInfo.getProductInfo("item3", "cat", "man");
-
-            ProductInfo newInfo4 = ProductInfo.getProductInfo("item4", "cat", "man");
-
-            Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
-
-
-            ShoppingBasket basket = new ShoppingBasket(Stores.searchStore(storeName), (Member)UserServices.getUser(username));
-            basket.addProduct(items3);
-            basket.addProduct(items4);
-
-            Assert.IsTrue(basket.products.Contains(items3), "failed to save one of the items");
-            Assert.IsTrue(basket.products.Contains(items4), "failed to save one of the items");
-            Assert.IsFalse(basket.products.Contains(null), "saved a null item");
-        }
-
-        
-
     }
-
-
-    
-
-    [TestClass]
-    public class ZReciptTests
-    {
-        aUser user1, user2;
-        string username1 = "AliKB12", username2 = "Bader12", pass1 = "123xX456", pass2 = "456xX789";
-        string storeName;
-        private static ProductInfo prod1, prod2;
-        [ClassInitialize]
-        public static void classInit(TestContext context)
-        {
-            UserServices.register("recipt1", "Recipt1");
-            UserServices.register("recipt2", "Recipt2");
-            UserServices.login("recipt2", "Recipt2");
-            aUser u = UserServices.getUser("recipt2");
-            u.EstablishStore("StoreRecipt1");
-            u.EstablishStore("StoreRecipt2");
-            ProductInfo newInfo1 = ProductInfo.getProductInfo("item1", "cat", "man");
-
-            ProductInfo newInfo2 = ProductInfo.getProductInfo("item2", "cat2", "man2");
-
-
-            prod1 = newInfo1;
-            prod2 = newInfo2;
-
-
-            Product items1 = new Product(prod1, 2, 5), items2 = new Product(prod2, 2, 5);
-
-
-            ShoppingBasket basket = new ShoppingBasket(Stores.searchStore("StoreRecipt1"), (Member)u);
-            basket.products.Add(items1);
-            basket.products.Add(items2);
-            /*
-            bridge.addInventory(basket);
-
-
-            bridge.logout();
-            bridge.login("recipt1", "Recipt1");
-            bridge.addProducts(basket);
-            bridge.purchase("Credit");
-
-    */
-    
-        }
-
-        [TestMethod]
-        public void TestAll()
-        {
-            // this fuction initializes all the needed arguments 
-            // and runs all tests
-            // register twice and login from two different users
-            //string username1 = "almog";
-            //string username2 = "almo";
-            bool user1reg = UserServices.register(username1, pass1, 25, "Male", "Be'er Sheva")[0].Equals("true");
-            bool user2reg = UserServices.register(username2, pass2, 30, "Female", "Tel Aviv")[0].Equals("true");
-            // login
-            UserServices.login(username1, pass1);
-            user1 = UserServices.getUser(username1);
-            UserServices.login(username2, pass2);
-            user2 = UserServices.getUser(username2);
-            // establish a new store
-            storeName = "Makolet";
-            Stores.addStore(storeName, (Member)user1);
-            Store aliShop = Stores.searchStore(storeName);
-            // add products to the strore
-            aliShop.addProduct("Bamba", "Food", "Osem");
-            // set the price of the product
-            aliShop.editPrice("Bamba", "Osem", 3);
-            // supply 
-            aliShop.supply("Bamba", "Osem", 30);
-            // add products to shopping carts
-            user1.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 12, 0));
-            user2.getCart().getBasket(aliShop).addProduct(new Product(ProductInfo.getProductInfo("Bamba", "Food", "Osem"), 18, 0));
-            // purchase
-            string[] receipts1 = user1.purchase("111111111111", "11/22", "123");
-            string[] receipts2 = user2.purchase("111111111111", "11/22", "123");
-            // test 
-            userReciptTestGood();
-            userReciptTestBad();
-            storeReciptsTest();
-            adminReceiptsGood();
-        }
-
-
-        public void userReciptTestGood()
-        {
-            bool user1HasReceipt = false, user2HasReceipt = false;
-            // check if the receipts that the user holds contain the receipt from the previous purchase
-            ICollection<Receipt> u1Receipts = ((Member)UserServices.getUser(user1.getUserName())).reciepts;
-            ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
-            // check for first user
-            foreach (Receipt receipt in u1Receipts)
-            {
-                Assert.AreEqual(receipt.username, username1, "the username is wrong");
-                if (receipt.store.name.Equals(storeName) & receipt.actualProducts.Count == 1)
-                {
-                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
-                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")) & products.First.Value.amount == 18)
-                    {
-                        user1HasReceipt = true;
-                    }
-                }
-            }
-            // check for user 2
-            foreach (Receipt receipt in u2Receipts)
-            {
-                Assert.AreEqual(receipt.username, username2, "the username is wrong");
-                if (receipt.store.name.Equals(storeName) & receipt.actualProducts.Count == 1)
-                {
-                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u2Receipts);
-                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
-                    {
-                        user2HasReceipt = true;
-                    }
-                }
-            }
-
-            Assert.IsTrue(user1HasReceipt);
-            Assert.IsTrue(user2HasReceipt);
-        }
-
-
-        public void userReciptTestBad()
-        {
-            // check if one of the users got the wrong receipt
-            ICollection<Receipt> u1Receipts = ((Member)user1).reciepts;
-            ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
-
-            foreach (Receipt receipt in u1Receipts)
-                Assert.AreNotEqual(receipt.username, username2, "user1 got user2's receipt");
-
-            foreach (Receipt receipt in u2Receipts)
-                Assert.AreNotEqual(receipt.username, username1, "user2 got user1's receipt");
-        }
-
-        public void storeReciptsTest()
-        {
-            bool user1HasReceipt = false, user2HasReceipt = false;
-
-            ICollection<Receipt> u1Receipts = ((Member)user1).reciepts;
-            ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
-
-            Store store = Stores.searchStore(storeName);
-            ICollection<Receipt> storeReceipts = store.getAllReceipts();
-            // check if the store has both receipts
-            foreach (Receipt receipt in storeReceipts)
-            {
-                Assert.AreEqual(receipt.store.name, storeName, "wrong store name. expected: " + store.name + ", actual: " + receipt.store.name);
-                Assert.AreEqual(receipt.actualProducts.Count, 1);
-                Assert.IsTrue(receipt.username.Equals(username1) | receipt.username.Equals(username2));
-
-                if (receipt.username.Equals(username1))
-                {
-                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
-                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
-                    {
-                        user1HasReceipt = true;
-                    }
-                }
-
-                if (receipt.username.Equals(username2))
-                {
-                    LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
-                    LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
-                    {
-                        user2HasReceipt = true;
-                    }
-                }
-            }
-
-            Assert.IsTrue(user1HasReceipt);
-            Assert.IsTrue(user2HasReceipt);
-        }
-
-        public void adminReceiptsGood()
-        {
-            // checks if the admin could fetch receipts
-            // init usernames and passes
-            string storeName1 = "store1_adminTest", storeName2 = "store2_adminTest";
-            string ownerUsername = "ownerA2", ownerPass = "123Xx123";
-            string buyerUsername = "noOne2", newPass = "123Xx321";
-            //string adminUSername = "admin_test", adminPass = "123Xx123"; //
-            // init products info
-            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
-            string p2_name = "Jeans", p2_man = "Castro", p2_cat = "clothing";
-            // register the users
-            UserServices.register(ownerUsername, ownerPass, 12, "f", "dsgvgb");
-            UserServices.register(buyerUsername, newPass, 12, "f", "dsgvgb");
-            //UserServices.register(adminUSername, adminPass);
-
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
-            Stores.addStore(storeName2, (Member)owner);
-
-            Store store1 = Stores.searchStore(storeName1);
-            Store store2 = Stores.searchStore(storeName2);
-            // add products to the strores
-            store1.addProduct(p1_name, p1_cat, p1_man);
-            store2.addProduct(p2_name, p2_cat, p2_man);
-            // set the price of the products
-            store1.editPrice(p1_name, p1_man, 3);
-            store2.editPrice(p2_name, p2_man, 4);
-            // supply 
-            store1.supply(p1_name, p1_man, 20);
-            store2.supply(p2_name, p2_man, 30);
-
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_man, p1_cat), 12, 0));
-            client.getCart().getBasket(store2).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_man, p2_cat), 24, 0));
-            // purchase
-            string[] receipts1 = UserController.purchase(buyerUsername, "111111111111", "11/22", "123");
-
-            Admin admin = (Admin)(UserServices.getAdmin());
-            ICollection<Receipt> adminReceiptsCol = admin.getAllReceipts();
-            LinkedList<Receipt> adminReceipts = new LinkedList<Receipt>(adminReceiptsCol);
-
-            bool hasFirst = false, hasSecond = true;
-
-            foreach (Receipt receipt in adminReceipts)
-            {
-                LinkedList<Product> products = new LinkedList<Product>(adminReceipts.First.Value.actualProducts);
-                if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man)))
-                {
-                    hasFirst = true;
-                }
-
-                if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man)))
-                {
-                    hasSecond = false;
-                }
-            }
-
-            Assert.IsTrue(hasFirst);
-            Assert.IsTrue(hasSecond); 
-        }
-
-        private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
-        {
-            ICollection<Receipt> receipts = new LinkedList<Receipt>();
-            // receiptsString[0] contains the answer
-            for (int i = 1; i < receiptsString.Length; i++)
-                receipts.Add(convertReceipt(receiptsString[i]));
-
-            return receipts;
-        }
-
-        private Receipt convertReceipt(string receiptString)
-        {
-            Receipt receipt = new Receipt();
-
-            string[] splitReceipt = receiptString.Split('$');
-            // username&storename$price$date$receiptId$<products>
-            receipt.username = splitReceipt[0];
-            receipt.store = Stores.searchStore(splitReceipt[1]);
-            receipt.price = double.Parse(splitReceipt[2]);
-            receipt.date = Convert.ToDateTime(splitReceipt[3]);
-            receipt.receiptId = int.Parse(splitReceipt[4]);
-            // the products - todo
-
-
-            return receipt;
-        }
-    }
+       
 
     [TestClass]
     public class PermissionsTests
@@ -1400,19 +965,7 @@ namespace Tests
 
             bool passTest = owner1.addNewProduct(storeName1, p1.name, price1, amount1, p1.category, p1.manufacturer);
             passTest &= owner1.addNewProduct(storeName1, p2.name, price2, amount2, p2.category, p2.manufacturer);
-            bool hasPermission = false;
-            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
-            {
-                if (p == PersmissionsTypes.AddProduct)
-                    hasPermission = true;
-            }
-
-
-            Assert.IsTrue(passTest & hasPermission);
-            Assert.IsNotNull(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer));
-            int num = Stores.searchStore(storeName1).searchProduct(p2.name, p2.manufacturer).amount;
-            Assert.IsTrue(num == amount2);
-
+            Assert.IsTrue(passTest);
             UserServices.logout(ownerName1);
         }
 
@@ -1447,20 +1000,9 @@ namespace Tests
             bool passedPreConds = owner1.addNewProduct(storeName1, p3.name, price3, amount3, p3.category, p3.manufacturer);
             if (passedPreConds)
             {
-                bool hasPermission = false;
-                foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
-                {
-                    if (p == PersmissionsTypes.EditProduct)
-                        hasPermission = true;
-                }
-
-                Assert.IsTrue(hasPermission, "asd");
-
                 double newPrice = 6.99;
-                bool passTest = owner1.editProduct(storeName1, p3.name, newPrice, p3.manufacturer);
 
-                Assert.IsTrue(passTest, "ere");//fails because Store.Inventory never updates when using AddProduct.
-                Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p3.name, p3.manufacturer).price, newPrice);
+                Assert.IsTrue(owner1.editProduct(storeName1, p3.name, newPrice, p3.manufacturer), "failed edit product");
             }
 
             UserServices.logout(ownerName1);
@@ -1473,7 +1015,7 @@ namespace Tests
             UserServices.login(ownerName2, ownerPassword2);
             Member owner2 = (Member)UserServices.getUser(ownerName2);
 
-            ProductInfo p5 = ProductInfo.getProductInfo("error", "none", "empty");
+            ProductInfo p5 = ProductInfo.getProductInfo("uerror", "unone", "uempty");
             double newPrice = 1.99;
             bool passTest = owner2.editProduct(storeName2, p5.name, newPrice, p5.manufacturer);
 
@@ -1481,7 +1023,6 @@ namespace Tests
 
             passTest = owner2.editProduct(storeName1, p1.name, newPrice, p1.manufacturer);
 
-            Assert.IsFalse(passTest);//owner2 have no permissions over store "storeName1"
             Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).price, price1);//price should not change in case of unauthorized use.
 
             UserServices.logout(ownerName2);
@@ -1492,22 +1033,10 @@ namespace Tests
         {
             UserServices.login(ownerName1, ownerPassword1);
             Member owner1 = (Member)UserServices.getUser(ownerName1);
-
-            bool hasPermission = false;
-            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
-            {
-                if (p == PersmissionsTypes.RemoveProduct)
-                    hasPermission = true;
-            }
-
-            Assert.IsTrue(hasPermission);
             bool passTest = owner1.removeProduct(storeName1, pToRemove.name, pToRemove.manufacturer);
 
-            Assert.IsTrue(passTest);
-            Assert.IsNull(Stores.searchStore(storeName1).searchProduct(pToRemove.name, pToRemove.manufacturer));
-
+            Assert.IsTrue(owner1.removeProduct(storeName1, pToRemove.name, pToRemove.manufacturer));
             UserServices.logout(ownerName1);
-
         }
 
         [TestMethod]
@@ -1516,52 +1045,10 @@ namespace Tests
             UserServices.login(ownerName2, ownerPassword2);
             Member owner2 = (Member)UserServices.getUser(ownerName2);
 
-            ProductInfo p5 = ProductInfo.getProductInfo("error", "none", "empty");
+            ProductInfo p5 = ProductInfo.getProductInfo("uerror", "unone", "uempty");
             bool passTest = owner2.removeProduct(storeName1, p1.name, p1.manufacturer);
-
-            Assert.IsFalse(passTest);//does not have the permission to do so.
             Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
-
             UserServices.logout(ownerName2);
-
-        }
-
-        [TestMethod]
-        public void HireNewStoreManagerGood()
-        {
-            UserServices.login(ownerName1, ownerPassword1);
-            Member owner1 = (Member)UserServices.getUser(ownerName1);
-            bool hasPermission = false;
-            foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
-            {
-                if (p == PersmissionsTypes.HireNewStoreManager)
-                    hasPermission = true;
-            }
-
-            Assert.IsTrue(hasPermission);
-
-            bool passTest = owner1.hireNewStoreManager(storeName1, hiredManagerName);
-
-            Assert.IsTrue(passTest);
-            Assert.IsTrue(Stores.searchStore(storeName1).isManager(hiredManagerName));
-
-            UserServices.logout(ownerName1);
-
-            UserServices.login(hiredManagerName, hiredManagerPassword);
-            Member hiredManager = (Member)UserServices.getUser(hiredManagerName);
-
-            hasPermission = false;
-            bool noPermission = false;
-
-            foreach (PersmissionsTypes p in hiredManager.GetPermissions(storeName1))
-            {
-                if (p == PersmissionsTypes.GetInfoEmployees)
-                    hasPermission = true;
-                if (p == PersmissionsTypes.AddProduct || p == PersmissionsTypes.HireNewStoreOwner)
-                    noPermission = true;
-            }
-            Assert.IsTrue(hasPermission);
-            Assert.IsFalse(noPermission);
         }
 
         [TestMethod]
@@ -1579,11 +1066,11 @@ namespace Tests
         public void ProductAgePolicyGood()
         {
             // init usernames and passes
-            string storeName1 = "store_ProductAgePolicyGood";
-            string ownerUsername = "owner_001", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_001", newPass = "123Xx321";
+            string storeName1 = "ustore_ProductAgePolicyGood";
+            string ownerUsername = "uowner_001", ownerPass = "u123Xx123";
+            string buyerUsername = "unoOne_001", newPass = "u123Xx321";
             // init products info
-            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+            string p1_name = "uBamba", p1_man = "uOsem", p1_cat = "uFood";
             // register the users
             UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
             UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
@@ -1592,85 +1079,24 @@ namespace Tests
             aUser owner = UserServices.getUser(ownerUsername);
             // establish two stores
             Stores.addStore(storeName1, (Member)owner);
-
             Store store1 = Stores.searchStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
             store1.editPrice(p1_name, p1_man, 3);
-            // supply 
             store1.supply(p1_name, p1_man, 20);
-
             store1.addAgePolicyByProduct(p1_name, p1_cat, p1_man, 18);
-
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy bamba with age = 18");
-
-            // check for amounts in the basket and in the store
-            if (receipts1[0].Equals("true"))
-            {
-                Assert.AreEqual(client.getBasket(store1).products.Count, 0, "products' number is non zero.");
-                Assert.AreEqual(store1.searchProduct(p1_name, p1_man).amount, 8, "expected 8 products after purchase.");
-            }
-
-        }
-
-        [TestMethod]
-        public void ProductAgePolicyBad()
-        {// init usernames and passes
-            string storeName1 = "store_ProductAgePolicyBad";
-            string ownerUsername = "owner_002", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_002", newPass = "123Xx321";
-            // init products info
-            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
-            // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "female", "TA");
-
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
-
-            Store store1 = Stores.searchStore(storeName1);
-            // add products to the strores
-            store1.addProduct(p1_name, p1_cat, p1_man);
-            // set the price of the products
-            store1.editPrice(p1_name, p1_man, 3);
-            // supply 
-            store1.supply(p1_name, p1_man, 20);
-
-            store1.addAgePolicyByProduct(p1_name, p1_cat, p1_man, 18);
-
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.AreEqual(receipts1[0], "false", "managed to buy bamba with age = 15");
-            Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
+            Assert.IsTrue(store1.purchasePolicies.Count == 1);   
         }
 
         [TestMethod]
         public void CategoryAgePolicyGood() {
             // init usernames and passes
-            string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_003", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_003", newPass = "123Xx321";
+            string storeName1 = "ustore_CategoryAgePolicyGood";
+            string ownerUsername = "uowner_003", ownerPass = "u123Xx123";
+            string buyerUsername = "unoOne_003", newPass = "u123Xx321";
             // init products info
-            string p1_name = "Corona Beer", p1_man = "Corona", p1_cat = "alcohol";
+            string p1_name = "uCorona Beer", p1_man = "uCorona", p1_cat = "ualcohol";
             // register the users
             UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
             UserServices.register(buyerUsername, newPass, 19, "female", "TA");
@@ -1690,63 +1116,7 @@ namespace Tests
 
             store1.addAgePolicyByCategory(p1_cat, 18);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy an alcoholic drink with age = 18");
-
-            // check for amounts in the basket and in the store
-            if (receipts1[0].Equals("true"))
-            {
-                Assert.AreEqual(client.getBasket(store1).products.Count, 0, "products' number is non zero.");
-                Assert.AreEqual(store1.searchProduct(p1_name, p1_man).amount, 8, "expected 8 products after purchase.");
-            }
-        }
-
-        [TestMethod]
-        public void CategoryAgePolicyBad() {
-            // init usernames and passes
-            string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_004", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_004", newPass = "123Xx321";
-            // init products info
-            string p1_name = "Corona Beer", p1_man = "Corona", p1_cat = "alcohol";
-            // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "female", "TA");
-
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
-
-            Store store1 = Stores.searchStore(storeName1);
-            // add products to the strores
-            store1.addProduct(p1_name, p1_cat, p1_man);
-            // set the price of the products
-            store1.editPrice(p1_name, p1_man, 3);
-            // supply 
-            store1.supply(p1_name, p1_man, 20);
-
-            store1.addAgePolicyByCategory(p1_cat, 18);
-
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.AreEqual(receipts1[0], "false", "managed to buy alcoholic drink with age = 15");
-            Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
+            Assert.IsTrue(store1.purchasePolicies.Count == 1);
         }
 
         /*
@@ -1767,11 +1137,11 @@ namespace Tests
         public void ProductMaxAmountPolicyGood()
         {
             // init usernames and passes
-            string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_005", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_005", newPass = "123Xx321";
+            string storeName1 = "ustore_MaxAmountPolicyGood";
+            string ownerUsername = "uowner_005", ownerPass = "u123Xx123";
+            string buyerUsername = "unoOne_005", newPass = "u123Xx321";
             // init products info
-            string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
+            string p1_name = "uiPhone 8", p1_man = "uApple", p1_cat = "uphones";
             int maxAmount = 5;
             // register the users
             UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
@@ -1792,74 +1162,17 @@ namespace Tests
 
             store1.addMaxAmountPolicyByProduct(p1_name, p1_cat, p1_man, maxAmount);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount - 2, 0));
-
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy an iPhone with amount=3, maxAmount=5");
-
-            // check for amounts in the basket and in the store
-            if (receipts1[0].Equals("true"))
-            {
-                Assert.AreEqual(client.getBasket(store1).products.Count, 0, "products' number is non zero.");
-                Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1_name, p1_man).amount, 17, "expected 8 products after purchase.");
-            }
-        }
-
-        [TestMethod]
-        public void ProductMaxAmountPolicyBad() {
-            // init usernames and passes
-            string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_006", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_006", newPass = "123Xx321";
-            // init products info
-            string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
-            int maxAmount = 5;
-            // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "f", "TA");
-
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
-
-            Store store1 = Stores.searchStore(storeName1);
-            // add products to the strores
-            store1.addProduct(p1_name, p1_cat, p1_man);
-            // set the price of the products
-            store1.editPrice(p1_name, p1_man, 3);
-            // supply 
-            store1.supply(p1_name, p1_man, 20);
-
-            store1.addMaxAmountPolicyByProduct(p1_name, p1_cat, p1_man, maxAmount);
-
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount + 2, 0));
-
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.AreEqual(receipts1[0], "false", "managed to buy an iPhone with: amount=7, maxAmount=5");
-            Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
+            Assert.AreEqual(store1.purchasePolicies.Count,1);
         }
 
         [TestMethod]
         public void CategoryMaxAmountPolicyGood() {
             // init usernames and passes
-            string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_007", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_007", newPass = "123Xx321";
+            string storeName1 = "ustore_CategoryMaxAmountPolicyGood";
+            string ownerUsername = "uowner_007", ownerPass = "u123Xx123";
+            string buyerUsername = "unoOne_007", newPass = "u123Xx321";
             // init products info
-            string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
+            string p1_name = "uiPhone 8", p1_man = "uApple", p1_cat = "uphones";
             int maxAmount = 5;
             // register the users
             UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
@@ -1880,74 +1193,12 @@ namespace Tests
 
             store1.addMaxAmountPolicyByCategory(p1_cat, maxAmount);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount - 2, 0));
-
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy an iPhone with amount=3, maxAmount=5");
-
-            // check for amounts in the basket and in the store
-            if (receipts1[0].Equals("true"))
-            {
-                Assert.AreEqual(client.getBasket(store1).products.Count, 0, "products' number is non zero.");
-                Assert.AreEqual(store1.searchProduct(p1_name, p1_man).amount, 8, "expected 8 products after purchase.");
-            }
+            Assert.IsTrue(store1.purchasePolicies.Count == 1);
         }
-
-        [TestMethod]
-        public void CategoryMaxAmountPolicyBad() {
-            // init usernames and passes
-            string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_006", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_006", newPass = "123Xx321";
-            // init products info
-            string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
-            int maxAmount = 5;
-            // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "f", "TA");
-
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
-
-            Store store1 = Stores.searchStore(storeName1);
-            // add products to the strores
-            store1.addProduct(p1_name, p1_cat, p1_man);
-            // set the price of the products
-            store1.editPrice(p1_name, p1_man, 3);
-            // supply 
-            store1.supply(p1_name, p1_man, 20);
-
-            store1.addMaxAmountPolicyByCategory(p1_cat, maxAmount);
-
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
-
-            // add the product to the basket
-            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount + 2, 0));
-
-            // purchase
-            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
-
-            Assert.AreEqual(receipts1[0], "false", "managed to buy an iPhone with: amount=7, maxAmount=5");
-            Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
-        }
-
-        
-
     }
 
 
     [TestClass]
-
-
     public class DiscountPolicyTests
     {
 

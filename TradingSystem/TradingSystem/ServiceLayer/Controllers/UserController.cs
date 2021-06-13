@@ -162,7 +162,9 @@ namespace TradingSystem.ServiceLayer
         public static bool EstablishStore(string username, string storeName)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+            {
                 return false;
+            }
             return BuissnessLayer.UserServices.EstablishStore(username, storeName);
         }
 
