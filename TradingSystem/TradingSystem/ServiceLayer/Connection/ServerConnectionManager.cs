@@ -81,7 +81,8 @@ namespace TradingSystem.ServiceLayer
 
         public static void disconnect()
         {
-            listner.Stop();
+            if(listner != null)
+                listner.Stop();
             
         }
 

@@ -4,27 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.BuissnessLayer.commerce.Rules;
 using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
     public class Receipt
     {
-        public Dictionary<int, int> products { get; set; } // <product_id, amount>
-        public ICollection<Product> actualProducts { get; set; }
-        public Store store { get; set; }
-        public string username { get; set; }
+        public ShoppingBasket basket{ get; set; }
         public double price { get; set; }
         public DateTime date { get; set; }
         public int receiptId;
         private static int currentId = -1;
         private static Object idLocker = new Object();
-        public int discount { get; set; } //todo
-        //public PurchasePolicy purchasePolicy { get; set; }
+        public iPolicyDiscountData discount { get; set; } //todo
+        public iPolicy purchasePolicy { get; set; }
 
         public ReceiptData toDataObject()
         {
-            return new ReceiptData(this.receiptId, this.store.name, this.username, this.price, this.date, this.discount, -1);
+            return new ReceiptData(this.receiptId, this.basket,  this.price, this.date, this.discount, -1);
         }
 
         public Receipt(ReceiptData receiptData)

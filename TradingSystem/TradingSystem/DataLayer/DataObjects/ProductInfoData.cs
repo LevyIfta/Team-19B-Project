@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace TradingSystem.DataLayer
         public string productName { get; set; }
         public string category { get; set; }
         public string manufacturer { get; set; }
+        [Key]
         public int productID { get; set; }
 
         //CONSTRUCTORS

@@ -122,11 +122,11 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         }
         
-        /*public BasketData toDataObject()
+        public BasketData toDataObject()
         {
-            return new BasketData(store.name, owner.getUserName());
+            return new BasketData(store.toDataObject(), owner.to);
         }// (ICollection<ProductData>)this.products.Select(p => p.toDataObject()),
-        */
+        
         public void update()
         {
             BasketDAL.update(new BasketData(this.store.name, this.owner.getUserName()));
