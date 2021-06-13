@@ -83,6 +83,7 @@ namespace TradingSystem.ServiceLayer
                         DecodedMessge response = act(Decoder.decode(data.ToArray()));
 
                       //  byte[] enc_os = TradingSystem.ServiceLayer.Encoder.encode(response);
+
                         lock (qwewe)
                         {
                             qwewe.Enqueue(response);

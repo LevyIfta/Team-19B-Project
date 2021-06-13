@@ -22,18 +22,26 @@
             <Button x:Name="button3" Content="Search" HorizontalAlignment="Left" Margin="184,0,0,6" VerticalAlignment="Bottom" Width="75" Click="button3_Click"/>
             <Label x:Name="label2" Content="Store:" HorizontalAlignment="Left" Margin="276,8,0,3" d:LayoutOverrides="Height" RenderTransformOrigin="0.25,0.538"/>
             <Button x:Name="button2" Content="Search" HorizontalAlignment="Right" Margin="0,10,25,7" Width="75" d:LayoutOverrides="Height" Click="button2_Click"/>
-
+            <Grid  DataContext="productToView"/>
         </Grid>
         <Grid Margin="10,115,285,10">
-            <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" 
-                      HorizontalAlignment="Left" VerticalAlignment="Top" Height="212" Width="349" Margin="0,10,0,0" AutoGenerateColumns="False" 
-                      SelectionChanged="dataGrid_SelectionChanged"
-                      MouseDoubleClick="Row_MouseDoubleClick"
->
+            
+            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="8,41,234,121" SelectionChanged="dgProducts_SelectionChanged">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Products" Binding="{Binding}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Amount" Binding="{Binding amounttoAdd, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="StoreName" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Click="addToBasket">Add</Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <TextBox  x:Name="textBox21" HorizontalAlignment="Left" Height="23" Margin="27,8,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" KeyUp="textBox1_KeyUp" TextChanged="textBox21_TextChanged" />
         </Grid>
         <Grid HorizontalAlignment="Right" Margin="0,115,21,10" Width="244">
             <DockPanel Margin="10">

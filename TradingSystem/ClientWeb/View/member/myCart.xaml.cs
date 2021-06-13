@@ -20,13 +20,70 @@ namespace ClientWeb
     /// Interaction logic for myCart.xaml
     /// </summary>
     /// 
-    public class productView
+    class productView : ANotifyPropChange
     {
 
-        public string Name { get; set; }
-        public string Price { get; set; }
-        public string Amount { get; set; }
-        public string StoreName { get; set; }
+        private String Name;
+
+        public String name
+        {
+            get { return Name; }
+            set
+            {
+                Name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Price;
+
+        public String price
+        {
+            get { return Price; }
+            set
+            {
+                Price = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
+        private String Amount;
+
+        public String amount
+        {
+            get { return Amount; }
+            set
+            {
+                Amount = value;
+                OnPropertyChanged();
+            }
+        }
+        private String AmounttoAdd;
+
+        public String amounttoAdd
+        {
+            get { return AmounttoAdd; }
+            set
+            {
+                AmounttoAdd = value;
+                OnPropertyChanged();
+            }
+        }
+        private String StoreName;
+
+        public String storeName
+        {
+            get { return StoreName; }
+            set
+            {
+                StoreName = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
     }
     public partial class myCart : Page
@@ -67,9 +124,10 @@ namespace ClientWeb
 
             List<productView> productToView = new List<productView>();
 
-            productToView.Add(new productView() {Name = "Pro1", Price = "15" ,Amount = "12" ,StoreName ="Castro" } );
-            productToView.Add(new productView() { Name = "Pro2", Price = "15", Amount = "12", StoreName = "Castro" });
-            productToView.Add(new productView() { Name = "Pro3", Price = "15", Amount = "12", StoreName = "Castro" });
+            productToView.Add(new productView() {name = "Pro1", price = "15" ,amount = "12" ,storeName ="Castro", amounttoAdd = "0" } );
+            productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+            productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+
 
             dgProducts.ItemsSource = productToView;
 
@@ -123,6 +181,11 @@ namespace ClientWeb
         }
 
         private void DataGrid_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void dgProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

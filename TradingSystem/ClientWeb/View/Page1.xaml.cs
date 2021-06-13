@@ -23,9 +23,11 @@ namespace ClientWeb
     public partial class Page1 : Page
     {
         UserData userInfo = new UserData();
-
+        StoreData storeInfo = new StoreData();
 
         static Controller controler = Controller.GetController();
+
+        List<productView> productToView = new List<productView>();
 
         public Page1()
         {
@@ -35,11 +37,18 @@ namespace ClientWeb
             this.DataContext = userInfo;
             userInfo.username = "almog";
             checkMember();
-
+            storeInfo.storename = "Castro";
             string a = controler.SearchStore("Castro");
 
 
+            productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+            productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+            productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
 
+
+
+            dgProducts.ItemsSource = productToView;
+           
             //Controller.GetController().test();
 
             //test area
@@ -67,7 +76,14 @@ namespace ClientWeb
         }
 
 
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            var filtered = productToView.Where(product => product.name.StartsWith(textBox21.Text));
+            dgProducts.ItemsSource = null;
+            dgProducts.ItemsSource = filtered;
+            dgProducts.Items.Refresh();
 
+        }
 
         private void checkMember()
         {
@@ -178,6 +194,18 @@ namespace ClientWeb
 
         }
 
+        public void addToBasket(object sender, RoutedEventArgs e)
+        {
+            productView p = (productView)dgProducts.SelectedItem;
+
+            //add item to cart ( basket)
+          bool ans =  controler.SaveProduct(user.Name, storeInfo.storename, "man", p.name + "&" +p.amounttoAdd);
+            if (ans)
+            {
+                MessageBox.Show("added to cart");
+            }
+
+        }
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -185,6 +213,20 @@ namespace ClientWeb
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        private void dgProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void textBox21_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var filtered = productToView.Where(product => product.name.StartsWith(textBox21.Text));
+            dgProducts.ItemsSource = null;
+            dgProducts.ItemsSource = filtered;
+            dgProducts.Items.Refresh();
 
         }
     }
