@@ -23,6 +23,7 @@ namespace TradingSystem.ServiceLayer
             register("almog", "qweE1");
             login("almog", "qweE1");
             EstablishStore("almog", "Castro");
+            EstablishStore("almog", "Castro2");
             addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
             addNewProduct("almog", "Castro", "pro11", 10.1, 10, "cat", "man");
             addNewProduct("almog", "Castro", "pro121", 10.1, 10, "cat", "man");

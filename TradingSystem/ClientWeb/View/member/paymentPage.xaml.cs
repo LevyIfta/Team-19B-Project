@@ -20,14 +20,53 @@ namespace ClientWeb
     /// </summary>
     public partial class paymentPage : Page
     {
+        static Controller controler = Controller.GetController();
+        PurchData data = new PurchData();
+        UserData user = new UserData();
+        List<string> errors;
         public paymentPage()
         {
             InitializeComponent();
+            this.DataContext = data;
+            data.total = "the total price is: " + controler.CheckPrice(user.username);
         }
-
+        private void ButtomCheck() // textbox valid check 
+        {
+            if (data.cradit == null)
+                errors.Add("cradit number empty");
+            if (data.validity == null)
+                errors.Add("validity empty");
+            if (data.cvv == null)
+                errors.Add("cvv number empty");
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            if (errors.Count > 0)
+            {
+                foreach (string ms in errors)
+                    data.msg += ms + ", ";
+            }
+            else
+            {
+                string[] ans = controler.Purchase(user.username, data.cradit, data.validity, (string)data.cvv);
+                if (ans != null)
+                {
+                    if (ans[0].Equals("false"))
+                    {
+                        for (int i = 1; i < ans.Length; i++)
+                            data.msg += ans[i] + ", ";
+                    }
+                    else
+                    {
+                        data.msg = "the purchase have succsess!!!!";
+                        // show reciept
+                    }
+                }
+                else
+                {
+                    data.msg = "something went worng";
+                }
+            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
