@@ -62,7 +62,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             ProductInfo productInfo = new ProductInfo(name, category, manufacturer);
             productsInfo.Add(productInfo);
             // update in DB
-            ProductInfoDAL.addProductInfo(productInfo.toDataObject());
+            DataLayer.ORM.DataAccess.create(productInfo.toDataObject());
             return productInfo;
         }
         public static ProductInfo getProductInfo(int id)

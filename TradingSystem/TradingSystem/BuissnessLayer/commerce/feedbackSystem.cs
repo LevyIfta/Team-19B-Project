@@ -8,16 +8,16 @@ namespace TradingSystem.BuissnessLayer.commerce
 {
     class feedbackSystem
     {
-        public static bool leaveFeedback(string userName, string productName, string manufacturer, string comment)
+        public static bool leaveFeedback(string userName, string productID, string manufacturer, string comment)
         {
-            if (!DataLayer.ProductInfoDAL.isExist(productName, manufacturer))
+            if (!DataLayer.ORM.DataAccess.isProductExist(int.Parse(productID)))
             {
                 return false;
             }
-            if (!DataLayer.FeedbackDAL.isExist(productName, manufacturer, userName)){
+            if (!DataLayer.ORM.DataAccess.isFeedBackExist(userName, int.Parse(productID))){
                 return false;
             }
-
+            
             return true;
         }
     }

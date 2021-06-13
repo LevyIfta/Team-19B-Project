@@ -2,5 +2,9 @@
 {
     public class iPolicyData
     {
+        public iPolicyData()
+        {
+
+        }
     }
 }

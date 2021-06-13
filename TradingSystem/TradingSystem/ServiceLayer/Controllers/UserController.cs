@@ -244,25 +244,36 @@ namespace TradingSystem.ServiceLayer
         } // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
         private static BuissnessLayer.commerce.Receipt convertReceipt(string receipt)
         {
-            BuissnessLayer.commerce.Receipt ans = new BuissnessLayer.commerce.Receipt();
+            return new BuissnessLayer.commerce.Receipt(DataLayer.ORM.DataAccess.getReciept(int.Parse(receipt)));
+            /*
             string[] arr = receipt.Split('$');
-            ans.username = arr[0];
+            ans.user = (Member)UserServices.getUser(arr[0]);
             ans.store = BuissnessLayer.commerce.Stores.searchStore(arr[1]);
             ans.price = double.Parse(arr[2]);
             ans.date = Convert.ToDateTime(arr[3]);
             ans.receiptId = int.Parse(arr[4]);
             string[] pro = arr[5].Split('=');
-            Dictionary<int, int> dic = new Dictionary<int, int>();
+            //Dictionary<int, int> dic = new Dictionary<int, int>();
+            List<DataLayer.ProductData> products = new List<DataLayer.ProductData>();
             if (pro.Length > 0 && pro[0].Length > 0)
             {
                 for (int i = 0; i < pro.Length; i++)
                 {
                     string[] info = pro[i].Split('<');
-                    dic[int.Parse(info[0])] = int.Parse(info[1]);
+                    DataLayer.ProductData data = DataLayer.ORM.DataAccess.getProduct(ToGuid(int.Parse(info[0])));
+                    products.Add(new DataLayer.ProductData(data.productData, int.Parse(info[1]), data.price, data.storeName, ToGuid(int.Parse(info[0]))));
+                    //dic[int.Parse(info[0])] = int.Parse(info[1]);
                 }
             }
-            ans.products = dic;
+            ans.basket = new DataLayer.BasketInRecipt(products, DataLayer.ORM.DataAccess.getReciept())
             return ans;
+            */
+        }
+        private static Guid ToGuid(int value)
+        {
+            byte[] bytes = new byte[16];
+            BitConverter.GetBytes(value).CopyTo(bytes, 0);
+            return new Guid(bytes);
         }
 
         public static Dictionary<string,SLproduct> browseProducts(string username, string productName, string manufacturer)

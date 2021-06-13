@@ -427,6 +427,10 @@ namespace TradingSystem.DataLayer.ORM
                 return context.feedbacks.Where((FeedbackData x) => x.user.Equals(member)).ToList();
             }
         }
+        public static bool isFeedBackExist(string userName, int productID)
+        {
+            return false;
+        }
 
 
 
@@ -494,6 +498,10 @@ namespace TradingSystem.DataLayer.ORM
             {
                 return context.productInfos.ToList();
             }
+        }
+        public static bool isProductExist(int productID)
+        {
+            return false;
         }
 
 

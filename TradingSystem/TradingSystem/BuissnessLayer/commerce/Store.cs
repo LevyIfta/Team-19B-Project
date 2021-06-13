@@ -46,34 +46,38 @@ namespace TradingSystem.BuissnessLayer.commerce
         public Store(StoreData storeData)
         {
             this.name = storeData.storeName;
-            this.founder = (Member)UserServices.getUser(storeData.founder);
+            this.founder = (Member)UserServices.getUser(storeData.founder.userName);
             
             // fill the collections
-            this.fillReceipts();
-            this.fillInventory();
-            this.fillOwners();
-            this.fillManagers();
+            //this.fillReceipts();
+            //this.fillInventory();
+            //this.fillOwners();
+            //this.fillManagers();
         }
-
+        /*
         private void fillReceipts()
         {
-            this.receipts = new LinkedList<Receipt>();
-            ICollection<ReceiptData> receiptsData = ReceiptDAL.getStoreReceipts(this.name);
+            if(receipts == null)
+                this.receipts = new LinkedList<Receipt>();
+            ICollection<ReceiptData> receiptsData = DataLayer.ORM.DataAccess.getAllStoreRecipts(name);
             foreach (ReceiptData receipt in receiptsData)
                 this.receipts.Add(new Receipt(receipt));
         }
 
         private void fillInventory()
         {
-            this.inventory = new LinkedList<Product>();
-            ICollection<ProductData> productsData = ProductDAL.getStoreProducts(this.name);
+            if(inventory == null)
+                this.inventory = new LinkedList<Product>();
+            ICollection<ProductData> productsData = DataLayer.ORM.DataAccess.getAllProductsInfo();
+            
             foreach (ProductData productData in productsData)
                 this.inventory.Add(new Product(productData));
         }
 
         private void fillManagers()
         {
-            this.managers = new LinkedList<Member>();
+            if(managers == null)
+                this.managers = new LinkedList<Member>();
             ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
             foreach (HireNewStoreManagerPermissionData manager in managersData)
                 this.managers.Add((Member)UserServices.getUser(manager.userName));
@@ -86,6 +90,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             foreach (HireNewStoreOwnerPermissionData owner in ownersData)
                 this.owners.Add((Member)UserServices.getUser(owner.userName));
         }
+        */
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
         {
@@ -99,7 +104,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // the product doesn't exist, add it
                 this.inventory.Add(new Product(productInfo, 0, 0));
                 // update DB
-                ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
+                DataLayer.ORM.DataAccess.create(productInfo.toDataObject());
+                //ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
             }
             return productInfo;
         }
@@ -126,9 +132,11 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
                 {
                     p.price = newPrice;
-                    
+
                     // update DB
-                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
+                    p.update(this.name);
+                    //DataLayer.ORM.DataAccess.update(new ProductData(p.info.toDataObject(), p.amount, p.price, this.name));
+                    //ProductDAL.update();
                     return true;
                 }
             // the product doesn't exist, can't edit price
@@ -148,7 +156,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                     {
                         p.amount += amount;
                         // update DB
-                        ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
+                        p.update(name);
+                        //ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                         return true;
                     }
             }
@@ -236,7 +245,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         }
         private string ProductToString(Product pro)
         {
-            return pro.info.name + "$" + pro.amount;
+            return pro.info.id + "$" + pro.amount;
         }
 
         private Receipt validPurchase(ShoppingBasket basket)
@@ -244,6 +253,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             // calc the price
             double price = calcPriceBeforeDiscount(basket.products);
             Receipt receipt = new Receipt();
+            List<ProductData> products = new List<ProductData>();
             // request for payment
             // the payment was successful
             foreach (Product product in basket.products)
@@ -255,28 +265,29 @@ namespace TradingSystem.BuissnessLayer.commerce
                         // update amount in DB
                         localProduct.update(this.name);
                         // add the products to receipt
-                        receipt.products.Add(localProduct.info.id, product.amount);
+                        products.Add(product.toDataObject(this.name));
+                        //receipt.products.Add(localProduct.info.id, product.amount);
                         // 
-                        receipt.actualProducts.Add(new Product(localProduct));
+                        //receipt.actualProducts.Add(new Product(localProduct));
                         // leave feedback
                         //basket.owner.canLeaveFeedback = true;
                         product.info.leaveFeedback(basket.owner.userName, "");
                         // update feedback in DB
-                        FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                        new FeedbackData(localProduct.info.toDataObject(), localProduct.info.manufacturer, ((Member)basket.owner).toDataObject(), "");
                     }
                     //StoresData.getStore(this.name).removeProducts(product.toDataObject());
                     product.info.roomForFeedback(basket.owner.userName);
                 }
+            receipt.basket = new BasketInRecipt(products, receipt.toDataObject());
             // fill receipt fields
             receipt = fillReceipt(receipt, price);
-            receipt.username = basket.owner.userName;
             return receipt;
         }
 
         private Receipt fillReceipt(Receipt receipt, double price)
         {
             receipt.store = this;
-            receipt.discount = 0;
+            receipt.discount = null;
             receipt.date = DateTime.Now;
             receipt.price = price;
             // save the receipt
@@ -306,26 +317,26 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.owners.Add(owner);
             // update DB
-            HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
+            //HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
         }
         public void addManager(Member manager)
         {
             this.managers.Add(manager);
             // update DB
-            HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.name));
+            //HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.name));
         }
         public void removeOwner(Member owner)
         {
             this.owners.Remove(owner);
             // update DB
-            HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
+            //HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
         }
 
         public void removeManager(Member manager)
         {
             this.managers.Remove(manager);
             // update DB
-            HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.name));
+            //HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.name));
         }
 
         public bool isManager(string member)
@@ -402,7 +413,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public void remove()
         {
-            StoreDAL.remove(this.toDataObject());
+            DataLayer.ORM.DataAccess.Delete(this.toDataObject());
         }
         public Product getProduct(int productId)
         {
@@ -414,7 +425,25 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public StoreData toDataObject()
         {
-            return new StoreData(this.name, this.founder.userName);
+            List<ReceiptData> receipts = new List<ReceiptData>();
+            List<ProductData> products = new List<ProductData>();
+            List<MemberData> members1 = new List<MemberData>();
+            List<MemberData> members2 = new List<MemberData>();
+            List<iPolicyDiscountData> discountDatas = new List<iPolicyDiscountData>();
+            List<iPolicyData> policyDatas = new List<iPolicyData>();
+            foreach (Receipt receipt in this.receipts)
+                receipts.Add(receipt.toDataObject());
+            foreach (Product product in this.inventory)
+                products.Add(product.toDataObject(this.name));
+            foreach (Member member in owners)
+                members1.Add(member.toDataObject());
+            foreach (Member member in managers)
+                members2.Add(member.toDataObject());
+            foreach (iPolicy policy in this.purchasePolicies)
+                policyDatas.Add(null);
+            foreach (iPolicyDiscount discount in this.discountPolicies)
+                discountDatas.Add(null);
+            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, discountDatas, policyDatas);
         }
 
         public void removeFromInventory(Product product)

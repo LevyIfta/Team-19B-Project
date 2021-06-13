@@ -15,15 +15,19 @@ namespace TradingSystem.DataLayer
         public virtual BasketInRecipt basket { get; set; }
 
         public double price { get; set; }
+        public MemberData user { get; set; }
+        public StoreData store { get; set; }
         public DateTime date { get; set; }
         public iPolicyDiscountData discount { get; set; }
         public iPolicyData purchasePolicy { get; set; }
 
         //CONSTRUCTORS
-        public ReceiptData(int receiptID, BasketInRecipt basket , double price, DateTime date, iPolicyDiscountData discount, iPolicyData purchasePolicy)
+        public ReceiptData(int receiptID, BasketInRecipt basket, StoreData store, MemberData user, double price, DateTime date, iPolicyDiscountData discount, iPolicyData purchasePolicy)
         {
             this.receiptID = receiptID;
             this.basket = basket;
+            this.store = store;
+            this.user = user;
             this.price = price;
             this.date = date;
             this.discount = discount;

@@ -133,14 +133,14 @@ namespace TradingSystem.BuissnessLayer
         private string convertReceipt(Receipt receipt)
         {
             string ans = "";
-            foreach (int id in receipt.products.Keys)
+            foreach (Product product in receipt.getProducts())
             {
-                ans += id + "<" + receipt.products[id] + "=";
+                ans += product.info.id + "<" + product.amount + "=";
             }
             if(ans.Length > 0)
                 ans = ans.Substring(0, ans.Length - 1);
-            return receipt.username + "$" + receipt.store.name + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptId + "$" + ans;
-        }//receipt -> user$store$price$date$id$products. products -> pro1&pro2&pro3 -> proInfo^feedback -> feedback_feedback -> user#comment
+            return this.userName + "$" + receipt.store.name + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptId + "$" + ans;
+        }//receipt -> user$store$price$date$id$products. products -> 1<4=5<4
         private Receipt GetReceiptNow(string id)
         {
             foreach (Receipt receipt in reciepts)
@@ -246,7 +246,7 @@ namespace TradingSystem.BuissnessLayer
             ICollection<Receipt> list = new List<Receipt>();
             foreach(Receipt receipt in reciepts)
             {
-                if (receipt.store.Equals(storeName))
+                if (receipt.store.name.Equals(storeName))
                     list.Add(receipt);
             }
             return list;
@@ -359,7 +359,17 @@ namespace TradingSystem.BuissnessLayer
             messages.Add(message);
             return true;
         }
-
+        public MemberData toDataObject()
+        {
+            List<BasketInCart> baskets = new List<BasketInCart>();
+            List<ReceiptData> receipts = new List<ReceiptData>();
+            foreach (ShoppingBasket basket in myCart.baskets)
+                baskets.Add(basket.toDataObject());
+            foreach (Receipt receipt in this.reciepts)
+                receipts.Add(receipt.toDataObject());
+            return new MemberData(userName, password, age, gender, address, baskets, receipts);
+        }
+        /*
         public static Member dataToObject(MemberData data)
         {
             if(data == null)
@@ -370,13 +380,13 @@ namespace TradingSystem.BuissnessLayer
         {
             throw new NotImplementedException();
         }
-
+        */
         /// <summary>
         /// call everytime you chane anything in the user data
         /// </summary>
         protected override void update()
         {
-            MemberDAL.update(new MemberData(userName, password));
+            DataLayer.ORM.DataAccess.update(toDataObject());
         }
 
 
