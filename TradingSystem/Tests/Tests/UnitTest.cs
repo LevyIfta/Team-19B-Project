@@ -1148,11 +1148,13 @@ namespace Tests
             foreach (Receipt receipt in u1Receipts)
             {
                 Assert.AreEqual(receipt.user.userName, username1, "the username is wrong");
-                //if (receipt.store.name.Equals(storeName) & receipt.actualProducts.Count == 1)
+                if (receipt.store.name.Equals(storeName) & receipt.basket.products.Count == 1)
                 {
                     LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
-                    //LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    //if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")) & products.First.Value.amount == 18)
+                    LinkedList<Product> products = new LinkedList<Product>();
+                    foreach (var product in rAsList.First.Value.basket.products)
+                        products.AddLast(new Product(product));
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")) & products.First.Value.amount == 18)
                     {
                         user1HasReceipt = true;
                     }
@@ -1162,11 +1164,13 @@ namespace Tests
             foreach (Receipt receipt in u2Receipts)
             {
                 Assert.AreEqual(receipt.user.userName, username2, "the username is wrong");
-                //if (receipt.store.name.Equals(storeName) & receipt.actualProducts.Count == 1)
+                if (receipt.store.name.Equals(storeName) & receipt.basket.products.Count == 1)
                 {
                     LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u2Receipts);
-                    //LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    //if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
+                    LinkedList<Product> products = new LinkedList<Product>();
+                    foreach (var product in rAsList.First.Value.basket.products)
+                        products.AddLast(new Product(product));
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
                     {
                         user2HasReceipt = true;
                     }
@@ -1204,14 +1208,16 @@ namespace Tests
             foreach (Receipt receipt in storeReceipts)
             {
                 Assert.AreEqual(receipt.store.name, storeName, "wrong store name. expected: " + store.name + ", actual: " + receipt.store.name);
-                //Assert.AreEqual(receipt.actualProducts.Count, 1);
+                Assert.AreEqual(receipt.basket.products.Count, 1);
                 Assert.IsTrue(receipt.user.userName.Equals(username1) | receipt.user.userName.Equals(username2));
 
                 if (receipt.user.userName.Equals(username1))
                 {
                     LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
-                    //LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    //if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
+                    LinkedList<Product> products = new LinkedList<Product>();
+                    foreach (var product in rAsList.First.Value.basket.products)
+                        products.AddLast(new Product(product));
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
                     {
                         user1HasReceipt = true;
                     }
@@ -1220,8 +1226,10 @@ namespace Tests
                 if (receipt.user.userName.Equals(username2))
                 {
                     LinkedList<Receipt> rAsList = new LinkedList<Receipt>(u1Receipts);
-                    //LinkedList<Product> products = new LinkedList<Product>(rAsList.First.Value.actualProducts);
-                    //if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
+                    LinkedList<Product> products = new LinkedList<Product>();
+                    foreach (var product in rAsList.First.Value.basket.products)
+                        products.AddLast(new Product(product));
+                    if (products.First.Value.info.Equals(ProductInfo.getProductInfo("Bamba", "Food", "Osem")))
                     {
                         user2HasReceipt = true;
                     }
@@ -1283,13 +1291,15 @@ namespace Tests
 
             foreach (Receipt receipt in adminReceipts)
             {
-                //LinkedList<Product> products = new LinkedList<Product>(adminReceipts.First.Value.actualProducts);
-                //if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man)))
+                LinkedList<Product> products = new LinkedList<Product>();
+                foreach (var product in adminReceipts.First.Value.basket.products)
+                    products.AddLast(new Product(product));
+                if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man)))
                 {
                     hasFirst = true;
                 }
 
-                //if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man)))
+                if (products.First.Value.info.Equals(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man)))
                 {
                     hasSecond = false;
                 }
