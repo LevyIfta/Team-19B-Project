@@ -31,8 +31,6 @@ namespace ClientWeb
         {
             // mockData data = new mockData();
 
-            userInfo.username = "Ali";
-
             InitializeComponent();
             this.DataContext = userInfo;
             string username = userInfo.username;

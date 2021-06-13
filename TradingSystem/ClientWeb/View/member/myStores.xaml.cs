@@ -35,7 +35,7 @@ namespace ClientWeb
             Button storeButton = new Button();
             storeButton.Content = storeName;
             storeButton.Click += (r, e) => openStoreWindow(storeName);
-            this.StackList.Children.Add(storeButton);
+          /*  this.StackList.Children.Add(storeButton);*/
         }
 
         private void openStoreWindow(string storeName)

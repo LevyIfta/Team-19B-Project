@@ -10,7 +10,7 @@
 
     <Grid Background="LightBlue">
         <Label Content="Payment Page" HorizontalAlignment="Left" Margin="332,70,0,0" VerticalAlignment="Top" Width="226" Height="53"/>
-        <Button Content="Purchase" HorizontalAlignment="Left" Margin="139,316,0,0" VerticalAlignment="Top" Width="75" Height="31" Click="Button_Click"/>
+        <Button Content="Purchase" HorizontalAlignment="Left" Margin="140,316,0,0" VerticalAlignment="Top" Width="75" Height="31" Click="Button_Click"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="128,150,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="128,204,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="128,250,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>

@@ -47,6 +47,21 @@ namespace ClientWeb
 
         public string[] Login(string username, string password)
         {
+            /*
+            TradingSystem.ServiceLayer.DecodedMessge msg = new TradingSystem.ServiceLayer.DecodedMessge();
+            msg.type = TradingSystem.ServiceLayer.msgType.FUNC;
+            msg.name = "login";
+            msg.param_list = new string[] { username, password };
+
+            TradingSystem.ServiceLayer.DecodedMessge ans_d = TradingSystem.ServiceLayer.ServerMessageManager.act(msg);
+
+            if (ans_d.type == TradingSystem.ServiceLayer.msgType.OBJ && ans_d.name == "string[]")
+            {
+                return ans_d.param_list;
+            }
+            return null;
+            */
+           
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "login";
@@ -60,6 +75,7 @@ namespace ClientWeb
                 return ans_d.param_list;
             }
             return null;
+            
         }
         public bool Logoutfunc()
         {
@@ -623,6 +639,6 @@ namespace ClientWeb
             throw new NotImplementedException();
         }*/ //todo
 
-        
+
+        }
     }
-}

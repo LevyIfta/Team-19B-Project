@@ -11,7 +11,7 @@
     <Grid Background="LightBlue">
         <Grid Margin="305,81,318,25">
             <Label x:Name="label1" Content="user name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBox" Height="23" Margin="20,41,0,0" TextWrapping="Wrap" Text="{Binding loginname, Mode=TwoWay ,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
+            <TextBox x:Name="textBox" Height="23" Margin="20,41,0,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
             <Label x:Name="label2" Content="password:" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="textBox1" Margin="20,113,37,0" TextWrapping="Wrap" Text="{Binding password, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" Height="23" VerticalAlignment="Top"/>
             <Button x:Name="button" Content="login" HorizontalAlignment="Right" Margin="0,154,10,170" Width="75" d:LayoutOverrides="Height" Click="button_Click"/>

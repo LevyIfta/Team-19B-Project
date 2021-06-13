@@ -17,7 +17,22 @@ namespace ClientWeb
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-    class UserData : ANotifyPropChange
+
+    class StoreData : ANotifyPropChange
+    {
+        private String Storename;
+
+        public String storename
+        {
+            get { return Storename; }
+            set
+            {
+                Storename = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+        class UserData : ANotifyPropChange
     {
         private String Username;
 

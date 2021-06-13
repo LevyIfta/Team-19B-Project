@@ -16,7 +16,7 @@ using TradingSystem.BuissnessLayer;
 namespace TradingSystem.ServiceLayer
 {
     
-    class ServerMessageManager
+    public class ServerMessageManager
     {
 
         public static readonly int EOT = 4;
@@ -300,8 +300,8 @@ namespace TradingSystem.ServiceLayer
                 ans = ans.Substring(0, ans.Length - 1); // delete the # in the end
             return ans;
         }
-
-        private static DecodedMessge act(DecodedMessge msg)
+       
+        public static DecodedMessge act(DecodedMessge msg)
         {
 
             bool ans = false;
