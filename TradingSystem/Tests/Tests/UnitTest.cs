@@ -9,6 +9,8 @@ using TradingSystem.ServiceLayer;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using System.Threading;
 using System;
+using TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy;
+using TradingSystem.BuissnessLayer.commerce.Rules.Policy;
 
 namespace Tests
 {
@@ -170,7 +172,7 @@ namespace Tests
             UserController.register(user2, "qweE1", 99, "male", "estb 2");
             UserController.login(user1, "qweE1");
             UserController.EstablishStore(user1, storename1);
-            Assert.IsFalse(UserController.EstablishStore(user1,storename1));
+            Assert.IsFalse(UserController.EstablishStore(user1, storename1));
             UserController.logout();
             UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.EstablishStore(user2, storename1));
@@ -192,8 +194,8 @@ namespace Tests
             permissionList.Add("EditProduct");
             UserController.editManagerPermissions(user1, storename, user2, permissionList);
             var temp = ((Member)UserServices.getUser(user1)).GetPermissions(storename);
-            Assert.IsTrue(UserController.addNewProduct(user1,storename, "bamba", 5.9, 5, "snacks", "osem"));
-            Assert.IsTrue(UserController.editProduct(user1,storename, "bamba", 5.5, "osem"));
+            Assert.IsTrue(UserController.addNewProduct(user1, storename, "bamba", 5.9, 5, "snacks", "osem"));
+            Assert.IsTrue(UserController.editProduct(user1, storename, "bamba", 5.5, "osem"));
             UserController.logout();
         }
 
@@ -263,7 +265,7 @@ namespace Tests
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
-            Assert.IsFalse(UserController.editManagerPermissions(user1,wrongstore, user2, permissionList));
+            Assert.IsFalse(UserController.editManagerPermissions(user1, wrongstore, user2, permissionList));
             UserController.logout();
         }
 
@@ -280,7 +282,7 @@ namespace Tests
             UserController.login(user2, "qweE1");
             var emp = UserController.getInfoEmployees(user2, storename);
             bool check = false;
-            foreach(SLemployee em in emp)
+            foreach (SLemployee em in emp)
             {
                 if (em.userName.Equals(user2))
                     check = true;
@@ -304,7 +306,7 @@ namespace Tests
             Assert.IsNull(UserController.getInfoEmployees(user1, wrongstore)); //store doesnt exist
             UserController.logout();
             UserController.login(user2, "qweE1");
-            Assert.IsNotNull(UserController.getInfoEmployees(user2,storename)); //no permissions
+            Assert.IsNotNull(UserController.getInfoEmployees(user2, storename)); //no permissions
             UserController.logout();
 
         }
@@ -1046,12 +1048,12 @@ namespace Tests
             Assert.IsFalse(basket.products.Contains(null), "saved a null item");
         }
 
-        
+
 
     }
 
 
-    
+
 
     [TestClass]
     public class ZReciptTests
@@ -1094,7 +1096,7 @@ namespace Tests
             bridge.purchase("Credit");
 
     */
-    
+
         }
 
         [TestMethod]
@@ -1294,7 +1296,7 @@ namespace Tests
             }
 
             Assert.IsTrue(hasFirst);
-            Assert.IsTrue(hasSecond); 
+            Assert.IsTrue(hasSecond);
         }
 
         private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
@@ -1550,7 +1552,7 @@ namespace Tests
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
+
             // purchase
             string[] receipts1 = client.purchase("111111111111", "11/22", "123");
 
@@ -1597,7 +1599,7 @@ namespace Tests
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
+
             // purchase
             string[] receipts1 = client.purchase("111111111111", "11/22", "123");
 
@@ -1606,7 +1608,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CategoryAgePolicyGood() {
+        public void CategoryAgePolicyGood()
+        {
             // init usernames and passes
             string storeName1 = "store_CategoryAgePolicyGood";
             string ownerUsername = "owner_003", ownerPass = "123Xx123";
@@ -1637,7 +1640,7 @@ namespace Tests
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
+
             // purchase
             string[] receipts1 = client.purchase("111111111111", "11/22", "123");
 
@@ -1652,11 +1655,12 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CategoryAgePolicyBad() {
+        public void CategoryAgePolicyBad()
+        {
             // init usernames and passes
             string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_004", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_004", newPass = "123Xx321";
+            string ownerUsername = "owner_009", ownerPass = "123Xx123";
+            string buyerUsername = "noOne_009", newPass = "123Xx321";
             // init products info
             string p1_name = "Corona Beer", p1_man = "Corona", p1_cat = "alcohol";
             // register the users
@@ -1683,7 +1687,7 @@ namespace Tests
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
-            
+
             // purchase
             string[] receipts1 = client.purchase("111111111111", "11/22", "123");
 
@@ -1754,11 +1758,12 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ProductMaxAmountPolicyBad() {
+        public void ProductMaxAmountPolicyBad()
+        {
             // init usernames and passes
             string storeName1 = "store_CategoryAgePolicyGood";
-            string ownerUsername = "owner_006", ownerPass = "123Xx123";
-            string buyerUsername = "noOne_006", newPass = "123Xx321";
+            string ownerUsername = "owner_008", ownerPass = "123Xx123";
+            string buyerUsername = "noOne_008", newPass = "123Xx321";
             // init products info
             string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
             int maxAmount = 5;
@@ -1795,7 +1800,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CategoryMaxAmountPolicyGood() {
+        public void CategoryMaxAmountPolicyGood()
+        {
             // init usernames and passes
             string storeName1 = "store_CategoryAgePolicyGood";
             string ownerUsername = "owner_007", ownerPass = "123Xx123";
@@ -1842,7 +1848,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CategoryMaxAmountPolicyBad() {
+        public void CategoryMaxAmountPolicyBad()
+        {
             // init usernames and passes
             string storeName1 = "store_CategoryAgePolicyGood";
             string ownerUsername = "owner_006", ownerPass = "123Xx123";
@@ -1882,7 +1889,7 @@ namespace Tests
             Assert.AreEqual(receipts1[1], "Policy err", "the error isn't policy related");
         }
 
-        
+
 
     }
 
@@ -1922,7 +1929,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void SingleDiscountBambaGood()
+        public void BaseDiscountPolicyByProductGood()
         {
             // init usernames and passes
             string storeName1 = "store_ProductAgePolicyGood";
@@ -1948,8 +1955,8 @@ namespace Tests
             store1.supply(p1_name, p1_man, 20);
 
 
-            store1.addSingleDiscountPolicyByProduct(p1_name, p1_cat, p1_man, DateTime.MaxValue, 10);
-          
+            store1.addSingleDiscountPolicyByProduct(p1_name, p1_cat, p1_man, DateTime.MaxValue, 0.1);
+
             UserServices.login(buyerUsername, newPass);
             aUser client = UserServices.getUser(buyerUsername);
 
@@ -1967,9 +1974,275 @@ namespace Tests
                 Receipt actualReceipt = convertReceipt(receipts1[1]);
                 Assert.AreEqual(actualReceipt.price, 9, "expected 9 the price");
             }
+        }
 
+        [TestMethod]
+        public void BaseDiscountPolicyByProductBad()
+        {
+            // init usernames and passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food",
+                p2_name = "Bamba - no discount", p2_man = "Osem", p2_cat = "Food";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            store1.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            store1.editPrice(p2_name, p2_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            store1.supply(p2_name, p2_man, 20);
+
+
+            store1.addSingleDiscountPolicyByProduct(p1_name, p1_cat, p1_man, DateTime.MaxValue, 0.1);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man), 1, 0));
+
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy bamba with age = 18");
+
+            // check for amounts in the basket and in the store
+            if (receipts1[0].Equals("true"))
+            {
+                Receipt actualReceipt = convertReceipt(receipts1[1]);
+                Assert.AreEqual(actualReceipt.price, 10, "Got discount on wrong product.");
+            }
+        }
+
+        [TestMethod]
+        public void BaseDiscountPolicyByCategoryBad()
+        {
+            // init usernames and passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(), 
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(), 
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food",
+                p2_name = "Bamba - no discount", p2_man = "Osem", p2_cat = "Food-no dis";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            store1.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            store1.editPrice(p2_name, p2_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            store1.supply(p2_name, p2_man, 20);
+
+
+            store1.addSingleDiscountPolicyByProduct(p1_name, p1_cat, p1_man, DateTime.MaxValue, 0.1);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man), 1, 0));
+
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy bamba with age = 18");
+
+            // check for amounts in the basket and in the store
+            if (receipts1[0].Equals("true"))
+            {
+                Receipt actualReceipt = convertReceipt(receipts1[1]);
+                Assert.AreEqual(actualReceipt.price, 10, "Got a discount on the wrong category.");
+            }
+        }
+
+        [TestMethod]
+        public void BaseDiscountPolicyByCategoryGood()
+        {
+            // init usernames and passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+
+
+            store1.addSingleDiscountPolicyByProduct(p1_name, p1_cat, p1_man, DateTime.MaxValue, 0.1);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 0));
+
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy bamba with age = 18");
+
+            // check for amounts in the basket and in the store
+            if (receipts1[0].Equals("true"))
+            {
+                Receipt actualReceipt = convertReceipt(receipts1[1]);
+                Assert.AreEqual(actualReceipt.price, 9, "expected 1 shekel discount.");
+            }
+        }
+
+        [TestMethod]
+        public void ConditionedDiscountByAmountAndProductGood()
+        {
+            // init usernames and passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food",
+                p2_name = "Bamba2", p2_man = "Osem", p2_cat = "Food";
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            store1.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            store1.editPrice(p2_name, p2_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            store1.supply(p2_name, p2_man, 20);
+
+            // create a new conditioned policy
+            ConditioningPolicyDiscount condition = DiscountPoliciesGenerator.generateMinProductsCondition(p1_name, p1_cat, p1_man, 5);
+            iPolicyDiscount discountPolicy = DiscountPoliciesGenerator.generateDiscountPolicyByProduct(p1_name, p2_cat, p2_man, 0.1, DateTime.MaxValue);
+            // add the condition to the policy, and the policy to the store
+            discountPolicy.addCondition(condition);
+            store1.addDiscountPolicy(discountPolicy);
+            
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man), 1, 0));
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 5, 0));
+
+            // purchase
+            string[] receipts1 = client.purchase("111111111111", "11/22", "123");
+
+            Assert.IsTrue(receipts1[0].Equals("true") || !receipts1[1].Equals("Policy err"), "couldn't manage to buy bamba with age = 18");
+
+            // check for amounts in the basket and in the store
+            if (receipts1[0].Equals("true"))
+            {
+                Receipt actualReceipt = convertReceipt(receipts1[1]);
+                Assert.AreEqual(actualReceipt.price, 59, "expected 1 shekel discount.");
+            }
+        }
+
+        public class InfoGenerator
+        {
+            // this class has static methods and fields
+            // it provides services for generating valid and unvalid unique info
+            // including usernames, passwords and store names
+            private static string baseUsername = "User",
+                                basePassword = "123Xx",
+                                baseStoreName = "Store";
+            // id's for uniqueness
+            private static int usernameID = 0,
+                            passwordID = 0,
+                            storeID = 0;
+            // locks for preventing generating the same info twice
+            private static Object usernameLocker = new object(),
+                            passwordLocker = new object(),
+                             storeLocker = new object();
+
+            public static string generateValidUsername()
+            {
+                lock (usernameLocker)
+                {
+                    usernameID++;
+                    return baseUsername + getThreeDigit(usernameID);
+                }
+            }
+
+            public static string generateValidPassword()
+            {
+                lock (passwordLocker)
+                {
+                    passwordID++;
+                    return basePassword + getThreeDigit(passwordID);
+                }
+            }
+
+            public static string generateValidStoreName()
+            {
+                lock (storeLocker)
+                {
+                    storeID++;
+                    return baseStoreName + getThreeDigit(storeID);
+                }
+            }
+
+            private static string getThreeDigit(int ID)
+            {
+                return ID < 10 ? "00" + ID : ID < 100 ? "0" + ID : "" + ID;
+            }
         }
     }
-
-    }
+}
 

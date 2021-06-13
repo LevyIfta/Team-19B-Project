@@ -591,12 +591,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             this.purchasePolicies.Add(policy);
         }
-
-
-
         
-
-
         public void offer(OfferRequest request)
         {
             // notify the relevant owners/managers
@@ -613,6 +608,16 @@ namespace TradingSystem.BuissnessLayer.commerce
                 manager.addAlarm("Offer request update", request.ToString());
                 manager.addOffer(request);
             }
+        }
+
+        public void addPurchasePolicy(iPolicy policy)
+        {
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addDiscountPolicy(iPolicyDiscount discountPolicy)
+        {
+            this.discountPolicies.Add(discountPolicy);
         }
 
     }

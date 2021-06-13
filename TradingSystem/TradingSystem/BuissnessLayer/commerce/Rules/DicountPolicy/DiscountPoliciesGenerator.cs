@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
-    class DicountPoliciesGenerator
+    public class DiscountPoliciesGenerator
     {
         // this class has static methods
         // it provides services for generating discount policies
@@ -79,7 +79,12 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 
         public static ConditioningPolicyDiscount generateMinTotalPriceCondition(double minTotalPrice)
         {
-            return null;
+            return new BaseCondition((basket, totalPrice) =>
+            {
+                return totalPrice >= minTotalPrice;
+            });
         }
+
+        
     }
 }

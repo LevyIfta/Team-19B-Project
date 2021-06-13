@@ -25,11 +25,11 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
             return  product.price - (product.price * discount_percent);
         }
 
-        public void addPolicy(ConditioningPolicyDiscount policy)
+        public void addCondition(ConditioningPolicyDiscount policy)
         {
             this.policies.Add(policy);
         }
-        public bool removePolicy()
+        public bool removeCondition()
         {
             if (this.policies.Count == 0) return false;
             this.policies.Remove(this.policies[this.policies.Count - 1]);
