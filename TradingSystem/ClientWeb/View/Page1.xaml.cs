@@ -127,7 +127,7 @@ namespace ClientWeb
 
         private void myCart_Click(object sender, RoutedEventArgs e)
         {
-            myCart m = new myCart();
+            myCart m = new myCart(userInfo.username);
             NavigationService.Navigate(m);
         }
 

@@ -26,8 +26,12 @@ namespace TradingSystem.ServiceLayer
             addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
             addNewProduct("almog", "Castro", "pro11", 10.1, 10, "cat", "man");
             addNewProduct("almog", "Castro", "pro121", 10.1, 10, "cat", "man");
-            logout();
-            
+            Dictionary<string, int> d = new Dictionary<string, int>();
+            d["pro"] = 1;
+            d["pro11"] = 1;
+            saveProduct("almog", "Castro", "man", d);
+            // logout();
+
         }
 
         public static void init(Func<object, bool> alarmhandler)
