@@ -25,6 +25,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         // id generation help fields
         private static int currentId = -1;
         private static Object idLocker = new Object();
+        private Object responseLocker = new object();
 
         public OfferRequest(Product product, aUser requester, Store store)
         {
@@ -40,17 +41,30 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.store = store;
         }
 
-        public bool editPrice(double price)
+        public bool editPrice(double price, aUser editor)
         {
-            if (price < 0) return false;
-            this.product.price = price;
+            if (price < 0)
+                return false;
+            // if the user is waiting for the store to response then he/she can't edit the price
+            if (this.status == Status.PENDING_STORE && !userHasPermission(editor))
+                return false;
+            lock (this.responseLocker)
+            {
+                this.product.price = price;
+            }
             return true;
+        }
+
+        private bool userHasPermission(aUser editor)
+        {
+            // check if the user has the permission to edit the price
+            return this.store.hasRequestPermission(editor);
         }
 
         public void send()
         {
             this.status = Status.PENDING_STORE;
-            // send a notification to the store owner
+            
             notifyStore();
         }
 
@@ -58,7 +72,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             if (this.status != Status.PENDING_REQUESTER) return false;
             this.status = Status.ACCEPTED;
-            // send a notification to the user
+            
             notifyUser();
             return true;
         }
@@ -66,19 +80,26 @@ namespace TradingSystem.BuissnessLayer.commerce
         public bool reject()
         {
             if (this.status != Status.PENDING_REQUESTER) return false;
-            this.status = Status.REJECTED;
-            // send a notification to the user
-            notifyUser();
+            lock (responseLocker)
+            {
+                this.status = Status.REJECTED;
+                // send a notification to the user
+                notifyUser();
+            }
             return true;
         }
 
-        public bool negotiate(double price)
+        public bool negotiate(double price, aUser negotiator) // used by managers/owners
         {
-            if (this.status != Status.PENDING_REQUESTER) return false;
-            editPrice(price);
-            this.status = Status.PENDING_REQUESTER;
+            if (this.status != Status.PENDING_STORE) return false;
+            lock (responseLocker)
+            {
+                editPrice(price, negotiator);
 
-            notifyUser();
+                this.status = Status.PENDING_REQUESTER;
+
+                notifyUser();
+            }
             return true;
         }
 
@@ -92,10 +113,11 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.requester.addAlarm("Offer update", this.ToString());
         }
 
-        public string purchase(string creditNumber, string validity, string cvv)
+        public string[] purchase(string creditNumber, string validity, string cvv)
         {
-            if (this.status != Status.ACCEPTED) return "";
-            string receipt = this.store.executeOfferPurchase(this.requester, this.product, creditNumber, validity, cvv);
+            if (this.status != Status.ACCEPTED) return null;
+            
+            string[] receipt = this.store.executeOfferPurchase(this.requester, this.product, creditNumber, validity, cvv);
 
             this.status = Status.DONE;
             return receipt;

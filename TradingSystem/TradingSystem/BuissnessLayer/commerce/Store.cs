@@ -43,6 +43,19 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.purchasePolicies = new LinkedList<iPolicy>();
         }
 
+        public bool hasRequestPermission(aUser user)
+        {
+            foreach (aUser owner in this.owners)
+                if (owner.userName.Equals(user.userName))
+                    return true;
+
+            foreach (aUser manager in this.managers)
+                if (manager.userName.Equals(user.userName))
+                    return true;
+
+            return false;
+        }
+
         public Store(StoreData storeData)
         {
             this.name = storeData.storeName;
@@ -177,7 +190,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return price;
         }
 
-        public void updatePricesInBasket(ICollection<Product> products)
+        private void updatePricesInBasket(ICollection<Product> products)
         {
             foreach (Product product in products)
                 foreach (Product localProduct in this.inventory)
@@ -185,17 +198,58 @@ namespace TradingSystem.BuissnessLayer.commerce
                         product.price = localProduct.price;
         }
 
-        public double calcPriceAfterDiscount(ICollection<Product> products)
+        private double calcTotalDiscount(ShoppingBasket basket, double totalPrice)
         {
-            double price = 0.0;
+            double totalDiscount = 0;
 
-            foreach (Product product in products)
-                price += product.price * product.amount;
+            foreach (iPolicyDiscount discountPolicy in this.discountPolicies)
+                totalDiscount += discountPolicy.ApplyDiscount(basket, totalDiscount);
+            
 
-            return price;
+
+            return totalDiscount;
+        }
+        
+
+        public string[] executeOfferPurchase(aUser user, Product product, string creditNumber, string validity, string cvv)
+        {  // lock the store for purchase
+            Receipt receipt;
+            lock (this.purchaseLock)
+            {
+                string policy = checkPolicies(product);
+                if (policy.Length != 0)
+                    return new string[] { "false", policy };
+                if (!checkAmounts(new LinkedList<Product>(new Product[] { product })))
+                    return new string[] { "false", "not enough items in stock" };
+                if (!PaymentSystem.Verification.Pay(user.userName, creditNumber, validity, cvv))
+                    return new string[] { "false", "payment not approved" };
+                if (!SupplySystem.Supply.OrderPackage(name, user.userName, user.getAddress(), ProductToString(product)))
+                    return new string[] { "false", "supply not approved" };
+
+                // create a temp basket for purchase
+                ShoppingBasket basket = new ShoppingBasket(this, user);
+                basket.products.Add(product);
+
+                receipt = validPurchase(basket);
+                if (!basket.owner.userName.Equals("guest"))
+                {
+                    receipt.save();
+                }
+
+                user.addReceipt(receipt);
+                
+                // update the origin store
+                Stores.stores[this.name].inventory = this.inventory;
+                Stores.stores[this.name].receipts = this.receipts;
+            }
+
+            return new string[] { "true", "" + receipt.receiptId }; ;
         }
 
-        public string executeOfferPurchase(aUser user, Product product, string creditNumber, string validity, string cvv) { return null; }
+        private string checkPolicies(Product product)
+        {
+            throw new NotImplementedException();
+        }
 
         public string[] executePurchase(ShoppingBasket basket, string creditNumber, string validity, string cvv)
         {
@@ -204,7 +258,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             Receipt receipt;
             lock (this.purchaseLock)
             {
-                // check for amounts validation
+                // check for amounts validation, policies, payment verification and supplyment validation
+                updatePricesInBasket(basket.products);
+                
                 string policy = checkPolicies(basket);
                 if (policy.Length != 0)
                     return new string[] { "false", policy };
@@ -243,6 +299,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             return ans2; // pro1_pro2_pro3
         }
+        
         private string ProductToString(Product pro)
         {
             return pro.info.id + "$" + pro.amount;
@@ -251,7 +308,8 @@ namespace TradingSystem.BuissnessLayer.commerce
         private Receipt validPurchase(ShoppingBasket basket)
         {
             // calc the price
-            double price = calcPriceBeforeDiscount(basket.products);
+            double priceBeforeDisc = calcPriceBeforeDiscount(basket.products);
+            double price = priceBeforeDisc - calcTotalDiscount(basket, priceBeforeDisc);
             Receipt receipt = new Receipt();
             List<ProductData> products = new List<ProductData>();
             // request for payment
@@ -467,7 +525,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             iPolicyDiscount policy = new baseDiscountPolicy(
                 (Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)),
-                (Product p, double totalPrice)=> true,
+                (Product p)=> true,
                 deadline,
                 discount_percent);
             this.discountPolicies.Add(policy);
@@ -562,153 +620,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             this.purchasePolicies.Add(policy);
         }
-
-
-
-        public iPolicy generateAgePolicyByProduct(string name, string category, string man, int minAge)
-        {
-            iPolicy policy = new BasePolicy((Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => u.getAge() >= minAge);
-            return policy;
-        }
-
-        public iPolicy generateAgePolicyByCategory(string category, int minAge)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => u.getAge() >= minAge);
-            return policy;
-        }
-
-        public iPolicy generateDailyPolicyByProduct(string name, string category, string man, int maxHour)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Hour <= maxHour);
-            return policy;
-        }
-
-        public iPolicy generateDailyPolicyByCategory(string category, int hour)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Hour <= hour);
-            return policy;
-        }
-
-        public iPolicy generateMaxAmountPolicyByProduct(string name, string category, string man, int maxAmount)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount <= maxAmount);
-            return policy;
-        }
-
-        public iPolicy generateMinAmountPolicyByProduct(string name, string category, string man, int minAmount)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => p.amount >= minAmount);
-            return policy;
-        }
-
-        public iPolicy generateMaxAmountPolicyByCategory(string category, int maxAmount)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => p.amount <= maxAmount);
-            return policy;
-        }
-
-        public iPolicy generateMinAmountPolicyByCategory(string category, int minAmount)
-        {
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => p.amount >= minAmount);
-            return policy;
-        }
-
-        public iPolicy generateWeeklyTimePolicyByCategory(string category, int minDay, int minHour, int maxDay, int maxHour)
-        {
-            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return null;
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
-            this.purchasePolicies.Add(policy);
-            return policy;
-        }
-
-        public iPolicy generateWeeklyTimePolicyByProduct(string name, string category, string man, int minDay, int minHour, int maxDay, int maxHour)
-        {
-            if (minDay > maxDay | minDay < 1 | minDay > 7 | maxDay < 1 | maxDay > 7 | minHour < 0 | minHour > 23 | maxHour < 0 | maxHour > 23) return null;
-            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (Product p, aUser u) => DateTime.Now.Day < minDay | DateTime.Now.Day > maxDay | (DateTime.Now.Day == minDay & DateTime.Now.Hour < minHour) | (DateTime.Now.Day == maxDay & DateTime.Now.Hour > maxHour));
-            this.purchasePolicies.Add(policy);
-            return policy;
-        }
-
-        public iPolicy generateDateTimePolicyByCategory(string category, DateTime minDate, DateTime maxDate)
-        {
-            if (minDate > maxDate) return null;
-            iPolicy policy = new BasePolicy(p => p.info.category.Equals(category), (p, u) => DateTime.Now < minDate | DateTime.Now > maxDate);
-            this.purchasePolicies.Add(policy);
-            return policy;
-        }
-
-        public iPolicy generateDateTimePolicyByProduct(string name, string category, string man, DateTime minDate, DateTime maxDate)
-        {
-            if (minDate > maxDate) return null;
-            iPolicy policy = new BasePolicy(p => p.info.Equals(ProductInfo.getProductInfo(name, category, man)), (p, u) => DateTime.Now < minDate | DateTime.Now > maxDate);
-            this.purchasePolicies.Add(policy);
-            return policy;
-        }
-
-
         
-        public iPolicy generateAndPolicy(ICollection<iPolicy> policies) {
-            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
-
-            iPolicy andPolicy = new AndPolicy();
-
-            foreach (iPolicy policy in policies)
-                andPolicy.addPolicy(policy);
-
-            return andPolicy;
-        }
-
-        public iPolicy generateOrPolicy(ICollection<iPolicy> policies)
-        {
-            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
-
-            iPolicy orPolicy = new OrPolicy();
-
-            foreach (iPolicy policy in policies)
-                orPolicy.addPolicy(policy);
-
-            return orPolicy;
-        }
-
-
-        //Alijb
-        public ConditioningPolicyDiscount generateAndPolicyDisc(ICollection<ConditioningPolicyDiscount> policies)
-        {
-            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
-
-            ConditioningPolicyDiscount andPolicy = new AndPolicyDiscount();
-
-            foreach (ConditioningPolicyDiscount policy in policies)
-                andPolicy.addPolicy(policy);
-
-            return andPolicy;
-        }
-
-        public ConditioningPolicyDiscount generateOrPolicyDisc(ICollection<ConditioningPolicyDiscount> policies)
-        {
-            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
-
-            ConditioningPolicyDiscount orPolicy = new OrPolicyDiscount();
-
-            foreach (ConditioningPolicyDiscount policy in policies)
-                orPolicy.addPolicy(policy);
-
-            return orPolicy;
-        }
-
-        public ConditioningPolicyDiscount generateXorPolicyDisc(ICollection<ConditioningPolicyDiscount> policies)
-        {
-            if (policies == null || policies.Count == 0) return null; // ? 0 or less than 2
-
-            ConditioningPolicyDiscount XorPolicy = new XorPolicyDiscount();
-
-            foreach (ConditioningPolicyDiscount policy in policies)
-                XorPolicy.addPolicy(policy);
-
-            return XorPolicy;
-        }
-
-
         public void offer(OfferRequest request)
         {
             // notify the relevant owners/managers
@@ -716,13 +628,25 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 // notify
                 owner.addAlarm("Offer request update", request.ToString());
+                owner.addOffer(request);
             }
 
             foreach (aUser manager in this.managers)
             {
                 // notify
                 manager.addAlarm("Offer request update", request.ToString());
+                manager.addOffer(request);
             }
+        }
+
+        public void addPurchasePolicy(iPolicy policy)
+        {
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addDiscountPolicy(iPolicyDiscount discountPolicy)
+        {
+            this.discountPolicies.Add(discountPolicy);
         }
 
     }
