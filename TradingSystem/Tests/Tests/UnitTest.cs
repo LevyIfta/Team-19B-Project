@@ -2194,6 +2194,106 @@ namespace Tests
             }
         }
 
+        [TestMethod]
+        public void BasicDiscountByProductG()
+        {
+            // init usernames and passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food",
+                p2_name = "Bamba2", p2_man = "Osem", p2_cat = "Food";
+
+            iPolicyDiscount discountPolicy1 = DiscountPoliciesGenerator.generateDiscountPolicyByProduct(p1_name, p1_cat, p1_man, 0.1, DateTime.MaxValue);
+            iPolicyDiscount discountPolicy2 = DiscountPoliciesGenerator.generateDiscountPolicyByProduct(p2_name, p2_cat, p2_man, 0.1, DateTime.MaxValue);
+            Product p1 = new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 10);
+
+
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            store1.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            store1.editPrice(p2_name, p2_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            store1.supply(p2_name, p2_man, 20);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            //client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man), 1, 0));
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 10));
+
+            Assert.AreEqual(1, discountPolicy1.ApplyDiscount(client.getCart().getBasket(store1), 10));
+            
+        }
+
+        [TestMethod]
+        public void BasicDiscountByProductB()
+        {
+            // init usernames and passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food",
+                p2_name = "Bamba2", p2_man = "Osem", p2_cat = "Food";
+
+            iPolicyDiscount discountPolicy1 = DiscountPoliciesGenerator.generateDiscountPolicyByProduct(p1_name, p1_cat, p1_man, 0.1, DateTime.MaxValue);
+            iPolicyDiscount discountPolicy2 = DiscountPoliciesGenerator.generateDiscountPolicyByProduct(p2_name, p2_cat, p2_man, 0.1, DateTime.MaxValue);
+            Product p1 = new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 10);
+
+
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            store1.addProduct(p2_name, p2_cat, p2_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            store1.editPrice(p2_name, p2_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+            store1.supply(p2_name, p2_man, 20);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // add the product to the basket
+            //client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man), 1, 0));
+            client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 10));
+
+            
+            Assert.AreEqual(0, discountPolicy2.ApplyDiscount(client.getBasket(store1), 10));
+        }
+
+
+
         public class InfoGenerator
         {
             // this class has static methods and fields
