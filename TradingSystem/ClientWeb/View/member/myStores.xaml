@@ -11,6 +11,8 @@
     <Grid Background="LightBlue">
         <Label x:Name="label" Content="my stores" HorizontalAlignment="Left" Margin="358,31,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,31,40,0" VerticalAlignment="Top"/>
-
+        <DataGrid HorizontalAlignment="Left" Height="142" Margin="110,130,0,0" VerticalAlignment="Top" Width="281" SelectionChanged="DataGrid_SelectionChanged"/>
+        <StackPanel HorizontalAlignment="Left" Height="100" Margin="478,170,0,0" VerticalAlignment="Top" Width="100"/>
+       
     </Grid>
 </Page>

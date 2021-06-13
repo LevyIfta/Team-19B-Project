@@ -33,9 +33,12 @@ namespace ClientWeb
 
             InitializeComponent();
             this.DataContext = userInfo;
-            string username = userInfo.username;
-            userInfo.username = "hello, " + username;
+            userInfo.username = "almog";
             checkMember();
+
+            string a = controler.SearchStore("Castro");
+
+
 
             //Controller.GetController().test();
 
@@ -136,6 +139,7 @@ namespace ClientWeb
 
         private void stores_Click(object sender, RoutedEventArgs e)
         {
+            //   myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
             myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
             NavigationService.Navigate(m);
         }

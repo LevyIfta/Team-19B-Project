@@ -24,6 +24,8 @@ namespace TradingSystem.ServiceLayer
             login("almog", "qweE1");
             EstablishStore("almog", "Castro");
             addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
+            addNewProduct("almog", "Castro", "pro11", 10.1, 10, "cat", "man");
+            addNewProduct("almog", "Castro", "pro121", 10.1, 10, "cat", "man");
             logout();
             
         }

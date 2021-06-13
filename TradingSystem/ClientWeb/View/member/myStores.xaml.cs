@@ -22,12 +22,15 @@ namespace ClientWeb
     {
 
         UserData user = new UserData();
+      
         public myStores(ICollection<string> storesNames, string username)
         {
             InitializeComponent();
 
-            foreach (string storeName in storesNames)
-                addButton(storeName);
+            user.username = username;
+            MessageBox.Show(username);
+          /*  foreach (string storeName in storesNames)
+                addButton(storeName);*/
         }
 
         private void addButton(string storeName)
@@ -35,13 +38,25 @@ namespace ClientWeb
             Button storeButton = new Button();
             storeButton.Content = storeName;
             storeButton.Click += (r, e) => openStoreWindow(storeName);
-          /*  this.StackList.Children.Add(storeButton);*/
+            var window = new Window();
+            var stackPanel = new StackPanel { Orientation = Orientation.Vertical };
+            /*  this.StackList.Children.Add(storeButton);*/
+
+            stackPanel.Children.Add(storeButton);
+           /* stackPanel.Children.Add(new Button { Content = "Button" });*/
+            window.Content = stackPanel;
+            
         }
 
         private void openStoreWindow(string storeName)
         {
             Store storeWindow = new Store(storeName, user.username);
             NavigationService.Navigate(storeWindow);
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
