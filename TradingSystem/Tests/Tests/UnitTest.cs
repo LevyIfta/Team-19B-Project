@@ -132,7 +132,7 @@ namespace Tests
             string user1 = "uestg_user_1";
             UserController.register(user1, "qweE1", 99, "male", "estg 1");
             UserController.login(user1, "qweE1");
-            Assert.IsTrue(UserController.EstablishStore(user1, storename1));
+            Assert.IsTrue(UserServices.EstablishStore(user1, storename1));
             UserController.logout();
         }
 
@@ -144,11 +144,11 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "estb 1");
             UserController.register(user2, "qweE1", 99, "male", "estb 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename1);
-            Assert.IsFalse(UserController.EstablishStore(user1,storename1));
+            UserServices.EstablishStore(user1, storename1);
+            Assert.IsFalse(UserServices.EstablishStore(user1,storename1));
             UserController.logout();
             UserController.login(user2, "qweE1");
-            Assert.IsFalse(UserController.EstablishStore(user2, storename1));
+            Assert.IsFalse(UserServices.EstablishStore(user2, storename1));
             UserController.logout();
             Assert.IsFalse(UserServices.EstablishStore("notRealUserName", storename2));
         }
@@ -160,7 +160,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "emptg 1");
             UserController.register(user2, "qweE1", 99, "male", "emptg 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -175,7 +175,7 @@ namespace Tests
             string storename = "emptb1_store_1", user1 = "emptb1_user_1", user2 = "emptb1_user_2";
             UserController.register(user1, "qweE1", 99, "male", "emptb 1");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
@@ -191,7 +191,7 @@ namespace Tests
             UserController.register(owner2, "qweE1", 99, "male", "emptb 3");
             UserController.register(manager, "qweE1", 99, "male", "emptb 4");
             UserController.login(owner1, "qweE1");
-            UserController.EstablishStore(owner1, storename);
+            UserServices.EstablishStore(owner1, storename);
             UserController.hireNewStoreManager(owner1, storename, manager);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -211,7 +211,7 @@ namespace Tests
             UserController.register(owner2, "qweE1", 99, "male", "emptb 3");
             UserController.register(manager, "qweE1", 99, "male", "emptb 4");
             UserController.login(owner1, "qweE1");
-            UserController.EstablishStore(owner1, storename);
+            UserServices.EstablishStore(owner1, storename);
             UserController.hireNewStoreManager(owner1, storename, manager);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -230,7 +230,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "emptb 5");
             UserController.register(user2, "qweE1", 99, "male", "emptb 6");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -246,7 +246,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "ogietg 1");
             UserController.register(user2, "qweE1", 99, "male", "ogietg 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             UserController.logout();
             UserController.login(user2, "qweE1");
@@ -268,7 +268,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "ogietb 1");
             UserController.register(user2, "qweE1", 99, "male", "ogietb 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             var ma = UserController.getInfoEmployees(user1, storename);
             Assert.IsNotNull(UserController.getInfoEmployees(user1, storename)); //owner not his own employee
             UserController.hireNewStoreManager(user1, storename, user2);
@@ -288,7 +288,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "hnsotg 1");
             UserController.register(user2, "qweE1", 99, "male", "hnsotg 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("HireNewStoreManager");
@@ -303,7 +303,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "hnsotb 1");
             UserController.register(user2, "qweE1", 99, "male", "hnsotb 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("HireNewStoreManager");
@@ -321,7 +321,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "rmtg 1");
             UserController.register(user2, "qweE1", 99, "male", "rmtg 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
@@ -338,7 +338,7 @@ namespace Tests
             UserController.register(user2, "qweE1", 99, "male", "rmtb 2");
             UserController.register(user3, "qweE1", 99, "male", "rmtb 3");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             UserController.hireNewStoreManager(user1, storename, user3);
             UserController.logout();
@@ -354,7 +354,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "rmtb 4");
             UserController.register(user2, "qweE1", 99, "male", "rmtb 5");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             Assert.IsFalse(UserController.removeManager(user1, storename, user2)); //remove non employee
             Assert.IsFalse(UserController.removeManager(user1, storename, user1)); //remove self
             UserController.hireNewStoreManager(user1, storename, user2);
@@ -374,7 +374,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "rmtb 6");
             UserController.register(user2, "qweE1", 99, "male", "rmtb 7");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreManager(user1, storename, user2);
             Assert.IsFalse(UserController.removeManager(user1, wrongstore, user2));
             UserController.logout();
@@ -387,7 +387,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "rotg 1");
             UserController.register(user2, "qweE1", 99, "male", "rotg 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
@@ -405,7 +405,7 @@ namespace Tests
             UserController.register(user2, "qweE1", 99, "male", "rotb 2");
             UserController.register(user3, "qweE1", 99, "male", "rotb 3");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
@@ -425,7 +425,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "f", "rotb 4");
             UserController.register(user2, "qweE1", 99, "f", "rotb 5");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             Assert.IsFalse(UserController.removeOwner(user1, storename, user2)); //remove non employee
             Assert.IsFalse(UserController.removeOwner(user1, storename, user1)); //remove self
             bool t = UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
@@ -445,7 +445,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "f", "rotb 6");
             UserController.register(user2, "qweE1", 99, "f", "rotb 7");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
             Assert.IsFalse(UserController.removeOwner(user1, wrongstore, user2));
             UserController.logout();
@@ -460,7 +460,7 @@ namespace Tests
             UserController.register(user1, "qweE1", 99, "male", "rotb 1");
             UserController.register(user2, "qweE1", 99, "male", "rotb 2");
             UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.logout();
             UserController.login(user2, "qweE1");
             Assert.IsFalse(UserController.addNewProduct(user2, storename, productName, 5.9, 5, "snacks", productManuf));
@@ -650,50 +650,60 @@ namespace Tests
         [TestMethod]
         public void addProductTestGood()
         {
+            string userNameAdd = "userAdd1"; string passwordAdd = "abcdE12"; string storeNameAdd1 = "storeAddTest1"; string storeNameAdd2 = "storeAddTest2";
+            UserController.register(userNameAdd, passwordAdd, 21, "m", "address");
+            UserController.login(userNameAdd, passwordAdd);
+            UserServices.EstablishStore(userNameAdd, storeNameAdd1);
+            UserServices.EstablishStore(userNameAdd, storeNameAdd2);
             // add new ProductInfo
             ProductInfo p = ProductInfo.getProductInfo("productX2", "categoryX2", "ManufacturerX2");
             ProductInfo p1 = ProductInfo.getProductInfo("productY2", "categoryY2", "ManufacturerY2");
             ProductInfo p2 = ProductInfo.getProductInfo("productZ2", "categoryZ2", "ManufacturerZ2");
             // add products to stores
-            Stores.searchStore(store1Name).addProduct(p1.name, p1.category, p1.manufacturer);
-            Stores.searchStore(store1Name).addProduct(p2.name, p2.category, p2.manufacturer);
-            Stores.searchStore(store2Name).addProduct(p1.name, p1.category, p1.manufacturer);
+            Stores.searchStore(storeNameAdd1).addProduct(p1.name, p1.category, p1.manufacturer);
+            Stores.searchStore(storeNameAdd1).addProduct(p2.name, p2.category, p2.manufacturer);
+            Stores.searchStore(storeNameAdd2).addProduct(p1.name, p1.category, p1.manufacturer);
             // assert that the products exist
-            Assert.IsTrue(Stores.searchStore(store1Name).isProductExist(p1.name, p1.manufacturer));
-            Assert.IsTrue(Stores.searchStore(store1Name).isProductExist(p2.name, p2.manufacturer));
-            Assert.IsTrue(Stores.searchStore(store2Name).isProductExist(p1.name, p1.manufacturer));
-            Assert.IsFalse(Stores.searchStore(store2Name).isProductExist(p2.name, p2.manufacturer));
+            Assert.IsTrue(Stores.searchStore(storeNameAdd1).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsTrue(Stores.searchStore(storeNameAdd1).isProductExist(p2.name, p2.manufacturer));
+            Assert.IsTrue(Stores.searchStore(storeNameAdd2).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsFalse(Stores.searchStore(storeNameAdd2).isProductExist(p2.name, p2.manufacturer));
             // clean the stores
-            Stores.searchStore(store1Name).removeProduct(p1.name, p1.manufacturer);
-            Stores.searchStore(store1Name).removeProduct(p2.name, p2.manufacturer);
-            Stores.searchStore(store2Name).removeProduct(p1.name, p1.manufacturer);
+            Stores.searchStore(storeNameAdd1).removeProduct(p1.name, p1.manufacturer);
+            Stores.searchStore(storeNameAdd1).removeProduct(p2.name, p2.manufacturer);
+            Stores.searchStore(storeNameAdd2).removeProduct(p1.name, p1.manufacturer);
             // assert that the products were removed
-            Assert.IsFalse(Stores.searchStore(store1Name).isProductExist(p1.name, p1.manufacturer));
-            Assert.IsFalse(Stores.searchStore(store1Name).isProductExist(p2.name, p2.manufacturer));
-            Assert.IsFalse(Stores.searchStore(store2Name).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsFalse(Stores.searchStore(storeNameAdd1).isProductExist(p1.name, p1.manufacturer));
+            Assert.IsFalse(Stores.searchStore(storeNameAdd1).isProductExist(p2.name, p2.manufacturer));
+            Assert.IsFalse(Stores.searchStore(storeNameAdd2).isProductExist(p1.name, p1.manufacturer));
         }
 
         [TestMethod]
         public void supplyTestGood()
         {
+            string userNameSupply = "userSupply1"; string passwordSupply = "abcdE12"; string storeNameSupply1 = "storeSupplyTest1"; string storeNameSupply2 = "storeSupplyTest2";
+            UserController.register(userNameSupply, passwordSupply, 21, "m", "address");
+            UserController.login(userNameSupply, passwordSupply);
+            UserServices.EstablishStore(userNameSupply, storeNameSupply1);
+            UserServices.EstablishStore(userNameSupply, storeNameSupply2);
             // add the products to the stores
-            Stores.searchStore(store1Name).addProduct(product1.name, product1.category, product1.manufacturer);
-            Stores.searchStore(store1Name).addProduct(product2.name, product2.category, product2.manufacturer);
-            Stores.searchStore(store2Name).addProduct(product1.name, product1.category, product1.manufacturer);
-            Stores.searchStore(store2Name).addProduct(product2.name, product2.category, product2.manufacturer);
+            Stores.searchStore(storeNameSupply1).addProduct(product1.name, product1.category, product1.manufacturer);
+            Stores.searchStore(storeNameSupply1).addProduct(product2.name, product2.category, product2.manufacturer);
+            Stores.searchStore(storeNameSupply2).addProduct(product1.name, product1.category, product1.manufacturer);
+            Stores.searchStore(storeNameSupply2).addProduct(product2.name, product2.category, product2.manufacturer);
             // supply store1
-            Stores.searchStore(store1Name).supply(product1.name, product1.manufacturer, 25);
-            Stores.searchStore(store1Name).supply(product2.name, product2.manufacturer, 30);
+            Stores.searchStore(storeNameSupply1).supply(product1.name, product1.manufacturer, 25);
+            Stores.searchStore(storeNameSupply1).supply(product2.name, product2.manufacturer, 30);
             // supply store2
-            Stores.searchStore(store2Name).supply(product1.name, product1.manufacturer, 10);
-            Stores.searchStore(store2Name).supply(product2.name, product2.manufacturer, 40);
+            Stores.searchStore(storeNameSupply2).supply(product1.name, product1.manufacturer, 10);
+            Stores.searchStore(storeNameSupply2).supply(product2.name, product2.manufacturer, 40);
             // check amounts
             // store1
-            Assert.AreEqual(Stores.searchStore(store1Name).searchProduct(product1.name, product1.manufacturer).amount, 25);
-            Assert.AreEqual(Stores.searchStore(store1Name).searchProduct(product2.name, product2.manufacturer).amount, 30);
+            Assert.AreEqual(Stores.searchStore(storeNameSupply1).searchProduct(product1.name, product1.manufacturer).amount, 25);
+            Assert.AreEqual(Stores.searchStore(storeNameSupply1).searchProduct(product2.name, product2.manufacturer).amount, 30);
             // store2
-            Assert.AreEqual(Stores.searchStore(store2Name).searchProduct(product1.name, product1.manufacturer).amount, 10);
-            Assert.AreEqual(Stores.searchStore(store2Name).searchProduct(product2.name, product2.manufacturer).amount, 40);
+            Assert.AreEqual(Stores.searchStore(storeNameSupply2).searchProduct(product1.name, product1.manufacturer).amount, 10);
+            Assert.AreEqual(Stores.searchStore(storeNameSupply2).searchProduct(product2.name, product2.manufacturer).amount, 40);
         }
 
         [TestMethod]
@@ -770,14 +780,14 @@ namespace Tests
             // trying to add a feedback on a product that the user didn't buy
             // init usernames and passes
             string ownerUsername = "ownerA2", ownerPass = "123Xx123";
-            string buyerUsername = "noOne2", newPass = "123Xx321";
+            string buyerUsername = "AddFeedBackUser", newPass = "123Xx321";
             string FOUsername = "FBObserve", FOPass = "123Xx123"; // FO: feedback observer
             // register the users
             UserServices.register(ownerUsername, ownerPass, 12, "f", "some address");
             UserServices.register(buyerUsername, newPass, 12, "f", "some address");
             UserServices.register(FOUsername, FOPass, 12, "f", "some address");
 
-            string storeName = "Ali Shop121";
+            string storeName = "Ali_Shop121FeedBackTest";
 
             UserServices.login(ownerUsername, ownerPass);
             aUser owner = UserServices.getUser(ownerUsername);
@@ -827,7 +837,7 @@ namespace Tests
             string productName = "bamba", productManuf = "osem";
             UserController.register(user1, user1, 99, "male", "ppsb 1");
             UserController.login(user1, user1);
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.addNewProduct(user1, storename, productName, 5.5, 100, "snacks", productManuf);
             Dictionary<string, int> products = new Dictionary<string, int>();
             products.Add(productName, 1);
@@ -845,7 +855,7 @@ namespace Tests
             string productName = "bamba", productManuf = "osem";
             UserController.register(user1, user1, 99, "male", "");
             UserController.login(user1, user1);
-            UserController.EstablishStore(user1, storename);
+            UserServices.EstablishStore(user1, storename);
             UserController.addNewProduct(user1, storename, productName, 5.5, 100, "snacks", productManuf);
             Dictionary<string, int> products = new Dictionary<string, int>();
             products.Add(productName, 1);
@@ -1042,13 +1052,19 @@ namespace Tests
         [TestMethod]
         public void removeProductPermissionBad()
         {
-            UserServices.login(ownerName2, ownerPassword2);
-            Member owner2 = (Member)UserServices.getUser(ownerName2);
-
-            ProductInfo p5 = ProductInfo.getProductInfo("uerror", "unone", "uempty");
-            bool passTest = owner2.removeProduct(storeName1, p1.name, p1.manufacturer);
-            Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
-            UserServices.logout(ownerName2);
+            string ownerNameRemovePermission = "ownerRemovePerm"; string PasswordRemovePermission = "abcD1234"; string storeNameRemove = "storeRemovePerm";
+            UserController.register(ownerNameRemovePermission, PasswordRemovePermission, 21, "f", "address");
+            UserServices.login(ownerName1, ownerPassword1);
+            Member owner2 = (Member)UserServices.getUser(ownerNameRemovePermission);
+            UserServices.EstablishStore(ownerName1, storeNameRemove);
+            Stores.searchStore(storeNameRemove).addProduct(p1.name, p1.category, p1.manufacturer);
+            Stores.searchStore(storeNameRemove).supply(p1.name, p1.manufacturer, 15);
+            UserController.logout();
+            UserServices.login(ownerNameRemovePermission, PasswordRemovePermission);
+            Member notOwner = (Member)UserServices.getUser(ownerNameRemovePermission);
+            bool passTest = notOwner.removeProduct(storeNameRemove, p1.name, p1.manufacturer);
+            Assert.AreEqual(Stores.searchStore(storeNameRemove).searchProduct(p1.name, p1.manufacturer).amount, 15);
+            UserController.logout();
         }
 
         [TestMethod]

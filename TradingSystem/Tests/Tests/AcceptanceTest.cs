@@ -25,66 +25,65 @@ namespace Tests
         [TestMethod]
         public void AcceptanceRegisterTestGood()
         {
-            string[] u1 = UserServices.register("newUser1", "newPassword1");
+            string[] u1 = bridge.register("newUser1", "newPassword1", 99, "f", "address");
             Assert.IsTrue(u1[0].Equals("true"), "faild to register as a valid user");
-            string[] u2 = UserServices.login("newUser1", "newPassword1");
+            string[] u2 = bridge.login("newUser1", "newPassword1");
             Assert.IsTrue(u2[0].Equals("true"), "user was not properly saved");
-            UserController.logout();
-            string[] u3 = UserServices.login("newUser1", "fakePassword1");
+            bridge.logout();
+            string[] u3 = bridge.login("newUser1", "fakePassword1");
             Assert.IsTrue(u3[0].Equals("false"), "wrong password found as exist");
-            UserController.logout();
+            bridge.logout();
 
-            string[] u4 = UserServices.register("newUser2", "newPassword1");
+            string[] u4 = bridge.register("newUser2", "newPassword1", 99, "f", "address");
             Assert.IsTrue(u4[0].Equals("true"), "faild to register as a valid user(existing password)");
-            string[] u5 = UserServices.login("newUser2", "newPassword1");
+            string[] u5 = bridge.login("newUser2", "newPassword1");
             Assert.IsTrue(u5[0].Equals("true"), "user was not properly saved (existing password)");
-            UserController.logout();
+            bridge.logout();
         }
 
         [TestMethod]
         public void AcceptanceRegisterTestBad()
         {
-            UserServices.register("user1", "Password1");
-            string[] u1 = UserServices.register("user1", "Password1");
+            bridge.register("user1", "Password1", 99, "f", "address");
+            string[] u1 = bridge.register("user1", "Password1", 99, "f", "address");
             Assert.IsFalse(u1[0].Equals("true"), "managed to register as an alread existing user (same password)");
-            string[] u2 = UserServices.register("user1", "Password2");
+            string[] u2 = bridge.register("user1", "Password2", 99, "f", "address");
             Assert.IsFalse(u2[0].Equals("true"), "managed to register with an existig username (different passwords)");
-            string[] u3 = UserServices.login("user1", "Password2");
+            string[] u3 = bridge.login("user1", "Password2");
             Assert.IsTrue(u3[0].Equals("false"), "exisint user with different passworrd considerd to exist");
-            UserController.logout();
+            bridge.logout();
 
-            string[] u4 = UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword");
+            string[] u4 = bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword", 99, "m", "address");
             Assert.IsFalse(u4[0].Equals("true"), "managed to register with bad username");
-            string[] u5 = UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword");
+            string[] u5 = bridge.login("badbadBADUSERwithBadWord!@$%$$$$_8", "OKpassword");
             Assert.IsFalse(u5[0].Equals("true"), "invlid user saved (bad username)");
-            UserController.logout();
+            bridge.logout();
 
-            string[] u6 = UserServices.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^");
+            string[] u6 = bridge.register("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^", 99, "f", "address");
             Assert.IsFalse(u6[0].Equals("true"), "managed to register with bad password");
-            string[] u7 = UserServices.login("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^");
+            string[] u7 = bridge.login("okUser", "badpassword^^^^^^^^^^^^^^^^^^^^^6^^#@#$%^");
             Assert.IsFalse(u7[0].Equals("true"), "invlid user saved (bad password)");
-            UserController.logout();
+            bridge.logout();
 
-            string[] u8 = UserServices.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^");
+            string[] u8 = bridge.register("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^", 12, "m", "address");
             Assert.IsFalse(u8[0].Equals("true"), "managed to register with bad username and bad password");
-            string[] u9 = UserServices.login("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^");
+            string[] u9 = bridge.login("badbadBADUSERwithBadWord!@$%$$$$_8", "badpassword^^^#@#$%^");
             Assert.IsFalse(u8[0].Equals("true"), "invlid user saved (bad username and bad passsword)");
-            UserController.logout();
+            bridge.logout();
         }
 
         [TestMethod]
         public void AcceptanceEstablishStoreTestGood()
         {
-            string storename1 = "estg_store_1";
-            string user1 = "estg_user_1";
-            UserController.register(user1, "qweE1", 99, "male", "estb 1");
-            UserController.login(user1, "qweE1");
-            bool res = UserController.EstablishStore(user1, storename1);
-            Assert.IsTrue(res);
-            Assert.IsNotNull(StoreController.searchStore(storename1));
-            SLstore store = StoreController.searchStore(storename1);
-            Assert.IsTrue(store.founderName.Equals(user1));
-            UserController.logout();
+            string storename1 = "aestg_store_1";
+            string user1 = "aestg_user_1";
+            bridge.register(user1, "qweE1", 99, "male", "estb 1");
+            bridge.login(user1, "qweE1");
+            Assert.IsTrue(bridge.openStore(user1, storename1));
+            Assert.IsNotNull(bridge.getStore(storename1));
+            Store store = bridge.getStore(storename1);
+            Assert.IsTrue(store.founder.getUserName().Equals(user1));
+            bridge.logout();
 
         }
 
@@ -93,103 +92,103 @@ namespace Tests
         {
             string storename1 = "estb_store_1", storename2 = "estb_store_2";
             string user1 = "estb_user_1", user2 = "estb_user_2";
-            UserController.register(user1, "qweE1", 99, "male", "estb 1");
-            UserController.register(user2, "qweE1", 99, "male", "estb 2");
-            UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename1);
-            Assert.IsFalse(UserController.EstablishStore(user1, storename1));
-            UserController.logout();
-            UserController.login(user2, "qweE1");
-            Assert.IsFalse(UserController.EstablishStore(user2, storename1));
-            UserController.logout();
-            Assert.IsFalse(UserServices.EstablishStore("notRealUserName", storename2));
+            bridge.register(user1, "qweE1", 99, "male", "estb 1");
+            bridge.register(user2, "qweE1", 99, "male", "estb 2");
+            bridge.login(user1, "qweE1");
+            bridge.openStore(user1, storename1);
+            Assert.IsFalse(bridge.openStore(user1, storename1));
+            bridge.logout();
+            bridge.login(user2, "qweE1");
+            Assert.IsFalse(bridge.openStore(user2, storename1));
+            bridge.logout();
+            Assert.IsFalse(bridge.openStore("notRealUserName", storename2));
         }
 
         [TestMethod]
         public void AcceptanceEditManagerPermissionsTestGood()
         {
             string storename = "emptg_store_1", user1 = "emptg_user_1", user2 = "emptg_user_1";
-            UserController.register(user1, "qweE1", 99, "male", "emptg 1");
-            UserController.register(user2, "qweE1", 99, "male", "emptg 2");
-            UserController.login(user1, "qweE1");
+            bridge.register(user1, "qweE1", 99, "male", "emptg 1");
+            bridge.register(user2, "qweE1", 99, "male", "emptg 2");
+            bridge.login(user1, "qweE1");
 
-            Assert.IsTrue(UserServices.isUserOnline(user1));
+            Assert.IsTrue(bridge.isUserLoggedIn(user1));
 
-            UserController.EstablishStore(user1, storename);
+            bridge.openStore(user1, storename);
 
-            Assert.IsNotNull(Stores.searchStore(storename));
+            Assert.IsNotNull(bridge.getStore(storename));
 
-            UserController.hireNewStoreManager(user1, storename, user2);
+            bridge.hireNewStoreManager(user1, storename, user2);
 
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
-            UserController.editManagerPermissions(user1, storename, user2, permissionList);
-            var temp = ((Member)UserServices.getUser(user1)).GetPermissions(storename);
+            bridge.editManagerPermissions(user1, storename, user2, permissionList);
+            var temp = ((Member)bridge.getUser(user1)).GetPermissions(storename);
             Assert.IsTrue(temp.Contains(PersmissionsTypes.AddProduct));
             Assert.IsTrue(temp.Contains(PersmissionsTypes.EditProduct));
 
-            Assert.IsTrue(UserController.addNewProduct(user1, storename, "bamba", 5.9, 5, "snacks", "osem"));
-            Assert.IsTrue(UserController.editProduct(user1, storename, "bamba", 5.5, "osem"));
+            Assert.IsTrue(bridge.addNewProduct(user1, storename, "bamba", 5.9, 5, "snacks", "osem"));
+            Assert.IsTrue(bridge.editProduct(user1, storename, "bamba", 5.5, "osem"));
 
-            UserController.logout();
+            bridge.logout();
         }
 
         [TestMethod]
         public void AcceptanceHireNewStoreOwnerTestGood()
         {
             string storename = "hnsotg_store_1", user1 = "hnsotg_user_1", user2 = "hnsotg_user_2";
-            UserController.register(user1, "qweE1", 99, "male", "hnsotg 1");
-            UserController.register(user2, "qweE1", 99, "male", "hnsotg 2");
-            UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            bridge.register(user1, "qweE1", 99, "male", "hnsotg 1");
+            bridge.register(user2, "qweE1", 99, "male", "hnsotg 2");
+            bridge.login(user1, "qweE1");
+            bridge.openStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("HireNewStoreManager");
-            UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-            var ma = UserServices.getUser(user2).GetAllPermissions();
+            bridge.hireNewStoreOwner(user1, storename, user2, permissionList);
+            var ma = bridge.getUser(user2).GetAllPermissions();
             Assert.IsTrue(ma[storename].Contains("AddProduct"));
             Assert.IsTrue(ma[storename].Contains("HireNewStoreManager"));
             Assert.IsTrue(ma[storename].Count == 2);
-            UserController.logout();
+            bridge.logout();
         }
 
         [TestMethod]
         public void AcceptanceRemoveManagerTestGood()//removeMenager doesn't update list of employees.
         {
             string storename = "rmtgstore1", user1 = "rmtgser1", user2 = "rmtguser2";
-            UserController.register(user1, "qweE1", 99, "male", "rmtg 1");
-            UserController.register(user2, "qweE1", 99, "male", "rmtg 2");
-            UserController.login(user1, "qweE1");
-            Assert.IsTrue(UserController.EstablishStore(user1, storename));
-            UserController.hireNewStoreManager(user1, storename, user2);
+            bridge.register(user1, "qweE1", 99, "male", "rmtg 1");
+            bridge.register(user2, "qweE1", 99, "male", "rmtg 2");
+            bridge.login(user1, "qweE1");
+            Assert.IsTrue(bridge.openStore(user1, storename));
+            bridge.hireNewStoreManager(user1, storename, user2);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
-            UserController.editManagerPermissions(user1, storename, user2, permissionList);
-            int staffSize = UserController.getInfoEmployees(user1, storename).Count;
-            UserController.removeManager(user1, storename, user2);
+            bridge.editManagerPermissions(user1, storename, user2, permissionList);
+            int staffSize = bridge.getInfoEmployees(user1, storename).Count;
+            bridge.removeManager(user1, storename, user2);
 
-            Assert.IsNull(UserServices.getUser(user2).GetPermissions(storename));
-            Assert.AreEqual(UserController.getInfoEmployees(user1, storename).Count, staffSize - 1);
-            UserController.logout();
+            Assert.IsNull(bridge.getUser(user2).GetPermissions(storename));
+            Assert.AreEqual(bridge.getInfoEmployees(user1, storename).Count, staffSize - 1);
+            bridge.logout();
         }
 
         [TestMethod]
         public void AcceptanceRemoveOwnerTestGood()
         {
             string storename = "rotg_store_14", user1 = "rotg_user_111", user2 = "rotg_user_222";
-            UserController.register(user1, "qweE1", 99, "male", "rotg 1");
-            UserController.register(user2, "qweE1", 99, "male", "rotg 2");
-            UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
+            bridge.register(user1, "qweE1", 99, "male", "rotg 1");
+            bridge.register(user2, "qweE1", 99, "male", "rotg 2");
+            bridge.login(user1, "qweE1");
+            bridge.openStore(user1, storename);
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
-            UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-            int staffSize = UserController.getInfoEmployees(user1, storename).Count;
-            UserController.removeOwner(user1, storename, user2);
-            Assert.IsTrue(UserServices.getUser(user1).GetAllPermissions().Keys.Count == 1);
-            Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
-            UserController.logout();
+            bridge.hireNewStoreOwner(user1, storename, user2, permissionList);
+            int staffSize = bridge.getInfoEmployees(user1, storename).Count;
+            bridge.removeOwner(user1, storename, user2);
+            Assert.IsTrue(bridge.getUser(user1).GetAllPermissions().Keys.Count == 1);
+            Assert.IsFalse(bridge.getStore(storename).owners.Contains((Member)bridge.getUser(user2)));
+            bridge.logout();
         }
 
         [TestMethod]
@@ -199,23 +198,23 @@ namespace Tests
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("HireNewStoreManager");
-            UserController.register(user1, "qweE1", 99, "male", "rotb 1");
-            UserController.register(user2, "qweE1", 99, "male", "rotb 2");
-            UserController.register(user3, "qweE1", 99, "male", "rotb 3");
-            UserController.login(user1, "qweE1");
-            UserController.EstablishStore(user1, storename);
-            UserController.hireNewStoreOwner(user1, storename, user2, permissionList);
-            UserController.logout();
-            UserController.login(user2, "qweE1");
-            UserController.hireNewStoreManager(user2, storename, user3);
-            UserController.logout();
-            UserController.login(user1, "qweE1");
-            Assert.IsFalse(UserController.removeOwner(user3, storename, user1));
-            Assert.IsTrue(UserController.removeOwner(user1, storename, user2));
-            Assert.IsTrue(UserController.getInfoEmployees(user1, storename).Count == 1);
+            bridge.register(user1, "qweE1", 99, "male", "rotb 1");
+            bridge.register(user2, "qweE1", 99, "male", "rotb 2");
+            bridge.register(user3, "qweE1", 99, "male", "rotb 3");
+            bridge.login(user1, "qweE1");
+            bridge.openStore(user1, storename);
+            bridge.hireNewStoreOwner(user1, storename, user2, permissionList);
+            bridge.logout();
+            bridge.login(user2, "qweE1");
+            bridge.hireNewStoreManager(user2, storename, user3);
+            bridge.logout();
+            bridge.login(user1, "qweE1");
+            Assert.IsFalse(bridge.removeOwner(user3, storename, user1));
+            Assert.IsTrue(bridge.removeOwner(user1, storename, user2));
+            Assert.IsTrue(bridge.getInfoEmployees(user1, storename).Count == 1);
             Assert.IsFalse(StoreController.searchStore(storename).ownerNames.Contains(user2));
             Assert.IsFalse(StoreController.searchStore(storename).managerNames.Contains(user3));
-            UserController.logout();
+            bridge.logout();
         }
 
 
@@ -223,25 +222,26 @@ namespace Tests
         public void TestShopMenagement()
         {
             string username = "sm_owner"; string password = "qweE1"; string storeName = "sm_store1";
-            UserController.register(username, password, 99, "female", "address1");
-            UserController.login(username, password);
-            UserController.EstablishStore(username, storeName);
+            bridge.register(username, password, 99, "female", "address1");
+            bridge.login(username, password);
+            bridge.openStore(username, storeName);
             ProductInfo newInfo1 = ProductInfo.getProductInfo("smitem1", "smfood", "smmenu1"); //new ProductInfo("item1", "food", "manu1");
             ProductInfo newInfo2 = ProductInfo.getProductInfo("item2", "food", "menu1");
-            Store store1 = Stores.searchStore(storeName);
-            Stores.searchStore(storeName).addProduct(newInfo1.name, newInfo1.category, newInfo1.manufacturer);
-            Stores.searchStore(storeName).addProduct(newInfo2.name, newInfo2.category, newInfo2.manufacturer);
-            Stores.searchStore(storeName).supply(newInfo1.name, newInfo1.manufacturer, 10);
-            Stores.searchStore(storeName).supply(newInfo2.name, newInfo2.manufacturer, 20);
+            Store store1 = bridge.getStore(storeName);
+            bridge.getStore(storeName).addProduct(newInfo1.name, newInfo1.category, newInfo1.manufacturer);
+            bridge.getStore(storeName).addProduct(newInfo2.name, newInfo2.category, newInfo2.manufacturer);
+            bridge.getStore(storeName).supply(newInfo1.name, newInfo1.manufacturer, 10);
+            bridge.getStore(storeName).supply(newInfo2.name, newInfo2.manufacturer, 20);
         
-            UserController.logout();
+            bridge.logout();
+            bridge.logout();
 
-            Assert.IsFalse(UserServices.isUserOnline(username), "logout failed");
-            Assert.IsNotNull(Stores.searchStore(storeName), "store was not created");
-            Assert.IsTrue(Stores.searchStore(storeName).isProductExist(newInfo1.name, newInfo1.manufacturer), "failed loading products to inventory");
-            Assert.IsTrue(Stores.searchStore(storeName).isProductExist(newInfo2.name, newInfo2.manufacturer), "failed loading products to inventory");
-            Assert.AreEqual(Stores.searchStore(storeName).searchProduct(newInfo1.name, newInfo1.manufacturer).amount, 10, "did not add correct amount of the item");
-            Assert.AreEqual(Stores.searchStore(storeName).searchProduct(newInfo2.name, newInfo2.manufacturer).amount, 20, "did not add correct amount of the item");
+            Assert.IsFalse(bridge.isUserLoggedIn(username), "logout failed");
+            Assert.IsNotNull(bridge.getStore(storeName), "store was not created");
+            Assert.IsTrue(bridge.getStore(storeName).isProductExist(newInfo1.name, newInfo1.manufacturer), "failed loading products to inventory");
+            Assert.IsTrue(bridge.getStore(storeName).isProductExist(newInfo2.name, newInfo2.manufacturer), "failed loading products to inventory");
+            Assert.AreEqual(bridge.getStore(storeName).searchProduct(newInfo1.name, newInfo1.manufacturer).amount, 10, "did not add correct amount of the item");
+            Assert.AreEqual(bridge.getStore(storeName).searchProduct(newInfo2.name, newInfo2.manufacturer).amount, 20, "did not add correct amount of the item");
         }
     }
 
@@ -260,10 +260,10 @@ namespace Tests
         {
             bridge = Driver.getBridge();
             string username = "ShopOwner11", pass = "123xX321";
-            UserServices.register(username, pass, 99, "male", "address1");
+            bridge.register(username, pass, 99, "male", "address1");
             // login
-            UserServices.login(username, pass);
-            Member owner = (Member)UserServices.getUser(username);
+            bridge.login(username, pass);
+            Member owner = (Member)bridge.getUser(username);
             // init names
             store1Name = "store1_";
             store2Name = "store2_";
@@ -273,34 +273,35 @@ namespace Tests
             // init product infos
             product1 = ProductInfo.getProductInfo("Batman Costume", "clothing", "FairytaleLand");
             product2 = ProductInfo.getProductInfo("Wireless keyboard", "computer accessories", "Logitech");
-            UserController.logout();
+            bridge.logout();
         }
 
         [TestMethod]
         public void AcceptancePurchaseGood()
         {
-            string username = "Member1-ptg"; string password = "Pass2345";
+            string username = "Member1-ptg"; string password = "Pass2345"; string storeNamePurch = "StorePurchTest1";
             //Member member2 = new Member("regular", "justsomemember12");
-            UserController.register(username, password, 12, "f", "gvfdg");
-            UserController.login("Member1-ptg", "Pass2345");
+            bridge.register(username, password, 12, "f", "gvfdg");
+            bridge.login(username, password);
+            bridge.openStore(username, storeNamePurch);
 
-            Stores.searchStore(store1Name).addProduct(product1.name, product1.category, product1.manufacturer);
-            Stores.searchStore(store1Name).addProduct(product2.name, product2.category, product2.manufacturer);
-            Stores.searchStore(store1Name).supply(product1.name, product1.manufacturer, 10);
-            Stores.searchStore(store1Name).supply(product2.name, product2.manufacturer, 20);
+            bridge.getStore(storeNamePurch).addProduct(product1.name, product1.category, product1.manufacturer);
+            bridge.getStore(storeNamePurch).addProduct(product2.name, product2.category, product2.manufacturer);
+            bridge.getStore(storeNamePurch).supply(product1.name, product1.manufacturer, 10);
+            bridge.getStore(storeNamePurch).supply(product2.name, product2.manufacturer, 20);
             
-            string[] ans = UserController.purchase(username, "111111111111", "11/22", "123");
-            Store store1 = Stores.searchStore(store1Name);
-            UserController.logout();
+            string[] ans = bridge.purchase(username, "111111111111", "11/22", "123");
+            Store store1 = bridge.getStore(storeNamePurch);
+            bridge.logout();
             //Store store2 = bridge.getStore("Store1");
-            Assert.IsNull(ans, ans.Length+"");
-            if (ans != null)
+            Assert.AreEqual(ans.Length, 0, ans.Length+"");
+            if (ans.Length > 0)
             {
                 Assert.IsFalse(ans[0].Equals("false"), "error in purchse");
                 if (ans[0].Equals("true"))
                 {
                     string[] arr = ans[1].Split('$');
-                    Assert.IsTrue(arr[1].Equals("Store1"), "different store");
+                    Assert.IsTrue(arr[1].Equals("StorePurchTest1"), "different store");
                 }
             }
         }
@@ -310,13 +311,13 @@ namespace Tests
         {
             string storeOwnerName = "StoreOwner-cstg", storeOwnerPass = "123Xx456";
             string storeName = null;
-            UserController.register(storeOwnerName, storeOwnerPass, 99, "nale", "address1");
-            UserServices.login(storeOwnerName, storeOwnerPass);
-            aUser storeOwner = UserServices.getUser(storeOwnerName);
+            bridge.register(storeOwnerName, storeOwnerPass, 99, "nale", "address1");
+            bridge.login(storeOwnerName, storeOwnerPass);
+            aUser storeOwner = bridge.getUser(storeOwnerName);
             // try to create a store  with an empty name
             
-            Assert.IsNull(Stores.searchStore(storeName), "found a store with a null name");
-            UserController.logout();
+            Assert.IsNull(bridge.getStore(storeName), "found a store with a null name");
+            bridge.logout();
         }
 
         [TestMethod]
@@ -325,35 +326,38 @@ namespace Tests
             bridge.register("Member2-ptb", "Pass2345", 12, "f", "gvfdg");
             bridge.login("Member2-ptb", "Pass2345");
             Dictionary<string, int> d = new Dictionary<string, int>();
-            d["item1"] = 10;
-            d["item2"] = 10;
+            d.Add("item1", 10);
+            d.Add("item2", 20);
             Store store1 = bridge.getStore("Store1-ptb");
-            bridge.saveProducts(bridge.getUserName(), "Store1-ptb", "manu1", d);
+            if (store1 != null)
+            {
+                bridge.saveProducts("Member2-ptb", "Store1-ptb", "manu1", d);
 
-            var ans = bridge.purchase("111111111111", "11/22", "123");
-            bridge.logout();
-            Assert.IsTrue(ans[0].Equals("false"), "receipt should be empty");
-            Assert.IsTrue(ans[1].Equals("not enough items in stock"), "receipt should be empty");
-            Assert.IsFalse(bridge.isUserLoggedIn("Member2"), "user should not be logged in");
-            Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "should not change the inventory if the purchase is invalid");//should not process the purchase because there are not enough of the product in the store
+                var ans = bridge.purchase("Member2-ptb", "111111111111", "11/22", "123");
+                bridge.logout();
+                Assert.IsTrue(ans[0].Equals("false"), "receipt should be empty");
+                Assert.IsTrue(ans[1].Equals("not enough items in stock"), "receipt should be empty");
+                Assert.IsFalse(bridge.isUserLoggedIn("Member2"), "user should not be logged in");
+                Assert.IsTrue(bridge.getProductAmount("Store1", "item2", "manu1") == 10, "should not change the inventory if the purchase is invalid");//should not process the purchase because there are not enough of the product in the store
+            }
         }
 
         [TestMethod]
         public void parallelPurchase()
         {
             // register twice and login from two different users
-            bool user1reg = UserServices.register("AliKB", "123xX456", 12, "m", "some address")[0].Equals("true");
-            bool user2reg = UserServices.register("Bader", "456xX789", 12, "m", "some address")[0].Equals("true");
+            bool user1reg = bridge.register("AliKBparal", "123xX456", 12, "m", "some address")[0].Equals("true");
+            bool user2reg = bridge.register("Baderparal", "456xX789", 12, "m", "some address")[0].Equals("true");
 
             // login
-            UserServices.login("AliKB", "123xX456");
-            aUser user1 = UserServices.getUser("AliKB");
-            UserServices.login("Bader", "456xX789");
-            aUser user2 = UserServices.getUser("Bader");
+            bridge.login("AliKBparal", "123xX456");
+            aUser user1 = bridge.getUser("AliKBparal");
+            bridge.login("Baderparal", "456xX789");
+            aUser user2 = bridge.getUser("Baderparal");
             // establish a new store
-            string storeName = "Ali Shop";
-            Stores.addStore(storeName, (Member)user1);
-            Store aliShop = Stores.searchStore(storeName);
+            string storeName = "Ali_Shop_paral";
+            bridge.openStore(user1.userName, storeName);
+            Store aliShop = bridge.getStore(storeName);
             // add products to the strore
             aliShop.addProduct("Bamba", "Food", "Osem");
             // set the price of the product
@@ -401,7 +405,7 @@ namespace Tests
             Thread.Sleep(3500);
             Assert.IsTrue(flag);
 
-            UserServices.logout("AliKB");
+            bridge.logout();
         }
 
 
@@ -422,13 +426,11 @@ namespace Tests
             string[] splitReceipt = receiptString.Split('$');
             // username&storename$price$date$receiptId$<products>
             receipt.username = splitReceipt[0];
-            receipt.store = Stores.searchStore(splitReceipt[1]);
+            receipt.store = bridge.getStore(splitReceipt[1]);
             receipt.price = double.Parse(splitReceipt[2]);
             receipt.date = Convert.ToDateTime(splitReceipt[3]);
             receipt.receiptId = int.Parse(splitReceipt[4]);
             // the products - todo
-
-
             return receipt;
         }
 
@@ -437,26 +439,27 @@ namespace Tests
     [TestClass]
     public class AcceptanceBasketTests
     {
+        private static Bridge.Bridge bridge = Driver.getBridge();
         [TestMethod]
         public void AcceptanceSaveProductTest()
         {
-            string username = "AlIbAd";
-            string pass = "123xX4";
-            string storeName = "asp_store_1";
+            string username = "AlIbAdsave";
+            string pass = "123xX4save";
+            string storeName = "asp_store_1save";
 
-            UserServices.register(username, pass);
-            string[] user = UserServices.login(username, pass);
+            bridge.register(username, pass, 99, "m", "address");
+            string[] user = bridge.login(username, pass);
             // open a new store
-            Stores.addStore(storeName, (Member)UserServices.getUser(username));
+            bridge.openStore(username, storeName);
             //setup
-            ProductInfo newInfo3 = ProductInfo.getProductInfo("item3", "cat", "man");
+            ProductInfo newInfo3 = ProductInfo.getProductInfo("item3save", "catsave", "mansave");
 
-            ProductInfo newInfo4 = ProductInfo.getProductInfo("item4", "cat", "man");
+            ProductInfo newInfo4 = ProductInfo.getProductInfo("item4save", "catsave", "mansave");
 
             Product items3 = new Product(newInfo3, 5, 5), items4 = new Product(newInfo4, 2, 5);
 
 
-            ShoppingBasket basket = new ShoppingBasket(Stores.searchStore(storeName), (Member)UserServices.getUser(username));
+            ShoppingBasket basket = new ShoppingBasket(bridge.getStore(storeName), (Member)bridge.getUser(username));
             basket.addProduct(items3);
             basket.addProduct(items4);
 
@@ -469,6 +472,7 @@ namespace Tests
     [TestClass]
     public class AcceptanceZReciptTests
     {
+        private static Bridge.Bridge bridge = Driver.getBridge();
         aUser user1, user2;
         string username1 = "AliKB12", username2 = "Bader12", pass1 = "123xX456", pass2 = "456xX789";
         string storeName;
@@ -477,17 +481,17 @@ namespace Tests
         [TestMethod]
         public void TestReceipt()
         {
-            UserController.register(username1, pass1, 25, "Male", "Be'er Sheva");
-            UserController.register(username2, pass2, 30, "Female", "Tel Aviv");
+            bridge.register(username1, pass1, 25, "Male", "Be'er Sheva");
+            bridge.register(username2, pass2, 30, "Female", "Tel Aviv");
             // login
-            UserController.login(username1, pass1);
-            user1 = UserServices.getUser(username1);
-            UserController.login(username2, pass2);
-            user2 = UserServices.getUser(username2);
+            bridge.login(username1, pass1);
+            user1 = bridge.getUser(username1);
+            bridge.login(username2, pass2);
+            user2 = bridge.getUser(username2);
             // establish a new store
-            storeName = "Makolet";
-            Stores.addStore(storeName, (Member)user1);
-            Store aliShop = Stores.searchStore(storeName);
+            storeName = "TestReceiptStore111";
+            bridge.openStore(user1.userName, storeName);
+            Store aliShop = bridge.getStore(storeName);
             // add products to the strore
             aliShop.addProduct("Bamba", "Food", "Osem");
             // set the price of the product
@@ -568,7 +572,7 @@ namespace Tests
             ICollection<Receipt> u1Receipts = ((Member)user1).reciepts;
             ICollection<Receipt> u2Receipts = ((Member)user2).reciepts;
 
-            Store store = Stores.searchStore(storeName);
+            Store store = bridge.getStore(storeName);
             ICollection<Receipt> storeReceipts = store.getAllReceipts();
             // check if the store has both receipts
             foreach (Receipt receipt in storeReceipts)
@@ -614,18 +618,18 @@ namespace Tests
             string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
             string p2_name = "Jeans", p2_man = "Castro", p2_cat = "clothing";
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 12, "f", "dsgvgb");
-            UserServices.register(buyerUsername, newPass, 12, "f", "dsgvgb");
-            //UserServices.register(adminUSername, adminPass);
+            bridge.register(ownerUsername, ownerPass, 12, "f", "dsgvgb");
+            bridge.register(buyerUsername, newPass, 12, "f", "dsgvgb");
+            //bridge.register(adminUSername, adminPass);
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
-            Stores.addStore(storeName2, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
+            bridge.openStore(owner.userName, storeName2);
 
-            Store store1 = Stores.searchStore(storeName1);
-            Store store2 = Stores.searchStore(storeName2);
+            Store store1 = bridge.getStore(storeName1);
+            Store store2 = bridge.getStore(storeName2);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             store2.addProduct(p2_name, p2_cat, p2_man);
@@ -636,16 +640,16 @@ namespace Tests
             store1.supply(p1_name, p1_man, 20);
             store2.supply(p2_name, p2_man, 30);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_man, p1_cat), 12, 0));
             client.getCart().getBasket(store2).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_man, p2_cat), 24, 0));
             // purchase
-            string[] receipts1 = UserController.purchase(buyerUsername, "111111111111", "11/22", "123");
+            string[] receipts1 = bridge.purchase(buyerUsername, "111111111111", "11/22", "123");
 
-            Admin admin = (Admin)(UserServices.getAdmin());
+            Admin admin = (Admin)(bridge.getAdmin());
             ICollection<Receipt> adminReceiptsCol = admin.getAllReceipts();
             LinkedList<Receipt> adminReceipts = new LinkedList<Receipt>(adminReceiptsCol);
 
@@ -686,7 +690,7 @@ namespace Tests
             string[] splitReceipt = receiptString.Split('$');
             // username&storename$price$date$receiptId$<products>
             receipt.username = splitReceipt[0];
-            receipt.store = Stores.searchStore(splitReceipt[1]);
+            receipt.store = bridge.getStore(splitReceipt[1]);
             receipt.price = double.Parse(splitReceipt[2]);
             receipt.date = Convert.ToDateTime(splitReceipt[3]);
             receipt.receiptId = int.Parse(splitReceipt[4]);
@@ -700,6 +704,7 @@ namespace Tests
     [TestClass]
     public class AcceptancePermissionsTests
     {
+        private static Bridge.Bridge bridge;
         private static string storeName1;
         private static string ownerName1; private static string ownerPassword1;
         private static double age1; private static string gender1; private static string address1;
@@ -726,6 +731,7 @@ namespace Tests
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
+            bridge = Driver.getBridge();
             storeName1 = "bestStore";
             ownerName1 = "storeOwner111"; ownerPassword1 = "1A2b3C4d";
             age1 = 30.0; gender1 = "m"; address1 = "thisAddress";
@@ -750,14 +756,14 @@ namespace Tests
             amount3 = 30;
             amountToRemove = 100;
             //registration of users
-            UserServices.register(ownerName1, ownerPassword1, age1, gender1, address1);
-            UserServices.register(ownerName2, ownerPassword2, age2, gender2, address2);
-            UserServices.register(hiredManagerName, hiredManagerPassword, age3, gender3, address3);
+            bridge.register(ownerName1, ownerPassword1, age1, gender1, address1);
+            bridge.register(ownerName2, ownerPassword2, age2, gender2, address2);
+            bridge.register(hiredManagerName, hiredManagerPassword, age3, gender3, address3);
 
             //login
-            UserServices.login(ownerName1, ownerPassword1);
-            Member owner1 = (Member)UserServices.getUser(ownerName1);
-            Member owner2 = (Member)UserServices.getUser(ownerName2);
+            bridge.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)bridge.getUser(ownerName1);
+            Member owner2 = (Member)bridge.getUser(ownerName2);
             //establish store
             owner1.EstablishStore(storeName1);
             owner2.EstablishStore(storeName2);
@@ -767,8 +773,8 @@ namespace Tests
         [TestMethod]
         public void addProductPermissionGood()
         {
-            UserServices.login(ownerName1, ownerPassword1);
-            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            bridge.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)bridge.getUser(ownerName1);
 
             bool passTest = owner1.addNewProduct(storeName1, p1.name, price1, amount1, p1.category, p1.manufacturer);
             passTest &= owner1.addNewProduct(storeName1, p2.name, price2, amount2, p2.category, p2.manufacturer);
@@ -781,18 +787,18 @@ namespace Tests
 
 
             Assert.IsTrue(passTest & hasPermission);
-            Assert.IsNotNull(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer));
-            int num = Stores.searchStore(storeName1).searchProduct(p2.name, p2.manufacturer).amount;
+            Assert.IsNotNull(bridge.getStore(storeName1).searchProduct(p1.name, p1.manufacturer));
+            int num = bridge.getStore(storeName1).searchProduct(p2.name, p2.manufacturer).amount;
             Assert.IsTrue(num == amount2);
 
-            UserServices.logout(ownerName1);
+            bridge.logout();
         }
 
         [TestMethod]
         public void editProductPermissionGood()
         {
-            UserServices.login(ownerName1, ownerPassword1);
-            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            bridge.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)bridge.getUser(ownerName1);
 
             bool passedPreConds = owner1.addNewProduct(storeName1, p3.name, price3, amount3, p3.category, p3.manufacturer);
             if (passedPreConds)
@@ -809,18 +815,18 @@ namespace Tests
                 double newPrice = 6.99;
 
                 Assert.IsTrue(owner1.editProduct(storeName1, p3.name, newPrice, p3.manufacturer), "edit product did not execute successfully ");//fails because Store.Inventory never updates when using AddProduct.
-                Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p3.name, p3.manufacturer).price, newPrice);
+                Assert.AreEqual(bridge.getStore(storeName1).searchProduct(p3.name, p3.manufacturer).price, newPrice);
             }
 
-            UserServices.logout(ownerName1);
+            bridge.logout();
 
         }
 
         [TestMethod]
         public void editProductPermissionBad()
         {
-            UserServices.login(ownerName2, ownerPassword2);
-            Member owner2 = (Member)UserServices.getUser(ownerName2);
+            bridge.login(ownerName2, ownerPassword2);
+            Member owner2 = (Member)bridge.getUser(ownerName2);
 
             ProductInfo p5 = ProductInfo.getProductInfo("error", "none", "empty");
             double newPrice = 1.99;
@@ -831,16 +837,16 @@ namespace Tests
             passTest = owner2.editProduct(storeName1, p1.name, newPrice, p1.manufacturer);
 
             Assert.IsFalse(passTest);//owner2 have no permissions over store "storeName1"
-            Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).price, price1);//price should not change in case of unauthorized use.
+            Assert.AreEqual(bridge.getStore(storeName1).searchProduct(p1.name, p1.manufacturer).price, price1);//price should not change in case of unauthorized use.
 
-            UserServices.logout(ownerName2);
+            bridge.logout();
         }
 
         [TestMethod]
         public void removeProductPermissionGood()
         {
-            UserServices.login(ownerName1, ownerPassword1);
-            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            bridge.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)bridge.getUser(ownerName1);
 
             bool hasPermission = false;
             foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
@@ -853,33 +859,33 @@ namespace Tests
             bool passTest = owner1.removeProduct(storeName1, pToRemove.name, pToRemove.manufacturer);
 
             Assert.IsTrue(passTest);
-            Assert.IsNull(Stores.searchStore(storeName1).searchProduct(pToRemove.name, pToRemove.manufacturer));
+            Assert.IsNull(bridge.getStore(storeName1).searchProduct(pToRemove.name, pToRemove.manufacturer));
 
-            UserServices.logout(ownerName1);
+            bridge.logout();
 
         }
 
         [TestMethod]
         public void removeProductPermissionBad()
         {
-            UserServices.login(ownerName2, ownerPassword2);
-            Member owner2 = (Member)UserServices.getUser(ownerName2);
+            bridge.login(ownerName2, ownerPassword2);
+            Member owner2 = (Member)bridge.getUser(ownerName2);
 
             ProductInfo p5 = ProductInfo.getProductInfo("error", "none", "empty");
             bool passTest = owner2.removeProduct(storeName1, p1.name, p1.manufacturer);
 
             Assert.IsFalse(passTest);//does not have the permission to do so.
-            Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
+            Assert.AreEqual(bridge.getStore(storeName1).searchProduct(p1.name, p1.manufacturer).amount, amount1);
 
-            UserServices.logout(ownerName2);
+            bridge.logout();
 
         }
 
         [TestMethod]
         public void HireNewStoreManagerGood()
         {
-            UserServices.login(ownerName1, ownerPassword1);
-            Member owner1 = (Member)UserServices.getUser(ownerName1);
+            bridge.login(ownerName1, ownerPassword1);
+            Member owner1 = (Member)bridge.getUser(ownerName1);
             bool hasPermission = false;
             foreach (PersmissionsTypes p in owner1.GetPermissions(storeName1))
             {
@@ -892,12 +898,12 @@ namespace Tests
             bool passTest = owner1.hireNewStoreManager(storeName1, hiredManagerName);
 
             Assert.IsTrue(passTest);
-            Assert.IsTrue(Stores.searchStore(storeName1).isManager(hiredManagerName));
+            Assert.IsTrue(bridge.getStore(storeName1).isManager(hiredManagerName));
 
-            UserServices.logout(ownerName1);
+            bridge.logout();
 
-            UserServices.login(hiredManagerName, hiredManagerPassword);
-            Member hiredManager = (Member)UserServices.getUser(hiredManagerName);
+            bridge.login(hiredManagerName, hiredManagerPassword);
+            Member hiredManager = (Member)bridge.getUser(hiredManagerName);
 
             hasPermission = false;
             bool noPermission = false;
@@ -924,6 +930,8 @@ namespace Tests
     [TestClass]
     public class AcceptancePolicyTests
     {
+        private static Bridge.Bridge bridge = Driver.getBridge();
+
         [TestMethod]
         public void ProductAgePolicyGood()
         {
@@ -934,15 +942,15 @@ namespace Tests
             // init products info
             string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
-            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+            bridge.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            bridge.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -952,8 +960,8 @@ namespace Tests
 
             store1.addAgePolicyByProduct(p1_name, p1_cat, p1_man, 18);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
@@ -981,15 +989,15 @@ namespace Tests
             // init products info
             string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "female", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            bridge.register(buyerUsername, newPass, 15, "female", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -999,10 +1007,10 @@ namespace Tests
 
             store1.addAgePolicyByProduct(p1_name, p1_cat, p1_man, 18);
 
-            UserController.logout();
+            bridge.logout();
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
@@ -1024,15 +1032,15 @@ namespace Tests
             // init products info
             string p1_name = "Corona Beer", p1_man = "Corona", p1_cat = "alcohol";
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
-            UserServices.register(buyerUsername, newPass, 19, "female", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            bridge.register(buyerUsername, newPass, 19, "female", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -1042,8 +1050,8 @@ namespace Tests
 
             store1.addAgePolicyByCategory(p1_cat, 18);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
@@ -1071,15 +1079,15 @@ namespace Tests
             // init products info
             string p1_name = "Corona Beer", p1_man = "Corona", p1_cat = "alcohol";
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "female", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            bridge.register(buyerUsername, newPass, 15, "female", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -1089,8 +1097,8 @@ namespace Tests
 
             store1.addAgePolicyByCategory(p1_cat, 18);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 12, 0));
@@ -1127,15 +1135,15 @@ namespace Tests
             string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
             int maxAmount = 5;
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "f", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "m", "Moria");
+            bridge.register(buyerUsername, newPass, 15, "f", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -1145,8 +1153,8 @@ namespace Tests
 
             store1.addMaxAmountPolicyByProduct(p1_name, p1_cat, p1_man, maxAmount);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount - 2, 0));
@@ -1160,7 +1168,7 @@ namespace Tests
             if (receipts1[0].Equals("true"))
             {
                 Assert.AreEqual(client.getBasket(store1).products.Count, 0, "products' number is non zero.");
-                Assert.AreEqual(Stores.searchStore(storeName1).searchProduct(p1_name, p1_man).amount, 17, "expected 8 products after purchase.");
+                Assert.AreEqual(bridge.getStore(storeName1).searchProduct(p1_name, p1_man).amount, 17, "expected 8 products after purchase.");
             }
         }
 
@@ -1175,15 +1183,15 @@ namespace Tests
             string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
             int maxAmount = 5;
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "f", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "m", "Moria");
+            bridge.register(buyerUsername, newPass, 15, "f", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -1193,8 +1201,8 @@ namespace Tests
 
             store1.addMaxAmountPolicyByProduct(p1_name, p1_cat, p1_man, maxAmount);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount + 2, 0));
@@ -1217,15 +1225,15 @@ namespace Tests
             string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
             int maxAmount = 5;
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "f", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "m", "Moria");
+            bridge.register(buyerUsername, newPass, 15, "f", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -1235,8 +1243,8 @@ namespace Tests
 
             store1.addMaxAmountPolicyByCategory(p1_cat, maxAmount);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount - 2, 0));
@@ -1265,15 +1273,15 @@ namespace Tests
             string p1_name = "iPhone 8", p1_man = "Apple", p1_cat = "phones";
             int maxAmount = 5;
             // register the users
-            UserServices.register(ownerUsername, ownerPass, 117, "m", "Moria");
-            UserServices.register(buyerUsername, newPass, 15, "f", "TA");
+            bridge.register(ownerUsername, ownerPass, 117, "m", "Moria");
+            bridge.register(buyerUsername, newPass, 15, "f", "TA");
 
-            UserServices.login(ownerUsername, ownerPass);
-            aUser owner = UserServices.getUser(ownerUsername);
-            // establish two stores
-            Stores.addStore(storeName1, (Member)owner);
+            bridge.login(ownerUsername, ownerPass);
+            aUser owner = bridge.getUser(ownerUsername);
+            // establish two bridge
+            bridge.openStore(owner.userName, storeName1);
 
-            Store store1 = Stores.searchStore(storeName1);
+            Store store1 = bridge.getStore(storeName1);
             // add products to the strores
             store1.addProduct(p1_name, p1_cat, p1_man);
             // set the price of the products
@@ -1283,8 +1291,8 @@ namespace Tests
 
             store1.addMaxAmountPolicyByCategory(p1_cat, maxAmount);
 
-            UserServices.login(buyerUsername, newPass);
-            aUser client = UserServices.getUser(buyerUsername);
+            bridge.login(buyerUsername, newPass);
+            aUser client = bridge.getUser(buyerUsername);
 
             // add the product to the basket
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), maxAmount + 2, 0));

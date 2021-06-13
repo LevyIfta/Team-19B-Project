@@ -44,10 +44,10 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public ShoppingBasket getBasket(string storeName)
+        public ShoppingBasket getBasket(string userName, string storeName)
         {
             if (realBridge != null)
-                return this.realBridge.getBasket(storeName);
+                return this.realBridge.getBasket(userName, storeName);
             throw new NotImplementedException();
         }
 
@@ -89,17 +89,10 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public aUser getUser()
+        public aUser getUser(string userName)
         {
             if (realBridge != null)
-                return this.realBridge.getUser();
-            throw new NotImplementedException();
-        }
-
-        public string getUserName()
-        {
-            if (realBridge != null)
-                return this.realBridge.getUserName();
+                return this.realBridge.getUser(userName);
             throw new NotImplementedException();
         }
 
@@ -145,13 +138,15 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool login(string username, string password)
+        public string[] login(string username, string password)
         {
+            string[] ret = { "true", "" };
             if (realBridge != null)
                 return this.realBridge.login(username, password);
             if (username == "good" && password != "bad")
-                return true;
-            return false;
+                return ret;
+            ret[0] = "false";
+            return ret;
         }
 
         public void logout()
@@ -171,18 +166,18 @@ namespace Tests.Bridge
             throw new NotImplementedException();
         }
 
-        public bool openStore(string storeName)
+        public bool openStore(string userName, string storeName)
         {
             if (realBridge != null)
-                return this.realBridge.openStore(storeName);
+                return this.realBridge.openStore(userName, storeName);
             throw new NotImplementedException();
         }
 
-        public string[] purchase(string creditNumber, string validity, string cvv)
+        public string[] purchase(string userName, string creditNumber, string validity, string cvv)
         {
             if (realBridge != null)
             {
-                return this.realBridge.purchase(creditNumber, validity, cvv);
+                return this.realBridge.purchase(userName, creditNumber, validity, cvv);
             }
             throw new NotImplementedException();
         }
@@ -228,6 +223,87 @@ namespace Tests.Bridge
             if (realBridge != null)
             {
                 return this.realBridge.checkPrice(username);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool hireNewStoreManager(string ownerName, string storeName, string employeeName)
+        {
+            if(realBridge != null)
+            {
+                return realBridge.hireNewStoreManager(ownerName, storeName, employeeName);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool editManagerPermissions(string ownerName, string storeName, string employeeName, List<string> permissions)
+        {
+            if (realBridge != null)
+            {
+                return realBridge.editManagerPermissions(ownerName, storeName, employeeName, permissions);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool addNewProduct(string username, string storeName, string productName, double price, int amount, string category, string manufacturer)
+        {
+            if (realBridge != null)
+            {
+                return realBridge.addNewProduct(username, storeName, productName, price, amount, category, manufacturer);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool editProduct(string userName, string storeName, string productName, double price, string manufacturer)
+        {
+            if(realBridge != null)
+            {
+                return realBridge.editProduct(userName, storeName, productName, price, manufacturer);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool hireNewStoreOwner(string ownerName, string storeName, string employeeName, List<string> permissions)
+        {
+            if (realBridge != null)
+            {
+                return realBridge.hireNewStoreOwner(ownerName, storeName, employeeName, permissions);
+            }
+            throw new NotImplementedException();
+        }
+
+        public ICollection<SLemployee> getInfoEmployees(string userName, string storeName)
+        {
+            if(realBridge != null)
+            {
+                return realBridge.getInfoEmployees(userName, storeName);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool removeManager(string ownerName, string storeName, string employeeName)
+        {
+            if(realBridge != null)
+            {
+                return realBridge.removeManager(ownerName, storeName, employeeName);
+            }
+            throw new NotImplementedException();
+        }
+
+        public bool removeOwner(string ownerName, string storeName, string employeeName)
+        {
+            if(realBridge != null)
+            {
+                return realBridge.removeOwner(ownerName, storeName, employeeName);
+            }
+            throw new NotImplementedException();
+        }
+
+        public aUser getAdmin()
+        {
+            if(realBridge != null)
+            {
+                return realBridge.getAdmin();
             }
             throw new NotImplementedException();
         }
