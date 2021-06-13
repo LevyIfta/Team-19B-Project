@@ -92,6 +92,10 @@ namespace TradingSystem.ServiceLayer
         {
             return UserController.user.getUserName();
         }
+        public static aUser getUser(string username)
+        {
+            return UserServices.getUser(username);
+        }
         public static string[] register(string userName, string password)
         {
             string[] ans = BuissnessLayer.UserServices.register(userName, password);
