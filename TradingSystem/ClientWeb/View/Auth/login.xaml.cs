@@ -51,7 +51,7 @@ namespace ClientWeb
             }
             if (ans != null && ans[0].Equals("true"))
             {
-                Page1 page1 = new Page1();
+                Page1 page1 = new Page1(user.username);
                 NavigationService.Navigate(page1);
             }
             /*

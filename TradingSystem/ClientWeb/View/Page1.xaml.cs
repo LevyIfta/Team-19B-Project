@@ -29,17 +29,27 @@ namespace ClientWeb
 
         List<productView> productToView = new List<productView>();
 
-        public Page1()
+        public Page1(string username)
         {
             // mockData data = new mockData();
 
             InitializeComponent();
+
+            if (userName.Equals(""))
+            {
+                userInfo.username = "guest";
+            }
+            else
+            {
+                userInfo.username = username;
+            }
+          
             this.DataContext = userInfo;
-            userInfo.username = "almog";
+         
             checkMember();
             storeInfo.storename = "Castro";
             string a = controler.SearchStore("Castro");
-
+                
 
             productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
             productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
@@ -111,7 +121,8 @@ namespace ClientWeb
 
         private void openStore_Click(object sender, RoutedEventArgs e)
         {
-            openStore o = new openStore();
+            MessageBox.Show(userInfo.username);
+            openStore o = new openStore(userInfo.username);
             NavigationService.Navigate(o);
         }
 
@@ -203,6 +214,7 @@ namespace ClientWeb
             if (ans)
             {
                 MessageBox.Show("added to cart");
+                MessageBox.Show(ans.ToString());
             }
 
         }

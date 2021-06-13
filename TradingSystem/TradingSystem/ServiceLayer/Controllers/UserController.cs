@@ -21,6 +21,7 @@ namespace TradingSystem.ServiceLayer
         static UserController()
         {
             register("almog", "qweE1");
+            /*
             login("almog", "qweE1");
             EstablishStore("almog", "Castro");
           //  EstablishStore("almog", "Castro2");
@@ -31,8 +32,8 @@ namespace TradingSystem.ServiceLayer
             d["pro"] = 1;
             d["pro11"] = 1;
             saveProduct("almog", "Castro", "man", d);
-            logout();
-
+            //logout();
+            */
         }
 
         public static void init(Func<object, bool> alarmhandler)

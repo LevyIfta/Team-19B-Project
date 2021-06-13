@@ -31,6 +31,18 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+
+        private String Username;
+
+        public String username
+        {
+            get { return Username; }
+            set
+            {
+                Username = value;
+                OnPropertyChanged();
+            }
+        }
     }
         class UserData : ANotifyPropChange
     {

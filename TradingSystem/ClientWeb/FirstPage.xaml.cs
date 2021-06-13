@@ -39,7 +39,7 @@ namespace ClientWeb
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Page1 p = new Page1();
+            Page1 p = new Page1("");
             NavigationService.Navigate(p);
         }
     }
