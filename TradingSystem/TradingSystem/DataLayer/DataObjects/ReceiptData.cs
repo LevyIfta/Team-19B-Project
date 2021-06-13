@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,20 +10,24 @@ namespace TradingSystem.DataLayer
     public class ReceiptData
     {
         //FIELDS
+        [Key]
         public int receiptID { get; set; }
-        public string storeName { get; set; }
-        public string userName { get; set; }
+        public virtual BasketInRecipt basket { get; set; }
+
         public double price { get; set; }
+        public MemberData user { get; set; }
+        public StoreData store { get; set; }
         public DateTime date { get; set; }
-        public int discount { get; set; }
-        public int purchasePolicy { get; set; }
+        public iPolicyDiscountData discount { get; set; }
+        public iPolicyData purchasePolicy { get; set; }
 
         //CONSTRUCTORS
-        public ReceiptData(int receiptID, string storeName, string userName, double price, DateTime date, int discount, int purchasePolicy)
+        public ReceiptData(int receiptID, BasketInRecipt basket, StoreData store, MemberData user, double price, DateTime date, iPolicyDiscountData discount, iPolicyData purchasePolicy)
         {
             this.receiptID = receiptID;
-            this.storeName = storeName;
-            this.userName = userName;
+            this.basket = basket;
+            this.store = store;
+            this.user = user;
             this.price = price;
             this.date = date;
             this.discount = discount;
@@ -37,10 +42,7 @@ namespace TradingSystem.DataLayer
 
         public bool Equals(ReceiptData other)
         {
-            return this.receiptID.Equals(other.receiptID) & this.storeName.Equals(other.storeName)
-                & this.userName.Equals(other.userName) & this.price.Equals(other.price)
-                & this.date.Equals(other.date) & this.discount.Equals(other.discount)
-                & this.purchasePolicy.Equals(other.purchasePolicy);
+            return this.receiptID == other.receiptID;
         }
     }
 }

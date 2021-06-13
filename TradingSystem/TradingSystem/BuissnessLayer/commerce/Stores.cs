@@ -24,7 +24,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 return false;
             stores.Add(storeName, newStore);
             // add the new store to DB
-            StoreDAL.addStore(newStore.toDataObject());
+            DataLayer.ORM.DataAccess.create(newStore.toDataObject());
             return true;
         }
 
