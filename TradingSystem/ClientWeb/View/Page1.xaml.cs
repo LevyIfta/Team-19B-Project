@@ -167,8 +167,11 @@ namespace ClientWeb
         private void stores_Click(object sender, RoutedEventArgs e)
         {
             //   myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
+            
             myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
             NavigationService.Navigate(m);
+            
+
         }
 
         private void browse_Click(object sender, RoutedEventArgs e)
@@ -240,6 +243,12 @@ namespace ClientWeb
             dgProducts.ItemsSource = filtered;
             dgProducts.Items.Refresh();
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Store page = new Store("Castro", "almog");
+            NavigationService.Navigate(page);
         }
     }
 }

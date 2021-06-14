@@ -61,6 +61,7 @@
                     <Button Name="user" >edit profile</Button>
                     <Button Name="stores" Click="stores_Click" >my stores</Button>
                     <Button x:Name="browse" Click="browse_Click" Content="browse" />
+                    <Button Content="Store Castro" Margin="0" Width="202" Click="Button_Click"/>
                 </StackPanel>
             </DockPanel>
         </Grid>

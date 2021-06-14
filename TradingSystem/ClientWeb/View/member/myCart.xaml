@@ -12,12 +12,12 @@
         
      
         <Button Content="Procced To checkout" HorizontalAlignment="Left" Margin="550,249,0,0" VerticalAlignment="Top" Width="150" Height="47" Click="Button_Click"/>
-        <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="30,65,454,97" SelectionChanged="dgProducts_SelectionChanged">
+        <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="8,41,543,151" SelectionChanged="dgProducts_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" />
-                <DataGridTextColumn Header="StoreName" Binding="{Binding StoreName}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding amounttoAdd, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="StoreName" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

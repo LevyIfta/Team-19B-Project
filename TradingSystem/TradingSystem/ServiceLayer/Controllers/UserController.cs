@@ -32,9 +32,8 @@ namespace TradingSystem.ServiceLayer
             d["pro"] = 1;
             d["pro11"] = 1;
             saveProduct("almog", "Castro", "man", d);
-            saveProduct("almog", "Castro", "man", d);
-            saveProduct("almog", "Castro", "man", d);
             logout();
+            
             
         }
 

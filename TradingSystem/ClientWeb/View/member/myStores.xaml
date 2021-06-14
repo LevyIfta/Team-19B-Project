@@ -11,8 +11,23 @@
     <Grid Background="LightBlue">
         <Label x:Name="label" Content="my stores" HorizontalAlignment="Left" Margin="358,31,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,31,40,0" VerticalAlignment="Top"/>
-        <DataGrid HorizontalAlignment="Left" Height="142" Margin="110,130,0,0" VerticalAlignment="Top" Width="281" SelectionChanged="DataGrid_SelectionChanged"/>
+        <DataGrid x:Name="dataGrid1" ColumnWidth="*" HorizontalAlignment="Left" Height="142" Margin="110,130,0,0" VerticalAlignment="Top" Width="281">
+            <DataGrid.Resources>
+                <Style TargetType="DataGrid">
+                    <Setter Property="AutoGenerateColumns" Value="False"/>
+                    <Setter Property="CanUserResizeRows" Value="False"/>
+                    <Setter Property="IsReadOnly" Value="True"/>
+                    <Setter Property="SelectionMode" Value="Single"/>
+                </Style>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Products" Binding="{Binding Path=.}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
         <StackPanel HorizontalAlignment="Left" Height="100" Margin="478,170,0,0" VerticalAlignment="Top" Width="100"/>
-       
     </Grid>
+
 </Page>

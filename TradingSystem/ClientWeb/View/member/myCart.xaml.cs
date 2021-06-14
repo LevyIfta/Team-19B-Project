@@ -98,27 +98,31 @@ namespace ClientWeb
 
       
             string[] a = controler.GetCart(username);
-            string[,] a1 = convertToViewObj.Product(a);
+           // string[][] a1 = convertToViewObj.Cart(a);
 
             // {basket, basket}. basket -> username&storename&pros. pros -> -> pro$pro -> proInfo^feedback -> feedback_feedback -> user#comment
 
  
             List<productView> productToView = new List<productView>();
-         for( int i=0; i<a1.Length; i++)
+            /*
+            for( int i=0; i<a1.Length; i++)
             {
-                productToView.Add(new productView() { name = a1[i,0] , price = a1[i, 1], amount = a1[i, 2], storeName = a1[i,3]});
+                productToView.Add(new productView() { name = a1[i][0] , price = a1[i][1], amount = a1[i][2], storeName = a1[i][3], amounttoAdd = "0" });
             }
-         /*
-            productToView.Add(new productView() {name = "Pro1", price = "15" ,amount = "12" ,storeName ="Castro", amounttoAdd = "0" } );
+            
+            */
+
+
+
+            productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
             productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
             productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
-         */
+
             dgProducts.ItemsSource = productToView;
 
-            string b = a[0].Split('&')[2].Split('$')[1];
-            string storename = a[0].Split('&')[1];
-            MessageBox.Show(b);
-            MessageBox.Show(storename);
+           string b = a[0].Split('&')[2].Split('$')[1];
+           string storename = a[0].Split('&')[1];
+
 
 
 

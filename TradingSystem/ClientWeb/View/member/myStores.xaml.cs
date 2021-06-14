@@ -22,17 +22,20 @@ namespace ClientWeb
     {
 
         UserData user = new UserData();
-      
+
         public myStores(ICollection<string> storesNames, string username)
         {
             InitializeComponent();
 
             user.username = username;
             MessageBox.Show(username);
-          /*  foreach (string storeName in storesNames)
-                addButton(storeName);*/
+            dataGrid1.DataContext = storesNames;
+            dataGrid1.ItemsSource = storesNames;
+            /*  foreach (string storeName in storesNames)
+                  addButton(storeName);*/
         }
 
+        /*
         private void addButton(string storeName)
         {
             Button storeButton = new Button();
@@ -40,10 +43,10 @@ namespace ClientWeb
             storeButton.Click += (r, e) => openStoreWindow(storeName);
             var window = new Window();
             var stackPanel = new StackPanel { Orientation = Orientation.Vertical };
-            /*  this.StackList.Children.Add(storeButton);*/
+            //this.StackList.Children.Add(storeButton);
 
             stackPanel.Children.Add(storeButton);
-           /* stackPanel.Children.Add(new Button { Content = "Button" });*/
+            //stackPanel.Children.Add(new Button { Content = "Button" });
             window.Content = stackPanel;
             
         }
@@ -53,10 +56,13 @@ namespace ClientWeb
             Store storeWindow = new Store(storeName, user.username);
             NavigationService.Navigate(storeWindow);
         }
+        */
 
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Row_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
+            string selected = dataGrid1.SelectedItem.ToString();
+            Store storePage = new Store(selected, user.username);
+            NavigationService.Navigate(storePage);
         }
     }
 }

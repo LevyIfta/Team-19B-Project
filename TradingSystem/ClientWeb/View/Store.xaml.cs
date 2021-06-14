@@ -30,7 +30,10 @@ namespace ClientWeb
             InitializeComponent();
 
             this.storeName = storeName;
-            this.username = user.username;
+            // this.username = user.username;
+            //debuging porpuse
+            this.username = "almog";
+            this.user.username = "almog";
             this.storeNameLabel.Content = storeName;
 
             initActionsStack();
@@ -38,6 +41,7 @@ namespace ClientWeb
 
         private void initActionsStack()
         {
+            /*
             ICollection<string> permissions = controller.GetPermissions(username, storeName);
             if (permissions == null)
                 return;
@@ -46,6 +50,7 @@ namespace ClientWeb
                 addPermissionButton(permission);
             // we assume, for the mean time, that there is no permission for adding a new policy
             addPermissionButton("AddPolicy");
+            */
         }
 
         private void addPermissionButton(string permission)
@@ -403,6 +408,16 @@ namespace ClientWeb
         }
 
         private void close_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addproduct_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void infoemployees_Click(object sender, RoutedEventArgs e)
         {
 
         }

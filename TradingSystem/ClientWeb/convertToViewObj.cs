@@ -19,6 +19,29 @@ namespace ClientWeb
             }
         }
         */
+
+        public static string[][] Cart(string[] arr)
+        {
+            string[][] ans = null;
+            List<string[]> list = new List<string[]>();
+            for (int i = 0; i < arr.Length; i++)
+            {
+                string[] basket = arr[i].Split('&');
+                string[] pros = basket[2].Split('$');
+                for(int j=0; i<pros.Length; j++)
+                {
+                    string[] proInfo = pros[j].Split('^');
+                    string[] ans_i = new string[4];
+                    ans_i[0] = proInfo[0];
+                    ans_i[1] = proInfo[1];
+                    ans_i[2] = proInfo[4];
+                    ans_i[3] = basket[2];
+                    list.Add(ans_i);
+                }
+                
+            }
+            return list.ToArray();
+        }
         public static string[,] Product(string[] arr)
         {
             string[,] ans = new string[arr.Length, 4];
