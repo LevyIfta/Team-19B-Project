@@ -20,9 +20,40 @@ namespace ClientWeb.View.member
     /// </summary>
     public partial class recieptPage : Page
     {
+
+        static Controller controler = Controller.GetController();
+        List<productView> productToView = new List<productView>();
+
+
         public recieptPage()
         {
             InitializeComponent();
+
+            productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+            productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+            productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+
+
+
+            dgProducts.ItemsSource = productToView;
+
+        }
+
+        public void addFeedback(object sender, RoutedEventArgs e)
+        {
+            productView p = (productView)dgProducts.SelectedItem;
+            MessageBox.Show("implement Add feedback to product");
+
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void dgProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

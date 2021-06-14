@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientWeb.View.member;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,6 +61,8 @@ namespace ClientWeb
                     {
                         data.msg = "the purchase have succsess!!!!";
                         // show reciept
+                        recieptPage m = new recieptPage();
+                        NavigationService.Navigate(m);
                     }
                 }
                 else

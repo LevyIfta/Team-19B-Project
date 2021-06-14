@@ -31,7 +31,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>99</ApplicationRevision>
+    <ApplicationRevision>108</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -76,6 +76,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="convertToViewObj.cs" />
     <Compile Include="FirstPage.xaml.cs">
       <DependentUpon>FirstPage.xaml</DependentUpon>
     </Compile>
@@ -96,7 +97,6 @@
     <Compile Include="View\member\paymentPage.xaml.cs">
       <DependentUpon>paymentPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\member\PurchData.cs" />
     <Compile Include="View\member\recieptPage.xaml.cs">
       <DependentUpon>recieptPage.xaml</DependentUpon>
     </Compile>

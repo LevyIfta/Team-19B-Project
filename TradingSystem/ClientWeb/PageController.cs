@@ -145,3 +145,61 @@ class PageController : ANotifyPropChange
     }
 }
 
+class PurchData : ANotifyPropChange
+{
+    private String Cradit;
+
+    public String cradit
+    {
+        get { return Cradit; }
+        set
+        {
+            Cradit = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Validity;
+
+    public String validity
+    {
+        get { return Validity; }
+        set
+        {
+            Validity = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Cvv;
+
+    public String cvv
+    {
+        get { return Cvv; }
+        set
+        {
+            Cvv = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Total;
+
+    public String total
+    {
+        get { return Total; }
+        set
+        {
+            Total = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Msg;
+
+    public String msg
+    {
+        get { return Msg; }
+        set
+        {
+            Msg = value;
+            OnPropertyChanged();
+        }
+    }
+}

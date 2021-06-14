@@ -11,7 +11,7 @@
     <Grid Background="LightBlue">
         <Button Content="Continue As Guest" HorizontalAlignment="Left" Margin="521,188,0,0" VerticalAlignment="Top" Width="114" Height="45" Click="Button_Click_2"/>
         <Button Content="Login" HorizontalAlignment="Left" Margin="107,257,0,0" VerticalAlignment="Top" Width="123" Height="48" Click="Button_Click_1"/>
-        <Button Content="Register" HorizontalAlignment="Left" Margin="112,185,0,0" VerticalAlignment="Top" Width="118" Height="48" Click="Button_Click"/>
+        <Button Content="Register" HorizontalAlignment="Left" Margin="113,181,0,0" VerticalAlignment="Top" Width="118" Height="48" Click="Button_Click" RenderTransformOrigin="0.322,0.562"/>
         <Label Content="Team 19 B ecommerce" HorizontalAlignment="Left" Margin="318,49,0,0" VerticalAlignment="Top" Width="153" Height="51"/>
 
     </Grid>
