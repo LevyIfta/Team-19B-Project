@@ -47,6 +47,30 @@ namespace TradingSystem.DataLayer.ORM
         protected override void OnConfiguring(DbContextOptionsBuilder options)
       => options.UseSqlite("DataSource=TradingSystem.db");
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BasketInCart>().HasKey(u => new
+            {
+                u.storeName,
+                u.userName
+            });
+
+            modelBuilder.Entity<FeedbackData>().HasKey(u => new
+            {
+                u.productID,
+                u.userName
+            });
+            modelBuilder.Entity<iPolicyData>().HasNoKey();
+            modelBuilder.Entity<iPolicyDiscountData>().HasNoKey();
+/*
+            modelBuilder.Entity<ReceiptData>()
+            .HasOne(p => p.discount)
+            .WithMany(b => b.recipts);
+            modelBuilder.Entity<ReceiptData>()
+            .HasOne(p => p.purchasePolicy)
+            .WithMany(b => b.recipts);*/
+        }
+
 
         public void tearDown()
         {

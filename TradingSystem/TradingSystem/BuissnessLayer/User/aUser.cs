@@ -7,6 +7,7 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.BuissnessLayer.commerce;
 using System.Threading;
 using TradingSystem.BuissnessLayer.User;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -255,6 +256,12 @@ namespace TradingSystem.BuissnessLayer
         public virtual void addOffer(OfferRequest request)
         {
             
+        }
+
+        public virtual MemberData toDataObject()
+        {
+
+            return new MemberData("guest", null, 0, null, null, null, null, null);
         }
     }
 }

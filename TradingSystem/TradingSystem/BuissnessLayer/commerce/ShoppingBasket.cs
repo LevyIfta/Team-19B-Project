@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
 
@@ -11,7 +12,7 @@ namespace TradingSystem.BuissnessLayer.commerce
     {
         public ICollection<Product> products { get; set; }
         public Store store { get; set; }
-        public aUser owner { get; }
+        public aUser owner { get; set; }
 
         public ShoppingBasket(Store store, aUser owner)
         {
@@ -19,18 +20,18 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.products = new LinkedList<Product>();
             this.owner = owner;
         }
-       /* public ShoppingBasket(BasketData shoppingBasketData)
-        {
-            this.products = new LinkedList<Product>();
-            ICollection<ProductData> productsInBasketData = shoppingBasketData.products;
+        /* public ShoppingBasket(BasketData shoppingBasketData)
+         {
+             this.products = new LinkedList<Product>();
+             ICollection<ProductData> productsInBasketData = shoppingBasketData.products;
 
-            foreach (ProductData p_data in productsInBasketData)
-            {
-                this.products.Add(new Product(p_data));
-            }
-            //this.store = new Store();
-            //this.owner = UserServices.getUser(shoppingBasketData);
-        }*/
+             foreach (ProductData p_data in productsInBasketData)
+             {
+                 this.products.Add(new Product(p_data));
+             }
+             //this.store = new Store();
+             //this.owner = UserServices.getUser(shoppingBasketData);
+         }*/
         public ShoppingBasket(BasketInCart shoppingBasketData)
         {
             this.products = new LinkedList<Product>();
@@ -40,8 +41,30 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 this.products.Add(new Product(p_data));
             }
-            this.store = new Store(shoppingBasketData.storeName);
-            this.owner = new Member(shoppingBasketData.useName);
+
+            ThreadStart linkStore = new ThreadStart(() => this.store = Stores.searchStore(shoppingBasketData.storeName));
+            ThreadStart linkOwner = new ThreadStart(() => this.owner = UserServices.getUser(shoppingBasketData.userName));
+            //  this.store = new Store(shoppingBasketData.recipt.store);
+            // this.owner = new Member(shoppingBasketData.recipt.user);
+            Build.addLink(linkStore);
+            Build.addLink(linkOwner);
+        }
+
+        public ShoppingBasket(BasketInRecipt shoppingBasketData)
+        {
+            this.products = new LinkedList<Product>();
+            ICollection<ProductData> productsInBasketData = shoppingBasketData.products;
+
+            foreach (ProductData p_data in productsInBasketData)
+            {
+                this.products.Add(new Product(p_data));
+            }
+            ThreadStart linkStore = new ThreadStart( ()=>this.store = Stores.searchStore(shoppingBasketData.recipt.store.storeName ));
+            ThreadStart linkOwner = new ThreadStart(() => this.owner = UserServices.getUser(shoppingBasketData.recipt.user.userName));
+            //  this.store = new Store(shoppingBasketData.recipt.store);
+            // this.owner = new Member(shoppingBasketData.recipt.user);
+            Build.addLink(linkStore);
+            Build.addLink(linkOwner);
         }
 
         internal IEnumerable<object> GetDictionaryProductQuantity()
@@ -133,7 +156,14 @@ namespace TradingSystem.BuissnessLayer.commerce
             return true;
 
         }
-        
+        public BasketInRecipt toDataObjectRecipt()
+        {
+            List<ProductData> products = new List<ProductData>();
+            foreach (Product product in this.products)
+                products.Add(product.toDataObject(this.store.name));
+            return new BasketInRecipt( products, null);
+        }
+
         public BasketInCart toDataObject()
         {
             List<ProductData> products = new List<ProductData>();
@@ -148,6 +178,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                 products.Add(product.toDataObject(this.store.name));
             return new BasketInRecipt(products, );
         }*/
+
         public void update()
         {
             DataLayer.ORM.DataAccess.update(this.toDataObject());

@@ -16,7 +16,6 @@ namespace TradingSystem.BuissnessLayer.commerce
         public static Dictionary<string, Store> storesClose = new Dictionary<string, Store>();
         public static bool addStore(string storeName, Member founder)
         {
-            SupplySystem.Supply.InformStore(storeName);
             Store newStore = new Store(storeName, founder);
             //newStore.purchasePolicies = new LinkedList<Rules.iPolicy>();
             // check for a name duplicant
@@ -25,6 +24,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             stores.Add(storeName, newStore);
             // add the new store to DB
             DataLayer.ORM.DataAccess.create(newStore.toDataObject());
+            SupplySystem.Supply.InformStore(storeName);
             return true;
         }
 
@@ -80,6 +80,13 @@ namespace TradingSystem.BuissnessLayer.commerce
             storesClose.Remove(store.name);
             // SupplySystem.Supply.open
             return true;
+        }
+
+
+        public static void loadStore(StoreData store)
+        {
+            Store newStore = new Store(store);
+            stores.Add(store.storeName, newStore);
         }
 
     }

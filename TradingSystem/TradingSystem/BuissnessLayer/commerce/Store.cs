@@ -60,7 +60,49 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.name = storeData.storeName;
             this.founder = (Member)UserServices.getUser(storeData.founder.userName);
-            
+
+            this.receipts = new List<Receipt>();
+            foreach (ReceiptData item in storeData.receipts)
+            {
+                this.receipts.Add(new Receipt(item));
+            }
+
+            this.inventory = new List<Product>();
+            foreach (ProductData item in storeData.inventory)
+            {
+                this.inventory.Add(new Product(item));
+            }
+            this.managers = new List<Member>();
+            foreach (MemberData item in storeData.managers)
+            {
+                this.managers.Add((Member)UserServices.getUser(item.userName)); //i hate this... anyway the only type of user in the list is member
+            }
+            this.owners = new List<Member>();
+            foreach (MemberData item in storeData.owners)
+            {
+                this.managers.Add((Member)UserServices.getUser(item.userName)); //i hate this... anyway the only type of user in the list is member
+            }
+
+            this.messages = new List<Message>();
+            foreach (MessageData msg in storeData.messages)
+            {
+                this.messages.Add(new Message(msg));
+            }
+
+            this.discountPolicies = new List<iPolicyDiscount>();
+            foreach (iPolicyDiscountData item in storeData.discountPolicies)
+            {
+                this.discountPolicies.Add(null); //todo
+            }
+
+            this.purchasePolicies = new List<iPolicy>();
+            foreach (iPolicyData item in storeData.purchasePolicies)
+            {
+                this.purchasePolicies.Add(null); //todo
+            }
+
+
+
             // fill the collections
             //this.fillReceipts();
             //this.fillInventory();
@@ -311,7 +353,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             double priceBeforeDisc = calcPriceBeforeDiscount(basket.products);
             double price = priceBeforeDisc - calcTotalDiscount(basket, priceBeforeDisc);
             Receipt receipt = new Receipt();
-            List<ProductData> products = new List<ProductData>();
+            //List<ProductData> products = new List<ProductData>();
             // request for payment
             // the payment was successful
             foreach (Product product in basket.products)
@@ -323,7 +365,7 @@ namespace TradingSystem.BuissnessLayer.commerce
                         // update amount in DB
                         localProduct.update(this.name);
                         // add the products to receipt
-                        products.Add(product.toDataObject(this.name));
+                      //  products.Add(product.toDataObject(this.name));
                         //receipt.products.Add(localProduct.info.id, product.amount);
                         // 
                         //receipt.actualProducts.Add(new Product(localProduct));
@@ -331,12 +373,12 @@ namespace TradingSystem.BuissnessLayer.commerce
                         //basket.owner.canLeaveFeedback = true;
                         product.info.leaveFeedback(basket.owner.userName, "");
                         // update feedback in DB
-                        new FeedbackData(localProduct.info.toDataObject(), localProduct.info.manufacturer, ((Member)basket.owner).toDataObject(), "");
+                        //new FeedbackData(localProduct.info.toDataObject(), localProduct.info.manufacturer, ((Member)basket.owner).toDataObject(), "");
                     }
                     //StoresData.getStore(this.name).removeProducts(product.toDataObject());
                     product.info.roomForFeedback(basket.owner.userName);
                 }
-            receipt.basket = new BasketInRecipt(products, receipt.toDataObject());
+            receipt.basket = basket;
             // fill receipt fields
             receipt = fillReceipt(receipt, price);
             return receipt;
@@ -344,7 +386,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         private Receipt fillReceipt(Receipt receipt, double price)
         {
-            receipt.store = this;
+            //receipt.store = this;
             receipt.discount = null;
             receipt.date = DateTime.Now;
             receipt.price = price;
@@ -487,6 +529,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             List<ProductData> products = new List<ProductData>();
             List<MemberData> members1 = new List<MemberData>();
             List<MemberData> members2 = new List<MemberData>();
+            List<MessageData> messages = new List<MessageData>();
             List<iPolicyDiscountData> discountDatas = new List<iPolicyDiscountData>();
             List<iPolicyData> policyDatas = new List<iPolicyData>();
             foreach (Receipt receipt in this.receipts)
@@ -497,11 +540,13 @@ namespace TradingSystem.BuissnessLayer.commerce
                 members1.Add(member.toDataObject());
             foreach (Member member in managers)
                 members2.Add(member.toDataObject());
+            foreach (Message message in this.messages)
+                messages.Add(message.toDataObject());
             foreach (iPolicy policy in this.purchasePolicies)
                 policyDatas.Add(null);
             foreach (iPolicyDiscount discount in this.discountPolicies)
                 discountDatas.Add(null);
-            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, discountDatas, policyDatas);
+            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, messages, discountDatas, policyDatas);
         }
 
         public void removeFromInventory(Product product)

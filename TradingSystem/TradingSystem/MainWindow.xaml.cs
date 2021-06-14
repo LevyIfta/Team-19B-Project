@@ -54,6 +54,14 @@ namespace TradingSystem
             new Thread(new ThreadStart(ServiceLayer.ServerConnectionManager.init)).Start();
         }
 
-      
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+          object ans =  TradingSystem.ServiceLayer.UserController.register("grim", "Oirlee1");
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+           object ans = TradingSystem.ServiceLayer.UserController.login("grim", "Oirlee1");
+        }
     }
 }

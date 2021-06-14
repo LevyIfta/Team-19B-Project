@@ -19,22 +19,23 @@ namespace TradingSystem.DataLayer
 
         public virtual ICollection<BasketInCart> shopingcart { get; set; }
         public virtual ICollection<ReceiptData> receipts { get; set; }
+        public virtual ICollection<MessageData> messages { get; set; }
 
         //CONSTRUCTORS
-      /*  public MemberData(string userName, string password)
-        {
-            this.userName = userName;
-            this.password = password;
-            this.age = -1;
-            this.gender = "nun";
-            this.address = "";
-     
-        }*/
+        /*  public MemberData(string userName, string password)
+          {
+              this.userName = userName;
+              this.password = password;
+              this.age = -1;
+              this.gender = "nun";
+              this.address = "";
+
+          }*/
         public MemberData()
         {
             this.userName = "guest";
         }
-        public MemberData(string userName, string password, double age, string gender, string address, ICollection<BasketInCart> shopingcart, ICollection<ReceiptData> receipts)
+        public MemberData(string userName, string password, double age, string gender, string address, ICollection<BasketInCart> shopingcart, ICollection<ReceiptData> receipts, ICollection<MessageData> messages)
         {
             this.userName = userName;
             this.password = password;
@@ -43,6 +44,7 @@ namespace TradingSystem.DataLayer
             this.address = address;
             this.shopingcart = shopingcart;
             this.receipts = receipts;
+            this.messages = messages;
         }
 
         //EQUALS

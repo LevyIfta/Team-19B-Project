@@ -11,11 +11,13 @@ namespace TradingSystem.DataLayer
     public class FeedbackData
     {       
         //FIELDS
-        [Key]
-        [Column(Order=1)]
+        
+        [Key, Column(Order=0)]
+        public virtual int productID { get; set; }
         public virtual ProductInfoData product { get; set; }
-        [Key]
-        [Column(Order = 2)]
+        
+        [Key, Column(Order = 1)]
+        public virtual string userName { get; set; }
         public virtual MemberData user { get; set; }
         public string manufacturer { get; set; }
         public string comment { get; set; }
@@ -24,9 +26,15 @@ namespace TradingSystem.DataLayer
         public FeedbackData(ProductInfoData product, string manufacturer, MemberData user, string comment)
         {
             this.product = product;
+            this.productID = product.productID;
             this.manufacturer = manufacturer;
             this.user = user;
+            this.userName = user.userName;
             this.comment = comment;
+        }
+
+        public FeedbackData()
+        {
         }
 
         //EQUALS

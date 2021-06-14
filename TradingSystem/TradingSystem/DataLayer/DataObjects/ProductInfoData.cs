@@ -18,11 +18,15 @@ namespace TradingSystem.DataLayer
 
         //CONSTRUCTORS
         public ProductInfoData(string productName, string category, string manufacturer, int productID)
-        {
+        { 
             this.productName = productName;
             this.category = category;
             this.manufacturer = manufacturer;
             this.productID = productID;
+        }
+
+        public ProductInfoData()
+        {
         }
 
         //EQUALS

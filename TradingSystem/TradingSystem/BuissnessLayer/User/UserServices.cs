@@ -18,8 +18,8 @@ namespace TradingSystem.BuissnessLayer
         public static ICollection<string> offlineUsers { get; private set; } = new List<string>() ;
         static UserServices()
         {
-            UserServices.register("admin", "Admin1");
-            UserServices.register("UserTest", "123Xx123");
+        //    UserServices.register("admin", "Admin1");
+         //   UserServices.register("UserTest", "123Xx123");
             //Users.Add(new Admin("admin", "Admin1"));
         }
         // menu functions
@@ -86,7 +86,7 @@ namespace TradingSystem.BuissnessLayer
             fullans[0] = "false";
             if(fullans[1].Length < 3)
             {
-                DataLayer.ORM.DataAccess.create(new MemberData(username, password, age, gender, address, new List<BasketInCart>(), new List<ReceiptData>()));
+                DataLayer.ORM.DataAccess.create(new MemberData(username, password, age, gender, address, new List<BasketInCart>(), new List<ReceiptData>(), new List<MessageData>()));
                 if (username.Equals("admin"))
                     Users.Add(new Admin(username, password));
                 else
@@ -527,6 +527,20 @@ namespace TradingSystem.BuissnessLayer
                     return true;
             }
             return false;
+        }
+
+
+
+        public static void LoadUser(MemberData member )
+        {
+            aUser user;
+            if (member.userName != "admin")
+                user = new Member(member);
+            else
+                user = new Admin(member);
+            Users.Add(user);
+            offlineUsers.Add(user.userName);
+
         }
 
     }
