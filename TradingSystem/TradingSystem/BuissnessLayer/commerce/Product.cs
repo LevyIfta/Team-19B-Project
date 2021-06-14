@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -14,20 +15,23 @@ namespace TradingSystem.BuissnessLayer.commerce
         public double price { get; set; }
 
         public double discount_percent { get; set; }
+        private Guid id { get; set; } = Guid.NewGuid();
 
         public Product(ProductInfo info, int amount, double price)
         {
             this.info = info;
             this.amount = amount;
             this.price = price;
+            this.discount_percent = 0;
         }
 
         public Product(ProductData productData)
         {
-            ProductInfoData productInfoData = ProductInfoDAL.getProductInfo(productData.productID);
+            ProductInfoData productInfoData = productData.productData;
             this.info = ProductInfo.getProductInfo(productInfoData.productName, productInfoData.category, productInfoData.manufacturer);
             this.amount = productData.amount;
             this.price = productData.price;
+            this.discount_percent = 0;
         }
 
         public Product(Product product)
@@ -36,18 +40,21 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.info = product.info;
             this.amount = product.amount;
             this.price = product.price;
+            this.discount_percent = 0;
         }
-        public Product(ProductsInBasketData productsInBasketData)
+        /*
+        public Product(BasketInCart productsInBasketData)
         {
             ProductInfoData productInfoData = ProductInfoDAL.getProductInfo(productsInBasketData.productID);
             this.info = ProductInfo.getProductInfo(productInfoData.productName, productInfoData.category, productInfoData.manufacturer);
             this.amount = productsInBasketData.amount;
             this.price = 0;
-        }
+
+        }*/
 
         public ProductData toDataObject(string storeName)
         {
-            return new ProductData(this.info.id, this.amount, this.price, storeName);
+            return new ProductData(this.info.toDataObject(), this.amount, this.price, storeName, this.id);
         }
         public override bool Equals(object obj)
         {
@@ -64,12 +71,12 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public void update(string storeName)
         {
-            ProductDAL.update(this.toDataObject(storeName));
+            DataLayer.ORM.DataAccess.update(this.toDataObject(storeName));
         }
 
         public void remove(string name)
         {
-            ProductDAL.remove(this.toDataObject(name));
+            DataLayer.ORM.DataAccess.Delete(this.toDataObject(name));
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Tests.Bridge
         {
             if (realBridge != null)
             {
-                this.realBridge.saveProducts( userName,  storeName,  manufacturer,  product);
+                this.realBridge.saveProducts(userName, storeName, manufacturer, product);
                 return;
             }
             throw new NotImplementedException();
@@ -56,7 +56,7 @@ namespace Tests.Bridge
             if (realBridge != null)
             {
                 return this.realBridge.getProductAmount(basket, info);
-                
+
             }
             throw new NotImplementedException();
         }
@@ -229,7 +229,7 @@ namespace Tests.Bridge
 
         public bool hireNewStoreManager(string ownerName, string storeName, string employeeName)
         {
-            if(realBridge != null)
+            if (realBridge != null)
             {
                 return realBridge.hireNewStoreManager(ownerName, storeName, employeeName);
             }
@@ -256,7 +256,7 @@ namespace Tests.Bridge
 
         public bool editProduct(string userName, string storeName, string productName, double price, string manufacturer)
         {
-            if(realBridge != null)
+            if (realBridge != null)
             {
                 return realBridge.editProduct(userName, storeName, productName, price, manufacturer);
             }
@@ -274,7 +274,7 @@ namespace Tests.Bridge
 
         public ICollection<SLemployee> getInfoEmployees(string userName, string storeName)
         {
-            if(realBridge != null)
+            if (realBridge != null)
             {
                 return realBridge.getInfoEmployees(userName, storeName);
             }
@@ -283,7 +283,7 @@ namespace Tests.Bridge
 
         public bool removeManager(string ownerName, string storeName, string employeeName)
         {
-            if(realBridge != null)
+            if (realBridge != null)
             {
                 return realBridge.removeManager(ownerName, storeName, employeeName);
             }
@@ -292,7 +292,7 @@ namespace Tests.Bridge
 
         public bool removeOwner(string ownerName, string storeName, string employeeName)
         {
-            if(realBridge != null)
+            if (realBridge != null)
             {
                 return realBridge.removeOwner(ownerName, storeName, employeeName);
             }
@@ -301,7 +301,7 @@ namespace Tests.Bridge
 
         public aUser getAdmin()
         {
-            if(realBridge != null)
+            if (realBridge != null)
             {
                 return realBridge.getAdmin();
             }

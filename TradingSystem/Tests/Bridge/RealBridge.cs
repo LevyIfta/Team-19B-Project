@@ -24,7 +24,7 @@ namespace Tests.Bridge
         {
             //ShoppingBasket userBasket = getBasket(basket.store.name);
             //userBasket.margeBasket(basket);
-            UserController.saveProduct( userName,  storeName,  manufacturer,  product);
+            UserController.saveProduct(userName, storeName, manufacturer, product);
         }
         public void addProducts(ShoppingBasket basket)
         {
@@ -32,7 +32,7 @@ namespace Tests.Bridge
             userBasket.margeBasket(basket);
         }
 
-        public ShoppingBasket getBasket(string userName,string storeName)
+        public ShoppingBasket getBasket(string userName, string storeName)
         {
             return UserServices.getBasket(userName, storeName);
         }
@@ -59,7 +59,7 @@ namespace Tests.Bridge
         {
             foreach (Receipt item in getStore(storeName).receipts)
             {
-                if (item.username == userName && item.date == Date)
+                if (item.user.userName == userName && item.date == Date)
                     return item;
             }
             return null;
@@ -67,7 +67,7 @@ namespace Tests.Bridge
 
         public Receipt GetRecieptByUser(string storeName, string userName, DateTime Date)
         {
-            foreach (Receipt receipt in UserServices.getAllReceiptsHistory(userName, storeName) )
+            foreach (Receipt receipt in UserServices.getAllReceiptsHistory(userName, storeName))
             {
                 if (receipt.date.Equals(Date))
                     return receipt;
@@ -84,7 +84,6 @@ namespace Tests.Bridge
             return UserServices.getUser(userName);
         }
 
-        
 
         public bool isItemAtStore(string storeName, string productName, string manufacturar)
         {
@@ -129,7 +128,7 @@ namespace Tests.Bridge
         public void logout()
         {
             UserController.logout();
-         
+
         }
 
         public int onlineUserCount()

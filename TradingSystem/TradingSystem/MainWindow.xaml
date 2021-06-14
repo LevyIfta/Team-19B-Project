@@ -7,8 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Label x:Name="label2" Content="Label" HorizontalAlignment="Left" Height="225" Margin="157,67,0,0" VerticalAlignment="Top" Width="466"/>
-
-
+        <Button Content="tear down DB" HorizontalAlignment="Left" Margin="178,59,0,0" VerticalAlignment="Top" Width="139" Height="49" Click="tearDown"/>
+        <Button Content="Load Data" HorizontalAlignment="Left" Margin="446,59,0,0" VerticalAlignment="Top" Width="134" Height="49" Click="loadDB"/>
+        <Button Content="start server" HorizontalAlignment="Left" Height="60" Margin="286,181,0,0" VerticalAlignment="Top" Width="192" Click="startServer"/>
+        <Button Content="run test reg" HorizontalAlignment="Left" Margin="178,337,0,0" VerticalAlignment="Top" Width="107" Height="30" Click="Button_Click"/>
+        <Button Content="run test login" HorizontalAlignment="Left" Margin="423,337,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
     </Grid>
 </Window>

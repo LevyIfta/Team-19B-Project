@@ -59,34 +59,80 @@ namespace TradingSystem.BuissnessLayer.commerce
         public Store(StoreData storeData)
         {
             this.name = storeData.storeName;
-            this.founder = (Member)UserServices.getUser(storeData.founder);
-            
-            // fill the collections
-            this.fillReceipts();
-            this.fillInventory();
-            this.fillOwners();
-            this.fillManagers();
-        }
+            this.founder = (Member)UserServices.getUser(storeData.founder.userName);
 
+            this.receipts = new List<Receipt>();
+            foreach (ReceiptData item in storeData.receipts)
+            {
+                this.receipts.Add(new Receipt(item));
+            }
+
+            this.inventory = new List<Product>();
+            foreach (ProductData item in storeData.inventory)
+            {
+                this.inventory.Add(new Product(item));
+            }
+            this.managers = new List<Member>();
+            foreach (MemberData item in storeData.managers)
+            {
+                this.managers.Add((Member)UserServices.getUser(item.userName)); //i hate this... anyway the only type of user in the list is member
+            }
+            this.owners = new List<Member>();
+            foreach (MemberData item in storeData.owners)
+            {
+                this.managers.Add((Member)UserServices.getUser(item.userName)); //i hate this... anyway the only type of user in the list is member
+            }
+
+            this.messages = new List<Message>();
+            foreach (MessageData msg in storeData.messages)
+            {
+                this.messages.Add(new Message(msg));
+            }
+
+            this.discountPolicies = new List<iPolicyDiscount>();
+            foreach (iPolicyDiscountData item in storeData.discountPolicies)
+            {
+                this.discountPolicies.Add(null); //todo
+            }
+
+            this.purchasePolicies = new List<iPolicy>();
+            foreach (iPolicyData item in storeData.purchasePolicies)
+            {
+                this.purchasePolicies.Add(null); //todo
+            }
+
+
+
+            // fill the collections
+            //this.fillReceipts();
+            //this.fillInventory();
+            //this.fillOwners();
+            //this.fillManagers();
+        }
+        /*
         private void fillReceipts()
         {
-            this.receipts = new LinkedList<Receipt>();
-            ICollection<ReceiptData> receiptsData = ReceiptDAL.getStoreReceipts(this.name);
+            if(receipts == null)
+                this.receipts = new LinkedList<Receipt>();
+            ICollection<ReceiptData> receiptsData = DataLayer.ORM.DataAccess.getAllStoreRecipts(name);
             foreach (ReceiptData receipt in receiptsData)
                 this.receipts.Add(new Receipt(receipt));
         }
 
         private void fillInventory()
         {
-            this.inventory = new LinkedList<Product>();
-            ICollection<ProductData> productsData = ProductDAL.getStoreProducts(this.name);
+            if(inventory == null)
+                this.inventory = new LinkedList<Product>();
+            ICollection<ProductData> productsData = DataLayer.ORM.DataAccess.getAllProductsInfo();
+            
             foreach (ProductData productData in productsData)
                 this.inventory.Add(new Product(productData));
         }
 
         private void fillManagers()
         {
-            this.managers = new LinkedList<Member>();
+            if(managers == null)
+                this.managers = new LinkedList<Member>();
             ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
             foreach (HireNewStoreManagerPermissionData manager in managersData)
                 this.managers.Add((Member)UserServices.getUser(manager.userName));
@@ -99,6 +145,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             foreach (HireNewStoreOwnerPermissionData owner in ownersData)
                 this.owners.Add((Member)UserServices.getUser(owner.userName));
         }
+        */
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
         {
@@ -112,7 +159,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                 // the product doesn't exist, add it
                 this.inventory.Add(new Product(productInfo, 0, 0));
                 // update DB
-                ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
+                DataLayer.ORM.DataAccess.create(productInfo.toDataObject());
+                //ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
             }
             return productInfo;
         }
@@ -139,9 +187,11 @@ namespace TradingSystem.BuissnessLayer.commerce
                 if (p.info.name.Equals(productName) & p.info.manufacturer.Equals(manufacturer))
                 {
                     p.price = newPrice;
-                    
+
                     // update DB
-                    ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
+                    p.update(this.name);
+                    //DataLayer.ORM.DataAccess.update(new ProductData(p.info.toDataObject(), p.amount, p.price, this.name));
+                    //ProductDAL.update();
                     return true;
                 }
             // the product doesn't exist, can't edit price
@@ -161,7 +211,8 @@ namespace TradingSystem.BuissnessLayer.commerce
                     {
                         p.amount += amount;
                         // update DB
-                        ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
+                        p.update(name);
+                        //ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                         return true;
                     }
             }
@@ -181,7 +232,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return price;
         }
 
-        public void updatePricesInBasket(ICollection<Product> products)
+        private void updatePricesInBasket(ICollection<Product> products)
         {
             foreach (Product product in products)
                 foreach (Product localProduct in this.inventory)
@@ -189,22 +240,24 @@ namespace TradingSystem.BuissnessLayer.commerce
                         product.price = localProduct.price;
         }
 
-        public double calcPriceAfterDiscount(ICollection<Product> products)
+        private double calcTotalDiscount(ShoppingBasket basket, double totalPrice)
         {
-            double price = 0.0;
+            double totalDiscount = 0;
 
-            foreach (Product product in products)
-                price += product.price * product.amount;
+            foreach (iPolicyDiscount discountPolicy in this.discountPolicies)
+                totalDiscount += discountPolicy.ApplyDiscount(basket, totalDiscount);
+            
 
-            return price;
+
+            return totalDiscount;
         }
+        
 
         public string[] executeOfferPurchase(aUser user, Product product, string creditNumber, string validity, string cvv)
         {  // lock the store for purchase
             Receipt receipt;
             lock (this.purchaseLock)
             {
-                // check for amounts validation
                 string policy = checkPolicies(product);
                 if (policy.Length != 0)
                     return new string[] { "false", policy };
@@ -247,7 +300,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             Receipt receipt;
             lock (this.purchaseLock)
             {
-                // check for amounts validation
+                // check for amounts validation, policies, payment verification and supplyment validation
+                updatePricesInBasket(basket.products);
+                
                 string policy = checkPolicies(basket);
                 if (policy.Length != 0)
                     return new string[] { "false", policy };
@@ -289,14 +344,16 @@ namespace TradingSystem.BuissnessLayer.commerce
         
         private string ProductToString(Product pro)
         {
-            return pro.info.name + "$" + pro.amount;
+            return pro.info.id + "$" + pro.amount;
         }
 
         private Receipt validPurchase(ShoppingBasket basket)
         {
             // calc the price
-            double price = calcPriceBeforeDiscount(basket.products);
+            double priceBeforeDisc = calcPriceBeforeDiscount(basket.products);
+            double price = priceBeforeDisc - calcTotalDiscount(basket, priceBeforeDisc);
             Receipt receipt = new Receipt();
+            //List<ProductData> products = new List<ProductData>();
             // request for payment
             // the payment was successful
             foreach (Product product in basket.products)
@@ -308,28 +365,29 @@ namespace TradingSystem.BuissnessLayer.commerce
                         // update amount in DB
                         localProduct.update(this.name);
                         // add the products to receipt
-                        receipt.products.Add(localProduct.info.id, product.amount);
+                      //  products.Add(product.toDataObject(this.name));
+                        //receipt.products.Add(localProduct.info.id, product.amount);
                         // 
-                        receipt.actualProducts.Add(new Product(localProduct));
+                        //receipt.actualProducts.Add(new Product(localProduct));
                         // leave feedback
                         //basket.owner.canLeaveFeedback = true;
                         product.info.leaveFeedback(basket.owner.userName, "");
                         // update feedback in DB
-                        FeedbackDAL.addFeedback(new FeedbackData(localProduct.info.name, localProduct.info.manufacturer, basket.owner.userName, ""));
+                        //new FeedbackData(localProduct.info.toDataObject(), localProduct.info.manufacturer, ((Member)basket.owner).toDataObject(), "");
                     }
                     //StoresData.getStore(this.name).removeProducts(product.toDataObject());
                     product.info.roomForFeedback(basket.owner.userName);
                 }
+            receipt.basket = basket;
             // fill receipt fields
             receipt = fillReceipt(receipt, price);
-            receipt.username = basket.owner.userName;
             return receipt;
         }
 
         private Receipt fillReceipt(Receipt receipt, double price)
         {
-            receipt.store = this;
-            receipt.discount = 0;
+            //receipt.store = this;
+            receipt.discount = null;
             receipt.date = DateTime.Now;
             receipt.price = price;
             // save the receipt
@@ -359,26 +417,26 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             this.owners.Add(owner);
             // update DB
-            HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
+            //HireNewStoreOwnerPermissionDAL.addHireNewStoreOwnerPermission(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
         }
         public void addManager(Member manager)
         {
             this.managers.Add(manager);
             // update DB
-            HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.name));
+            //HireNewStoreManagerPermissionDAL.addHireNewStoreManagerPermission(new HireNewStoreManagerPermissionData(manager.userName, this.name));
         }
         public void removeOwner(Member owner)
         {
             this.owners.Remove(owner);
             // update DB
-            HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
+            //HireNewStoreOwnerPermissionDAL.remove(new HireNewStoreOwnerPermissionData(owner.userName, this.name));
         }
 
         public void removeManager(Member manager)
         {
             this.managers.Remove(manager);
             // update DB
-            HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.name));
+            //HireNewStoreManagerPermissionDAL.remove(new HireNewStoreManagerPermissionData(manager.userName, this.name));
         }
 
         public bool isManager(string member)
@@ -455,7 +513,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public void remove()
         {
-            StoreDAL.remove(this.toDataObject());
+            DataLayer.ORM.DataAccess.Delete(this.toDataObject());
         }
         public Product getProduct(int productId)
         {
@@ -467,7 +525,28 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public StoreData toDataObject()
         {
-            return new StoreData(this.name, this.founder.userName);
+            List<ReceiptData> receipts = new List<ReceiptData>();
+            List<ProductData> products = new List<ProductData>();
+            List<MemberData> members1 = new List<MemberData>();
+            List<MemberData> members2 = new List<MemberData>();
+            List<MessageData> messages = new List<MessageData>();
+            List<iPolicyDiscountData> discountDatas = new List<iPolicyDiscountData>();
+            List<iPolicyData> policyDatas = new List<iPolicyData>();
+            foreach (Receipt receipt in this.receipts)
+                receipts.Add(receipt.toDataObject());
+            foreach (Product product in this.inventory)
+                products.Add(product.toDataObject(this.name));
+            foreach (Member member in owners)
+                members1.Add(member.toDataObject());
+            foreach (Member member in managers)
+                members2.Add(member.toDataObject());
+            foreach (Message message in this.messages)
+                messages.Add(message.toDataObject());
+            foreach (iPolicy policy in this.purchasePolicies)
+                policyDatas.Add(null);
+            foreach (iPolicyDiscount discount in this.discountPolicies)
+                discountDatas.Add(null);
+            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, messages, discountDatas, policyDatas);
         }
 
         public void removeFromInventory(Product product)
@@ -491,7 +570,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             iPolicyDiscount policy = new baseDiscountPolicy(
                 (Product p) => p.info.Equals(ProductInfo.getProductInfo(name, category, man)),
-                (Product p, double totalPrice)=> true,
+                (Product p)=> true,
                 deadline,
                 discount_percent);
             this.discountPolicies.Add(policy);
@@ -586,12 +665,7 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             this.purchasePolicies.Add(policy);
         }
-
-
-
         
-
-
         public void offer(OfferRequest request)
         {
             // notify the relevant owners/managers
@@ -608,6 +682,16 @@ namespace TradingSystem.BuissnessLayer.commerce
                 manager.addAlarm("Offer request update", request.ToString());
                 manager.addOffer(request);
             }
+        }
+
+        public void addPurchasePolicy(iPolicy policy)
+        {
+            this.purchasePolicies.Add(policy);
+        }
+
+        public void addDiscountPolicy(iPolicyDiscount discountPolicy)
+        {
+            this.discountPolicies.Add(discountPolicy);
         }
 
     }

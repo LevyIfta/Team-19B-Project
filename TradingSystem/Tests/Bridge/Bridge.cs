@@ -11,7 +11,7 @@ namespace Tests.Bridge
     interface Bridge
     {
         //unit tests
-       //bool login(string userName, string password);
+        //bool login(string userName, string password);
         string[] login(string userName, string password);
         string[] register(string userName, string password);
         string[] register(string userName, string password, double age, string gender, string address);
@@ -26,7 +26,7 @@ namespace Tests.Bridge
         bool isStoreExist(string storeName);
 
         bool isProductExist(string productName, string manufacturar);
-        ShoppingBasket getBasket(string userName,string storeName);
+        ShoppingBasket getBasket(string userName, string storeName);
 
         int getProductAmount(ShoppingBasket basket, ProductInfo info);
         double getProductAmount(string storeName, string productName, string manufacturer);
@@ -37,7 +37,7 @@ namespace Tests.Bridge
         void addInventory(ShoppingBasket basket); //to store
         void removeInventory(ShoppingBasket basket);
         bool isItemAtStore(string storeName, string productName, string manufacturar);
-        
+
         Store getStore(string storeName);
         Receipt GetRecieptByUser(string storeName, string userName, DateTime Date);
         Receipt GetRecieptByStore(string storeName, string userName, DateTime Date);
