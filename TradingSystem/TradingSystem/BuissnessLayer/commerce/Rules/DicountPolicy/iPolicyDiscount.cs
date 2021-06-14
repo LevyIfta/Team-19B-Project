@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
 {
@@ -10,6 +11,20 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
     {
 
         public List<ConditioningPolicyDiscount> policies = new List<ConditioningPolicyDiscount>();
+
+        public iPolicyDiscount(iPolicyDiscountData ipd)
+        {
+            //todo
+        }
+
+        protected iPolicyDiscount()
+        {
+        }
+
+        public iPolicyDiscountData toDataObject()
+        {
+            return null; //todo
+        }
 
         public abstract double ApplyDiscount(ShoppingBasket basket, double totalPrice);
         //public abstract bool isValid(ICollection<Product> products, double totalprice);

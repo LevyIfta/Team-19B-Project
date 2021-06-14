@@ -53,8 +53,17 @@ namespace TradingSystem.BuissnessLayer
             this.userName = member.userName;
             this.password = member.password;
             this.reciepts = new List<Receipt>();
-            this.myCart = new ShoppingCart(this);
+            foreach (ReceiptData item in member.receipts)
+            {
+                this.reciepts.Add(new Receipt(item));
+            }
+            this.myCart = new ShoppingCart(this, member.shopingcart);
             this.messages = new List<Message>();
+            foreach (MessageData msg in member.messages)
+            {
+                this.messages.Add(new Message(msg));
+            }
+
         }
 
         public override string getUserName()
@@ -360,15 +369,20 @@ namespace TradingSystem.BuissnessLayer
             messages.Add(message);
             return true;
         }
-        public MemberData toDataObject()
+        public override MemberData toDataObject()
         {
             List<BasketInCart> baskets = new List<BasketInCart>();
             List<ReceiptData> receipts = new List<ReceiptData>();
+            List<MessageData> messages = new List<MessageData>();
             foreach (ShoppingBasket basket in myCart.baskets)
                 baskets.Add(basket.toDataObject());
             foreach (Receipt receipt in this.reciepts)
                 receipts.Add(receipt.toDataObject());
-            return new MemberData(userName, password, age, gender, address, baskets, receipts);
+            foreach (Message item in this.messages)
+            {
+                messages.Add(item.toDataObject());
+            }
+            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages);
         }
         /*
         public static Member dataToObject(MemberData data)

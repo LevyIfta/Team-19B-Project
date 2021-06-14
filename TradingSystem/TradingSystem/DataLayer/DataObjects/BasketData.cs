@@ -16,10 +16,14 @@ namespace TradingSystem.DataLayer
         public virtual ICollection<ProductData> products { get; set; }
 
         //CONSTRUCTORS
-        protected BasketData(ICollection<ProductData> product)
+        protected BasketData(ICollection<ProductData> products)
         {
             
-            this.products = product;
+            this.products = products;
+        }
+
+        protected BasketData()
+        {
         }
 
         //EQUALS
@@ -36,18 +40,32 @@ namespace TradingSystem.DataLayer
 
     public class BasketInCart : BasketData
     {
-        [Key]
-        [Column(Order = 1)]
-        public virtual StoreData storeName { get; set; }
-        [Key]
-        [Column(Order = 2)]
-        public virtual MemberData useName { get; }
-
-        public BasketInCart(StoreData storeName, MemberData useName, ICollection<ProductData> product) : base(product)
+        public BasketInCart(ICollection<ProductData> products) : base(products)
         {
-            this.storeName = storeName;
-            this.useName = useName;
         }
+
+      
+        [Key, Column(Order = 0)]
+        public virtual string storeName { get; set; }
+        public virtual StoreData store { get; set; }
+
+        [Key, Column(Order = 1)]
+        public virtual string userName { get; set; }
+        public virtual MemberData user { get; set; }
+
+
+        public BasketInCart():base()
+        {
+        }
+
+        public BasketInCart(StoreData store, MemberData user, ICollection<ProductData> products) : base(products)
+        {
+            this.store = store ?? throw new ArgumentNullException(nameof(store));
+            this.user = user ?? throw new ArgumentNullException(nameof(user));
+            this.storeName = this.store.storeName;
+            this.userName = this.user.userName;
+        }
+
 
         //EQUALS
         public override bool Equals(object obj)
@@ -57,18 +75,34 @@ namespace TradingSystem.DataLayer
 
         public bool Equals(BasketInCart other)
         {
-            return this.useName.Equals(other.useName) && this.storeName.Equals(other.storeName);
+            return this.userName.Equals(other.userName) && this.storeName.Equals(other.storeName);
         }
     }
 
     public class BasketInRecipt : BasketData
     {
-        [Key]
+       
+        //[ForeignKey("ReceiptData")]
         public virtual ReceiptData recipt { get; set; }
 
-        public BasketInRecipt(ICollection<ProductData> product, ReceiptData receipt) : base(product)
+        [Key]
+        public virtual int reciptID { get; set; }
+
+
+        public BasketInRecipt(ICollection<ProductData> products, ReceiptData recipt) : base(products)
         {
             this.recipt = recipt;
+            this.reciptID = recipt.receiptID;
+        }
+
+        public BasketInRecipt() :base()
+        {
+        }
+
+        public BasketInRecipt(ReceiptData recipt, int reciptID, ICollection<ProductData> products) : base(products)
+        {
+            this.recipt = recipt ?? throw new ArgumentNullException(nameof(recipt));
+            this.reciptID = reciptID;
         }
 
         //EQUALS

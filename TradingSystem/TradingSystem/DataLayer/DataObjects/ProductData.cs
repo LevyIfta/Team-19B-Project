@@ -11,7 +11,7 @@ namespace TradingSystem.DataLayer
     public class ProductData
     {
         //FIELDS
-        [ForeignKey("ProductInfoData")]
+        //[ForeignKey("ProductInfoData")]
         public virtual ProductInfoData productData { get; set; }
         public int amount { get; set; }
         public double price { get; set; }
@@ -29,8 +29,12 @@ namespace TradingSystem.DataLayer
             this.id = id;
         }
 
+        public ProductData()
+        {
+        }
+
         //EQUALS
-    
+
 
         public bool Equals(ProductData obj)
         {
