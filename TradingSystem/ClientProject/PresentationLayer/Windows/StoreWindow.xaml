@@ -1,0 +1,28 @@
+﻿<Window x:Class="ClientProject.PresentationLayer.Windows.StoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientProject.PresentationLayer.Windows"
+        mc:Ignorable="d"
+        Title="StoreWindow" Height="450" Width="646.675">
+    <Grid>
+        <Label HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Label Content="" Name="StoreName" Width="783" HorizontalContentAlignment="Center"/>
+        </Label>
+        <Label Content="Search Product:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,43,0,0"/>
+        <TextBox Name="ProductName" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="191" Margin="114,79,0,0"/>
+        <Button Name="searchBtn" Content="Search" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="157,148,0,0" RenderTransformOrigin="2.04,1.572" Click="SearchBtn_Click"/>
+        <Label Content="Product Name" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,76,0,0"/>
+        <TextBox x:Name="ProductCategory" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="191" Margin="114,110,0,0"/>
+        <Label Content="Categodry" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,107,0,0"/>
+        <TextBox x:Name="ProductManufacturer" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="191" Margin="437,79,0,0"/>
+        <Label Content="Manufacturer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="333,76,0,0"/>
+        <TextBox x:Name="MinPrice" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="191" Margin="437,110,0,0"/>
+        <Label Content="Min Price" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="333,107,0,0"/>
+        <TextBox x:Name="MaxPrice" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="191" Margin="437,145,0,0"/>
+        <Label Content="Max Price" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="333,142,0,0"/>
+        <Grid Name="Results" HorizontalAlignment="Left" Height="219" VerticalAlignment="Top" Width="618" Margin="10,190,0,0"/>
+
+    </Grid>
+</Window>

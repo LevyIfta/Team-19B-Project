@@ -1,0 +1,41 @@
+business layer:
+	store: (ali B)
+		shopping cart + basket
+		products
+			product info + reviews
+		recipts
+	users: (almog + elad)
+		abstract decorator
+		manager roles
+			manager
+			owner
+		admin
+			logs (ali jb)
+		registered
+		guest
+		interfaces
+			imember
+			user
+	system:
+		threads
+		system managers
+			products
+			stores
+			users
+service layer:
+	controllers
+data layers:
+	data objects
+		all users
+		all stores
+testing: (iftah)
+	unit
+	acceptance
+	system
+	testing structure		
+documentation:
+	state chart (ali jb)
+	websocket presentation (ali jb)
+	fixing arcitecture model, usecases, white class diagram
+	updating as we go
+	

@@ -1,0 +1,26 @@
+
+login : 
+actor: guest
+preconditions: none
+post conditon: the guest is now logged in => he becomes a memeber
+description: a guest logs in into the system as a registerd user. the username and password must be valid and fit an existing user
+happy: valid and existing user name and password
+sad: incorrect username or password
+
+
+logout:
+actor: member
+precodtion: none
+postcondtion: the member is no longer logged in => he becomes a guest
+description: a member logout of his User, and becomes a guest.
+happy: a member logout 
+sad: none
+
+register:
+actor: guest
+precondition:
+postcondition: 	a new member is added to the system
+description: a guest register inorder to create a new member in the system.   the username and password are valid and DO NOT fit an existing member
+happy: username and password are valid, and unique
+sad: username and password already in use
+
