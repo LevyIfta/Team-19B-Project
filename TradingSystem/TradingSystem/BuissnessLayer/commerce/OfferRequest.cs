@@ -96,7 +96,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 editPrice(price, negotiator);
 
-                this.status = Status.PENDING_REQUESTER;
+                this.status = Status.ACCEPTED;
 
                 notifyUser();
             }

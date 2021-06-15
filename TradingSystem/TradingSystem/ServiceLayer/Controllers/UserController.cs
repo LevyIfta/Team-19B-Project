@@ -519,5 +519,12 @@ namespace TradingSystem.ServiceLayer
                 return false;
             return BuissnessLayer.UserServices.supply(username, storeName, productName, amount, manufacturer);
         }
+
+        public static bool placeOffer(string username, string storeName, string productName, string category, string manufacturer, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
+            return UserServices.placeOffer(username, storeName, productName, category, manufacturer, price);
+        }
     }
 }

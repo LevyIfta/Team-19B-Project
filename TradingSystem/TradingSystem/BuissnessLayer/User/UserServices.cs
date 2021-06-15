@@ -543,5 +543,20 @@ namespace TradingSystem.BuissnessLayer
 
         }
 
+        public static bool placeOffer(string username, string storeName, string productName, string category, string manufacturer,int amount, double price)
+        {
+            aUser requester = getUser(username);
+            Store store = Stores.searchStore(storeName);
+            ProductInfo pInfo = ProductInfo.getProductInfo(productName, category, manufacturer);
+
+            if (requester == null | store == null | pInfo == null | price < 0)
+                return false;
+
+            Product product = new Product(pInfo, amount, price);
+            OfferRequest request = new OfferRequest(product, requester, store);
+
+            requester.placeOffer(request);
+            return true;
+        }
     }
 }

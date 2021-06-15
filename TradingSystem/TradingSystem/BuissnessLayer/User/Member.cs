@@ -404,9 +404,10 @@ namespace TradingSystem.BuissnessLayer
             DataLayer.ORM.DataAccess.update(toDataObject());
         }
 
-        public override void addOffer(OfferRequest request)
+        public override void placeOffer(OfferRequest request)
         {
             this.requests.Add(request);
+            request.send();
         }
     }
 }
