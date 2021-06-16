@@ -2441,7 +2441,69 @@ namespace Tests
         [TestMethod]
         public void NegotiateOfferRequest()
         {
+            // init store anf users names&passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
 
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // place a new offer
+            int requestId = UserServices.placeOffer(buyerUsername, storeName1, p1_name, p1_cat, p1_man, 3, 5);
+
+            // the owner should've been notified, the offer is in it's offer's list
+            Assert.AreNotEqual(requestId, -1, "could't place an offer - got a negative id");
+            OfferRequest requestToAnswer = owner.getRequestToAnswer(requestId);
+
+            Assert.IsNotNull(requestToAnswer, "The offer was not saved in the owner's list of requests to answer");
+            // make sure that the request jas the correct values in fields
+            Assert.AreEqual(requestToAnswer.getPrice(), 5, "Wrong price in offer.");
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info wasn't initialized as expected.");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.PENDING_STORE, "Wrong status.");
+
+            // accept requset
+            bool negotiated = owner.negotiateRequest(requestToAnswer.id, 6); // the new price is 6, instead of 5
+
+            Assert.IsTrue(negotiated, "Couldn't manage to accept the request.");
+
+            // make sure that the request general status has changed accordingly
+            Assert.AreEqual(requestToAnswer.getPrice(), 6, "The price hasn't changed to 6");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.ACCEPTED);
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info was changed");
+
+            // try to purchase the product
+            string[] receiptString = requestToAnswer.purchase("111111111111", "11/22", "123");
+            Assert.AreEqual(receiptString[0], "true", "Couldn't purchase");
+
+            Receipt receipt = client.getReceipt(int.Parse(receiptString[1]));
+            Assert.IsNotNull(receipt, "The receipt was not saved in the client's receipts collection.");
+            // check for the price
+            Assert.AreEqual(receipt.price, 18, "Wrong price");
+            // check for amounts in the store
+            int newAmount = store1.searchProduct(p1_name, p1_man).amount;
+            Assert.AreEqual(newAmount, 17, "The amounts were not correctly updated in store");
         }
 
     }
@@ -2455,7 +2517,7 @@ namespace Tests
     public class InfoGenerator
     {
         // this class has static methods and fields
-        // it provides services for generating valid and unvalid unique info
+        // it provides services for generating valid unique info
         // including usernames, passwords and store names
         private static string baseUsername = "User",
                             basePassword = "123Xx",

@@ -438,5 +438,21 @@ namespace TradingSystem.BuissnessLayer
                     return receipt;
             return null;
         }
+
+        public override bool rejectOffer(int id)
+        {
+            foreach (OfferRequest request in this.requestsToAnswer)
+                if (request.id == id)
+                    return request.reject(this);
+            return false;
+        }
+
+        public override bool negotiateRequest(int id, double price)
+        {
+            foreach (OfferRequest request in this.requestsToAnswer)
+                if (request.id == id)
+                    return request.negotiate(price, this);
+            return false;
+        }
     }
 }

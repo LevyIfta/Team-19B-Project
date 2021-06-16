@@ -287,5 +287,10 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
+
+        public virtual bool negotiateRequest(int id, double price)
+        {
+            return false;
+        }
     }
 }

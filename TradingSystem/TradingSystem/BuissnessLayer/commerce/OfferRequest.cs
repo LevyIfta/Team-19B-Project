@@ -77,9 +77,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             return true;
         }
 
-        public bool reject()
+        public bool reject(aUser rejector)
         {
-            if (this.status != Status.PENDING_REQUESTER) return false;
+            if (this.status != Status.PENDING_STORE | !userHasPermission(rejector)) return false;
             lock (responseLocker)
             {
                 this.status = Status.REJECTED;
