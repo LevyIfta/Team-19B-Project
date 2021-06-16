@@ -13,10 +13,9 @@ namespace TradingSystem.ServiceLayer
         [ThreadStatic]
         public static aUser user = new Guest();
         [ThreadStatic]
-        private static Thread alarmThread;
+        public static string userName = user.userName;
 
 
-        private static Func<object, bool> alarmHandler;
 
         static UserController()
         {
@@ -27,15 +26,10 @@ namespace TradingSystem.ServiceLayer
             logout();*/
             
         }
-
-        public static void init(Func<object, bool> alarmhandler)
-        {
-           
-            alarmHandler = alarmhandler;
-        }
         public static void threadInit()
         {
             user = new Guest();
+            userName = user.userName;
         }
         
 
@@ -52,11 +46,7 @@ namespace TradingSystem.ServiceLayer
             
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
-            if(alarmThread != null)
-            {
-                alarmThread.Abort();
-                alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
-            }
+            userName = user.userName;
             
             return ans;
 
@@ -72,12 +62,7 @@ namespace TradingSystem.ServiceLayer
                 {
                     aUser olduser = user;
                     user = new Guest();
-                    if(alarmThread != null)
-                    {
-                        alarmThread.Abort();
-                        alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
-                    }
-
+                    userName = user.userName;
                     return true;
                 }
             }
@@ -499,25 +484,17 @@ namespace TradingSystem.ServiceLayer
             return UserController.user.getUserName();
         }
 
-        public static Tuple<string, string> fetchAlarm()
-        {
-            return user.fetchAlarm();
-        }
-
-        public static bool isAlarmsEmpty()
-        {
-            return user.isAlarmsEmpty();
-        }
-        public static void estblishAlarmHandler(object queue, object waitEvent, AutoResetEvent alarmLock)
-        {
-            alarmThread =  user.estblishAlarmHandler(queue, waitEvent, alarmLock, alarmHandler);
-        }
 
         public static bool supplyProduct(string username, string storeName, string productName, int amount, string manufacturer)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return false;
             return BuissnessLayer.UserServices.supply(username, storeName, productName, amount, manufacturer);
+        }
+
+        public static Func<string> getUserNameFunc()
+        {
+            return (() => userName);
         }
     }
 }

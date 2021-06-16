@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using TradingSystem;
 using TradingSystem.BuissnessLayer;
+using TradingSystem.ServiceLayer.Connection;
 
 namespace TradingSystem.ServiceLayer
 {
@@ -32,37 +33,7 @@ namespace TradingSystem.ServiceLayer
         /// 5: the function to fetch an alarm
         /// </summary>
         /// <param name="parameters"></param>
-        public static bool AlarmHandler(Object parameters)
-        {
-            object[] input = (object[])parameters;
-           // Socket socket = (Socket)input[0]; //unused
-            //NetworkStream stream = new NetworkStream(socket); //unused
-            Queue<DecodedMessge> qwewe = (Queue<DecodedMessge>)input[1];
-            AutoResetEvent waitEvent = (AutoResetEvent)input[2];
-            AutoResetEvent alarmLock = (AutoResetEvent)input[3];
-            Func<bool> isAlarmsEmpty = (Func<bool>)input[4];
-            Func<Tuple<string, string>> fetchAlarm = (Func<Tuple<string, string>>)input[5];
 
-
-            while (true)
-            {
-                while (isAlarmsEmpty())
-                    alarmLock.WaitOne();
-
-                Tuple<string, string> content = fetchAlarm();
-                DecodedMessge msg = new DecodedMessge();
-                msg.type = msgType.ALARM;
-
-                msg.name = content.Item1;
-                msg.param_list = new string[] { content.Item2 };
-                lock (qwewe)
-                {
-                    qwewe.Enqueue(msg);
-                    waitEvent.Set();
-                }
-            }
-
-        }
 
         private static void messagesHandler(object parameters)
         {
@@ -71,6 +42,16 @@ namespace TradingSystem.ServiceLayer
             SslStream stream = (SslStream)input[0];
             Queue<DecodedMessge> qwewe = (Queue<DecodedMessge>)input[1];
             AutoResetEvent waitEvent = (AutoResetEvent)input[2];
+            Action<DecodedMessge> add2Q = (DecodedMessge msg) =>
+            {
+                lock (qwewe)
+                {
+                    qwewe.Enqueue(msg);
+                    waitEvent.Set();
+                }
+            };
+            int serialNum = Publisher.subscribe(UserController.getUserNameFunc(), add2Q);
+
 
             List<byte> data = new List<byte>();
             try
@@ -89,6 +70,7 @@ namespace TradingSystem.ServiceLayer
                             waitEvent.Set();
                         }
                         data = new List<byte>();
+                        Publisher.awaken(serialNum);
                     }
                     else
                         data.Add(Convert.ToByte(c));
@@ -144,7 +126,7 @@ namespace TradingSystem.ServiceLayer
 
             object[] parameters = new object[] { stream, qwewe, waitEvent };
             //alarmHandler.Start(parameters);
-            UserController.estblishAlarmHandler(qwewe, waitEvent, alarmLock);
+            
             sendhandler.Start(parameters);
             messagesHandler(parameters);
         }

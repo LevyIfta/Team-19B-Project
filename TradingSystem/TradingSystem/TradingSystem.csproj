@@ -256,6 +256,7 @@
     <Compile Include="DataLayer\DataObjects\StoreData.cs" />
     <Compile Include="DataLayer\ORM\context.cs" />
     <Compile Include="DataLayer\ORM\DataAccess.cs" />
+    <Compile Include="ServiceLayer\Connection\Publisher.cs" />
     <Compile Include="ServiceLayer\Connection\ServerConnectionManager.cs" />
     <Compile Include="ServiceLayer\Connection\DecodedMessge.cs" />
     <Compile Include="ServiceLayer\Connection\Decoder.cs" />
