@@ -22,6 +22,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ICollection<Member> owners { get; private set; }
         public ICollection<Member> managers { get; private set; }
         public ICollection<Message> messages { get; private set; }
+        public Dictionary<int, ICollection<aUser>> requestsAcceptors { get; set; }
         private Object purchaseLock = new Object();
 
         public ICollection<iPolicyDiscount> discountPolicies;
@@ -41,16 +42,21 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             this.discountPolicies = new LinkedList<iPolicyDiscount>();
             this.purchasePolicies = new LinkedList<iPolicy>();
+            this.requestsAcceptors = new Dictionary<int, ICollection<aUser>>();
+        }
+
+        public void removeAllAcceptors(int offerID)
+        {
+            if (!this.requestsAcceptors.ContainsKey(offerID))
+                this.requestsAcceptors.Add(offerID, new LinkedList<aUser>());
+            // remove all acceptors by init
+            this.requestsAcceptors[offerID] = new LinkedList<aUser>();
         }
 
         public bool hasRequestPermission(aUser user)
         {
             foreach (aUser owner in this.owners)
                 if (owner.userName.Equals(user.userName))
-                    return true;
-
-            foreach (aUser manager in this.managers)
-                if (manager.userName.Equals(user.userName))
                     return true;
 
             return false;
@@ -109,43 +115,81 @@ namespace TradingSystem.BuissnessLayer.commerce
             //this.fillOwners();
             //this.fillManagers();
         }
+
+        public bool isOfferAccepted(int offerID)
+        {
+            if (!this.requestsAcceptors.ContainsKey(offerID))
+                this.requestsAcceptors.Add(offerID, new LinkedList<aUser>());
+
+            // check if all the owners has accepted the offer
+            foreach (aUser owner in this.owners)
+            {
+                bool hasAccepted = false;
+
+                foreach (aUser acceptor in this.requestsAcceptors[offerID])
+                    if (acceptor.userName.Equals(owner.userName))
+                        hasAccepted = true;
+                // check for current owner's acceptance
+                if (!hasAccepted)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void acceptOffer(aUser acceptor, int offerID)
+        {
+            if (!this.requestsAcceptors.ContainsKey(offerID))
+                this.requestsAcceptors.Add(offerID, new LinkedList<aUser>());
+
+            if (this.requestsAcceptors[offerID] == null)
+                this.requestsAcceptors[offerID] = new LinkedList<aUser>();
+
+            // check if the user has accepted the request before
+            foreach (aUser owner in this.requestsAcceptors[offerID])
+                if (owner.userName.Equals(acceptor.userName))
+                    return;
+
+            this.requestsAcceptors[offerID].Add(acceptor);
+        }
+
         /*
-        private void fillReceipts()
-        {
-            if(receipts == null)
-                this.receipts = new LinkedList<Receipt>();
-            ICollection<ReceiptData> receiptsData = DataLayer.ORM.DataAccess.getAllStoreRecipts(name);
-            foreach (ReceiptData receipt in receiptsData)
-                this.receipts.Add(new Receipt(receipt));
-        }
+private void fillReceipts()
+{
+   if(receipts == null)
+       this.receipts = new LinkedList<Receipt>();
+   ICollection<ReceiptData> receiptsData = DataLayer.ORM.DataAccess.getAllStoreRecipts(name);
+   foreach (ReceiptData receipt in receiptsData)
+       this.receipts.Add(new Receipt(receipt));
+}
 
-        private void fillInventory()
-        {
-            if(inventory == null)
-                this.inventory = new LinkedList<Product>();
-            ICollection<ProductData> productsData = DataLayer.ORM.DataAccess.getAllProductsInfo();
-            
-            foreach (ProductData productData in productsData)
-                this.inventory.Add(new Product(productData));
-        }
+private void fillInventory()
+{
+   if(inventory == null)
+       this.inventory = new LinkedList<Product>();
+   ICollection<ProductData> productsData = DataLayer.ORM.DataAccess.getAllProductsInfo();
 
-        private void fillManagers()
-        {
-            if(managers == null)
-                this.managers = new LinkedList<Member>();
-            ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
-            foreach (HireNewStoreManagerPermissionData manager in managersData)
-                this.managers.Add((Member)UserServices.getUser(manager.userName));
-        }
+   foreach (ProductData productData in productsData)
+       this.inventory.Add(new Product(productData));
+}
 
-        private void fillOwners()
-        {
-            this.owners = new LinkedList<Member>();
-            ICollection<HireNewStoreOwnerPermissionData> ownersData = HireNewStoreOwnerPermissionDAL.getStoreOwners(this.name);
-            foreach (HireNewStoreOwnerPermissionData owner in ownersData)
-                this.owners.Add((Member)UserServices.getUser(owner.userName));
-        }
-        */
+private void fillManagers()
+{
+   if(managers == null)
+       this.managers = new LinkedList<Member>();
+   ICollection<HireNewStoreManagerPermissionData> managersData = HireNewStoreManagerPermissionDAL.getStoreManagers(this.name);
+   foreach (HireNewStoreManagerPermissionData manager in managersData)
+       this.managers.Add((Member)UserServices.getUser(manager.userName));
+}
+
+private void fillOwners()
+{
+   this.owners = new LinkedList<Member>();
+   ICollection<HireNewStoreOwnerPermissionData> ownersData = HireNewStoreOwnerPermissionDAL.getStoreOwners(this.name);
+   foreach (HireNewStoreOwnerPermissionData owner in ownersData)
+       this.owners.Add((Member)UserServices.getUser(owner.userName));
+}
+*/
 
         public ProductInfo addProduct(string name, string category, string manufacturer)
         {
