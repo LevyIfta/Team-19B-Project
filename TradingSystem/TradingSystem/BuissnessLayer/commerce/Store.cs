@@ -673,14 +673,14 @@ namespace TradingSystem.BuissnessLayer.commerce
             {
                 // notify
                 owner.addAlarm("Offer request update", request.ToString());
-                owner.placeOffer(request);
+                owner.addOfferToAnswer(request);
             }
 
             foreach (aUser manager in this.managers)
             {
                 // notify
                 manager.addAlarm("Offer request update", request.ToString());
-                manager.placeOffer(request);
+                manager.addOfferToAnswer(request);
             }
         }
 

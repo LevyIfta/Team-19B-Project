@@ -68,9 +68,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             notifyStore();
         }
 
-        public bool accept()
+        public bool accept(aUser acceptor)
         {
-            if (this.status != Status.PENDING_REQUESTER) return false;
+            if (this.status != Status.PENDING_REQUESTER | !userHasPermission(acceptor)) return false;
             this.status = Status.ACCEPTED;
             
             notifyUser();
@@ -134,6 +134,11 @@ namespace TradingSystem.BuissnessLayer.commerce
             output += "Status: " + this.status + "\n";
 
             return output;
+        }
+
+        public double getPrice()
+        {
+            return this.product.price;
         }
     }
 }
