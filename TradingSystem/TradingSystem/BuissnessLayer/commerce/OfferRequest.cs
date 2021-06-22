@@ -14,7 +14,8 @@ namespace TradingSystem.BuissnessLayer.commerce
             PENDING_REQUESTER,
             ACCEPTED,
             REJECTED,
-            DONE
+            DONE,
+            NULL
         }
 
         public aUser requester;
@@ -39,6 +40,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.product = product;
             this.requester = requester;
             this.store = store;
+            this.status = Status.NULL;
         }
 
         public bool editPrice(double price, aUser editor)
@@ -51,6 +53,11 @@ namespace TradingSystem.BuissnessLayer.commerce
             lock (this.responseLocker)
             {
                 this.product.price = price;
+                // there is a new price, all the owners have to confirm
+                this.store.removeAllAcceptors(this.id);
+                // if the editor is an owner then add him/her again
+                if (userHasPermission(editor))
+                    this.store.acceptOffer(editor, this.id);
             }
             return true;
         }
@@ -61,25 +68,35 @@ namespace TradingSystem.BuissnessLayer.commerce
             return this.store.hasRequestPermission(editor);
         }
 
-        public void send()
+        public bool send()
         {
+            if (this.status != Status.NULL)
+                return false;
+
             this.status = Status.PENDING_STORE;
-            
             notifyStore();
+
+            return true;
         }
 
-        public bool accept()
+        public bool accept(aUser acceptor)
         {
-            if (this.status != Status.PENDING_REQUESTER) return false;
-            this.status = Status.ACCEPTED;
-            
+            if (this.status != Status.PENDING_STORE | !userHasPermission(acceptor))
+                return false;
+            this.store.acceptOffer(acceptor, this.id);
+
+            if (store.isOfferAccepted(this.id))
+                this.status = Status.ACCEPTED;
+
             notifyUser();
             return true;
         }
 
-        public bool reject()
+        public bool reject(aUser rejector)
         {
-            if (this.status != Status.PENDING_REQUESTER) return false;
+            if (this.status != Status.PENDING_STORE | !userHasPermission(rejector))
+                return false;
+
             lock (responseLocker)
             {
                 this.status = Status.REJECTED;
@@ -91,12 +108,13 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public bool negotiate(double price, aUser negotiator) // used by managers/owners
         {
-            if (this.status != Status.PENDING_STORE) return false;
+            if (this.status != Status.PENDING_STORE | !userHasPermission(negotiator))
+                return false;
+
             lock (responseLocker)
             {
                 editPrice(price, negotiator);
-
-                this.status = Status.PENDING_REQUESTER;
+                this.status = Status.ACCEPTED;
 
                 notifyUser();
             }
@@ -115,7 +133,8 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public string[] purchase(string creditNumber, string validity, string cvv)
         {
-            if (this.status != Status.ACCEPTED) return null;
+            if (this.status != Status.ACCEPTED)
+                return null;
             
             string[] receipt = this.store.executeOfferPurchase(this.requester, this.product, creditNumber, validity, cvv);
 
@@ -134,6 +153,11 @@ namespace TradingSystem.BuissnessLayer.commerce
             output += "Status: " + this.status + "\n";
 
             return output;
+        }
+
+        public double getPrice()
+        {
+            return this.product.price;
         }
     }
 }

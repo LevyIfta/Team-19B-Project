@@ -549,7 +549,7 @@ namespace Tests
 
  
 
-        private ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
+        public ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
         {
             ICollection<Receipt> receipts = new LinkedList<Receipt>();
             // receiptsString[0] contains the answer
@@ -559,14 +559,14 @@ namespace Tests
             return receipts;
         }
 
-        private Receipt convertReceipt(string receiptString)
+        public Receipt convertReceipt(string receiptString)
         {
             Receipt receipt = new Receipt();
 
             string[] splitReceipt = receiptString.Split('$');
             // username&storename$price$date$receiptId$<products>
             receipt.user.userName = splitReceipt[0];
-           // receipt.store = Stores.searchStore(splitReceipt[1]); //changed
+            // receipt.store = Stores.searchStore(splitReceipt[1]); //changed
             receipt.price = double.Parse(splitReceipt[2]);
             receipt.date = Convert.ToDateTime(splitReceipt[3]);
             receipt.receiptId = int.Parse(splitReceipt[4]);
@@ -1894,9 +1894,9 @@ namespace Tests
         {
             // init usernames and passes
             string storeName1 = InfoGenerator.generateValidStoreName();
-            string ownerUsername = InfoGenerator.generateValidUsername(), 
+            string ownerUsername = InfoGenerator.generateValidUsername(),
                        ownerPass = InfoGenerator.generateValidPassword();
-            string buyerUsername = InfoGenerator.generateValidUsername(), 
+            string buyerUsername = InfoGenerator.generateValidUsername(),
                          newPass = InfoGenerator.generateValidPassword();
             // init products info
             string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food",
@@ -2031,7 +2031,7 @@ namespace Tests
             // add the condition to the policy, and the policy to the store
             discountPolicy.addCondition(condition);
             store1.addDiscountPolicy(discountPolicy);
-            
+
 
             UserServices.login(buyerUsername, newPass);
             aUser client = UserServices.getUser(buyerUsername);
@@ -2099,7 +2099,7 @@ namespace Tests
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 10));
 
             Assert.AreEqual(1, discountPolicy1.ApplyDiscount(client.getCart().getBasket(store1), 10));
-            
+
         }
 
         [TestMethod]
@@ -2147,60 +2147,301 @@ namespace Tests
             //client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p2_name, p2_cat, p2_man), 1, 0));
             client.getCart().getBasket(store1).addProduct(new Product(ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), 1, 10));
 
-            
+
             Assert.AreEqual(0, discountPolicy2.ApplyDiscount(client.getBasket(store1), 10));
         }
 
+    }
 
 
-        public class InfoGenerator
+    [TestClass]
+    public class OfferRequestTests
+    {
+        [TestMethod]
+        public void SimpleOfferRequestTestGood()
         {
-            // this class has static methods and fields
-            // it provides services for generating valid and unvalid unique info
-            // including usernames, passwords and store names
-            private static string baseUsername = "User",
-                                basePassword = "123Xx",
-                                baseStoreName = "Store";
-            // id's for uniqueness
-            private static int usernameID = 0,
-                            passwordID = 0,
-                            storeID = 0;
-            // locks for preventing generating the same info twice
-            private static Object usernameLocker = new object(),
-                            passwordLocker = new object(),
-                             storeLocker = new object();
+            // init store anf users names&passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
 
-            public static string generateValidUsername()
-            {
-                lock (usernameLocker)
-                {
-                    usernameID++;
-                    return baseUsername + getThreeDigit(usernameID);
-                }
-            }
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
 
-            public static string generateValidPassword()
-            {
-                lock (passwordLocker)
-                {
-                    passwordID++;
-                    return basePassword + getThreeDigit(passwordID);
-                }
-            }
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
 
-            public static string generateValidStoreName()
-            {
-                lock (storeLocker)
-                {
-                    storeID++;
-                    return baseStoreName + getThreeDigit(storeID);
-                }
-            }
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
 
-            private static string getThreeDigit(int ID)
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // place a new offer
+            int requestId = UserServices.placeOffer(buyerUsername, storeName1, p1_name, p1_cat, p1_man, 3, 5);
+
+            // the owner should've been notified, the offer is in it's offer's list
+            Assert.AreNotEqual(requestId, -1, "could't place an offer - got a negative id");
+            OfferRequest requestToAnswer = owner.getRequestToAnswer(requestId);
+
+            Assert.IsNotNull(requestToAnswer, "The offer was not saved in the owner's list of requests to answer");
+            // make sure that the request jas the correct values in fields
+            Assert.AreEqual(requestToAnswer.getPrice(), 5, "Wrong price in offer.");
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info wasn't initialized as expected.");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.PENDING_STORE, "Wrong status.");
+
+            // accept requset
+            bool accepted = owner.acceptRequest(requestToAnswer.id);
+
+            Assert.IsTrue(accepted, "Couldn't manage to accept the request.");
+
+            // make sure that the request general status has changed accordingly
+            Assert.AreEqual(requestToAnswer.getPrice(), 5, "The price has changed while shouldn't've");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.ACCEPTED);
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info was changed");
+
+            // try to purchase the product
+            string[] receiptString = requestToAnswer.purchase("111111111111", "11/22", "123");
+            Assert.AreEqual(receiptString[0], "true", "Couldn't purchase");
+
+            Receipt receipt = client.getReceipt(int.Parse(receiptString[1]));
+            Assert.IsNotNull(receipt, "The receipt was not saved in the client's receipts collection.");
+            // check for the price
+            Assert.AreEqual(receipt.price, 15, "Wrong price");
+            // check for amounts in the store
+            int newAmount = store1.searchProduct(p1_name, p1_man).amount;
+            Assert.AreEqual(newAmount, 17, "The amounts were not correctly updated in store");
+        }
+
+        [TestMethod]
+        public void SimpleOfferRequestTestBad()
+        {
+            // init store anf users names&passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // place a new offer
+            int requestId = UserServices.placeOffer(buyerUsername, storeName1, p1_name, p1_cat, p1_man, 3, 5);
+
+            // the owner should've been notified, the offer is in it's offer's list
+            Assert.AreNotEqual(requestId, -1, "could't place an offer - got a negative id");
+            OfferRequest requestToAnswer = owner.getRequestToAnswer(requestId);
+
+            Assert.IsNotNull(requestToAnswer, "The offer was not saved in the owner's list of requests to answer");
+            // make sure that the request jas the correct values in fields
+            Assert.AreEqual(requestToAnswer.getPrice(), 5, "Wrong price in offer.");
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info wasn't initialized as expected.");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.PENDING_STORE, "Wrong status.");
+
+            // accept requset
+            bool rejected = owner.rejectOffer(requestToAnswer.id);
+
+            Assert.IsTrue(rejected, "Couldn't manage to reject the request.");
+
+            // make sure that the request general status has changed accordingly
+            Assert.AreEqual(requestToAnswer.getPrice(), 5, "The price has changed while shouldn't've");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.REJECTED);
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info was changed");
+
+            // try to purchase the product
+            string[] receiptString = requestToAnswer.purchase("111111111111", "11/22", "123");
+            Assert.AreEqual(receiptString[0], "false", "Managed to purchase");
+            
+            // check for amounts in the store
+            int newAmount = store1.searchProduct(p1_name, p1_man).amount;
+            Assert.AreEqual(newAmount, 20, "The amounts were changed in store");
+        }
+
+        [TestMethod]
+        public void NegotiateOfferRequest()
+        {
+            // init store anf users names&passes
+            string storeName1 = InfoGenerator.generateValidStoreName();
+            string ownerUsername = InfoGenerator.generateValidUsername(),
+                       ownerPass = InfoGenerator.generateValidPassword();
+            string buyerUsername = InfoGenerator.generateValidUsername(),
+                         newPass = InfoGenerator.generateValidPassword();
+            // init products info
+            string p1_name = "Bamba", p1_man = "Osem", p1_cat = "Food";
+
+            // register the users
+            UserServices.register(ownerUsername, ownerPass, 117, "male", "Moria");
+            UserServices.register(buyerUsername, newPass, 18, "female", "TA"); // the buyer is 18 - he can buy
+
+            UserServices.login(ownerUsername, ownerPass);
+            aUser owner = UserServices.getUser(ownerUsername);
+            // establish two stores
+            Stores.addStore(storeName1, (Member)owner);
+
+            Store store1 = Stores.searchStore(storeName1);
+            // add products to the strores
+            store1.addProduct(p1_name, p1_cat, p1_man);
+            // set the price of the products
+            store1.editPrice(p1_name, p1_man, 10);
+            // supply 
+            store1.supply(p1_name, p1_man, 20);
+
+            UserServices.login(buyerUsername, newPass);
+            aUser client = UserServices.getUser(buyerUsername);
+
+            // place a new offer
+            int requestId = UserServices.placeOffer(buyerUsername, storeName1, p1_name, p1_cat, p1_man, 3, 5);
+
+            // the owner should've been notified, the offer is in it's offer's list
+            Assert.AreNotEqual(requestId, -1, "could't place an offer - got a negative id");
+            OfferRequest requestToAnswer = owner.getRequestToAnswer(requestId);
+
+            Assert.IsNotNull(requestToAnswer, "The offer was not saved in the owner's list of requests to answer");
+            // make sure that the request jas the correct values in fields
+            Assert.AreEqual(requestToAnswer.getPrice(), 5, "Wrong price in offer.");
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info wasn't initialized as expected.");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.PENDING_STORE, "Wrong status.");
+
+            // accept requset
+            bool negotiated = owner.negotiateRequest(requestToAnswer.id, 6); // the new price is 6, instead of 5
+
+            Assert.IsTrue(negotiated, "Couldn't manage to accept the request.");
+
+            // make sure that the request general status has changed accordingly
+            Assert.AreEqual(requestToAnswer.getPrice(), 6, "The price hasn't changed to 6");
+            Assert.AreEqual(requestToAnswer.status, OfferRequest.Status.ACCEPTED);
+            Assert.AreEqual(requestToAnswer.product.info, ProductInfo.getProductInfo(p1_name, p1_cat, p1_man), "The info was changed");
+
+            // try to purchase the product
+            string[] receiptString = requestToAnswer.purchase("111111111111", "11/22", "123");
+            Assert.AreEqual(receiptString[0], "true", "Couldn't purchase");
+
+            Receipt receipt = client.getReceipt(int.Parse(receiptString[1]));
+            Assert.IsNotNull(receipt, "The receipt was not saved in the client's receipts collection.");
+            // check for the price
+            Assert.AreEqual(receipt.price, 18, "Wrong price");
+            // check for amounts in the store
+            int newAmount = store1.searchProduct(p1_name, p1_man).amount;
+            Assert.AreEqual(newAmount, 17, "The amounts were not correctly updated in store");
+        }
+
+    }
+
+
+
+
+
+
+
+    public class InfoGenerator
+    {
+        // this class has static methods and fields
+        // it provides services for generating valid unique info
+        // including usernames, passwords and store names
+        private static string baseUsername = "User",
+                            basePassword = "123Xx",
+                            baseStoreName = "Store";
+        // id's for uniqueness
+        private static int usernameID = 0,
+                        passwordID = 0,
+                        storeID = 0;
+        // locks for preventing generating the same info twice
+        private static Object usernameLocker = new object(),
+                        passwordLocker = new object(),
+                         storeLocker = new object();
+
+        public static string generateValidUsername()
+        {
+            lock (usernameLocker)
             {
-                return ID < 10 ? "00" + ID : ID < 100 ? "0" + ID : "" + ID;
+                usernameID++;
+                return baseUsername + getThreeDigit(usernameID);
             }
+        }
+
+        public static string generateValidPassword()
+        {
+            lock (passwordLocker)
+            {
+                passwordID++;
+                return basePassword + getThreeDigit(passwordID);
+            }
+        }
+
+        public static string generateValidStoreName()
+        {
+            lock (storeLocker)
+            {
+                storeID++;
+                return baseStoreName + getThreeDigit(storeID);
+            }
+        }
+
+        private static string getThreeDigit(int ID)
+        {
+            return ID < 10 ? "00" + ID : ID < 100 ? "0" + ID : "" + ID;
+        }
+    }
+
+    public class ReceiptsConverter
+    {
+        public static ICollection<Receipt> convertReceiptsArray(string[] receiptsString)
+        {
+            ICollection<Receipt> receipts = new LinkedList<Receipt>();
+            // receiptsString[0] contains the answer
+            for (int i = 1; i < receiptsString.Length; i++)
+                receipts.Add(convertReceipt(receiptsString[i]));
+
+            return receipts;
+        }
+
+        public static Receipt convertReceipt(string receiptString)
+        {
+            Receipt receipt = new Receipt();
+
+            string[] splitReceipt = receiptString.Split('$');
+            // username&storename$price$date$receiptId$<products>
+            receipt.user.userName = splitReceipt[0];
+            // receipt.store = Stores.searchStore(splitReceipt[1]); //changed
+            receipt.price = double.Parse(splitReceipt[2]);
+            receipt.date = Convert.ToDateTime(splitReceipt[3]);
+            receipt.receiptId = int.Parse(splitReceipt[4]);
+            // the products - todo
+
+
+            return receipt;
         }
     }
 }

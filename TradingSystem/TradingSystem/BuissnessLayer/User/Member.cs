@@ -23,6 +23,7 @@ namespace TradingSystem.BuissnessLayer
 
         public ICollection<Message> messages { get; set; }
         public ICollection<OfferRequest> requests { get; set; }
+        public ICollection<OfferRequest> requestsToAnswer { get; set; }
 
 
         public Member(string username, string password) : base()
@@ -404,9 +405,54 @@ namespace TradingSystem.BuissnessLayer
             DataLayer.ORM.DataAccess.update(toDataObject());
         }
 
-        public override void addOffer(OfferRequest request)
+        public override void placeOffer(OfferRequest request)
         {
             this.requests.Add(request);
+            request.send();
+        }
+
+        public override void addOfferToAnswer(OfferRequest request)
+        {
+            this.requestsToAnswer.Add(request);
+        }
+
+        public override OfferRequest getRequestToAnswer(int requestID)
+        {
+            foreach (OfferRequest request in this.requestsToAnswer)
+                if (request.id == requestID)
+                    return request;
+            return null;
+        }
+        public override bool acceptRequest(int id)
+        {
+            foreach (OfferRequest request in this.requestsToAnswer)
+                if (request.id == id)
+                    return request.accept(this);
+            return false;
+        }
+
+        public override Receipt getReceipt(int receiptID)
+        {
+            foreach (Receipt receipt in this.reciepts)
+                if (receipt.receiptId == receiptID)
+                    return receipt;
+            return null;
+        }
+
+        public override bool rejectOffer(int id)
+        {
+            foreach (OfferRequest request in this.requestsToAnswer)
+                if (request.id == id)
+                    return request.reject(this);
+            return false;
+        }
+
+        public override bool negotiateRequest(int id, double price)
+        {
+            foreach (OfferRequest request in this.requestsToAnswer)
+                if (request.id == id)
+                    return request.negotiate(price, this);
+            return false;
         }
     }
 }

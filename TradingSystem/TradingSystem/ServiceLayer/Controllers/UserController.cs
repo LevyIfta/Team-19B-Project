@@ -521,5 +521,14 @@ namespace TradingSystem.ServiceLayer
                 return false;
             return BuissnessLayer.UserServices.supply(username, storeName, productName, amount, manufacturer);
         }
+
+        // tries to place an offer
+        // return value: in case of success - the id of the request, -1 otherwise
+        public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer,int amount, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return -1;
+            return UserServices.placeOffer(username, storeName, productName, category, manufacturer,amount, price);
+        }
     }
 }
