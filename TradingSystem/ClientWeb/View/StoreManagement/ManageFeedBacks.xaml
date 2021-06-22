@@ -9,6 +9,7 @@
       Title="ManageFeedBacks">
 
     <Grid Background="LightBlue">
-        
+        <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
+
     </Grid>
 </Page>
