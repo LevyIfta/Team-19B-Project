@@ -167,10 +167,7 @@ namespace Tests
             List<string> permissionList = new List<string>();
             permissionList.Add("AddProduct");
             permissionList.Add("EditProduct");
-            UserController.editManagerPermissions(user1, storename, user2, permissionList);
-            var temp = ((Member)UserServices.getUser(user1)).GetPermissions(storename);
-            Assert.IsTrue(UserController.addNewProduct(user1, storename, "bamba", 5.9, 5, "snacks", "osem"));
-            Assert.IsTrue(UserController.editProduct(user1, storename, "bamba", 5.5, "osem"));
+            Assert.IsTrue(UserController.editManagerPermissions(user1, storename, user2, permissionList));
             UserController.logout();
         }
 
