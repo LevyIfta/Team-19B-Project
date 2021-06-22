@@ -27,6 +27,12 @@ namespace ClientWeb.View.member
 
         public recieptPage()
         {
+
+
+            //// { bool, receipt, receipt }. receipt ->
+            ///user$store$price$date$id$products. products -> pro1&pro2&pro3 -> proInfo^feedback -> feedback_feedback -> user#comment
+            
+            
             InitializeComponent();
 
             productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });

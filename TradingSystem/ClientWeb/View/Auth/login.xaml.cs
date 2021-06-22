@@ -95,6 +95,7 @@ namespace ClientWeb
         {
             register page = new register();
             NavigationService.Navigate(page);
+            
         }
     }
 }

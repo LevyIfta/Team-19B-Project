@@ -20,9 +20,24 @@ namespace ClientWeb.View.StoreManagement
     /// </summary>
     public partial class ManageFeedBacks : Page
     {
+        private string storeName;
+        private string username;
+
         public ManageFeedBacks()
         {
             InitializeComponent();
+        }
+
+        public ManageFeedBacks(string username, string storeName)
+        {
+            this.username = username;
+            this.storeName = storeName;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Store page = new Store(username, storeName);
+            NavigationService.Navigate(page);
         }
     }
 }

@@ -10,6 +10,11 @@
 
     <Grid Background="LightBlue">
         <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
+        <DataGrid HorizontalAlignment="Left" Height="235" Margin="367,87,0,0" VerticalAlignment="Top" Width="363"/>
+        <Button Content="Add new manager" HorizontalAlignment="Left" Margin="155,122,0,0" VerticalAlignment="Top" Width="119" Click="Button_Click"/>
+        <Button Content="Remove manager" HorizontalAlignment="Left" Margin="150,205,0,0" VerticalAlignment="Top" Width="127" Click="Button_Click_2"/>
+        <Button Content="Edit permissions" HorizontalAlignment="Left" Margin="150,165,0,0" VerticalAlignment="Top" Width="127" Click="Button_Click_1"/>
+        <Label Content="All store manageres" HorizontalAlignment="Left" Margin="499,50,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>

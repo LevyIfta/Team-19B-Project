@@ -20,9 +20,23 @@ namespace ClientWeb.View.member
     /// </summary>
     public partial class ManageDiscountPolicies : Page
     {
+        private string storeName;
+        private string username;
         public ManageDiscountPolicies()
         {
             InitializeComponent();
+        }
+
+        public ManageDiscountPolicies(string username, string storeName)
+        {
+            this.username = username;
+            this.storeName = storeName;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Store page = new Store(username, storeName);
+            NavigationService.Navigate(page);
         }
     }
 }

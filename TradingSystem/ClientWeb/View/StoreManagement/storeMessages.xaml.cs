@@ -20,9 +20,18 @@ namespace ClientWeb.View.StoreManagement
     /// </summary>
     public partial class storeMessages : Page
     {
+        private string username;
+        private string storeName;
+
         public storeMessages()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Store page = new Store(username, storeName);
+            NavigationService.Navigate(page);
         }
     }
 }

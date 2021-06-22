@@ -13,22 +13,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientWeb.View.member
+namespace ClientWeb.View.StoreManagement
 {
     /// <summary>
-    /// Interaction logic for ManagePurchasePolicies.xaml
+    /// Interaction logic for StoreReciepts.xaml
     /// </summary>
-    public partial class ManagePurchasePolicies : Page
+    public partial class StoreReciepts : Page
     {
-        private string storeName;
         private string username;
+        private string storeName;
 
-        public ManagePurchasePolicies()
+        public StoreReciepts()
         {
             InitializeComponent();
         }
 
-        public ManagePurchasePolicies(string username, string storeName)
+        public StoreReciepts(string username, string storeName)
         {
             this.username = username;
             this.storeName = storeName;

@@ -1,4 +1,6 @@
 ﻿using ClientWeb.View.components;
+using ClientWeb.View.member;
+using ClientWeb.View.StoreManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -420,13 +422,48 @@ namespace ClientWeb
 
         private void infoemployees_Click(object sender, RoutedEventArgs e)
         {
-
+            Page p = new MangeManagers(username, storeName);
+            NavigationService.Navigate(p);
         }
 
         private void addproduct_Click_1(object sender, RoutedEventArgs e)
         {
             Page p = new AddProduct(username,storeName);
             NavigationService.Navigate(p);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManageDiscountPolicies(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManagePurchasePolicies(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void feedback_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManageFeedBacks(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void receipts_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new StoreReciepts(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void fireemplyee_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

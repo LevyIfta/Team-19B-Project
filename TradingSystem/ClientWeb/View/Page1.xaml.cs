@@ -23,7 +23,7 @@ namespace ClientWeb
     public partial class Page1 : Page
     {
         UserData userInfo = new UserData();
-        StoreData storeInfo = new StoreData();
+       // StoreData storeInfo = new StoreData();
 
         static Controller controler = Controller.GetController();
 
@@ -47,10 +47,9 @@ namespace ClientWeb
             this.DataContext = userInfo;
          
             checkMember();
-            storeInfo.storename = "Castro";
-            string a = controler.SearchStore("Castro");
-                
 
+            string a = controler.SearchStore("Castro");    
+            
             productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
             productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
             productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
@@ -145,6 +144,8 @@ namespace ClientWeb
             {
                 userInfo.username = "guest";
                 checkMember();
+                FirstPage p = new FirstPage();
+                NavigationService.Navigate(p);
             }
             else
             {
@@ -205,7 +206,6 @@ namespace ClientWeb
 
 
 
-
         }
 
         public void addToBasket(object sender, RoutedEventArgs e)
@@ -213,7 +213,7 @@ namespace ClientWeb
             productView p = (productView)dgProducts.SelectedItem;
 
             //add item to cart ( basket)
-          bool ans =  controler.SaveProduct(user.Name, storeInfo.storename, "man", p.name + "&" +p.amounttoAdd);
+          bool ans =  controler.SaveProduct(user.Name, p.storeName , "man", p.name + "&" +p.amounttoAdd);
             if (ans)
             {
                 MessageBox.Show("added to cart");
@@ -247,8 +247,11 @@ namespace ClientWeb
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
+            //Change this
             Store page = new Store("Castro", "almog");
             NavigationService.Navigate(page);
+
         }
     }
 }

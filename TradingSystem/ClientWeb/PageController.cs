@@ -44,6 +44,75 @@ namespace ClientWeb
             }
         }
     }
+
+    class ProductDataToAdd : ANotifyPropChange
+    {
+        private String Pname;
+
+        public String pname
+        {
+            get { return Pname; }
+            set
+            {
+                Pname = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Price;
+
+        public String price
+        {
+            get { return Price; }
+            set
+            {
+                Price = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private String Amount;
+
+        public String amount
+        {
+            get { return Amount; }
+            set
+            {
+                Amount = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private String Cat;
+
+        public String cat
+        {
+            get { return Cat; }
+            set
+            {
+                Cat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Man;
+
+        public String man
+        {
+            get { return Man; }
+            set
+            {
+                Man = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    
+
+
         class UserData : ANotifyPropChange
     {
         private String Username;

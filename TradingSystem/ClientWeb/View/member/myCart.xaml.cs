@@ -20,72 +20,7 @@ namespace ClientWeb
     /// Interaction logic for myCart.xaml
     /// </summary>
     /// 
-    class productView : ANotifyPropChange
-    {
 
-        private String Name;
-
-        public String name
-        {
-            get { return Name; }
-            set
-            {
-                Name = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private String Price;
-
-        public String price
-        {
-            get { return Price; }
-            set
-            {
-                Price = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-        private String Amount;
-
-        public String amount
-        {
-            get { return Amount; }
-            set
-            {
-                Amount = value;
-                OnPropertyChanged();
-            }
-        }
-        private String AmounttoAdd;
-
-        public String amounttoAdd
-        {
-            get { return AmounttoAdd; }
-            set
-            {
-                AmounttoAdd = value;
-                OnPropertyChanged();
-            }
-        }
-        private String StoreName;
-
-        public String storeName
-        {
-            get { return StoreName; }
-            set
-            {
-                StoreName = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-    }
     public partial class myCart : Page
     {
         UserData user = new UserData();
@@ -96,8 +31,8 @@ namespace ClientWeb
             user.username = username;
             InitializeComponent();
 
-      
             string[] a = controler.GetCart(username);
+            MessageBox.Show(a[0]);
            // string[][] a1 = convertToViewObj.Cart(a);
 
             // {basket, basket}. basket -> username&storename&pros. pros -> -> pro$pro -> proInfo^feedback -> feedback_feedback -> user#comment
@@ -126,38 +61,41 @@ namespace ClientWeb
 
 
 
-            /*
-    DataTable Data = new DataTable();
+        /*
+        DataTable Data = new DataTable();
 
-     // create "fixed" columns
-     Data.Columns.Add("Name");
-     Data.Columns.Add("Amount");
-     Data.Columns.Add("Store");
-     Data.Columns.Add("Man");
-
-
-     // add one row as an object array
-     Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
-     Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
-     Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
-     Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
+        // create "fixed" columns
+        Data.Columns.Add("Name");
+        Data.Columns.Add("Amount");
+        Data.Columns.Add("Store");
+        Data.Columns.Add("Man");
 
 
-     this.DataContext = Data;
-     */
+        // add one row as an object array
+        Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
+        Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
+        Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
+        Data.Rows.Add(new object[] { "pro", "12", "Castro", "A" });
+
+
+        this.DataContext = Data;
+        */
         }
 
 
 
         void removeProduct(object sender, RoutedEventArgs e)
         {
+
             for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
                 if (vis is DataGridRow)
                 {
                     var row = (DataGridRow)vis;
                     var temp = dgProducts.SelectedItem;
                     
-                    MessageBox.Show(row.ToString());
+                    //remove product from server
+                    MessageBox.Show(temp.ToString());
+                    
 
                 }
         }

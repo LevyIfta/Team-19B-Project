@@ -20,9 +20,34 @@ namespace ClientWeb.View.member
     /// </summary>
     public partial class MangeManagers : Page
     {
+        private string username;
+        private string storeName;
+
         public MangeManagers()
         {
             InitializeComponent();
+        }
+
+        public MangeManagers(string username, string storeName)
+        {
+            this.username = username;
+            this.storeName = storeName;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Store page = new Store(username, storeName);
+            NavigationService.Navigate(page);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
