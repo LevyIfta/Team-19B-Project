@@ -1,0 +1,10 @@
+init instructions-
+move initFile.cs to the correct folder
+add call to initializeSystem when starting the program.
+
+
+config instructions-
+read each row from the config file.
+based on the name of the supply or payment systems, 
+create correct objects to represent the systems.
+

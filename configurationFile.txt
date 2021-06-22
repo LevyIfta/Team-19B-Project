@@ -1,0 +1,8 @@
+Supply_system: realSupplySystem
+Payment_system: realPaymentSystem
+AdminUsername: Admin1
+AdminPassword: Adminpass123
+AdminAge: 45
+AdminGender: male
+AdminAddress: Address123
+DataBase: //insert database path here

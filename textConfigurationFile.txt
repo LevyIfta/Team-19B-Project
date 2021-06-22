@@ -1,0 +1,8 @@
+Supply_system: testSupplySystem
+Payment_system: testPaymentSystem
+AdminUsername: Admin1
+AdminPassword: Adminpass123
+AdminAge: 45
+AdminGender: male
+AdminAddress: Address123
+DataBase: //insert test database path here
