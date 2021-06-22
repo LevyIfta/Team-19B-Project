@@ -64,5 +64,10 @@ namespace ClientWeb
             Store storePage = new Store(selected, user.username);
             NavigationService.Navigate(storePage);
         }
+
+        private void dataGrid1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

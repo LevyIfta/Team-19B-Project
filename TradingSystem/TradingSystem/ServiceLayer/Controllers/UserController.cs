@@ -33,8 +33,7 @@ namespace TradingSystem.ServiceLayer
             d["pro11"] = 1;
             saveProduct("almog", "Castro", "man", d);
             logout();
-            
-            
+           
         }
 
         public static void init(Func<object, bool> alarmhandler)

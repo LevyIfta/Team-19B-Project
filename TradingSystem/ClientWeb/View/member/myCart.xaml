@@ -12,7 +12,7 @@
         
      
         <Button Content="Procced To checkout" HorizontalAlignment="Left" Margin="550,249,0,0" VerticalAlignment="Top" Width="150" Height="47" Click="Button_Click"/>
-        <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="8,41,543,151" SelectionChanged="dgProducts_SelectionChanged">
+        <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="8,41,335,126.6" SelectionChanged="dgProducts_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />

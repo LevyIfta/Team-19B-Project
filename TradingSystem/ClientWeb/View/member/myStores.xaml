@@ -11,7 +11,7 @@
     <Grid Background="LightBlue">
         <Label x:Name="label" Content="my stores" HorizontalAlignment="Left" Margin="358,31,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,31,40,0" VerticalAlignment="Top"/>
-        <DataGrid x:Name="dataGrid1" ColumnWidth="*" HorizontalAlignment="Left" Height="142" Margin="110,130,0,0" VerticalAlignment="Top" Width="281">
+        <DataGrid x:Name="dataGrid1" ColumnWidth="*" HorizontalAlignment="Left" Height="142" Margin="110,130,0,0" VerticalAlignment="Top" Width="281" SelectionChanged="dataGrid1_SelectionChanged">
             <DataGrid.Resources>
                 <Style TargetType="DataGrid">
                     <Setter Property="AutoGenerateColumns" Value="False"/>

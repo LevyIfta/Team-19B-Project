@@ -1,19 +1,14 @@
-﻿<Page x:Class="ClientWeb.myReceipts"
+﻿<Page x:Class="ClientWeb.View.StoreManagement.ManageFeedBacks"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ClientWeb"
+      xmlns:local="clr-namespace:ClientWeb.View.StoreManagement"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="myReceipts">
+      Title="ManageFeedBacks">
 
     <Grid Background="LightBlue">
-        <DataGrid HorizontalAlignment="Left" Height="277" Margin="102,53,0,0" VerticalAlignment="Top" Width="230"/>
-        <Label Content="Show Reciept button for every reciept in the list " HorizontalAlignment="Left" Margin="407,96,0,0" VerticalAlignment="Top" Width="338"/>
-
-
-
-
+        
     </Grid>
 </Page>

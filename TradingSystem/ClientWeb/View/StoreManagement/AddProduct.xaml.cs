@@ -13,16 +13,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientWeb.View.member
+namespace ClientWeb.View.components
 {
     /// <summary>
-    /// Interaction logic for recieptsPage.xaml
+    /// Interaction logic for AddProduct.xaml
     /// </summary>
-    public partial class recieptsPage : Page
+    public partial class AddProduct : Page
     {
-        public recieptsPage()
+        private string username;
+        private string storeName;
+
+        public AddProduct()
         {
             InitializeComponent();
+        }
+
+        public AddProduct(string username, string storeName)
+        {
+            this.username = username;
+            this.storeName = storeName;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientWeb.View.components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -420,6 +421,12 @@ namespace ClientWeb
         private void infoemployees_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void addproduct_Click_1(object sender, RoutedEventArgs e)
+        {
+            Page p = new AddProduct(username,storeName);
+            NavigationService.Navigate(p);
         }
     }
 }
