@@ -10,6 +10,8 @@
 
     <Grid Background="LightBlue">
         <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
+        <DataGrid HorizontalAlignment="Left" Height="100" Margin="461,132,0,0" VerticalAlignment="Top" Width="100"/>
+        <Label Content="Policies" HorizontalAlignment="Left" Margin="490,104,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>

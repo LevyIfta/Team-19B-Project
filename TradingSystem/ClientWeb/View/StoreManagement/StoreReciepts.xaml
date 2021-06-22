@@ -11,6 +11,7 @@
     <Grid Background="LightBlue">
         <DataGrid HorizontalAlignment="Left" Height="208" Margin="312,114,0,0" VerticalAlignment="Top" Width="376"/>
         <Label Content="Reciepts" HorizontalAlignment="Left" Margin="445,81,0,0" VerticalAlignment="Top" Width="100"/>
+        <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" Margin="80,198,0,0" Click="Button_Click_1"/>
 
     </Grid>
 </Page>
