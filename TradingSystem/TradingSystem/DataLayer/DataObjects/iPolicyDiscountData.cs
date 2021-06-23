@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TradingSystem.DataLayer
 {
     public class iPolicyDiscountData
-    {/*
+    {
+        [Key]
+        public int id { get; set; }
+
+
+        /*
         public iPolicyDiscountData()
         {
         }
