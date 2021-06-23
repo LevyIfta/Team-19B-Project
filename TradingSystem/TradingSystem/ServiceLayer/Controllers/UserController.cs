@@ -20,13 +20,13 @@ namespace TradingSystem.ServiceLayer
 
         static UserController()
         {
-            register("almog", "qweE1");
+            //register("milon", "qweE1");
             
-            login("almog", "qweE1");
-            EstablishStore("almog", "Castro");
+            //login("almog", "qweE1");
+           // EstablishStore("almog", "Castro");
           //  EstablishStore("almog", "Castro2");
-            addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-            logout();
+           // addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
+           // logout();
             
         }
 

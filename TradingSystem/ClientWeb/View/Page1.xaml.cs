@@ -48,11 +48,20 @@ namespace ClientWeb
          
             checkMember();
 
-            string a = controler.SearchStore("Castro");    
-            
-            productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
-            productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
-            productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
+            string a = controler.SearchStore("Castro");
+
+            var productArr = controler.GetAllProducts();
+            for (int i=0; i<productArr.Length; i++)
+            {
+                string[] pro = productArr[i].Split('&');
+                string[] stores = pro[2].Split('$');
+                string[] prices = pro[3].Split('$');
+                for (int j=0; j<stores.Length; j++)
+                {
+                    productToView.Add(new productView() { name = pro[0], price = prices[j], amount = "0", storeName = stores[j], amounttoAdd = "0", cat = pro[1], feedback = controler.getAllFeedbacksSearch(stores[j], pro[0])});
+                }
+                
+            }
 
 
 
