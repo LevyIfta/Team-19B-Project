@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using ClientWeb;
 
 namespace ClientWeb
 {
@@ -13,25 +14,27 @@ namespace ClientWeb
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));  
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-    class UserData : ANotifyPropChange
-    {
-        private String Usernamer;
 
-        public String username
+    class StoreData : ANotifyPropChange
+    {
+        private String Storename;
+
+        public String storename
         {
-            get { return Usernamer; }
+            get { return Storename; }
             set
             {
-                Usernamer = value;
+                Storename = value;
                 OnPropertyChanged();
             }
         }
+
         private String Username;
 
-        public String loginname
+        public String username
         {
             get { return Username; }
             set
@@ -40,6 +43,90 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+    }
+
+    class ProductDataToAdd : ANotifyPropChange
+    {
+        private String Pname;
+
+        public String pname
+        {
+            get { return Pname; }
+            set
+            {
+                Pname = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Price;
+
+        public String price
+        {
+            get { return Price; }
+            set
+            {
+                Price = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private String Amount;
+
+        public String amount
+        {
+            get { return Amount; }
+            set
+            {
+                Amount = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private String Cat;
+
+        public String cat
+        {
+            get { return Cat; }
+            set
+            {
+                Cat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Man;
+
+        public String man
+        {
+            get { return Man; }
+            set
+            {
+                Man = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    
+
+
+        class UserData : ANotifyPropChange
+    {
+        private String Username;
+
+        public String username
+        {
+            get { return Username; }
+            set
+            {
+                Username = value;
+                OnPropertyChanged();
+            }
+        }
+
         private String Password;
 
         public String password
@@ -62,32 +149,8 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
-    }
-    class UserR : ANotifyPropChange
-    {
-        private String Usernamer;
 
-        public String username
-        {
-            get { return Usernamer; }
-            set
-            {
-                Usernamer = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        private String Password;
 
-        public String password
-        {
-            get { return Password; }
-            set
-            {
-                Password = value;
-                OnPropertyChanged();
-            }
-        }
         private String PasswordC;
 
         public String passwordC
@@ -96,17 +159,6 @@ namespace ClientWeb
             set
             {
                 PasswordC = value;
-                OnPropertyChanged();
-            }
-        }
-        private String Usermsg;
-
-        public String usermsg
-        {
-            get { return Usermsg; }
-            set
-            {
-                Usermsg = value;
                 OnPropertyChanged();
             }
         }
@@ -144,10 +196,79 @@ namespace ClientWeb
             }
         }
     }
+}
 
-    public class PageController
+class PageController : ANotifyPropChange
+{
+
+    private String UserName;
+
+    public String username
     {
-        public static string username = "guest";
+        get { return UserName; }
+        set
+        {
+            UserName = value;
+            OnPropertyChanged();
+        }
+    }
+}
 
+class PurchData : ANotifyPropChange
+{
+    private String Cradit;
+
+    public String cradit
+    {
+        get { return Cradit; }
+        set
+        {
+            Cradit = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Validity;
+
+    public String validity
+    {
+        get { return Validity; }
+        set
+        {
+            Validity = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Cvv;
+
+    public String cvv
+    {
+        get { return Cvv; }
+        set
+        {
+            Cvv = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Total;
+
+    public String total
+    {
+        get { return Total; }
+        set
+        {
+            Total = value;
+            OnPropertyChanged();
+        }
+    }
+    private String Msg;
+
+    public String msg
+    {
+        get { return Msg; }
+        set
+        {
+            Msg = value;
+            OnPropertyChanged();
+        }
     }
 }

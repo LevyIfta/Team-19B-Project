@@ -1,0 +1,75 @@
+﻿<Page x:Class="ClientWeb.Page1"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ClientWeb" d:DataContext="{d:DesignInstance Type=local:UserData}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Page1">
+    <Grid Background="LightBlue">
+
+        <Grid Height="100" Margin="10,10,10,0" VerticalAlignment="Top">
+            <Label x:Name="label" Content="Trading System" Margin="312,0,374,0" VerticalAlignment="Top" RenderTransformOrigin="0.561,-0.104" Height="30"/>
+            <Label x:Name="userName" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,16,34,58" Width="98"/>
+            <Label Content="0" HorizontalAlignment="Left" Margin="651,70,0,0" VerticalAlignment="Top" Width="16" RenderTransformOrigin="-1.761,0.224"/>
+            <Label Content="Notifications" RenderTransformOrigin="2.366,0.623" Margin="688,72,15,2"/>
+        </Grid>
+        <Grid Height="37" Margin="10,73,234,0" VerticalAlignment="Top">
+            <TextBox x:Name="textBox" Margin="316,10,117,4" TextWrapping="Wrap" Text=""/>
+            <Label x:Name="label3" Content="Product:" HorizontalAlignment="Left" Margin="0,8,0,6" d:LayoutOverrides="Height" RenderTransformOrigin="-0.439,0.217"/>
+            <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="59,10,0,4" TextWrapping="Wrap" Text="" Width="120"/>
+            <Button x:Name="button3" Content="Search" HorizontalAlignment="Left" Margin="184,0,0,6" VerticalAlignment="Bottom" Width="75" Click="button3_Click"/>
+            <Label x:Name="label2" Content="Store:" HorizontalAlignment="Left" Margin="276,8,0,3" d:LayoutOverrides="Height" RenderTransformOrigin="0.25,0.538"/>
+            <Button x:Name="button2" Content="Search" HorizontalAlignment="Right" Margin="0,10,25,7" Width="75" d:LayoutOverrides="Height" Click="button2_Click"/>
+            <Grid  DataContext="productToView"/>
+            <Label x:Name="label3_Copy" Content="Product:" HorizontalAlignment="Left" Margin="28,86,0,-78" RenderTransformOrigin="-0.439,0.217"/>
+        </Grid>
+        <Grid Margin="10,115,285,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="111*"/>
+                <ColumnDefinition Width="394*"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="20,100,222,61.6" SelectionChanged="dgProducts_SelectionChanged" Grid.ColumnSpan="2">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Amount" Binding="{Binding amounttoAdd, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="StoreName" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Click="addToBasket">Add</Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBox  x:Name="textBox21" HorizontalAlignment="Left" Height="23" Margin="89,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" KeyUp="textBox1_KeyUp" TextChanged="textBox21_TextChanged" Grid.ColumnSpan="2" />
+        </Grid>
+        <Grid HorizontalAlignment="Right" Margin="0,115,21,10" Width="244">
+            <DockPanel Margin="10">
+                <StackPanel DockPanel.Dock="Right" Margin="10,0">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="0,0,0,5" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock FontWeight="Bold" Margin="0,0,0,10">Options:</TextBlock>
+                    <Button Name="register" Click="register_Click" >register</Button>
+                    <Button Name="login" Click="login_Click">login</Button>
+                    <Button Name="logout" Click="logout_Click" >logout</Button>
+                    <Button Name="openStore" Click="openStore_Click" >open store</Button>
+                    <Button Name="myCart" Click="myCart_Click" >my cart</Button>
+                    <Button Name="Receipts" Click="Receipts_Click" >my receipts</Button>
+                    <Button Name="user" >edit profile</Button>
+                    <Button Name="stores" Click="stores_Click" >my stores</Button>
+                    <Button x:Name="browse" Click="browse_Click" Content="browse" />
+                    <Button Content="Store Castro" Margin="0" Width="202" Click="Button_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+
+    </Grid>
+</Page>

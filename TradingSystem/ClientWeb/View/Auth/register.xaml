@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ClientWeb"
+      xmlns:local="clr-namespace:ClientWeb" d:DataContext="{d:DesignInstance Type=local:UserData}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="register">
@@ -11,23 +11,23 @@
     <Grid Background="LightBlue">
         <Grid Margin="259,71,260,177" RenderTransformOrigin="0.516,0.699">
             <Label x:Name="label" Content="user name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBox" Height="23" Margin="127,14,31,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox" Height="23" Margin="127,14,31,0" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" TextChanged="textBox_TextChanged"/>
             <Label x:Name="label1" Content="password:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBox1" Height="23" Margin="127,45,31,0" TextWrapping="Wrap" Text="{Binding password, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox1" Height="23" Margin="127,45,31,0" TextWrapping="Wrap" Text="{Binding password, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"/>
             <Label x:Name="label2" Content="confirm password:" HorizontalAlignment="Left" Margin="0,72,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBox2" Height="23" Margin="127,76,31,0" TextWrapping="Wrap" Text="{Binding passwordC, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox2" Height="23" Margin="127,76,31,0" TextWrapping="Wrap" Text="{Binding passwordC, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"/>
             <Label x:Name="label3" Content="age:" HorizontalAlignment="Left" Margin="21,103,0,0" VerticalAlignment="Top"/>
             <Label x:Name="label4" Content="gender" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.11,-0.254"/>
 
-            <TextBox x:Name="textBox3" Height="23" Margin="127,107,31,0" TextWrapping="Wrap" Text="{Binding age, Mode=TwoWay}" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBox4" Height="23" Margin="127,138,31,0" TextWrapping="Wrap" Text="{Binding gender, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox3" Height="23" Margin="127,107,31,0" TextWrapping="Wrap" Text="{Binding age, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox4" Height="23" Margin="127,138,31,0" TextWrapping="Wrap" Text="{Binding gender, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"/>
             <Label x:Name="label5" Content="address:" HorizontalAlignment="Left" Margin="15,0,0,10" VerticalAlignment="Bottom"/>
-            <TextBox x:Name="textBox5" Height="23" Margin="130,0,31,9" TextWrapping="Wrap" Text="{Binding address, Mode=TwoWay}" VerticalAlignment="Bottom"/>
+            <TextBox x:Name="textBox5" Height="23" Margin="130,0,31,9" TextWrapping="Wrap" Text="{Binding address, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom"/>
 
 
         </Grid>
         <Button x:Name="button1" Content="login" HorizontalAlignment="Left" Margin="281,0,0,53" VerticalAlignment="Bottom" Width="75" Click="button1_Click"/>
-        <Label x:Name="label6" Content="{Binding usermsg, Mode=TwoWay}" Margin="270,0,276,73" VerticalAlignment="Bottom" RenderTransformOrigin="-0.648,-1.265" Height="87"/>
+        <Label x:Name="label6" Content="{Binding usermsg, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" Margin="270,0,276,73" VerticalAlignment="Bottom" RenderTransformOrigin="-0.648,-1.265" Height="87"/>
         <Label x:Name="label7" Content="Registration" Margin="367,27,350,0" VerticalAlignment="Top"/>
         <Button x:Name="button" Content="sign up" HorizontalAlignment="Right" Margin="0,0,260,53" VerticalAlignment="Bottom" Width="75" Click="button_Click"/>
     </Grid>

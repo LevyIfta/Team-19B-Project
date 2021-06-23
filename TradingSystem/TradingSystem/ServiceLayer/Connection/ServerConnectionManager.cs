@@ -13,7 +13,7 @@ using TradingSystem.BuissnessLayer;
 
 namespace TradingSystem.ServiceLayer
 {
-    static class ServerConnectionManager
+    public static class ServerConnectionManager
     {
 
         public static readonly int EOT = 4;

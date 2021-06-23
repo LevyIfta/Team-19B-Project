@@ -20,9 +20,22 @@ namespace ClientWeb
     /// </summary>
     public partial class openStore : Page
     {
-        public openStore()
+
+        StoreData store = new StoreData();
+
+        static Controller controler = Controller.GetController();
+        public openStore(string username)
         {
             InitializeComponent();
+            store.username = username;
+            this.DataContext = store;
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(store.username + " " +store.storename);
+            controler.OpenStore(store.username, store.storename);
         }
     }
 }
