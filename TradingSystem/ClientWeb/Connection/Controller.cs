@@ -656,7 +656,60 @@ namespace ClientWeb
             }
             return null;
         }
+        // send message
+        public bool SendMessage(string username, string userToSend, string storeToSend, string Msg)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            msg.type = msgType.FUNC;
+            msg.name = "send message";
+            msg.param_list = new string[] { username, userToSend, storeToSend, Msg };
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
 
+            DecodedMessge ans_d = readMessage();
+            bool ans = false;
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            {
+                ans = ans_d.param_list[0] == "true";
+            }
+            return ans;
+        }
+        public string[] GetStoreMessages(string username, string storename)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            // init message fields
+            msg.type = msgType.FUNC;
+            msg.name = "get store message";
+            msg.param_list = new string[] { username, storename };
+            // encode and send message
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            if (ans_d.type == msgType.OBJ && ans_d.name == "string[]")
+            {
+                return ans_d.param_list;
+            }
+            return null;
+        }
+        public string[] GetUserMessages(string username)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            // init message fields
+            msg.type = msgType.FUNC;
+            msg.name = "get my message";
+            msg.param_list = new string[] { username };
+            // encode and send message
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            if (ans_d.type == msgType.OBJ && ans_d.name == "string[]")
+            {
+                return ans_d.param_list;
+            }
+            return null;
+        }
         public string test()
         {
             DecodedMessge msg = new DecodedMessge();    

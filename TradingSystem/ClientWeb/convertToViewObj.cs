@@ -70,5 +70,46 @@ namespace ClientWeb
             }//[user#feeback , user#feedback ...]
             return feedback;
         }
+
+        public static string PermmisionsInsert(string perm)
+        {//1 - AddProduct\n2 - EditManagerPermissions\n3 - EditProduct\n4 - GetInfoEmployees\n5 - GetPurchaseHistory\n
+         ////6 - HireNewStoreManager\n7 - HireNewStoreOwner\n8 - RemoveManager\n9 - RemoveProduct\n10 - RemoveOwner
+            string[] permission = perm.Split('#');
+            string ans = "";
+            for (int i=0; i<permission.Length; i++)
+            {
+                ans += convertPerm(permission[i]) + "$";
+            }
+            if (ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1);
+            return ans;
+        }
+        private static string convertPerm(string num)
+        {
+            switch (num)
+            {
+                case "1":
+                    return "AddProduct";
+                case "2":
+                    return "EditManagerPermissions";
+                case "3":
+                    return "EditProduct";
+                case "4":
+                    return "GetInfoEmployees";
+                case "5":
+                    return "GetPurchaseHistory";
+                case "6":
+                    return "HireNewStoreManager";
+                case "7":
+                    return "HireNewStoreOwner";
+                case "8":
+                    return "RemoveManager";
+                case "9":
+                    return "RemoveProduct";
+                case "10":
+                    return "RemoveOwner";
+            }
+            return "";
+        }
     }
 }

@@ -26,6 +26,7 @@ namespace ClientWeb
     {
         private static Controller controller = Controller.GetController();
         UserData user = new UserData();
+        List<employeeView> employee = new List<employeeView>();
         private string storeName;
         private string username;
         public Store(string storeName, string username)
@@ -40,6 +41,7 @@ namespace ClientWeb
             this.storeNameLabel.Content = storeName;
 
             initActionsStack();
+            initEmployees();
         }
 
         private void initActionsStack()
@@ -54,6 +56,40 @@ namespace ClientWeb
             // we assume, for the mean time, that there is no permission for adding a new policy
             addPermissionButton("AddPolicy");
             */
+        }
+        private void initEmployees()
+        {
+            string storename = PageController.storeForManager;
+            var emp = controller.GetInfoEmployees(PageController.username, storename);
+
+            for (int i=0; i<emp.Length; i++)
+            {
+                string[] info = emp[i].Split('$');
+                string[] perm = info[1].Split('&');
+                string permFinal = "";
+                for (int j=0; j<perm.Length; j++)
+                {
+                    string[] permInfo = perm[j].Split('^');
+                    if (permInfo[0].Equals(storename))
+                    {
+                        string[] permList = permInfo[1].Split('#');
+                        for (int h=0; h<permList.Length; h++)
+                        {
+                            permFinal += permList[h] + ", ";
+                        }
+                        
+                    }
+                    if (permFinal.Length > 0)
+                    {
+                        permFinal = permFinal.Substring(0, permFinal.Length - 2);
+                        employee.Add(new employeeView() { employeename = info[0], permissions = permFinal });
+                    }
+                        
+                }
+                
+            }
+
+            dgEmployees.ItemsSource = employee;
         }
 
         private void addPermissionButton(string permission)
@@ -422,7 +458,7 @@ namespace ClientWeb
 
         private void infoemployees_Click(object sender, RoutedEventArgs e)
         {
-            Page p = new MangeManagers(username, storeName);
+            Page p = new MangeManagers();
             NavigationService.Navigate(p);
         }
 

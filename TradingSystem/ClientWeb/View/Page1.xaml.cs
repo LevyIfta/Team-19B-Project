@@ -1,4 +1,5 @@
 ﻿using ClientWeb.Objects;
+using ClientWeb.View.member;
 using ClientWeb.Windows;
 using System;
 using System.Collections.Generic;
@@ -259,6 +260,12 @@ namespace ClientWeb
 
             //Change this
             Store page = new Store("Castro", "almog");
+            NavigationService.Navigate(page);
+
+        }
+        private void msg_Click(object sender, RoutedEventArgs e)
+        {
+            MyMessage page = new MyMessage();
             NavigationService.Navigate(page);
 
         }

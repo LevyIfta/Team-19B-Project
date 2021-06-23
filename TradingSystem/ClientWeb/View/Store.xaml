@@ -15,7 +15,12 @@
             <Button Content="Purchase Policy" HorizontalAlignment="Left" Margin="-163,299,0,0" VerticalAlignment="Top" Width="123" Click="Button_Click_2"/>
             <DataGrid HorizontalAlignment="Left" Height="195" Margin="52,48,0,0" VerticalAlignment="Top" Width="189"/>
             <Label Content="Products" HorizontalAlignment="Left" Margin="96,27,0,0" VerticalAlignment="Top" Width="100"/>
-            <DataGrid HorizontalAlignment="Left" Height="190" Margin="276,50,0,0" VerticalAlignment="Top" Width="155"/>
+            <DataGrid Name="dgEmployees" HorizontalAlignment="Left" Height="190" Margin="276,50,0,0" VerticalAlignment="Top" Width="155">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Employees" Binding="{Binding employeename , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Permissions" Binding="{Binding permissions , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                </DataGrid.Columns>
+            </DataGrid>
             <Label Content="Managers" HorizontalAlignment="Left" Margin="333,26,0,0" VerticalAlignment="Top"/>
 
         </Grid>

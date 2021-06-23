@@ -491,6 +491,18 @@ namespace TradingSystem.ServiceLayer
                 return false;
             return UserServices.sendMessage(username, userToSend, storeToSend, msg);
         }
+        public static string[] getMessages(string username, string storename)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getMessages(username, storename);
+        }
+        public static string[] getMessages(string username)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getMessages(username);
+        }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {

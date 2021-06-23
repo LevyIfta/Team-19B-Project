@@ -153,8 +153,133 @@ namespace ClientWeb
         }
     }
 
+    class employeeView : ANotifyPropChange
+    {
+        private String Employeename;
+
+        public String employeename
+        {
+            get { return Employeename; }
+            set
+            {
+                Employeename = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Permissions;
+
+        public String permissions
+        {
+            get { return Permissions; }
+            set
+            {
+                Permissions = value;
+                OnPropertyChanged();
+            }
+        }
+
+    }
+
+    class employeeStore : ANotifyPropChange
+    {
+        private String Employeename;
+
+        public String employeename
+        {
+            get { return Employeename; }
+            set
+            {
+                Employeename = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Permissions;
+
+        public String permissions
+        {
+            get { return Permissions; }
+            set
+            {
+                Permissions = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Permenu;
+
+        public String permenu
+        {
+            get { return Permenu; }
+            set
+            {
+                Permenu = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Msg;
+
+        public String msg
+        {
+            get { return Msg; }
+            set
+            {
+                Msg = value;
+                OnPropertyChanged();
+            }
+        }
+
+    }
+    class MessageData : ANotifyPropChange
+    {
+        private String Tosend;
+
+        public String tosend
+        {
+            get { return Tosend; }
+            set
+            {
+                Tosend = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Messagerecive;
+
+        public String messagerecive
+        {
+            get { return Messagerecive; }
+            set
+            {
+                Messagerecive = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Messagesend;
+
+        public String messagesend
+        {
+            get { return Messagesend; }
+            set
+            {
+                Messagesend = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Isnew;
+
+        public String isnew
+        {
+            get { return Isnew; }
+            set
+            {
+                Isnew = value;
+                OnPropertyChanged();
+            }
+        }
 
 
+    }
 
 
     class ViewModels

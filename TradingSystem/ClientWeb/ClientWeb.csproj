@@ -82,11 +82,20 @@
     </Compile>
     <Compile Include="productInBasketView.cs" />
     <Compile Include="ViewModels.cs" />
+    <Compile Include="View\member\MyMessage.xaml.cs">
+      <DependentUpon>MyMessage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\StoreManagement\AddManager.xaml.cs">
       <DependentUpon>AddManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StoreManagement\AddProduct.xaml.cs">
       <DependentUpon>AddProduct.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\EditOwner.xaml.cs">
+      <DependentUpon>EditOwner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\RemoveManager.xaml.cs">
+      <DependentUpon>RemoveManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StoreManagement\ManageDiscountPolicies.xaml.cs">
       <DependentUpon>ManageDiscountPolicies.xaml</DependentUpon>
@@ -139,11 +148,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\member\MyMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\StoreManagement\AddManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StoreManagement\AddProduct.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StoreManagement\EditOwner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StoreManagement\RemoveManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
