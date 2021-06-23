@@ -12,6 +12,7 @@ namespace TradingSystem.BuissnessLayer
 {
     public static class UserServices
     {
+
         
         public static ICollection<aUser> Users { get; private set; } = new List<aUser>();
         public static ICollection<string> onlineUsers { get; private set; } = new List<string>();
