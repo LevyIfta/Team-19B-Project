@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace TradingSystem.ServiceLayer
 {
@@ -44,7 +46,7 @@ namespace TradingSystem.ServiceLayer
             Object[] parameters = new Object[SLreceipt.PARAMETER_COUNT];
             parameters[0] = ProductController.makeSLproductCollection(receipt.getProducts());
             parameters[1] = receipt.store.name;
-            parameters[2] = receipt.username;
+            parameters[2] = receipt.user.userName;
             parameters[3] = receipt.price;
             parameters[4] = receipt.date;
             parameters[5] = receipt.receiptId;
@@ -59,6 +61,14 @@ namespace TradingSystem.ServiceLayer
                 SLreceipts.Add(ProductController.makeReceipt(receipt));
             }
             return SLreceipts;
+        }
+        public static Dictionary<SLproduct, List<string[]>> getAllProducts()
+        {
+            Dictionary<SLproduct, List<string[]>> ans = new Dictionary<SLproduct, List<string[]>>();
+            var all = UserServices.getAllProducts();
+            foreach (Product product in all.Keys)
+                ans[ProductController.makeSLproduct(product)] = all[product];
+            return ans;
         }
     }
 }

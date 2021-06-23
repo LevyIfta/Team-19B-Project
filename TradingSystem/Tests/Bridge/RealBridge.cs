@@ -4,6 +4,7 @@ using System.Text;
 using TradingSystem.BuissnessLayer;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.ServiceLayer;
+using TradingSystem.BuissnessLayer.User.Permmisions;
 
 namespace Tests.Bridge
 {
@@ -23,17 +24,17 @@ namespace Tests.Bridge
         {
             //ShoppingBasket userBasket = getBasket(basket.store.name);
             //userBasket.margeBasket(basket);
-            UserController.saveProduct( userName,  storeName,  manufacturer,  product);
+            UserController.saveProduct(userName, storeName, manufacturer, product);
         }
         public void addProducts(ShoppingBasket basket)
         {
-            ShoppingBasket userBasket = getBasket(basket.store.name);
+            ShoppingBasket userBasket = getBasket(basket.owner.userName, basket.store.name);
             userBasket.margeBasket(basket);
         }
 
-        public ShoppingBasket getBasket(string storeName)
+        public ShoppingBasket getBasket(string userName, string storeName)
         {
-            return UserServices.getBasket(getUserName(), storeName);
+            return UserServices.getBasket(userName, storeName);
         }
 
         public int getProductAmount(ShoppingBasket basket, ProductInfo info)
@@ -58,7 +59,7 @@ namespace Tests.Bridge
         {
             foreach (Receipt item in getStore(storeName).receipts)
             {
-                if (item.username == userName && item.date == Date)
+                if (item.user.userName == userName && item.date == Date)
                     return item;
             }
             return null;
@@ -66,7 +67,7 @@ namespace Tests.Bridge
 
         public Receipt GetRecieptByUser(string storeName, string userName, DateTime Date)
         {
-            foreach (Receipt receipt in UserServices.getAllReceiptsHistory(userName, storeName) )
+            foreach (Receipt receipt in UserServices.getAllReceiptsHistory(userName, storeName))
             {
                 if (receipt.date.Equals(Date))
                     return receipt;
@@ -78,16 +79,12 @@ namespace Tests.Bridge
         {
             return Stores.searchStore(storeName);
         }
-        public aUser getUser()
+        public aUser getUser(string userName)
         {
-            return UserController.getCorrentOnlineUser();
+            return UserServices.getUser(userName);
         }
 
-        public string getUserName()
-        {
-            return getUser().getUserName();
-           
-        }
+
 
         public bool isItemAtStore(string storeName, string productName, string manufacturar)
         {
@@ -124,15 +121,15 @@ namespace Tests.Bridge
             return UserServices.getUser(username) == null;
         }
 
-        public bool login(string userName, string password)
+        public string[] login(string userName, string password)
         {
-            return UserController.login(userName, password)[0] == "true";
+            return UserController.login(userName, password);
         }
 
         public void logout()
         {
             UserController.logout();
-         
+
         }
 
         public int onlineUserCount()
@@ -140,14 +137,14 @@ namespace Tests.Bridge
             return UserServices.countOnlineUsers();
         }
 
-        public bool openStore(string storeName)
+        public bool openStore(string userName, string storeName)
         {
-            return UserController.EstablishStore(getUserName(), storeName);
+            return UserServices.EstablishStore(userName, storeName);
         }
 
-        public string[] purchase(string creditNumber, string validity, string cvv)
+        public string[] purchase(string userName, string creditNumber, string validity, string cvv)
         {
-            return UserController.purchase(getUserName(), creditNumber, validity, cvv);
+            return UserController.purchase(userName, creditNumber, validity, cvv);
         }
 
         public void purchase(ShoppingBasket basket)
@@ -179,5 +176,42 @@ namespace Tests.Bridge
             //non
             throw new NotImplementedException();
         }
+        public bool hireNewStoreManager(string ownerName, string storeName, string employeeName)
+        {
+            return UserController.hireNewStoreManager(ownerName, storeName, employeeName);
+        }
+        public bool editManagerPermissions(string ownerName, string storeName, string employeeName, List<string> permissions)
+        {
+            return UserController.editManagerPermissions(ownerName, storeName, employeeName, permissions);
+        }
+        public bool addNewProduct(string username, string storeName, string productName, double price, int amount, string category, string manufacturer)
+        {
+            return UserController.addNewProduct(username, storeName, productName, price, amount, category, manufacturer);
+        }
+        public bool editProduct(string userName, string storeName, string productName, double price, string manufacturer)
+        {
+            return UserController.editProduct(userName, storeName, productName, price, manufacturer);
+        }
+        public bool hireNewStoreOwner(string ownerName, string storeName, string employeeName, List<string> permissions)
+        {
+            return UserController.hireNewStoreOwner(ownerName, storeName, employeeName, permissions);
+        }
+        public ICollection<SLemployee> getInfoEmployees(string userName, string storeName)
+        {
+            return UserController.getInfoEmployees(userName, storeName);
+        }
+        public bool removeManager(string ownerName, string storeName, string employeeName)
+        {
+            return UserController.removeManager(ownerName, storeName, employeeName);
+        }
+        public bool removeOwner(string ownerName, string storeName, string employeeName)
+        {
+            return UserController.removeOwner(ownerName, storeName, employeeName);
+        }
+        public aUser getAdmin()
+        {
+            return UserServices.getAdmin();
+        }
+
     }
 }

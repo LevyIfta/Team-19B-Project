@@ -26,16 +26,8 @@ namespace TradingSystem.ServiceLayer
             EstablishStore("almog", "Castro");
           //  EstablishStore("almog", "Castro2");
             addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-            addNewProduct("almog", "Castro", "pro11", 10.1, 10, "cat", "man");
-            addNewProduct("almog", "Castro", "pro121", 10.1, 10, "cat", "man");
-            Dictionary<string, int> d = new Dictionary<string, int>();
-            d["pro"] = 1;
-            //  d["pro11"] = 1;
-            saveProduct("almog", "Castro", "man", d);
-           
-            
             logout();
-           
+            
         }
 
         public static void init(Func<object, bool> alarmhandler)
@@ -101,6 +93,10 @@ namespace TradingSystem.ServiceLayer
         public static string getCorrentOnlineUserName()
         {
             return UserController.user.getUserName();
+        }
+        public static aUser getUser(string username)
+        {
+            return UserServices.getUser(username);
         }
         public static string[] register(string userName, string password)
         {
@@ -254,25 +250,36 @@ namespace TradingSystem.ServiceLayer
         } // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
         private static BuissnessLayer.commerce.Receipt convertReceipt(string receipt)
         {
-            BuissnessLayer.commerce.Receipt ans = new BuissnessLayer.commerce.Receipt();
+            return new BuissnessLayer.commerce.Receipt(DataLayer.ORM.DataAccess.getReciept(int.Parse(receipt)));
+            /*
             string[] arr = receipt.Split('$');
-            ans.username = arr[0];
+            ans.user = (Member)UserServices.getUser(arr[0]);
             ans.store = BuissnessLayer.commerce.Stores.searchStore(arr[1]);
             ans.price = double.Parse(arr[2]);
             ans.date = Convert.ToDateTime(arr[3]);
             ans.receiptId = int.Parse(arr[4]);
             string[] pro = arr[5].Split('=');
-            Dictionary<int, int> dic = new Dictionary<int, int>();
+            //Dictionary<int, int> dic = new Dictionary<int, int>();
+            List<DataLayer.ProductData> products = new List<DataLayer.ProductData>();
             if (pro.Length > 0 && pro[0].Length > 0)
             {
                 for (int i = 0; i < pro.Length; i++)
                 {
                     string[] info = pro[i].Split('<');
-                    dic[int.Parse(info[0])] = int.Parse(info[1]);
+                    DataLayer.ProductData data = DataLayer.ORM.DataAccess.getProduct(ToGuid(int.Parse(info[0])));
+                    products.Add(new DataLayer.ProductData(data.productData, int.Parse(info[1]), data.price, data.storeName, ToGuid(int.Parse(info[0]))));
+                    //dic[int.Parse(info[0])] = int.Parse(info[1]);
                 }
             }
-            ans.products = dic;
+            ans.basket = new DataLayer.BasketInRecipt(products, DataLayer.ORM.DataAccess.getReciept())
             return ans;
+            */
+        }
+        private static Guid ToGuid(int value)
+        {
+            byte[] bytes = new byte[16];
+            BitConverter.GetBytes(value).CopyTo(bytes, 0);
+            return new Guid(bytes);
         }
 
         public static Dictionary<string,SLproduct> browseProducts(string username, string productName, string manufacturer)
@@ -450,6 +457,10 @@ namespace TradingSystem.ServiceLayer
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
         }
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
+        {
+            return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName);
+        }
         public static bool closeStore(string username, string storeName)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
@@ -513,6 +524,15 @@ namespace TradingSystem.ServiceLayer
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return false;
             return BuissnessLayer.UserServices.supply(username, storeName, productName, amount, manufacturer);
+        }
+
+        // tries to place an offer
+        // return value: in case of success - the id of the request, -1 otherwise
+        public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer,int amount, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return -1;
+            return UserServices.placeOffer(username, storeName, productName, category, manufacturer,amount, price);
         }
     }
 }

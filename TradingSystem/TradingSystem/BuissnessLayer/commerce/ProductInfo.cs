@@ -31,14 +31,23 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.manufacturer = manufacturer;
             this.feedbacks = new Dictionary<string, string>();
         }
+        public static void AddProductInfo(ProductInfoData productInfoData)
+        {
+            productsInfo.Add(new ProductInfo(productInfoData));
+        }
 
         public ProductInfo(ProductInfoData productInfoData)
         {
             this.name = productInfoData.productName;
             this.category = productInfoData.category;
             this.manufacturer = productInfoData.manufacturer;
-            // get feedbacks - TODO
+            this.id = productInfoData.productID;
 
+            // get feedbacks - TODO - DONE
+            foreach (FeedbackData item in DataLayer.ORM.DataAccess.getAllFeedbacksOnProduct(this.id))
+            {
+                feedbacks.Add(item.user.userName, item.comment);
+            }
         }
 
         public ProductInfoData toDataObject()
@@ -62,7 +71,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             ProductInfo productInfo = new ProductInfo(name, category, manufacturer);
             productsInfo.Add(productInfo);
             // update in DB
-            ProductInfoDAL.addProductInfo(productInfo.toDataObject());
+            DataLayer.ORM.DataAccess.create(productInfo.toDataObject());
             return productInfo;
         }
         public static ProductInfo getProductInfo(int id)
@@ -73,7 +82,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             return null;
         }
 
-        public bool roomForFeedback (string username)
+        public bool roomForFeedback(string username)
         {
             if (this.feedbacks.ContainsKey(username))
             {
@@ -88,9 +97,9 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public bool leaveFeedback(string username, string comment)
         {
-          /*  feedbacks[username] += comment;
-            return true;*/
-            
+            /*  feedbacks[username] += comment;
+              return true;*/
+
             if (this.feedbacks.ContainsKey(username))
             {
                 if (feedbacks[username].CompareTo("") == 0)
@@ -126,7 +135,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             Dictionary<string, string> allFeedbacks = new Dictionary<string, string>();
             foreach (string userName in this.feedbacks.Keys)
             {
-                if(this.feedbacks[userName].CompareTo("") != 0)
+                if (this.feedbacks[userName].CompareTo("") != 0)
                 {
                     allFeedbacks.Add(userName, this.feedbacks[userName]);
                 }
@@ -153,6 +162,6 @@ namespace TradingSystem.BuissnessLayer.commerce
             return output;
         }
     }
-    
+
 
 }

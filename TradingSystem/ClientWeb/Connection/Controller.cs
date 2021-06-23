@@ -583,6 +583,25 @@ namespace ClientWeb
             }
             return ans;
         }
+        public string getAllFeedbacksSearch(string storeName, string productName)
+        { // products -> product$product$product -> name&amount 
+            DecodedMessge msg = new DecodedMessge();
+            // init message fields
+            msg.type = msgType.FUNC;
+            msg.name = "get all feedbacks for search";
+            msg.param_list = new string[] { storeName, productName };
+            // encode and send message
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            string ans = "";
+            if (ans_d.type == msgType.OBJ && ans_d.name == "feedbacks")
+            {
+                ans = ans_d.param_list[0];
+            }
+            return ans;
+        }
         public string[] GetPermissions(string username, string storename)
         {
             DecodedMessge msg = new DecodedMessge();
@@ -608,6 +627,24 @@ namespace ClientWeb
             msg.type = msgType.FUNC;
             msg.name = "get my stores";
             msg.param_list = new string[] { username };
+            // encode and send message
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            if (ans_d.type == msgType.OBJ && ans_d.name == "string[]")
+            {
+                return ans_d.param_list;
+            }
+            return null;
+        }
+        public string[] GetAllProducts()
+        {
+            DecodedMessge msg = new DecodedMessge();
+            // init message fields
+            msg.type = msgType.FUNC;
+            msg.name = "get all products";
+            msg.param_list = new string[] { };
             // encode and send message
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);

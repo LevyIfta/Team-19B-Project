@@ -7,6 +7,7 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.BuissnessLayer.commerce;
 using System.Threading;
 using TradingSystem.BuissnessLayer.User;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -252,9 +253,44 @@ namespace TradingSystem.BuissnessLayer
             return th;
         }
 
-        public virtual void addOffer(OfferRequest request)
+        public virtual void placeOffer(OfferRequest request)
         {
             
+        }
+
+        public virtual MemberData toDataObject()
+        {
+
+            return new MemberData("guest", null, 0, null, null, null, null, null);
+        }
+
+        public virtual void addOfferToAnswer(OfferRequest request)
+        {
+        }
+
+        public virtual OfferRequest getRequestToAnswer(int requestID)
+        {
+            return null;
+        }
+
+        public virtual bool acceptRequest(int id)
+        {
+            return false;
+        }
+
+        public virtual Receipt getReceipt(int receiptID)
+        {
+            return null;
+        }
+
+        public virtual bool rejectOffer(int id)
+        {
+            return false;
+        }
+
+        public virtual bool negotiateRequest(int id, double price)
+        {
+            return false;
         }
     }
 }
