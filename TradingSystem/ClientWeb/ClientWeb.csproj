@@ -76,8 +76,31 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="ConvertData.cs" />
-    <Compile Include="myCart.xaml.cs">
+    <Compile Include="convertToViewObj.cs" />
+    <Compile Include="FirstPage.xaml.cs">
+      <DependentUpon>FirstPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="productInBasketView.cs" />
+    <Compile Include="ViewModels.cs" />
+    <Compile Include="View\StoreManagement\AddManager.xaml.cs">
+      <DependentUpon>AddManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\AddProduct.xaml.cs">
+      <DependentUpon>AddProduct.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\ManageDiscountPolicies.xaml.cs">
+      <DependentUpon>ManageDiscountPolicies.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\ManageFeedBacks.xaml.cs">
+      <DependentUpon>ManageFeedBacks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\ManagePurchasePolicies.xaml.cs">
+      <DependentUpon>ManagePurchasePolicies.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\MangeManagers.xaml.cs">
+      <DependentUpon>MangeManagers.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\member\myCart.xaml.cs">
       <DependentUpon>myCart.xaml</DependentUpon>
     </Compile>
     <Compile Include="myReceipts.xaml.cs">

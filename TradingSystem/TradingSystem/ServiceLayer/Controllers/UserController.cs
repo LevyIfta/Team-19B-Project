@@ -20,11 +20,12 @@ namespace TradingSystem.ServiceLayer
 
         static UserController()
         {
-     /*       register("almog", "qweE1");
+            register("almog", "qweE1");
+            
             login("almog", "qweE1");
             EstablishStore("almog", "Castro");
             addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-            logout();*/
+            logout();
             
         }
 
