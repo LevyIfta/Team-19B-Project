@@ -48,14 +48,14 @@ namespace TradingSystem.BuissnessLayer
         private string convertReceipt(Receipt receipt)
         {
             string ans = "";
-            foreach (int id in receipt.products.Keys)
+            foreach (Product product in receipt.getProducts())
             {
-                ans += id + "<" + receipt.products[id] + "=";
+                ans += product.info.id + "<" + product.amount + "=";
             }
             if (ans.Length > 0)
                 ans = ans.Substring(0, ans.Length - 1);
-            return receipt.username + "$" + receipt.store.name + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptId + "$" + ans;
-        }//receipt -> user$store$price$date$id$products. products -> pro1&pro2&pro3 -> proInfo^feedback -> feedback_feedback -> user#comment
+            return this.userName + "$" + receipt.store.name + "$" + receipt.price + "$" + receipt.date.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "$" + receipt.receiptId + "$" + ans;
+        }//receipt -> user$store$price$date$id$products. products -> 1<4=5<4
         private Receipt GetReceiptNow(string id)
         {
             foreach (Receipt receipt in reciepts)

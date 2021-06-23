@@ -1,26 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingSystem.DataLayer.DataObjects
+namespace TradingSystem.DataLayer
 {
     public class MessageData
     {
         //FIELDS
-        public string SenderName { get; set; }
-        public string StoreToSend { get; set; }
-        public string UserToSend { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid Id { get; set; }
+
+        public virtual string sender { get; set; }
+        public virtual StoreData StoreToSend { get; set; }
+        public virtual MemberData  UserToSend { get; set; }
         public string Message { get; set; }
 
         //CONSTRUCTORS
-        public MessageData(string SenderName, string StoreToSend, string UserToSend, string Message)
+        public MessageData(string sender, StoreData StoreToSend, MemberData UserToSend, string Message)
         {
-            this.SenderName = SenderName;
+            this.sender = sender;
             this.StoreToSend = StoreToSend;
             this.UserToSend = UserToSend;
             this.Message = Message;
+        }
+
+        public MessageData()
+        {
         }
 
         //EQUALS
@@ -31,7 +41,7 @@ namespace TradingSystem.DataLayer.DataObjects
 
         public bool Equals(MessageData other)
         {
-            return this.SenderName.Equals(other.SenderName) & this.StoreToSend.Equals(other.StoreToSend) & this.UserToSend.Equals(other.UserToSend) & this.Message.Equals(other.Message);
+            return this.Id == other.Id;
         }
     }
 }

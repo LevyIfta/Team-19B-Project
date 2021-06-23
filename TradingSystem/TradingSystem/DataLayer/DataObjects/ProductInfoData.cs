@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,15 +13,20 @@ namespace TradingSystem.DataLayer
         public string productName { get; set; }
         public string category { get; set; }
         public string manufacturer { get; set; }
+        [Key]
         public int productID { get; set; }
 
         //CONSTRUCTORS
         public ProductInfoData(string productName, string category, string manufacturer, int productID)
-        {
+        { 
             this.productName = productName;
             this.category = category;
             this.manufacturer = manufacturer;
             this.productID = productID;
+        }
+
+        public ProductInfoData()
+        {
         }
 
         //EQUALS

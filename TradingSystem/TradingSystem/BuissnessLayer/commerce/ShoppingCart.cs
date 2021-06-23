@@ -17,6 +17,13 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.baskets = new LinkedList<ShoppingBasket>();
         }
 
+        public ShoppingCart(aUser owner, ICollection<BasketInCart> baskets)
+        {
+            //todo
+            this.owner = owner;
+            this.baskets = new LinkedList<ShoppingBasket>();
+        }
+
         public ShoppingBasket getBasket(Store store)
         {
             foreach (ShoppingBasket b in this.baskets)

@@ -26,22 +26,42 @@ namespace TradingSystem
         {
           
             InitializeComponent();
-            
-            new Thread(new ThreadStart( ServiceLayer.ServerConnectionManager.init)).Start();
             Application.Current.Exit += new ExitEventHandler(disconnect);
+           
+          
 
         }
 
 
 
-        public void dothedo(TradingSystem.ServiceLayer.DecodedMessge msg)
-        {
-            
-            this.label2.Content = "" + msg.type + "  " + msg.name + "  " + msg.param_list.ToString();   
-        }
         private void disconnect(object sender, ExitEventArgs args)
         {
             ServiceLayer.ServerConnectionManager.disconnect();
+        }
+
+        private void loadDB(object sender, RoutedEventArgs e)
+        {
+            ServiceLayer.Controllers.SystemController.Build();
+        }
+
+        private void tearDown(object sender, RoutedEventArgs e)
+        {
+            ServiceLayer.Controllers.SystemController.tearDown();
+        }
+
+        private void startServer(object sender, RoutedEventArgs e)
+        {
+            new Thread(new ThreadStart(ServiceLayer.ServerConnectionManager.init)).Start();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+          object ans =  TradingSystem.ServiceLayer.UserController.register("grim", "Oirlee1");
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+           object ans = TradingSystem.ServiceLayer.UserController.login("grim", "Oirlee1");
         }
     }
 }

@@ -18,8 +18,8 @@ namespace TradingSystem.BuissnessLayer
         public static ICollection<string> offlineUsers { get; private set; } = new List<string>() ;
         static UserServices()
         {
-            UserServices.register("admin", "Admin1");
-            UserServices.register("UserTest", "123Xx123");
+        //    UserServices.register("admin", "Admin1");
+         //   UserServices.register("UserTest", "123Xx123");
             //Users.Add(new Admin("admin", "Admin1"));
         }
         // menu functions
@@ -38,10 +38,10 @@ namespace TradingSystem.BuissnessLayer
                 if (user1.getUserName().Equals(username))
                     ans = true;
             }
-            if (!ans && !MemberDAL.isExist(username))
+            if (!ans && !DataLayer.ORM.DataAccess.isMemberExist(username))
                 return new string[] { "false", "username not exist" };
 
-            if (!MemberDAL.getMember(username).password.Equals(password))
+            if (!DataLayer.ORM.DataAccess.getMember(username).password.Equals(password))
                 return new string[] { "false", "password incorrect" };
             onlineUsers.Add(username);
             offlineUsers.Remove(username);
@@ -58,14 +58,15 @@ namespace TradingSystem.BuissnessLayer
         public static string[] register(string username, string password)
         {
             string[] fullans = new string[2];
-            if (MemberDAL.isExist(username))
+            if (DataLayer.ORM.DataAccess.isMemberExist(username))
                 return new string[] { "false", "user already exist" };
             fullans[1] = checkUserNameValid(username) + ":";
             fullans[1] += checkPasswordValid(password);
             fullans[0] = "false";
             if(fullans[1].Length < 3)
             {
-                MemberDAL.addMember(new MemberData(username, password));
+                //MemberDAL.addMember(new MemberData(username, password));
+                DataLayer.ORM.DataAccess.create((new Member(username, password)).toDataObject());
                 if (username.Equals("admin"))
                     Users.Add(new Admin(username, password));
                 else
@@ -78,14 +79,14 @@ namespace TradingSystem.BuissnessLayer
         public static string[] register(string username, string password, double age, string gender, string address)
         {
             string[] fullans = new string[2]
-;            if (MemberDAL.isExist(username))
+;            if (DataLayer.ORM.DataAccess.isMemberExist(username))
                 return new string[] { "false", "user already exist" };
             fullans[1] = checkUserNameValid(username) + ":";
             fullans[1] += checkPasswordValid(password);
             fullans[0] = "false";
             if(fullans[1].Length < 3)
             {
-                MemberDAL.addMember(new MemberData(username, password, age, gender, address));
+                DataLayer.ORM.DataAccess.create(new MemberData(username, password, age, gender, address, new List<BasketInCart>(), new List<ReceiptData>(), new List<MessageData>()));
                 if (username.Equals("admin"))
                     Users.Add(new Admin(username, password));
                 else
@@ -101,7 +102,10 @@ namespace TradingSystem.BuissnessLayer
             aUser temp = getUser(username);
             if (temp == null)
                 return false;
-            ShoppingBasket basket = new ShoppingBasket(new BasketData(storeName, username));
+            Store store = browseStore(username, storeName);
+            if (store == null)
+                return false;
+            ShoppingBasket basket = new ShoppingBasket(store, temp);
             foreach (string pName in product.Keys)
             {
                 Product p1 = Stores.searchStore(storeName).searchProduct(pName, manufacturer);
@@ -116,7 +120,10 @@ namespace TradingSystem.BuissnessLayer
             aUser temp = getUser(username);
             if (temp == null)
                 return false;
-            ShoppingBasket basket = new ShoppingBasket(new BasketData(storeName, username));
+            Store store = browseStore(username, storeName);
+            if (store == null)
+                return false;
+            ShoppingBasket basket = new ShoppingBasket(store, temp);
             foreach (string pName in product.Keys)
             {
                 Product p1 = Stores.searchStore(storeName).searchProduct(pName, manufacturer);
@@ -196,6 +203,20 @@ namespace TradingSystem.BuissnessLayer
             if (temp == null)
                 return null;
             return temp.browseStore(storeName);
+        }
+        public static Dictionary<Product, List<string[]>> getAllProducts()
+        {
+            Dictionary<Product, List<string[]>> ans = new Dictionary<Product, List<string[]>>();
+            foreach (Store store in Stores.getAllStores())
+            {
+                foreach(Product product in store.inventory)
+                {
+                    if (!ans.Keys.Contains(product))
+                        ans[product] = new List<string[]>();
+                    ans[product].Add(new string[] { store.name, product.price + "" });
+                }
+            }
+            return ans;
         }
         public static ICollection<Receipt> getAllMyReceiptHistory(string username)
         {
@@ -330,6 +351,10 @@ namespace TradingSystem.BuissnessLayer
         public static Dictionary<string, string> getAllFeedbacks (string storeName, string productName, string manufacturer)
         {
             return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.getAllFeedbacks();
+        }
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
+        {
+            return Stores.searchStore(storeName).searchProduct(productName).info.getAllFeedbacks();
         }
 
 
@@ -522,5 +547,34 @@ namespace TradingSystem.BuissnessLayer
             return false;
         }
 
+
+
+        public static void LoadUser(MemberData member )
+        {
+            aUser user;
+            if (member.userName != "admin")
+                user = new Member(member);
+            else
+                user = new Admin(member);
+            Users.Add(user);
+            offlineUsers.Add(user.userName);
+
+        }
+
+        public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer,int amount, double price)
+        {
+            aUser requester = getUser(username);
+            Store store = Stores.searchStore(storeName);
+            ProductInfo pInfo = ProductInfo.getProductInfo(productName, category, manufacturer);
+
+            if (requester == null | store == null | pInfo == null | price < 0)
+                return -1;
+
+            Product product = new Product(pInfo, amount, price);
+            OfferRequest request = new OfferRequest(product, requester, store);
+
+            requester.placeOffer(request);
+            return request.id;
+        }
     }
 }
