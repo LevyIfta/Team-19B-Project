@@ -68,6 +68,29 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+        private String Feedback;
+
+        public String feedback
+        {
+            get { return Feedback; }
+            set
+            {
+                Feedback = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Cat;
+
+        public String cat
+        {
+            get { return Cat; }
+            set
+            {
+                Cat = value;
+                OnPropertyChanged();
+            }
+        }
+
     }
 
 
