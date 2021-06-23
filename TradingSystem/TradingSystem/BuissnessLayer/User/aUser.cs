@@ -8,6 +8,7 @@ using TradingSystem.BuissnessLayer.commerce;
 using System.Threading;
 using TradingSystem.BuissnessLayer.User;
 using TradingSystem.DataLayer;
+using TradingSystem.ServiceLayer.Connection;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -21,8 +22,6 @@ namespace TradingSystem.BuissnessLayer
         public Queue<Tuple<string, string>> alarms { get; set; } = new Queue<Tuple<string, string>>();
         public ICollection<Receipt> reciepts { get; set; }
 
-        public AutoResetEvent alarmLock = new AutoResetEvent(false);
-        private object[] alarmthreadParams;
         public bool canLeaveFeedback = false;
 
         public ShoppingCart getMyCart()
@@ -202,58 +201,10 @@ namespace TradingSystem.BuissnessLayer
         }
 
 
-        public virtual void addAlarm(string title, string description)
-        {
-            lock (alarms)
-            {
-                this.alarms.Enqueue(new Tuple<string, string>(title, description));
-                alarmLock.Set();
-            }
-        }
+      
+        
 
-        public virtual Tuple<string, string> fetchAlarm()
-        {
-            lock (alarms)
-            {
-                return this.alarms.Dequeue();
-            }
-        }
-
-        public virtual bool isAlarmsEmpty()
-        {
-            return this.alarms.Count == 0;
-        }
-
-        public AutoResetEvent getAlarmLock()
-        {
-            return this.alarmLock;
-        }
-        public object[] getAlarmParams()
-        {
-            return this.alarmthreadParams;
-        }
-        public Thread estblishAlarmHandler(object queue, object waitEvent, AutoResetEvent alarmLock, Func<object, bool> alarmHandler)
-        {
-            this.alarmLock = alarmLock;
-            object[] parameters = new object[] { null, queue, waitEvent, alarmLock, new Func<bool>(isAlarmsEmpty), new Func<Tuple<string, string>>(fetchAlarm) };
-            Thread th = new Thread(new ThreadStart(() => { alarmHandler(parameters); }));
-            this.alarmthreadParams = new object[] { null, queue, waitEvent };
-            th.Start();
-            alarmLock.Set();
-            return th;
-        }
-        public Thread estblishAlarmHandler(object[] parametersPartial,   AutoResetEvent alarmLock, Func<object, bool> alarmHandler)
-        {
-            this.alarmLock = alarmLock;
-            object[] parameters = new object[] {parametersPartial[0], parametersPartial[1], parametersPartial[2], alarmLock, new Func<bool>(isAlarmsEmpty), new Func<Tuple<string, string>>(fetchAlarm) };
-            Thread th = new Thread(new ThreadStart(() => { alarmHandler(parameters); }));
-            this.alarmthreadParams = parametersPartial;
-            th.Start();
-            alarmLock.Set();
-            return th;
-        }
-
-        public virtual void placeOffer(OfferRequest request)
+        public virtual void addOffer(OfferRequest request)
         {
             
         }
@@ -264,6 +215,10 @@ namespace TradingSystem.BuissnessLayer
             return new MemberData("guest", null, 0, null, null, null, null, null);
         }
 
+        public virtual void addAlarm(string title, string description)
+        {
+            Publisher.sendAlarm(this.getUserName(), title, description);
+        }
         public virtual void addOfferToAnswer(OfferRequest request)
         {
         }

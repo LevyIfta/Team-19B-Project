@@ -13,31 +13,23 @@ namespace TradingSystem.ServiceLayer
         [ThreadStatic]
         public static aUser user = new Guest();
         [ThreadStatic]
-        private static Thread alarmThread;
+        public static string userName = user.userName;
 
 
-        private static Func<object, bool> alarmHandler;
 
         static UserController()
         {
-            //register("milon", "qweE1");
+     /*       register("almog", "qweE1");
+            login("almog", "qweE1");
+            EstablishStore("almog", "Castro");
+            addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
+            logout();*/
             
-            //login("almog", "qweE1");
-           // EstablishStore("almog", "Castro");
-          //  EstablishStore("almog", "Castro2");
-           // addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-           // logout();
-            
-        }
-
-        public static void init(Func<object, bool> alarmhandler)
-        {
-           
-            alarmHandler = alarmhandler;
         }
         public static void threadInit()
         {
             user = new Guest();
+            userName = user.userName;
         }
         
 
@@ -54,11 +46,7 @@ namespace TradingSystem.ServiceLayer
             
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
-            if(alarmThread != null)
-            {
-                alarmThread.Abort();
-                alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
-            }
+            userName = user.userName;
             
             return ans;
 
@@ -74,12 +62,7 @@ namespace TradingSystem.ServiceLayer
                 {
                     aUser olduser = user;
                     user = new Guest();
-                    if(alarmThread != null)
-                    {
-                        alarmThread.Abort();
-                        alarmThread = user.estblishAlarmHandler(olduser.getAlarmParams(), olduser.getAlarmLock(), alarmHandler);
-                    }
-
+                    userName = user.userName;
                     return true;
                 }
             }
@@ -457,10 +440,6 @@ namespace TradingSystem.ServiceLayer
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
         }
-        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
-        {
-            return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName);
-        }
         public static bool closeStore(string username, string storeName)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
@@ -491,18 +470,6 @@ namespace TradingSystem.ServiceLayer
                 return false;
             return UserServices.sendMessage(username, userToSend, storeToSend, msg);
         }
-        public static string[] getMessages(string username, string storename)
-        {
-            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
-                return null;
-            return UserServices.getMessages(username, storename);
-        }
-        public static string[] getMessages(string username)
-        {
-            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
-                return null;
-            return UserServices.getMessages(username);
-        }
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {
@@ -517,19 +484,6 @@ namespace TradingSystem.ServiceLayer
             return UserController.user.getUserName();
         }
 
-        public static Tuple<string, string> fetchAlarm()
-        {
-            return user.fetchAlarm();
-        }
-
-        public static bool isAlarmsEmpty()
-        {
-            return user.isAlarmsEmpty();
-        }
-        public static void estblishAlarmHandler(object queue, object waitEvent, AutoResetEvent alarmLock)
-        {
-            alarmThread =  user.estblishAlarmHandler(queue, waitEvent, alarmLock, alarmHandler);
-        }
 
         public static bool supplyProduct(string username, string storeName, string productName, int amount, string manufacturer)
         {
@@ -538,13 +492,9 @@ namespace TradingSystem.ServiceLayer
             return BuissnessLayer.UserServices.supply(username, storeName, productName, amount, manufacturer);
         }
 
-        // tries to place an offer
-        // return value: in case of success - the id of the request, -1 otherwise
-        public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer,int amount, double price)
+        public static Func<string> getUserNameFunc()
         {
-            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
-                return -1;
-            return UserServices.placeOffer(username, storeName, productName, category, manufacturer,amount, price);
+            return (() => userName);
         }
     }
 }
