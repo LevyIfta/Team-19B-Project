@@ -530,7 +530,20 @@ private void fillOwners()
                     return new Product(product); // clone so that the user cannot edit price/amout ...
             return null; // no results
         }
-
+        public Product searchProduct(string productName)
+        {
+            foreach (Product product in this.inventory)
+                if (product.info.name.Equals(productName))
+                    return new Product(product); // clone so that the user cannot edit price/amout ...
+            return null; // no results
+        }
+        public List<Product> getAllProducts()
+        {
+            List<Product> products = new List<Product>();
+            foreach (Product product in this.inventory)
+                    products.Add(new Product(product)); 
+            return products; 
+        }
         public Product searchProduct(string productName, double minPrice, double maxPrice)
         {
             foreach (Product product in this.inventory)

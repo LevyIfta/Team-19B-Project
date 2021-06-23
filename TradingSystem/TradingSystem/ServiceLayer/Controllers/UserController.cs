@@ -455,6 +455,10 @@ namespace TradingSystem.ServiceLayer
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
         }
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
+        {
+            return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName);
+        }
         public static bool closeStore(string username, string storeName)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))

@@ -204,6 +204,20 @@ namespace TradingSystem.BuissnessLayer
                 return null;
             return temp.browseStore(storeName);
         }
+        public static Dictionary<Product, List<string[]>> getAllProducts()
+        {
+            Dictionary<Product, List<string[]>> ans = new Dictionary<Product, List<string[]>>();
+            foreach (Store store in Stores.getAllStores())
+            {
+                foreach(Product product in store.inventory)
+                {
+                    if (!ans.Keys.Contains(product))
+                        ans[product] = new List<string[]>();
+                    ans[product].Add(new string[] { store.name, product.price + "" });
+                }
+            }
+            return ans;
+        }
         public static ICollection<Receipt> getAllMyReceiptHistory(string username)
         {
             aUser temp = getUser(username);
@@ -337,6 +351,10 @@ namespace TradingSystem.BuissnessLayer
         public static Dictionary<string, string> getAllFeedbacks (string storeName, string productName, string manufacturer)
         {
             return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.getAllFeedbacks();
+        }
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
+        {
+            return Stores.searchStore(storeName).searchProduct(productName).info.getAllFeedbacks();
         }
 
 

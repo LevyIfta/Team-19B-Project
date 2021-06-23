@@ -201,6 +201,17 @@ namespace TradingSystem.ServiceLayer
                 ans = ans.Substring(0, ans.Length - 1); // delete the _ in the end
             return ans; // almog#what i think_gal#what he think
         }
+        private static string feedbackToStringSearch(Dictionary<string, string> dic) // username : comment
+        {
+            string ans = "";
+            foreach (string user in dic.Keys)
+            {
+                ans += user + ": " + dic[user] + "\n";
+            }
+            if (ans.Length > 0)
+                ans = ans.Substring(0, ans.Length - 1); // delete the \n in the end
+            return ans; // almog: what i think\ngal: what he think
+        }
         /*public ICollection<SLproduct> products { get; }
         public string storeName { get; }
         public string userName { get; }*/
@@ -287,6 +298,27 @@ namespace TradingSystem.ServiceLayer
             }
             if (ans.Length > 0)
                 ans = ans.Substring(0, ans.Length - 1); // delete the & in the end
+            return ans;
+        }
+        private static string[] AllProductsToStringArr(Dictionary<SLproduct, List<string[]>> products)
+        {
+            string[] ans = new string[products.Count];
+            int i = 0;
+            foreach (SLproduct product in products.Keys)
+            {
+                string temp1 = "";
+                string temp2 = "";
+                foreach (string[] arr in products[product])
+                {
+                    temp1 += arr[0] + "$";
+                    temp2 += arr[1] + "$";
+                }
+                if (temp1.Length > 0)
+                    temp1 = temp1.Substring(0, temp1.Length - 1);
+                if (temp2.Length > 0)
+                    temp2 = temp2.Substring(0, temp2.Length - 1);
+                ans[i] = product.productName + "&" + product.category + "&" + temp1 + "&" + temp2;
+            }
             return ans;
         }
         private static string ListToString(ICollection<string> list)
@@ -541,6 +573,12 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "feedbacks";
                         msg_send.param_list = new string[] { feedbackToString(ans_afb) }; // feedback_feedback -> user#comment.    almog#what i think_gal#what he think
                         break; // feedbackToString
+                    case ("get all feedbacks for search"): //string storeName, string productName
+                        var ans_afbs = TradingSystem.ServiceLayer.UserController.getAllFeedbacks(msg.param_list[0], msg.param_list[1]);
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "feedbacks";
+                        msg_send.param_list = new string[] { feedbackToStringSearch(ans_afbs) }; // feedback\nfeedback -> user: comment.    almog: what i think\ngal: what he think
+                        break; // feedbackToString
                     case ("username"):
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string";
@@ -557,6 +595,12 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string[]";
                         msg_send.param_list = ans_gmp;
+                        break;
+                    case ("get all products"):
+                        var ans_gap = TradingSystem.ServiceLayer.ProductController.getAllProducts();
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string[]";
+                        msg_send.param_list = AllProductsToStringArr(ans_gap);
                         break;
                 }
             }

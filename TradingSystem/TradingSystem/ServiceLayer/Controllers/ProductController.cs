@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace TradingSystem.ServiceLayer
 {
@@ -59,6 +61,14 @@ namespace TradingSystem.ServiceLayer
                 SLreceipts.Add(ProductController.makeReceipt(receipt));
             }
             return SLreceipts;
+        }
+        public static Dictionary<SLproduct, List<string[]>> getAllProducts()
+        {
+            Dictionary<SLproduct, List<string[]>> ans = new Dictionary<SLproduct, List<string[]>>();
+            var all = UserServices.getAllProducts();
+            foreach (Product product in all.Keys)
+                ans[ProductController.makeSLproduct(product)] = all[product];
+            return ans;
         }
     }
 }
