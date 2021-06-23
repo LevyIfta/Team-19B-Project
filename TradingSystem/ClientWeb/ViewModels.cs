@@ -77,6 +77,8 @@ namespace ClientWeb
             {
                 Feedback = value;
                 OnPropertyChanged();
+
+
             }
         }
         private String Cat;
