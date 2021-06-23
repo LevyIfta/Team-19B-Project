@@ -24,6 +24,7 @@ namespace ClientWeb
     public partial class myCart : Page
     {
         UserData user = new UserData();
+
         static Controller controler = Controller.GetController();
         public myCart(string username)
         {
