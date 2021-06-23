@@ -60,8 +60,7 @@ namespace TradingSystem.DataLayer.ORM
                 u.productID,
                 u.userName
             });
-            modelBuilder.Entity<iPolicyData>().HasNoKey();
-            modelBuilder.Entity<iPolicyDiscountData>().HasNoKey();
+
 /*
             modelBuilder.Entity<ReceiptData>()
             .HasOne(p => p.discount)
