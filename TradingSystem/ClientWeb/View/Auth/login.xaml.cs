@@ -21,7 +21,7 @@ namespace ClientWeb
     public partial class login : Page
     {
         UserData user = new UserData();
-        List<string> errors;
+        List<string> errors = new List<string>();
         static Controller controler = Controller.GetController();
         public login()
         {
