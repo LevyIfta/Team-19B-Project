@@ -42,19 +42,7 @@ namespace ClientWeb
         }
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            
-            bool bAns = controler.Login(user.username, user.password)[0].Equals("true");
-            string[] ans = { "false", user.username };
-            if (bAns)
-            {
-                ans[0] = "true";
-            }
-            if (ans != null && ans[0].Equals("true"))
-            {
-                Page1 page1 = new Page1(user.username);
-                NavigationService.Navigate(page1);
-            }
-            /*
+            CleanButton();
             bool insertValid = true;
             if (errors.Count > 0)
             {
@@ -64,7 +52,7 @@ namespace ClientWeb
             }
             if (insertValid)
             {
-                bool bAns = controler.Login(user.username, user.password)[0].Equals("true");
+                bool bAns = controler.Login(user.loginname, user.password)[0].Equals("true");
                 string[] ans = { "false", user.username };
                 if (bAns)
                 {
@@ -72,30 +60,23 @@ namespace ClientWeb
                 }
                 if (ans != null && ans[0].Equals("true"))
                 {
+                    PageController.username = user.loginname;
                     Page1 page1 = new Page1();
                     NavigationService.Navigate(page1);
                 }
                 else
                 {
-                    user.username = "";
+                    user.loginname = "";
                     user.password = "";
                     user.usermsg = ans[1];
                 }
             }
-            */
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            FirstPage page = new FirstPage();
+            Page1 page = new Page1();
             NavigationService.Navigate(page);
-        }
-
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-            register page = new register();
-            NavigationService.Navigate(page);
-            
         }
     }
 }

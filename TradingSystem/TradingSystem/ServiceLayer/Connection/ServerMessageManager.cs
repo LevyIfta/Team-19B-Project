@@ -16,7 +16,7 @@ using TradingSystem.BuissnessLayer;
 namespace TradingSystem.ServiceLayer
 {
     
-    public class ServerMessageManager
+    class ServerMessageManager
     {
 
         public static readonly int EOT = 4;
@@ -83,7 +83,6 @@ namespace TradingSystem.ServiceLayer
                         DecodedMessge response = act(Decoder.decode(data.ToArray()));
 
                       //  byte[] enc_os = TradingSystem.ServiceLayer.Encoder.encode(response);
-
                         lock (qwewe)
                         {
                             qwewe.Enqueue(response);
@@ -333,8 +332,8 @@ namespace TradingSystem.ServiceLayer
                 ans = ans.Substring(0, ans.Length - 1); // delete the # in the end
             return ans;
         }
-       
-        public static DecodedMessge act(DecodedMessge msg)
+
+        private static DecodedMessge act(DecodedMessge msg)
         {
 
             bool ans = false;

@@ -47,21 +47,6 @@ namespace ClientWeb
 
         public string[] Login(string username, string password)
         {
-            /*
-            TradingSystem.ServiceLayer.DecodedMessge msg = new TradingSystem.ServiceLayer.DecodedMessge();
-            msg.type = TradingSystem.ServiceLayer.msgType.FUNC;
-            msg.name = "login";
-            msg.param_list = new string[] { username, password };
-
-            TradingSystem.ServiceLayer.DecodedMessge ans_d = TradingSystem.ServiceLayer.ServerMessageManager.act(msg);
-
-            if (ans_d.type == TradingSystem.ServiceLayer.msgType.OBJ && ans_d.name == "string[]")
-            {
-                return ans_d.param_list;
-            }
-            return null;
-            */
-           
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "login";
@@ -75,7 +60,6 @@ namespace ClientWeb
                 return ans_d.param_list;
             }
             return null;
-            
         }
         public bool Logoutfunc()
         {
@@ -113,12 +97,12 @@ namespace ClientWeb
             return ans;
         }
 
-        public string[] Register(string username, string password, string age, string gender, string address)
+        public string[] Register(string username, string password)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "register";
-            msg.param_list = new string[] { username, password , age, gender, address };
+            msg.param_list = new string[] { username, password };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
 
@@ -280,7 +264,7 @@ namespace ClientWeb
             }
             return null;
         }
-        public string[] Purchase(string username, object cradit, object validity, string paymant)
+        public string[] Purchase(string username, string paymant)
         { // products -> product$product$product -> name&amount 
             DecodedMessge msg = new DecodedMessge();
             // init message fields
@@ -676,6 +660,6 @@ namespace ClientWeb
             throw new NotImplementedException();
         }*/ //todo
 
-
-        }
+        
     }
+}
