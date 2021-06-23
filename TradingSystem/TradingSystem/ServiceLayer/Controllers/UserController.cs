@@ -464,12 +464,7 @@ namespace TradingSystem.ServiceLayer
                 return null;
             return UserServices.GetMyStores(username);
         }
-        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
-        {
-            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
-                return false;
-            return UserServices.sendMessage(username, userToSend, storeToSend, msg);
-        }
+
         //TODO
         private static SLemployee makeSLemployee(BuissnessLayer.aUser employee)
         {
@@ -495,6 +490,24 @@ namespace TradingSystem.ServiceLayer
         public static Func<string> getUserNameFunc()
         {
             return (() => userName);
+        }
+        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return false;
+            return UserServices.sendMessage(username, userToSend, storeToSend, msg);
+        }
+        public static string[] getMessages(string username, string storename)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getMessages(username, storename);
+        }
+        public static string[] getMessages(string username)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getMessages(username);
         }
     }
 }

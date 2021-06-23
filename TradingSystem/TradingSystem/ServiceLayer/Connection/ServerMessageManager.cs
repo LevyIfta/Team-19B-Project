@@ -558,7 +558,7 @@ namespace TradingSystem.ServiceLayer
                         msg_send.param_list = new string[] { feedbackToString(ans_afb) }; // feedback_feedback -> user#comment.    almog#what i think_gal#what he think
                         break; // feedbackToString
                     case ("get all feedbacks for search"): //string storeName, string productName
-                        var ans_afbs = TradingSystem.ServiceLayer.UserController.getAllFeedbacks(msg.param_list[0], msg.param_list[1]);
+                        var ans_afbs = TradingSystem.ServiceLayer.UserController.getAllFeedbacks(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "feedbacks";
                         msg_send.param_list = new string[] { feedbackToStringSearch(ans_afbs) }; // feedback\nfeedback -> user: comment.    almog: what i think\ngal: what he think

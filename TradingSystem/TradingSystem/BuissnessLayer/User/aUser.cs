@@ -202,12 +202,7 @@ namespace TradingSystem.BuissnessLayer
 
 
       
-        
 
-        public virtual void addOffer(OfferRequest request)
-        {
-            
-        }
 
         public virtual MemberData toDataObject()
         {
@@ -218,6 +213,19 @@ namespace TradingSystem.BuissnessLayer
         public virtual void addAlarm(string title, string description)
         {
             Publisher.sendAlarm(this.getUserName(), title, description);
+        }
+
+
+
+
+
+        public virtual void addOffer(OfferRequest request)
+        {
+
+        }
+        public virtual void placeOffer(OfferRequest request)
+        {
+            
         }
         public virtual void addOfferToAnswer(OfferRequest request)
         {

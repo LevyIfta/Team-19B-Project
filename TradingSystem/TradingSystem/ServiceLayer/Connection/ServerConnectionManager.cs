@@ -51,8 +51,6 @@ namespace TradingSystem.ServiceLayer
         public static void init()
         {
 
-            UserController.init(new Func<object, bool>(ServerMessageManager.AlarmHandler));
-            
            
             listner = new TcpListener(IPAddress.Parse(ipAdress), serverPort);
 
