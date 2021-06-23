@@ -13,26 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientWeb.View.StoreManagement
+namespace ClientWeb
 {
     /// <summary>
-    /// Interaction logic for AddManager.xaml
+    /// Interaction logic for myCart.xaml
     /// </summary>
-    public partial class AddManager : Page
+    public partial class myCart : Page
     {
-        public AddManager()
+        public myCart()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

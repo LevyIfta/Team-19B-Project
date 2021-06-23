@@ -37,7 +37,6 @@ namespace ClientWeb.Windows
             string product = this.TextBoxName.Text;
             string manufacturer = this.TextBxMan.Text;
              Dictionary<string, SLproduct> products =  controller.BrowseProducts(username, product, manufacturer);
-            
             foreach (KeyValuePair<string, SLproduct> item in products)
             {
                 Label lab = new Label();

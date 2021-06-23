@@ -1,0 +1,51 @@
+﻿<Page x:Class="ClientWeb.Page1"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ClientWeb"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Page1">
+    <Grid Background="LightBlue">
+
+        <Grid Height="100" Margin="10,10,10,0" VerticalAlignment="Top">
+            <Label x:Name="label" Content="Trading System" Margin="312,0,374,0" VerticalAlignment="Top" RenderTransformOrigin="0.561,-0.104" Height="30"/>
+            <Label x:Name="userName" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,40,10,34" d:LayoutOverrides="Height" Width="99"/>
+        </Grid>
+        <Grid Height="37" Margin="10,73,234,0" VerticalAlignment="Top">
+            <TextBox x:Name="textBox" Margin="316,10,117,4" TextWrapping="Wrap" Text=""/>
+            <Label x:Name="label3" Content="Product:" HorizontalAlignment="Left" Margin="0,8,0,6" d:LayoutOverrides="Height" RenderTransformOrigin="-0.439,0.217"/>
+            <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="59,10,0,4" TextWrapping="Wrap" Text="" Width="120"/>
+            <Button x:Name="button3" Content="Search" HorizontalAlignment="Left" Margin="184,0,0,6" VerticalAlignment="Bottom" Width="75"/>
+            <Label x:Name="label2" Content="Store:" HorizontalAlignment="Left" Margin="276,8,0,3" d:LayoutOverrides="Height" RenderTransformOrigin="0.25,0.538"/>
+            <Button x:Name="button2" Content="Search" HorizontalAlignment="Right" Margin="0,10,25,7" Width="75" d:LayoutOverrides="Height"/>
+
+        </Grid>
+        <Grid Margin="10,115,285,10">
+
+        </Grid>
+        <Grid HorizontalAlignment="Right" Margin="0,115,21,10" Width="244">
+            <DockPanel Margin="10">
+                <StackPanel DockPanel.Dock="Right" Margin="10,0">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="0,0,0,5" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock FontWeight="Bold" Margin="0,0,0,10">Options:</TextBlock>
+                    <Button Name="register" Click="register_Click" >register</Button>
+                    <Button Name="login" Click="login_Click">login</Button>
+                    <Button Name="logout" Click="logout_Click" >logout</Button>
+                    <Button Name="openStore" Click="openStore_Click" >open store</Button>
+                    <Button Name="myCart" Click="myCart_Click" >my cart</Button>
+                    <Button Name="Receipts" Click="Receipts_Click" >my receipts</Button>
+                    <Button Name="user" >edit profile</Button>
+                    <Button Name="stores" Click="stores_Click" >my stores</Button>
+                    <Button x:Name="browse" Click="browse_Click" Content="browse" />
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+
+    </Grid>
+</Page>

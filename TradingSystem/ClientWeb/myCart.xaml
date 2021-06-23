@@ -1,15 +1,14 @@
-﻿<Page x:Class="ClientWeb.View.StoreManagement.ManageFeedBacks"
+﻿<Page x:Class="ClientWeb.myCart"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ClientWeb.View.StoreManagement"
+      xmlns:local="clr-namespace:ClientWeb"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ManageFeedBacks">
+      Title="myCart">
 
-    <Grid Background="LightBlue">
-        <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
-
+    <Grid>
+        
     </Grid>
 </Page>
