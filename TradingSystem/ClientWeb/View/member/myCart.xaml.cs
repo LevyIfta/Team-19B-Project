@@ -33,7 +33,7 @@ namespace ClientWeb
 
             string[] a = controler.GetCart(username);
             MessageBox.Show(a[0]);
-           // string[][] a1 = convertToViewObj.Cart(a);
+           string[][] a1 = convertToViewObj.Cart(a);
 
             // {basket, basket}. basket -> username&storename&pros. pros -> -> pro$pro -> proInfo^feedback -> feedback_feedback -> user#comment
 
@@ -55,8 +55,8 @@ namespace ClientWeb
 
             dgProducts.ItemsSource = productToView;
 
-           string b = a[0].Split('&')[2].Split('$')[1];
-           string storename = a[0].Split('&')[1];
+          // string b = a[0].Split('&')[2].Split('$')[1];
+          // string storename = a[0].Split('&')[1];
 
 
 

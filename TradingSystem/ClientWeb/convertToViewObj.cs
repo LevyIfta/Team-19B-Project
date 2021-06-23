@@ -28,7 +28,7 @@ namespace ClientWeb
             {
                 string[] basket = arr[i].Split('&');
                 string[] pros = basket[2].Split('$');
-                for(int j=0; i<pros.Length; j++)
+                for(int j=0; j<pros.Length; j++)
                 {
                     string[] proInfo = pros[j].Split('^');
                     string[] ans_i = new string[4];

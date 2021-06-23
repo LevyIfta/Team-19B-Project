@@ -40,7 +40,12 @@ namespace ClientWeb.View.components
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //Add product to store 
-            controler.AddNewProduct(username, storeName, product.pname, product.price, product.amount, product.cat, product.man);
+            bool ans = controler.AddNewProduct(username, storeName, product.pname, product.price, product.amount, product.cat, product.man);
+            if (ans)
+            {
+                //MessageBox.Show("Product Added succesfully");
+
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
