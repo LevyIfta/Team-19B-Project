@@ -318,6 +318,7 @@ namespace TradingSystem.ServiceLayer
                 if (temp2.Length > 0)
                     temp2 = temp2.Substring(0, temp2.Length - 1);
                 ans[i] = product.productName + "&" + product.category + "&" + temp1 + "&" + temp2;
+                i++;
             }
             return ans;
         }
@@ -484,7 +485,7 @@ namespace TradingSystem.ServiceLayer
                         var ans_gme = TradingSystem.ServiceLayer.UserController.getInfoEmployees(msg.param_list[0], msg.param_list[1]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "users";
-                        msg_send.param_list = UsersToStringArray(ans_gme); // { user, user, user }. user -> name$permissions. permissions -> per1&per2&per3. per -> store$pers. pers -> pername#pername
+                        msg_send.param_list = UsersToStringArray(ans_gme); // { user, user, user }. user -> name$permissions. permissions -> per1&per2&per3. per -> store^pers. pers -> pername#pername
                         break;
                     case ("add new product to store"): // string username, string storeName, string productName, double price, int amount, string category, string manufacturer
                         ans = TradingSystem.ServiceLayer.UserController.addNewProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], double.Parse(msg.param_list[3]), int.Parse(msg.param_list[4]), msg.param_list[5], msg.param_list[6]);
@@ -602,6 +603,28 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "string[]";
                         msg_send.param_list = AllProductsToStringArr(ans_gap);
                         break;
+                    case ("send message"): // string username, string userToSend, string storeToSend, string msg
+                        ans = TradingSystem.ServiceLayer.UserController.sendMessage(msg.param_list[0], msg.param_list[1], msg.param_list[2], msg.param_list[3]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        break;
+                    case ("get store message"): //string username, string storename
+                        var ans_gmm = TradingSystem.ServiceLayer.UserController.getMessages(msg.param_list[0], msg.param_list[1]);
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string[]";
+                        msg_send.param_list = ans_gmm;
+                        break;
+                    case ("get my message"): //string username
+                        var ans_gmmu = TradingSystem.ServiceLayer.UserController.getMessages(msg.param_list[0]);
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "string[]";
+                        msg_send.param_list = ans_gmmu;
+                        break;
+
                 }
             }
 

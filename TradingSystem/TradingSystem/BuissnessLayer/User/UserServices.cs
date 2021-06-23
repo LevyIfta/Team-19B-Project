@@ -332,6 +332,36 @@ namespace TradingSystem.BuissnessLayer
             }
             return persmissions;
         }
+        public static string[] getMessages(string username, string storename)
+        {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            var msg = Stores.searchStore(storename).messages;
+            string[] ans = new string[msg.Count];
+            int i = 0;
+            foreach (Message message in msg)
+            {
+                ans[i] = message.SenderName + "$" + message.StoreToSend + "$" + message.UserToSend + "$" + message.Msg + "$" + message.isNew.ToString();
+                i++;
+            }
+            return ans;
+        }
+        public static string[] getMessages(string username)
+        {
+            aUser temp = getUser(username);
+            if (temp == null)
+                return null;
+            var msg = ((Member)temp).messages;
+            string[] ans = new string[msg.Count];
+            int i = 0;
+            foreach (Message message in msg)
+            {
+                ans[i] = message.SenderName + "$" + message.StoreToSend + "$" + message.UserToSend + "$" + message.Msg + "$" + message.isNew.ToString();
+                i++;
+            }
+            return ans;
+        }
         public static ICollection<Member> getInfoEmployees(string username, string storeName)
         {
             aUser temp = getUser(username);
@@ -469,12 +499,12 @@ namespace TradingSystem.BuissnessLayer
             if (userToSend != null && userToSend.Length > 0)
             {
                 aUser temp = getUser(userToSend);
-                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg));
+                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg, true));
             }
             else if (storeToSend != null && storeToSend.Length > 0)
             {
                 Store temp = Stores.searchStore(storeToSend);
-                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg));
+                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg, true));
             }
             return false;
         }

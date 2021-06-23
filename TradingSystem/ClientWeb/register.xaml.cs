@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,8 @@ namespace ClientWeb
     /// </summary>
     public partial class register : Page
     {
-        UserR user = new UserR();
-        List<string> errors;
+        UserData user = new UserData();
+        List<string> errors = new List<string>();
         static Controller controler = Controller.GetController();
         public register()
         {
@@ -47,6 +48,22 @@ namespace ClientWeb
         }
         private void button_Click(object sender, RoutedEventArgs e)
         {
+
+
+            string[] ans = controler.Register(user.username, user.password,user.age,user.gender,user.address);
+
+            //string[] ans = mockData.register();
+            if (ans != null && ans[0].Equals("true"))
+            {
+                user.usermsg = "Registretion Su";
+                MessageBox.Show("Success!");
+            }
+            else
+            {
+                MessageBox.Show("Err");
+                user.usermsg = "Registretion Faild\n" + ans[1];
+            }
+            /*
             bool insertValid = true;
             if (errors.Count > 0)
             {
@@ -62,7 +79,7 @@ namespace ClientWeb
             }
             if (insertValid)
             {
-                string[] ans = controler.Register(user.username, user.password);
+                string[] ans = controler.Register(this.textBox1.Text, this.textBox2.Text);
                 if (ans != null && ans[0].Equals("true"))
                 {
                     user.usermsg = "Registretion Su";
@@ -72,12 +89,18 @@ namespace ClientWeb
                     user.usermsg = "Registretion Faild\n" + ans[1];
                 }
             }
+            */
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            login l = new login();
-            NavigationService.Navigate(l);
+            login page = new login();
+            NavigationService.Navigate(page);
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

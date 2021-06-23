@@ -15,13 +15,15 @@ namespace TradingSystem.BuissnessLayer.User
         public string StoreToSend { get; set; }
         public string UserToSend { get; set; }
         public string Msg { get; set; }
+        public bool isNew { get; set; }
 
-        public Message(string SenderName, string StoreToSend, string UserToSend, string Message)
+        public Message(string SenderName, string StoreToSend, string UserToSend, string Message, bool isNew)
         {
             this.SenderName = SenderName;
             this.StoreToSend = StoreToSend;
             this.UserToSend = UserToSend;
             this.Msg = Message;
+            this.isNew = isNew;
         }
 
         public Message(MessageData message)
@@ -36,6 +38,9 @@ namespace TradingSystem.BuissnessLayer.User
             else
                 this.UserToSend = message.UserToSend.userName;
             this.Msg = message.Message;
+            this.isNew = false;
+            if (message.isNew.Equals("True"))
+                this.isNew = true;
 
         }
 
@@ -48,7 +53,7 @@ namespace TradingSystem.BuissnessLayer.User
             else
                 store = Stores.searchStore(StoreToSend).toDataObject();
 
-            return new MessageData(SenderName, store, reciver, this.Msg);
+            return new MessageData(SenderName, store, reciver, this.Msg, this.isNew.ToString());
         }
 
         public bool sendMessage(string SenderName, string StoreToSend, string UserToSend, string Message)

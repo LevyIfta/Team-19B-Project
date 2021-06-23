@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ClientWeb.View.components;
+using ClientWeb.View.member;
+using ClientWeb.View.StoreManagement;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +25,8 @@ namespace ClientWeb
     public partial class Store : Page
     {
         private static Controller controller = Controller.GetController();
+        UserData user = new UserData();
+        List<employeeView> employee = new List<employeeView>();
         private string storeName;
         private string username;
         public Store(string storeName, string username)
@@ -29,14 +34,19 @@ namespace ClientWeb
             InitializeComponent();
 
             this.storeName = storeName;
-            this.username = PageController.username;
+            // this.username = user.username;
+            //debuging porpuse
+            this.username = "almog";
+            this.user.username = "almog";
             this.storeNameLabel.Content = storeName;
 
             initActionsStack();
+            initEmployees();
         }
 
         private void initActionsStack()
         {
+            /*
             ICollection<string> permissions = controller.GetPermissions(username, storeName);
             if (permissions == null)
                 return;
@@ -45,6 +55,41 @@ namespace ClientWeb
                 addPermissionButton(permission);
             // we assume, for the mean time, that there is no permission for adding a new policy
             addPermissionButton("AddPolicy");
+            */
+        }
+        private void initEmployees()
+        {
+            string storename = PageController.storeForManager;
+            var emp = controller.GetInfoEmployees(PageController.username, storename);
+
+            for (int i=0; i<emp.Length; i++)
+            {
+                string[] info = emp[i].Split('$');
+                string[] perm = info[1].Split('&');
+                string permFinal = "";
+                for (int j=0; j<perm.Length; j++)
+                {
+                    string[] permInfo = perm[j].Split('^');
+                    if (permInfo[0].Equals(storename))
+                    {
+                        string[] permList = permInfo[1].Split('#');
+                        for (int h=0; h<permList.Length; h++)
+                        {
+                            permFinal += permList[h] + ", ";
+                        }
+                        
+                    }
+                    if (permFinal.Length > 0)
+                    {
+                        permFinal = permFinal.Substring(0, permFinal.Length - 2);
+                        employee.Add(new employeeView() { employeename = info[0], permissions = permFinal });
+                    }
+                        
+                }
+                
+            }
+
+            dgEmployees.ItemsSource = employee;
         }
 
         private void addPermissionButton(string permission)
@@ -169,7 +214,7 @@ namespace ClientWeb
             productNameLabel.Content = "Product name:";
             manLabel.Content = "Manufacturer:";
 
-            addToMainGrid(new UIElement[] { productNameLabel, productNameTextBox, manLabel, manTextBox});
+            addToMainGrid(new UIElement[] { productNameLabel, productNameTextBox, manLabel, manTextBox });
 
             addProduct.Click += (r, e) =>
             {
@@ -265,7 +310,7 @@ namespace ClientWeb
             string[] infoEmp = controller.GetInfoEmployees(username, storeName);
             UIElement[] infoEmpUIE = new UIElement[infoEmp.Length];
 
-            for(int i = 0; i < infoEmp.Length; i++)
+            for (int i = 0; i < infoEmp.Length; i++)
             {
                 Label infoLabel = new Label();
                 infoLabel.Content = infoEmp[i];
@@ -300,7 +345,7 @@ namespace ClientWeb
 
             editPrice.Click += (r, e) =>
             {
-                controller.EditPrice(username, storeName, productNameTextBox.Text, priceTextBox.Text,  manTextBox.Text);
+                controller.EditPrice(username, storeName, productNameTextBox.Text, priceTextBox.Text, manTextBox.Text);
             };
         }
 
@@ -399,6 +444,62 @@ namespace ClientWeb
         {
             foreach (UIElement element in uIElement)
                 this.mainGrid.Children.Remove(element);
+        }
+
+        private void close_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addproduct_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void infoemployees_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new MangeManagers();
+            NavigationService.Navigate(p);
+        }
+
+        private void addproduct_Click_1(object sender, RoutedEventArgs e)
+        {
+            Page p = new AddProduct(username,storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManageDiscountPolicies(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManagePurchasePolicies(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void feedback_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManageFeedBacks(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void receipts_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new StoreReciepts(username, storeName);
+            NavigationService.Navigate(p);
+        }
+
+        private void fireemplyee_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
