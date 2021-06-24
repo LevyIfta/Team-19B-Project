@@ -23,17 +23,17 @@ namespace ClientWeb
 
     public partial class myCart : Page
     {
-        UserData user = new UserData();
+      
         static Controller controler = Controller.GetController();
-        public myCart(string username)
+        public myCart()
         {
             
-            user.username = username;
+           
             InitializeComponent();
 
-            string[] a = controler.GetCart(username);
+            string[] a = controler.GetCart(PageController.username);
             MessageBox.Show(a[0]);
-           string[][] a1 = convertToViewObj.Cart(a);
+            string[][] a1 = convertToViewObj.Cart(a);
 
             // {basket, basket}. basket -> username&storename&pros. pros -> -> pro$pro -> proInfo^feedback -> feedback_feedback -> user#comment
 

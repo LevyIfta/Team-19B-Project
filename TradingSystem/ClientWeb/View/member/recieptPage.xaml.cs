@@ -25,15 +25,24 @@ namespace ClientWeb.View.member
         List<productView> productToView = new List<productView>();
 
 
-        public recieptPage()
+        public recieptPage(string reciept_id)
         {
 
 
             //// { bool, receipt, receipt }. receipt ->
             ///user$store$price$date$id$products. products -> pro1&pro2&pro3 -> proInfo^feedback -> feedback_feedback -> user#comment
+            ///
+            string [] ans =  controler.GetAllMyReceiptHistory(PageController.username);
             
-            
+            //all recpepits extract the last one and ....
+
+
+
             InitializeComponent();
+            userLabel.Content = "reciept for" + PageController.username;
+            paymentLabel.Content = "Credit";
+            TotalLabel.Content = "price from reciept";
+
 
             productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
             productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
@@ -47,8 +56,9 @@ namespace ClientWeb.View.member
 
         public void addFeedback(object sender, RoutedEventArgs e)
         {
-            productView p = (productView)dgProducts.SelectedItem;
-            MessageBox.Show("implement Add feedback to product");
+
+            string p = dgProducts.SelectedItem.ToString();
+            //MessageBox.Show("implement Add feedback to product");
 
         }
 

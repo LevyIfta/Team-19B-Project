@@ -23,6 +23,15 @@ namespace ClientWeb
         public myReceipts()
         {
             InitializeComponent();
+
+
+
+
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -23,30 +23,19 @@ namespace ClientWeb
     /// </summary>
     public partial class Page1 : Page
     {
-        UserData userInfo = new UserData();
-       // StoreData storeInfo = new StoreData();
-
+ 
         static Controller controler = Controller.GetController();
 
         List<productView> productToView = new List<productView>();
-
-        public Page1(string username)
+        string username = PageController.username;
+        public Page1()
         {
             // mockData data = new mockData();
 
             InitializeComponent();
-
-            if (userName.Equals(""))
-            {
-                userInfo.username = "guest";
-            }
-            else
-            {
-                userInfo.username = username;
-            }
-          
-            this.DataContext = userInfo;
-         
+            username = PageController.username;
+            userName.Content = PageController.username;
+              
             checkMember();
 
             string a = controler.SearchStore("Castro");
@@ -68,30 +57,6 @@ namespace ClientWeb
 
             dgProducts.ItemsSource = productToView;
            
-            //Controller.GetController().test();
-
-            //test area
-
-            // bamba ^ 10.3 ^ manu1 ^ food ^ 10 ^ almog#what i think_gal#what he think
-
-            /*
-            controler.Register("aaaa", "Abc123456");
-            string[] a = controler.Login("aaaa", "Abc123456");
-            MessageBox.Show(a[0]);
-            string[] products = new string[] { "bamba", "besli", "ok" };
-
-            this.dataGrid.ItemsSource = products;
-              
-
-            List<Object> mylist = new List<Object>(){
-            new {FirstName="myfirstName1", LastName="mylastName1", Phone="+123-123-123"},
-            new {FirstName="myfirstName2", LastName="mylastName2", Phone="+124-124-124"},
-            new {FirstName="myfirstName3", LastName="mylastName3", Phone="+125-125-125"}
-                };
-
-            this.dataGrid.ItemsSource = mylist;
-          */
-
         }
 
 
@@ -107,12 +72,12 @@ namespace ClientWeb
         private void checkMember()
         {
 
-            if (userInfo.username.Equals("admin"))
+            if (username.Equals("admin"))
             {
                 register.Visibility = Visibility.Collapsed;
                 login.Visibility = Visibility.Collapsed;
             }
-            else if (userInfo.username.Equals("guest"))
+            else if (username.Equals("guest"))
             {
                 logout.Visibility = Visibility.Collapsed;
                 openStore.Visibility = Visibility.Collapsed;
@@ -121,7 +86,7 @@ namespace ClientWeb
                 user.Visibility = Visibility.Collapsed;
                 stores.Visibility = Visibility.Collapsed;
             }
-            else if (userInfo.username.Length > 0)
+            else if (username.Length > 0)
             {
                 register.Visibility = Visibility.Collapsed;
                 login.Visibility = Visibility.Collapsed;
@@ -130,8 +95,7 @@ namespace ClientWeb
 
         private void openStore_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(userInfo.username);
-            openStore o = new openStore(userInfo.username);
+            openStore o = new openStore();
             NavigationService.Navigate(o);
         }
 
@@ -152,7 +116,7 @@ namespace ClientWeb
             bool ans = controler.Logoutfunc();
             if (ans)
             {
-                userInfo.username = "guest";
+                PageController.username = "guest";
                 checkMember();
                 FirstPage p = new FirstPage();
                 NavigationService.Navigate(p);
@@ -165,7 +129,7 @@ namespace ClientWeb
 
         private void myCart_Click(object sender, RoutedEventArgs e)
         {
-            myCart m = new myCart(userInfo.username);
+            myCart m = new myCart();
             NavigationService.Navigate(m);
         }
 
@@ -179,10 +143,8 @@ namespace ClientWeb
         {
             //   myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
             
-            myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
+            myStores m = new myStores(controler.GetMyStore(PageController.username));
             NavigationService.Navigate(m);
-            
-
         }
 
         private void browse_Click(object sender, RoutedEventArgs e)
@@ -196,7 +158,7 @@ namespace ClientWeb
             //  string product = this.textBox1.Text;
             string product = "";
             string manufacturer = "";
-            Dictionary<string, SLproduct> products = controler.BrowseProducts(userInfo.username, product, manufacturer);
+            Dictionary<string, SLproduct> products = controler.BrowseProducts(PageController.username, product, manufacturer);
             foreach (KeyValuePair<string, SLproduct> item in products)
             {
 
@@ -226,8 +188,8 @@ namespace ClientWeb
           bool ans =  controler.SaveProduct(user.Name, p.storeName , "man", p.name + "&" +p.amounttoAdd);
             if (ans)
             {
-                MessageBox.Show("added to cart");
-                MessageBox.Show(ans.ToString());
+              //  MessageBox.Show("added to cart");
+              //  MessageBox.Show(ans.ToString());
             }
 
         }
@@ -259,8 +221,8 @@ namespace ClientWeb
         {
 
             //Change this
-            Store page = new Store("Castro", "almog");
-            NavigationService.Navigate(page);
+            //Store page = new Store("Castro");
+            //NavigationService.Navigate(page);
 
         }
         private void msg_Click(object sender, RoutedEventArgs e)

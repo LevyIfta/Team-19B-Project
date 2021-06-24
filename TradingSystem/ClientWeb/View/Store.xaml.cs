@@ -25,22 +25,22 @@ namespace ClientWeb
     public partial class Store : Page
     {
         private static Controller controller = Controller.GetController();
-        UserData user = new UserData();
+
         List<employeeView> employee = new List<employeeView>();
         private string storeName;
         private string username;
-        public Store(string storeName, string username)
+        public Store(string storeName)
         {
             InitializeComponent();
 
             this.storeName = storeName;
+            PageController.storeForManager = storeName;
             // this.username = user.username;
             //debuging porpuse
-            this.username = "almog";
-            this.user.username = "almog";
+            this.username = PageController.username;
             this.storeNameLabel.Content = storeName;
-
             initActionsStack();
+
             initEmployees();
         }
 

@@ -9,7 +9,7 @@
       Title="myReceipts">
 
     <Grid Background="LightBlue">
-        <DataGrid HorizontalAlignment="Left" Height="277" Margin="102,53,0,0" VerticalAlignment="Top" Width="230"/>
+        <DataGrid HorizontalAlignment="Left" Height="277" Margin="102,53,0,0" VerticalAlignment="Top" Width="230" SelectionChanged="DataGrid_SelectionChanged"/>
         <Label Content="Show Reciept button for every reciept in the list " HorizontalAlignment="Left" Margin="407,96,0,0" VerticalAlignment="Top" Width="338"/>
 
 

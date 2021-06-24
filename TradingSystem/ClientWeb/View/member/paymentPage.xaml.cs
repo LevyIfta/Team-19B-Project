@@ -61,7 +61,9 @@ namespace ClientWeb
                     {
                         data.msg = "the purchase have succsess!!!!";
                         // show reciept
-                        recieptPage m = new recieptPage();
+
+                        //get reciept_id;
+                        recieptPage m = new recieptPage("0");
                         NavigationService.Navigate(m);
                     }
                 }
