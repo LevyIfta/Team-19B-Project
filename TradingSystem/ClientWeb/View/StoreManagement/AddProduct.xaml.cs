@@ -50,7 +50,7 @@ namespace ClientWeb.View.components
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Store page = new Store(username,storeName);
+            Store page = new Store(storeName);
             NavigationService.Navigate(page);
         }
     }

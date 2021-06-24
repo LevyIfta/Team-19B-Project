@@ -212,12 +212,12 @@ namespace ClientWeb
 
 public class PageController
 {
-
+ 
     public static string username = "guest";
     public static string storeForManager = "";
     public static string permissionsMenu = "for permission enter the hash code,\ninsert you answer like this: 1#2#3\n1 - AddProduct\n2 - EditManagerPermissions\n3 - EditProduct\n4 - GetInfoEmployees\n5 - GetPurchaseHistory\n6 - HireNewStoreManager\n7 - HireNewStoreOwner\n8 - RemoveManager\n9 - RemoveProduct\n10 - RemoveOwner";
-    
-    
+
+
 
 }
 

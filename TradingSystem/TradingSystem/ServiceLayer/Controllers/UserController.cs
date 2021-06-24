@@ -16,15 +16,15 @@ namespace TradingSystem.ServiceLayer
         public static string userName = user.getUserName();
 
 
-
         static UserController()
         {
-     /*       register("almog", "qweE1");
-            login("almog", "qweE1");
-            EstablishStore("almog", "Castro");
-            addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-            logout();*/
-            
+
+         register("almog", "qweE1");
+         login("almog", "qweE1");
+         EstablishStore("almog", "Castro");
+         addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
+         logout();
+
         }
         public static void threadInit()
         {

@@ -21,14 +21,14 @@ namespace ClientWeb
     public partial class myStores : Page
     {
 
-        UserData user = new UserData();
+        string username = PageController.username;
 
-        public myStores(ICollection<string> storesNames, string username)
+        public myStores(ICollection<string> storesNames)
         {
             InitializeComponent();
+           
 
-            user.username = username;
-            MessageBox.Show(username);
+         
             dataGrid1.DataContext = storesNames;
             dataGrid1.ItemsSource = storesNames;
             /*  foreach (string storeName in storesNames)
@@ -61,7 +61,7 @@ namespace ClientWeb
         private void Row_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             string selected = dataGrid1.SelectedItem.ToString();
-            Store storePage = new Store(selected, user.username);
+            Store storePage = new Store(selected);
             NavigationService.Navigate(storePage);
         }
 

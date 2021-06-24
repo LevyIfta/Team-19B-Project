@@ -24,18 +24,17 @@ namespace ClientWeb
         StoreData store = new StoreData();
 
         static Controller controler = Controller.GetController();
-        public openStore(string username)
+        public openStore()
         {
             InitializeComponent();
-            store.username = username;
+            store.username = PageController.username;
             this.DataContext = store;
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(store.username + " " +store.storename);
-            controler.OpenStore(store.username, store.storename);
+        //MessageBox.Show(store.username + " " +store.storename);
+         controler.OpenStore(PageController.username, store.storename);
         }
     }
 }

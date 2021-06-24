@@ -25,8 +25,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="Total :" HorizontalAlignment="Left" Margin="662,119,0,0" VerticalAlignment="Top"/>
-        <Label Content="payment method :" HorizontalAlignment="Left" Margin="661,161,0,0" VerticalAlignment="Top"/>
+        <Label  Name="TotalLabel" Content="Total :" HorizontalAlignment="Left" Margin="662,119,0,0" VerticalAlignment="Top"/>
+        <Label  Name="paymentLabel" Content="payment method :" HorizontalAlignment="Left" Margin="661,161,0,0" VerticalAlignment="Top"/>
+        <Label Name="userLabel"  Content="Label" HorizontalAlignment="Left" Margin="661,81,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>
