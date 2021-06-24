@@ -70,7 +70,7 @@ namespace ClientWeb
             Connection.ConnectionManager.sendMessage(enc);
           
             DecodedMessge ans_d = readMessage();
-            if (ans_d.type == msgType.OBJ && ans_d.name == "string[]")
+            if (ans_d.type == msgType.OBJ && ans_d.name == "login response")
             {
                 return ans_d.param_list;
             }

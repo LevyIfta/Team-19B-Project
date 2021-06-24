@@ -70,7 +70,8 @@ namespace TradingSystem.ServiceLayer
             }
             catch(Exception e)
             {
-                throw e;
+                Console.WriteLine(e.StackTrace);
+
             }
           
         }

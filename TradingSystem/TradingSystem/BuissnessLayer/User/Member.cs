@@ -12,7 +12,8 @@ namespace TradingSystem.BuissnessLayer
 {
     public class Member : aUser
     {
-        //public string userName { get; set; }
+        private string _userName { get; set; }
+     
         public string password { get; set; }
         public double age { get; set; }
         public string gender { get; set; }
@@ -28,7 +29,7 @@ namespace TradingSystem.BuissnessLayer
 
         public Member(string username, string password) : base()
         {
-            this.userName = username;
+            this._userName = username;
             this.password = password;
             this.age = -1;
             this.gender = "nun";
@@ -39,7 +40,7 @@ namespace TradingSystem.BuissnessLayer
         }
         public Member(string username, string password, double age, string gender, string address) : base()
         {
-            this.userName = username;
+            this._userName = username;
             this.password = password;
             this.age = age;
             this.gender = gender;
@@ -51,7 +52,7 @@ namespace TradingSystem.BuissnessLayer
 
         public Member(MemberData member)
         {
-            this.userName = member.userName;
+            this._userName = member.userName;
             this.password = member.password;
             this.reciepts = new List<Receipt>();
             foreach (ReceiptData item in member.receipts)
@@ -69,7 +70,7 @@ namespace TradingSystem.BuissnessLayer
 
         public override string getUserName()
         {
-            return userName;
+            return _userName;
         }
         public override double getAge()
         {

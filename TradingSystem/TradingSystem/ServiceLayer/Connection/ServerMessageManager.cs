@@ -50,6 +50,7 @@ namespace TradingSystem.ServiceLayer
                     waitEvent.Set();
                 }
             };
+            string test = UserController.getUserNameFunc().Invoke();
             int serialNum = Publisher.subscribe(UserController.getUserNameFunc(), add2Q);
 
 
@@ -129,7 +130,17 @@ namespace TradingSystem.ServiceLayer
             //alarmHandler.Start(parameters);
             
             sendhandler.Start(parameters);
-            messagesHandler(parameters);
+            try
+            {
+                messagesHandler(parameters);
+            }
+            catch(Exception e)
+            {
+                try { stream.Close(); } catch (Exception e2) { }
+                Console.WriteLine(e.StackTrace);
+                sendhandler.Abort();
+
+            }
         }
 
 
@@ -342,8 +353,8 @@ namespace TradingSystem.ServiceLayer
                         if (ans_a[0].Equals("true"))
                             ans_d = "true";
                         msg_send.type = msgType.OBJ;
-                        msg_send.name = "string[]";
-                        msg_send.param_list = new string[] { ans_d };
+                        msg_send.name = "login response";
+                        msg_send.param_list =  ans_a ;
                         //   byte[] enc_l = TradingSystem.ServiceLayer.Encoder.encode(msg_send);
                         // ServerConnectionManager.sendMessage(enc_l);
                         break;

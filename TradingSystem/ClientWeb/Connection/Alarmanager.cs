@@ -25,24 +25,32 @@ namespace ClientWeb.Connection
 
         public static void start()
         {
-            while(true) 
+            try
             {
-                byte[] ans_e = Connection.ConnectionManager.readMessageCon();
-                DecodedMessge ans = Connection.Decoder.decode(ans_e);
-                if (ans.type == msgType.ALARM)
-                    handleAlarm(ans);
-                else
+                while (true)
                 {
-                    lock (nonAlarmMsg)
+                    byte[] ans_e = Connection.ConnectionManager.readMessageCon();
+                    DecodedMessge ans = Connection.Decoder.decode(ans_e);
+                    if (ans.type == msgType.ALARM)
+                        handleAlarm(ans);
+                    else
                     {
-       
-                        MessageBox.Show("not an alaram: return value " + ans.name, ans.param_list[0]);
+                        lock (nonAlarmMsg)
+                        {
+
+                            //  MessageBox.Show("not an alaram: return value " + ans.name);
 
 
-                        nonAlarmMsg.Enqueue(ans);
-                        waitlock.Set();
+                            nonAlarmMsg.Enqueue(ans);
+                            waitlock.Set();
+                        }
                     }
                 }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("and Error has occured", "oops! seems something went wrong. please try again later");
+                
             }
         }
         public static DecodedMessge getMsg()

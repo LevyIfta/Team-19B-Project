@@ -52,6 +52,8 @@ namespace TradingSystem
         private void startServer(object sender, RoutedEventArgs e)
         {
             new Thread(new ThreadStart(ServiceLayer.ServerConnectionManager.init)).Start();
+            startserv.Visibility = Visibility.Collapsed;
+            lab1.Visibility = Visibility.Visible;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

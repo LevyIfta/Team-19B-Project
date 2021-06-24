@@ -13,7 +13,7 @@ namespace TradingSystem.ServiceLayer
         [ThreadStatic]
         public static aUser user = new Guest();
         [ThreadStatic]
-        public static string userName = user.userName;
+        public static string userName = user.getUserName();
 
 
 
@@ -29,7 +29,7 @@ namespace TradingSystem.ServiceLayer
         public static void threadInit()
         {
             user = new Guest();
-            userName = user.userName;
+            userName = user.getUserName();
         }
         
 
@@ -46,7 +46,7 @@ namespace TradingSystem.ServiceLayer
             
             aUser olduser = user;
             user = BuissnessLayer.UserServices.getUser(username);
-            userName = user.userName;
+            userName = user.getUserName();
             
             return ans;
 
@@ -62,7 +62,7 @@ namespace TradingSystem.ServiceLayer
                 {
                     aUser olduser = user;
                     user = new Guest();
-                    userName = user.userName;
+                    userName = user.getUserName() ;
                     return true;
                 }
             }
@@ -489,6 +489,7 @@ namespace TradingSystem.ServiceLayer
 
         public static Func<string> getUserNameFunc()
         {
+            userName = user.getUserName();
             return (() => userName);
         }
         public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)

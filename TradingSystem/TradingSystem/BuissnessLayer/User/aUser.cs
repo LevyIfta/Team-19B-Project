@@ -16,7 +16,7 @@ namespace TradingSystem.BuissnessLayer
     {
 
       
-        public string userName { get; set; }
+        public string userName { get { return getUserName(); } }
         public ShoppingCart myCart { get; set; }
 
         public Queue<Tuple<string, string>> alarms { get; set; } = new Queue<Tuple<string, string>>();

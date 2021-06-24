@@ -17,9 +17,9 @@ namespace TradingSystem.DataLayer
         public string gender { get; set; }
         public string address { get; set; }
 
-        public virtual ICollection<BasketInCart> shopingcart { get; set; }
-        public virtual ICollection<ReceiptData> receipts { get; set; }
-        public virtual ICollection<MessageData> messages { get; set; }
+        public virtual ICollection<BasketInCart> shopingcart { get; set; } = new List<BasketInCart>();
+        public virtual ICollection<ReceiptData> receipts { get; set; } = new List<ReceiptData>();
+        public virtual ICollection<MessageData> messages { get; set; } = new List<MessageData>();
 
         //CONSTRUCTORS
         /*  public MemberData(string userName, string password)

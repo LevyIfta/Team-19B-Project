@@ -44,6 +44,7 @@ namespace TradingSystem.ServiceLayer.Connection
         public static int subscribe(Func<string> nameGetter, Action<DecodedMessge> sendFunc)
         {
             int id;
+            string test = nameGetter.Invoke();
             Tuple<Func<string>, Action<DecodedMessge>, int> subscriber;
             lock (SubscriberLock)
             {
