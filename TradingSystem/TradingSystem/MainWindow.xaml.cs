@@ -41,6 +41,9 @@ namespace TradingSystem
         private void initSupplySystem()
         {
             string supplyURL = getSupplyURL();
+
+            if (!supplyURL.Equals(""))
+                SupplySystem.SupplySystem.setReal(supplyURL);
         }
 
         private void initPaymentSystem()
