@@ -592,18 +592,19 @@ private void fillOwners()
             foreach (Receipt receipt in this.receipts)
                 receipts.Add(DataLayer.ORM.DataAccess.getReciept(receipt.receiptId));
             foreach (Product product in this.inventory)
-                products.Add(product.toDataObject(this.name));
+                products.Add(DataLayer.ORM.DataAccess.getProduct(product.id));
             foreach (Member member in owners)
-                members1.Add(member.toDataObject());
+                members1.Add(DataLayer.ORM.DataAccess.getMember(member.userName));
             foreach (Member member in managers)
-                members2.Add(member.toDataObject());
+                members2.Add(DataLayer.ORM.DataAccess.getMember(member.userName));
             foreach (Message message in this.messages)
-                messages.Add(message.toDataObject());
+                messages.Add(DataLayer.ORM.DataAccess.getMessage(message.id));
             foreach (iPolicy policy in this.purchasePolicies)
                 policyDatas.Add(null);
             foreach (iPolicyDiscount discount in this.discountPolicies)
                 discountDatas.Add(null);
-            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, messages, discountDatas, policyDatas);
+            return new StoreData(this.name, DataLayer.ORM.DataAccess.getMember(this.founder.userName), receipts, products, members1, members2, messages, discountDatas, policyDatas);
+           // return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, messages, discountDatas, policyDatas);
         }
 
         public void removeFromInventory(Product product)

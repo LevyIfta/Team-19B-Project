@@ -17,6 +17,8 @@ namespace TradingSystem.BuissnessLayer.User
         public string Msg { get; set; }
         public bool isNew { get; set; }
 
+        public Guid id { get; set; } = Guid.NewGuid();
+
         public Message(string SenderName, string StoreToSend, string UserToSend, string Message, bool isNew)
         {
             this.SenderName = SenderName;

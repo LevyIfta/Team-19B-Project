@@ -377,12 +377,15 @@ namespace TradingSystem.BuissnessLayer
             List<ReceiptData> receipts = new List<ReceiptData>();
             List<MessageData> messages = new List<MessageData>();
             foreach (ShoppingBasket basket in myCart.baskets)
-                baskets.Add(basket.toDataObject());
+                //  baskets.Add(basket.toDataObject());
+                baskets.Add(DataLayer.ORM.DataAccess.getBasket(basket.owner.getUserName(), basket.store.name));
             foreach (Receipt receipt in this.reciepts)
-                receipts.Add(receipt.toDataObject());
+                //receipts.Add(receipt.toDataObject());
+                receipts.Add(DataLayer.ORM.DataAccess.getReciept(receipt.receiptId));
             foreach (Message item in this.messages)
             {
-                messages.Add(item.toDataObject());
+                // messages.Add(item.toDataObject());
+                messages.Add(DataLayer.ORM.DataAccess.getMessage(item.id));
             }
             return new MemberData(userName, password, age, gender, address, baskets, receipts, messages);
         }

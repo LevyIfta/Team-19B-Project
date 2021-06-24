@@ -160,7 +160,8 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             List<ProductData> products = new List<ProductData>();
             foreach (Product product in this.products)
-                products.Add(product.toDataObject(this.store.name));
+                // products.Add(product.toDataObject(this.store.name));
+                products.Add(DataLayer.ORM.DataAccess.getProduct(product.id));
             return new BasketInRecipt( products, null);
         }
 
@@ -168,7 +169,8 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             List<ProductData> products = new List<ProductData>();
             foreach (Product product in this.products)
-                products.Add(product.toDataObject(this.store.name));
+                //   products.Add(product.toDataObject(this.store.name));
+                products.Add(DataLayer.ORM.DataAccess.getProduct(product.id));
             return new BasketInCart(this.store.toDataObject(), ((Member)this.owner).toDataObject(), products);
         }// (ICollection<ProductData>)this.products.Select(p => p.toDataObject()),
         /*public BasketInRecipt toDataObject(string notimportent)

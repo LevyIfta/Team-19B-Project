@@ -15,7 +15,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         public double price { get; set; }
 
         public double discount_percent { get; set; }
-        private Guid id { get; set; } = Guid.NewGuid();
+        public Guid id { get; set; } = Guid.NewGuid();
 
         public Product(ProductInfo info, int amount, double price)
         {
