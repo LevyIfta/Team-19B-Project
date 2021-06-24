@@ -26,7 +26,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         // id generation help fields
         private static int currentId = -1;
         private static Object idLocker = new Object();
-        private Object responseLocker = new object();
+        private Object responseLocker = new Object();
 
         public OfferRequest(Product product, aUser requester, Store store)
         {
