@@ -13,5 +13,6 @@
         <Button Content="run test reg" HorizontalAlignment="Left" Margin="178,337,0,0" VerticalAlignment="Top" Width="107" Height="30" Click="Button_Click"/>
         <Button Content="run test login" HorizontalAlignment="Left" Margin="423,337,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Label x:Name="lab1" Content="Server Runing" Visibility="Collapsed" HorizontalAlignment="Left" Height="60" Margin="224,181,0,0" VerticalAlignment="Top" Width="356"/>
+        <Button x:Name="button" Content="Configuration" HorizontalAlignment="Left" Margin="39,181,0,0" VerticalAlignment="Top" Width="105" Click="button_Click_2"/>
     </Grid>
 </Window>

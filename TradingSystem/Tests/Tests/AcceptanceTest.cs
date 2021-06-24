@@ -425,7 +425,7 @@ namespace Tests
 
             string[] splitReceipt = receiptString.Split('$');
             // username&storename$price$date$receiptId$<products>
-            receipt.user.userName = splitReceipt[0];
+            //receipt.user.userName = splitReceipt[0];
           //  receipt.store = bridge.getStore(splitReceipt[1]); //changed
             receipt.price = double.Parse(splitReceipt[2]);
             receipt.date = Convert.ToDateTime(splitReceipt[3]);
@@ -689,7 +689,7 @@ namespace Tests
 
             string[] splitReceipt = receiptString.Split('$');
             // username&storename$price$date$receiptId$<products>
-            receipt.user.userName = splitReceipt[0];
+            //receipt.user.userName = splitReceipt[0];
             //receipt.store = bridge.getStore(splitReceipt[1]); //changed
             receipt.price = double.Parse(splitReceipt[2]);
             receipt.date = Convert.ToDateTime(splitReceipt[3]);

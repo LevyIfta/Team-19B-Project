@@ -65,5 +65,10 @@ namespace TradingSystem
         {
            object ans = TradingSystem.ServiceLayer.UserController.login("grim", "Oirlee1");
         }
+
+        private void button_Click_2(object sender, RoutedEventArgs e)
+        {
+            ServiceLayer.Connection.ConfigurationFile.Configure();
+        }
     }
 }

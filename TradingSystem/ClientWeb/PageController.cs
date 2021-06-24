@@ -195,6 +195,18 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+
+        private String Noti;
+
+        public String noti
+        {
+            get { return Noti; }
+            set
+            {
+                Noti = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
 

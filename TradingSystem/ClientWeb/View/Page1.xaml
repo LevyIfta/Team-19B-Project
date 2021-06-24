@@ -12,7 +12,7 @@
         <Grid Height="100" Margin="10,10,10,0" VerticalAlignment="Top">
             <Label x:Name="label" Content="Trading System" Margin="312,0,374,0" VerticalAlignment="Top" RenderTransformOrigin="0.561,-0.104" Height="30"/>
             <Label x:Name="userName" Content="{Binding Path=username}" HorizontalAlignment="Right" Margin="0,16,34,58" Width="98"/>
-            <Label Content="0" HorizontalAlignment="Left" Margin="651,70,0,0" VerticalAlignment="Top" Width="16" RenderTransformOrigin="-1.761,0.224"/>
+            <Label Content="{Binding Path=username}" HorizontalAlignment="Left" Margin="651,70,0,0" VerticalAlignment="Top" Width="16" RenderTransformOrigin="-1.761,0.224"/>
             <Label Content="Notifications" RenderTransformOrigin="2.366,0.623" Margin="688,72,15,2"/>
         </Grid>
         <Grid Height="37" Margin="10,73,234,0" VerticalAlignment="Top">

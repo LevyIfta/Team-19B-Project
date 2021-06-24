@@ -45,6 +45,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Supply.cs" />
+    <Compile Include="SupplyInterface.cs" />
+    <Compile Include="SupplyProxy.cs" />
+    <Compile Include="SupplyReal.cs" />
+    <Compile Include="SupplySystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

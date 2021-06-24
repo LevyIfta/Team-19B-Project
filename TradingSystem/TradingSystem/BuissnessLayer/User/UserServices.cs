@@ -324,14 +324,18 @@ namespace TradingSystem.BuissnessLayer
             if (temp == null)
                 return null;
             var list = temp.GetAllPermissions();
-            string[] persmissions = new string[list.Count];
-            int i = 0;
-            foreach (string type in list.Keys)
+            if(list != null)
             {
-                persmissions[i] = type;
-                i++;
+                string[] persmissions = new string[list.Count];
+                int i = 0;
+                foreach (string type in list.Keys)
+                {
+                    persmissions[i] = type;
+                    i++;
+                }
+                return persmissions;
             }
-            return persmissions;
+            return null;
         }
         public static string[] getMessages(string username, string storename)
         {

@@ -45,7 +45,7 @@ namespace TradingSystem.DataLayer.ORM
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-      => options.UseSqlite("DataSource=TradingSystem.db");
+      => options.UseSqlite("DataSource=" + ServiceLayer.Connection.ConfigurationFile.DBName);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

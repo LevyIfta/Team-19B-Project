@@ -62,7 +62,7 @@ namespace TradingSystem.ServiceLayer
                 {
                     aUser olduser = user;
                     user = new Guest();
-                    userName = user.getUserName() ;
+                    userName = user.getUserName();
                     return true;
                 }
             }

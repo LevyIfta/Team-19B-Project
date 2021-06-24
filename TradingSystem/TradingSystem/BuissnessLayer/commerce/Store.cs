@@ -39,7 +39,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.inventory = new List<Product>();
             this.owners = new List<Member>();
             this.managers = new List<Member>();
-
+            this.messages = new List<Message>();
             this.discountPolicies = new LinkedList<iPolicyDiscount>();
             this.purchasePolicies = new LinkedList<iPolicy>();
             this.requestsAcceptors = new Dictionary<int, ICollection<aUser>>();
@@ -590,7 +590,7 @@ private void fillOwners()
             List<iPolicyDiscountData> discountDatas = new List<iPolicyDiscountData>();
             List<iPolicyData> policyDatas = new List<iPolicyData>();
             foreach (Receipt receipt in this.receipts)
-                receipts.Add(receipt.toDataObject());
+                receipts.Add(DataLayer.ORM.DataAccess.getReciept(receipt.receiptId));
             foreach (Product product in this.inventory)
                 products.Add(product.toDataObject(this.name));
             foreach (Member member in owners)

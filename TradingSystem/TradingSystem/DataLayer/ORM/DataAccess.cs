@@ -95,6 +95,7 @@ namespace TradingSystem.DataLayer.ORM
                 if (member.userName.Equals("guest"))
                     return;
                 context.members.Add(member);
+                //context.Entry(member).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
                 context.SaveChanges();
             }
         }
@@ -134,6 +135,8 @@ namespace TradingSystem.DataLayer.ORM
         {
             lock (Lock)
             {
+                MemberData member = DataAccess.getMember(store.founder.userName);
+                store.founder = member;
                 context.stores.Add(store);
                 context.SaveChanges();
             }
