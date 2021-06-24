@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace PaymentSystem
 {
-    public static class Verification
+    public class VerificationProxy : VerificationInterface
     {
-        public static bool Pay(string userName, string creditNumber, string validity, string cvv)
+        public VerificationInterface real { get; set; }
+
+        public bool Pay(string userName, string creditNumber, string validity, string cvv)
         {
             if (creditNumber == null || userName == null || validity == null || cvv == null)
                 return false;
@@ -21,8 +25,15 @@ namespace PaymentSystem
                 return false;
             if (date[0].Length > 3 || date[0].Length == 0 || date[1].Length < 2 || date[1].Length > 4)
                 return false;
-            return true;
+
+            // check for real
+            if (this.real == null)
+                return true;
+
+            bool success = real.Pay(userName, creditNumber, validity, cvv);
+            return success;
         }
+
         private static bool containLatter(string str)
         {
             foreach (char letter in str)
@@ -31,6 +42,11 @@ namespace PaymentSystem
                     return true;
             }
             return false;
+        }
+
+        public void setReal(VerificationInterface real)
+        {
+            this.real = real;
         }
     }
 }

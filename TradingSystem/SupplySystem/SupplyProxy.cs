@@ -5,10 +5,11 @@ using System.Text;
 
 namespace SupplySystem
 {
-    public static class Supply
+    public class SupplyProxy : SupplyInterface
     {
+        public SupplyInterface real { get; set; }
         private static ICollection<string> StoreList;
-        public static bool OrderPackage(string storeName, string userName, string address, string orderInfo)
+        public bool OrderPackage(string storeName, string userName, string address, string orderInfo)
         { // orderInfo -> order_order_order -> product$1
             if (storeName == null || userName == null || address == null || orderInfo == null)
                 return false;
@@ -25,16 +26,20 @@ namespace SupplySystem
                 if (containLatter(info[1]))
                     return false;
             }
+
+            if (this.real == null)
             return true;
+
+            return this.real.OrderPackage(storeName, userName, address, orderInfo);
         }
-        public static void InformStore(string storeName)
+        public void InformStore(string storeName)
         {
             if (StoreList == null)
                 StoreList = new List<string>();
             if (!StoreList.Contains(storeName))
                 StoreList.Add(storeName);
         }
-        public static bool RemoveStore(string storeName)
+        public bool RemoveStore(string storeName)
         {
             if (StoreList == null)
                 return false;
@@ -43,7 +48,7 @@ namespace SupplySystem
             StoreList.Remove(storeName);
             return true;
         }
-        private static bool containNumber(string str)
+        private bool containNumber(string str)
         {
             foreach (char letter in str)
             {
@@ -52,7 +57,7 @@ namespace SupplySystem
             }
             return false;
         }
-        private static bool containLatter(string str)
+        private bool containLatter(string str)
         {
             foreach (char letter in str)
             {
@@ -60,6 +65,11 @@ namespace SupplySystem
                     return true;
             }
             return false;
+        }
+
+        public void setReal(SupplyInterface real)
+        {
+            this.real = real;
         }
     }
 }

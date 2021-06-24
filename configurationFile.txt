@@ -1,5 +1,5 @@
-Supply_system: realSupplySystem
-Payment_system: realPaymentSystem
+Supply_system: https://cs-bgu-wsep.herokuapp.com/
+Payment_system: https://cs-bgu-wsep.herokuapp.com/
 AdminUsername: Admin1
 AdminPassword: Adminpass123
 AdminAge: 45
