@@ -594,6 +594,8 @@ namespace TradingSystem.BuissnessLayer
 
         public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer,int amount, double price)
         {
+            // try to place an offer request
+            // returns the offer request id in case of success, otherwise it returns -1
             aUser requester = getUser(username);
             Store store = Stores.searchStore(storeName);
             ProductInfo pInfo = ProductInfo.getProductInfo(productName, category, manufacturer);
@@ -607,5 +609,120 @@ namespace TradingSystem.BuissnessLayer
             requester.placeOffer(request);
             return request.id;
         }
+
+        public static bool rejectOfferRequest(string rejectorUsername, int requestID)
+        {
+            aUser rejector = getUser(rejectorUsername);
+
+            if (rejector == null)
+                return false;
+
+            return rejector.rejectOffer(requestID);
+        }
+
+        public static bool negotiateOffer(string negotiatorUsername, int requestID, double price)
+        {
+            aUser negotiator = getUser(negotiatorUsername);
+
+            if (negotiator == null)
+                return false;
+
+            return negotiator.negotiateRequest(requestID, price);
+        }
+        
+        public static bool acceptOfferRequest(string acceptorUsername, int requestID)
+        {
+            aUser acceptor = getUser(acceptorUsername);
+
+            if (acceptor == null)
+                return false;
+
+            return acceptor.acceptRequest(requestID);
+        }
+        
+        public static int[] getOfferRequestsIDs(string username)
+        {
+            aUser requestsHolder = getUser(username);
+
+            if (requestsHolder == null)
+                return null;
+
+            OfferRequest[] requests = requestsHolder.getRequests().ToArray<OfferRequest>();
+            int[] requestsIDs = new int[requests.Count()];
+
+            for (int i = 0; i < requestsIDs.Length; i++)
+                requestsIDs[i] = requests[i].id;
+
+            return requestsIDs;
+        }
+
+        public static int[] getOfferRequestsToAnswerIDs(string username)
+        {
+            aUser requestsHolder = getUser(username);
+
+            if (requestsHolder == null)
+                return null;
+
+            OfferRequest[] requests = requestsHolder.getRequestsToAnswer().ToArray<OfferRequest>();
+            int[] requestsIDs = new int[requests.Count()];
+
+            for (int i = 0; i < requestsIDs.Length; i++)
+                requestsIDs[i] = requests[i].id;
+
+            return requestsIDs;
+        }
+
+        public static string[] getOfferRequest(string username, int requestID)
+        {
+            aUser requestsHolder = getUser(username);
+
+            if (requestsHolder == null)
+                return null;
+            
+            OfferRequest request = requestsHolder.getOfferRequest(requestID);
+
+            if (request == null)
+                return null;
+
+            // convert it to string array
+            string[] requestString = new string[7]; // the length is equal to the number of relevant fields in OfferRequest
+
+            requestString[0] = "" + request.id;
+            requestString[1] = request.requester.getUserName();
+            requestString[2] = request.store.name;
+            requestString[3] = request.product.info.ToString();
+            requestString[4] = "" + request.product.amount;
+            requestString[5] = "" + request.getPrice();
+            requestString[6] = "" + request.status;
+            
+            return requestString;
+        }
+
+        public static string[] getOfferRequestToAnswer(string username, int requestID)
+        {
+            aUser requestsHolder = getUser(username);
+
+            if (requestsHolder == null)
+                return null;
+
+            OfferRequest request = requestsHolder.getRequestToAnswer(requestID);
+
+            if (request == null)
+                return null;
+
+            // convert it to string array
+            string[] requestString = new string[7]; // the length is equal to the number of relevant fields in OfferRequest
+
+            requestString[0] = "" + request.id;
+            requestString[1] = request.requester.getUserName();
+            requestString[2] = request.store.name;
+            requestString[3] = request.product.info.ToString();
+            requestString[4] = "" + request.product.amount;
+            requestString[5] = "" + request.getPrice();
+            requestString[6] = "" + request.status;
+
+            return requestString;
+        }
+
     }
 }

@@ -509,5 +509,61 @@ namespace TradingSystem.ServiceLayer
                 return null;
             return UserServices.getMessages(username);
         }
+
+        public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer, int amount, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return -1;
+            return UserServices.placeOffer(username, storeName, productName, category, manufacturer, amount, price);
+        }
+
+        public static bool acceptOfferRequest(string acceptor, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(acceptor))
+                return false;
+            return UserServices.acceptOfferRequest(acceptor, requestID);
+        }
+
+        public static bool rejectOfferRequest(string rejector, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(rejector))
+                return false;
+            return UserServices.rejectOfferRequest(rejector, requestID);
+        }
+
+        public static bool negotiateOfferRequest(string negotiator, int requestID, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(negotiator))
+                return false;
+            return UserServices.negotiateOffer(negotiator, requestID, price);
+        }
+
+        public static int[] getOfferRequestsIDs(string username)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequestsIDs(username);
+        }
+
+        public static int[] getOfferRequestsToAnswerIDs(string username)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequestsToAnswerIDs(username);
+        }
+
+        public static string[] getOfferRequest(string username, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequest(username, requestID);
+        }
+
+        public static string[] getOfferRequestToAnswer(string username, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequestToAnswer(username, requestID);
+        }
     }
 }

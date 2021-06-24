@@ -454,5 +454,25 @@ namespace TradingSystem.BuissnessLayer
                     return request.negotiate(price, this);
             return false;
         }
+
+        public override ICollection<OfferRequest> getRequests()
+        {
+            return this.requests;
+        }
+
+        public override ICollection<OfferRequest> getRequestsToAnswer()
+        {
+            return this.requestsToAnswer;
+        }
+
+        public override OfferRequest getOfferRequest(int requestID)
+        {
+            foreach (OfferRequest request in this.requests)
+                if (request.id == requestID)
+                    return request;
+            return null;
+        }
+
+        
     }
 }
