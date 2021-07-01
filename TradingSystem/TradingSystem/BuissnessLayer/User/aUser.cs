@@ -255,5 +255,20 @@ namespace TradingSystem.BuissnessLayer
         {
             return false;
         }
+
+        public virtual ICollection<OfferRequest> getRequests()
+        {
+            return null;
+        }
+
+        public virtual ICollection<OfferRequest> getRequestsToAnswer()
+        {
+            return null;
+        }
+
+        public virtual OfferRequest getOfferRequest(int requestID)
+        {
+            return null;
+        }
     }
 }

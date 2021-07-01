@@ -211,7 +211,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BuissnessLayer\System.cs" />
+    <Compile Include="BuissnessLayer\SystemBuild.cs" />
     <Compile Include="BuissnessLayer\commerce\feedbackSystem.cs" />
     <Compile Include="BuissnessLayer\commerce\OfferRequest.cs" />
     <Compile Include="BuissnessLayer\commerce\Rules\DicountPolicy\AndPolicyDiscount.cs" />

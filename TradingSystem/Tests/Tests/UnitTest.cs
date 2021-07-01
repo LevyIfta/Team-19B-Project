@@ -196,6 +196,7 @@ namespace Tests
             var temp = ((Member)UserServices.getUser(user1)).GetPermissions(storename);
             Assert.IsTrue(UserController.addNewProduct(user1, storename, "bamba", 5.9, 5, "snacks", "osem"));
             Assert.IsTrue(UserController.editProduct(user1, storename, "bamba", 5.5, "osem"));
+            Assert.IsTrue(UserController.editManagerPermissions(user1, storename, user2, permissionList));
             UserController.logout();
         }
 
@@ -2504,6 +2505,79 @@ namespace Tests
             // check for amounts in the store
             int newAmount = store1.searchProduct(p1_name, p1_man).amount;
             Assert.AreEqual(newAmount, 17, "The amounts were not correctly updated in store");
+        }
+
+        [TestMethod]
+        public void purchaseOfferTestGood()
+        {
+            string storename = "Potg_store_1", user1 = "Potg_user_1", user2 = "Potg_user_2", password = "qweE1";
+            string productName = "bamba", productManuf = "osem", productCtgr = "snacks";
+            UserController.register(user1, password, 99, "male", "");
+            UserController.register(user2, password, 99, "male", "");
+            UserController.login(user1, password);
+            UserController.EstablishStore(user1, storename);
+            UserController.addNewProduct(user1, storename, productName, 5.5, 100, productCtgr, productManuf);
+            UserController.logout();
+            UserController.login(user2, password);
+            //make initial offer
+            int offerID1 = UserController.placeOffer(user2, storename, productName, productCtgr, productManuf, 1, 1.5);
+            Assert.IsTrue(offerID1 > -1);
+            Assert.IsNotNull(UserController.getOfferRequestsToAnswerIDs(user2).Length == 1);
+            Assert.IsTrue(UserController.getOfferRequest(user1, offerID1)[6].Equals("PENDING_STORE"));
+            UserController.logout();
+            UserController.login(user1, password);
+            //reject initial offer
+            UserController.rejectOfferRequest(user1, offerID1);
+            Assert.IsTrue(UserController.getOfferRequestToAnswer(user1, offerID1)[6].Equals("REJECTED"));
+            UserController.logout();
+            UserController.login(user2, password);
+            //make secondary offer
+            int offerID2 = UserController.placeOffer(user2, storename, productName, productCtgr, productManuf, 1, 1.5);
+            UserController.logout();
+            UserController.login(user1, password);
+            //bargain on secondary offer
+            UserController.negotiateOfferRequest(user1, offerID2, 2.5);
+            Assert.IsTrue(UserController.getOfferRequestToAnswer(user1, offerID1)[6].Equals("PENDING_REQUESTER"));
+            UserController.logout();
+            UserController.login(user2, password);
+            //accept bargain on secondary offer
+            UserController.acceptOfferRequest(user2, offerID2);
+            Assert.IsTrue(UserController.purchase(user2, "1234567812345678", "01/99", "111").Equals("True"));
+            UserController.logout();
+        }
+
+        [TestMethod]
+        public void purchaseOfferTestBad()
+        {
+            string storename = "Potb_store_1", user1 = "Potb_user_1", user2 = "Potb_user_2", password = "qweE1";
+            string productName = "bamba", productManuf = "osem", productCtgr = "snacks";
+            UserController.register(user1, password, 99, "male", "");
+            UserController.register(user2, password, 99, "male", "");
+            UserController.login(user1, password);
+            UserController.EstablishStore(user1, storename);
+            UserController.addNewProduct(user1, storename, productName, 5.5, 100, productCtgr, productManuf);
+            UserController.logout();
+            //guset placing offer
+            int offerID1 = UserController.placeOffer("guest", storename, productName, productCtgr, productManuf, 1, 1.5);
+            Assert.IsTrue(offerID1 == -1);
+            //logged out user placing offer
+            int offerID2 = UserController.placeOffer(user2, storename, productName, productCtgr, productManuf, 1, 1.5);
+            Assert.IsTrue(offerID2 == -1);
+            UserController.login(user2, password);
+            //placing offer of nonexistant store
+            int offerID3 = UserController.placeOffer(user2, "wrongstore", productName, productCtgr, productManuf, 1, 1.5);
+            Assert.IsTrue(offerID3 < 0);
+            //placing offer for nonexistant product
+            int offerID4 = UserController.placeOffer(user2, storename, "wrongProduct", productCtgr, productManuf, 1, 1.5);
+            Assert.IsTrue(offerID4 < 0);
+            int offerID5 = UserController.placeOffer(user2, storename, productName, productCtgr, productManuf, 1, 1.5);
+            UserController.logout();
+            UserController.login(user1, password);
+            UserController.closeStore(user1, storename);
+            UserController.logout();
+            UserController.login(user2, password);
+            Assert.IsTrue(UserController.getOfferRequest(user2, offerID5)[6].Equals("REJECTED"));
+            UserController.logout();
         }
 
     }

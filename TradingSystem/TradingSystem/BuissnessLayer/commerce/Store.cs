@@ -307,9 +307,9 @@ private void fillOwners()
                     return new string[] { "false", policy };
                 if (!checkAmounts(new LinkedList<Product>(new Product[] { product })))
                     return new string[] { "false", "not enough items in stock" };
-                if (!PaymentSystem.Verification.Pay(user.userName, creditNumber, validity, cvv))
+                if (!PaymentSystem.VerificationSystem.paymentSystem.Pay(user.userName, creditNumber, validity, cvv))
                     return new string[] { "false", "payment not approved" };
-                if (!SupplySystem.Supply.OrderPackage(name, user.userName, user.getAddress(), ProductToString(product)))
+                if (!SupplySystem.SupplySystem.supplySystem.OrderPackage(name, user.userName, user.getAddress(), ProductToString(product)))
                     return new string[] { "false", "supply not approved" };
 
                 // create a temp basket for purchase
@@ -352,9 +352,9 @@ private void fillOwners()
                     return new string[] { "false", policy };
                 if (!checkAmounts(products))
                     return new string[] { "false", "not enough items in stock" };
-                if(!PaymentSystem.Verification.Pay(basket.owner.userName, creditNumber, validity, cvv))
+                if(!PaymentSystem.VerificationSystem.paymentSystem.Pay(basket.owner.userName, creditNumber, validity, cvv))
                     return new string[] { "false", "payment not approved" };
-                if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), BasketToStringArray(basket)))
+                if(!SupplySystem.SupplySystem.supplySystem.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), BasketToStringArray(basket)))
                     return new string[] { "false", "supply not approved" };
                 receipt = validPurchase(basket);
                 if (!basket.owner.userName.Equals("guest"))

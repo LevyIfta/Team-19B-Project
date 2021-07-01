@@ -148,7 +148,9 @@ namespace TradingSystem.BuissnessLayer.commerce
 
             output += "Request ID: " + this.id + "\n";
             output += "Username: " + this.requester.userName + "\n";
+            output += "Store: " + this.store.name + "\n";
             output += "Product: " + "\n" + this.product.info.ToString() + "\n";
+            output += "Amount: " + this.product.amount + "\n";
             output += "Price: " + this.product.price + "\n";
             output += "Status: " + this.status + "\n";
 
