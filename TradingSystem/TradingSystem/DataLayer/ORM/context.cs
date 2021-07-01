@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.DataLayer.ORM
 {
@@ -42,6 +43,18 @@ namespace TradingSystem.DataLayer.ORM
         public DbSet<ReceiptData> recipts { get; set; }
         public DbSet<StoreData> stores { get; set; }
 
+        //permissions
+        public DbSet<addProductPermissionData> addProductPermissions { get; set; }
+        public DbSet<editManagerPermissionsData> editManagerPermissions{ get; set; }
+        public DbSet<editProductPermissionData> editProductPermissions { get; set; }
+        public DbSet<editManagerPermissionsData> getInfoEmployeesPermissions { get; set; }
+        public DbSet<getPurchaseHistoryPermissionData> getPurchaseHistoryPermissions { get; set; }
+        public DbSet<hireNewStoreManagerPermissionData> hireNewStoreManagerPermissions { get; set; }
+        public DbSet<hireNewStoreOwnerPermissionData> hireNewStoreOwnerPermissions { get; set; }
+        public DbSet<removeManagerPermissionData> removeManagerPermissions { get; set; }
+        public DbSet<removeProductPermissionData> removeProductPermissions { get; set; }
+        public DbSet<removeOwnerPermissionData> removeOwnerPermissions { get; set; }
+
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -60,14 +73,20 @@ namespace TradingSystem.DataLayer.ORM
                 u.productID,
                 u.userName
             });
+            modelBuilder.Entity<aPermissionData>().HasKey(u => new
+            {
+                u.myOwnerName,
+                u.store
+            });
 
-/*
-            modelBuilder.Entity<ReceiptData>()
-            .HasOne(p => p.discount)
-            .WithMany(b => b.recipts);
-            modelBuilder.Entity<ReceiptData>()
-            .HasOne(p => p.purchasePolicy)
-            .WithMany(b => b.recipts);*/
+
+            /*
+                        modelBuilder.Entity<ReceiptData>()
+                        .HasOne(p => p.discount)
+                        .WithMany(b => b.recipts);
+                        modelBuilder.Entity<ReceiptData>()
+                        .HasOne(p => p.purchasePolicy)
+                        .WithMany(b => b.recipts);*/
         }
 
 
@@ -84,6 +103,16 @@ namespace TradingSystem.DataLayer.ORM
             productInfos.RemoveRange(productInfos);
             recipts.RemoveRange(recipts);
             stores.RemoveRange(stores);
+            addProductPermissions.RemoveRange(addProductPermissions);
+            editManagerPermissions.RemoveRange(editManagerPermissions);
+            editProductPermissions.RemoveRange(editProductPermissions);
+            getInfoEmployeesPermissions.RemoveRange(getInfoEmployeesPermissions);
+            getPurchaseHistoryPermissions.RemoveRange(getPurchaseHistoryPermissions);
+            hireNewStoreManagerPermissions.RemoveRange(hireNewStoreManagerPermissions);
+            hireNewStoreOwnerPermissions.RemoveRange(hireNewStoreOwnerPermissions);
+            removeManagerPermissions.RemoveRange(removeManagerPermissions);
+            removeProductPermissions.RemoveRange(removeProductPermissions);
+            removeOwnerPermissions.RemoveRange(removeOwnerPermissions);
         }
 
     }

@@ -32,6 +32,17 @@ namespace TradingSystem.DataLayer.ORM
                     foreach (var item in context.productInfos) ;
                     foreach (var item in context.recipts) ;
                     foreach (var item in context.stores) ;
+                    foreach (var item in context.addProductPermissions) ;
+                    foreach (var item in context.editManagerPermissions) ;
+                    foreach (var item in context.editProductPermissions) ;
+                    foreach (var item in context.getInfoEmployeesPermissions) ;
+                    foreach (var item in context.getPurchaseHistoryPermissions) ;
+                    foreach (var item in context.hireNewStoreManagerPermissions) ;
+                    foreach (var item in context.hireNewStoreOwnerPermissions) ;
+                    foreach (var item in context.removeManagerPermissions) ;
+                    foreach (var item in context.removeProductPermissions) ;
+                    foreach (var item in context.removeOwnerPermissions) ;
+
                     initiated = true;
                 }
             }

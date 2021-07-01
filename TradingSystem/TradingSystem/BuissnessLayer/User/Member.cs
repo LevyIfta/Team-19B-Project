@@ -7,6 +7,7 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.BuissnessLayer.User;
+using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -384,7 +385,7 @@ namespace TradingSystem.BuissnessLayer
             {
                 messages.Add(item.toDataObject());
             }
-            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages);
+            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages, new List<aPermissionData>());
         }
         /*
         public static Member dataToObject(MemberData data)

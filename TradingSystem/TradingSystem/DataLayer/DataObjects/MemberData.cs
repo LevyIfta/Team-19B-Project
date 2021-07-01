@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.DataLayer
 {
@@ -14,12 +15,13 @@ namespace TradingSystem.DataLayer
         public string userName { get; set; }
         public string password { get; set; }
         public double age { get; set; }
-        public string gender { get; set; }
+        public string gender { get; set; }  
         public string address { get; set; }
 
         public virtual ICollection<BasketInCart> shopingcart { get; set; } = new List<BasketInCart>();
         public virtual ICollection<ReceiptData> receipts { get; set; } = new List<ReceiptData>();
         public virtual ICollection<MessageData> messages { get; set; } = new List<MessageData>();
+        public virtual ICollection<aPermissionData> permissions { get; set; } = new List<aPermissionData>();
 
         //CONSTRUCTORS
         /*  public MemberData(string userName, string password)
@@ -35,7 +37,7 @@ namespace TradingSystem.DataLayer
         {
             this.userName = "guest";
         }
-        public MemberData(string userName, string password, double age, string gender, string address, ICollection<BasketInCart> shopingcart, ICollection<ReceiptData> receipts, ICollection<MessageData> messages)
+        public MemberData(string userName, string password, double age, string gender, string address, ICollection<BasketInCart> shopingcart, ICollection<ReceiptData> receipts, ICollection<MessageData> messages, ICollection<aPermissionData> permissions = null )
         {
             this.userName = userName;
             this.password = password;
@@ -45,6 +47,7 @@ namespace TradingSystem.DataLayer
             this.shopingcart = shopingcart;
             this.receipts = receipts;
             this.messages = messages;
+            this.permissions = permissions;
         }
 
         //EQUALS
