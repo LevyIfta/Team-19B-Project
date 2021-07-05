@@ -4,12 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
 {
     public class addProduct : aPermission
     {
         public addProduct(string storeName, string sponser) : base(storeName, sponser) { }
+
+        public override ICollection<aPermissionData> toDataObject()
+        {
+            aPermissionData me = new addProductPermissionData(store, sponser);
+            if (next == null)
+                return new List<aPermissionData> { me };
+            else
+            {
+                ICollection<aPermissionData> ans = next.toDataObject();
+                ans.Add(me);
+                return ans;
+            }
+        }
+
         public override object todo(PersmissionsTypes func, object[] args)
         {//string storeName 0,string productName 1, double price 2, int amount 3, string category 4, string manufacturer 5
             if (func == PersmissionsTypes.AddProduct && this.store.Equals((string)args[0]))

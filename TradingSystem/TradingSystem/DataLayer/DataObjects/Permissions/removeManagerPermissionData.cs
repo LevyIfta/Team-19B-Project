@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer.Permissions
 {
-    class removeManagerPermissionData :aPermissionData
+    public class removeManagerPermissionData :aPermissionData
     {
         public removeManagerPermissionData(MemberData myOwner, string store, string sponser) : this(store, sponser)
         {

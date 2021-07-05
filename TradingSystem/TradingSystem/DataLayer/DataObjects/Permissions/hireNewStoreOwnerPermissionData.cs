@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSystem.DataLayer.Permissions
 {
-    class hireNewStoreOwnerPermissionData : aPermissionData
+    public class hireNewStoreOwnerPermissionData : aPermissionData
     {
         public hireNewStoreOwnerPermissionData(MemberData myOwner, string store, string sponser) : this(store, sponser)
         {
