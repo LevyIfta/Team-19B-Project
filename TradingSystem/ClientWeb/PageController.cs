@@ -57,7 +57,118 @@ namespace ClientWeb
         }
     }
 
-    class ProductDataToAdd : ANotifyPropChange
+    class PolicyToAdd : ANotifyPropChange
+    {
+        private String policyProduct;
+
+        public String PolicyProduct
+        {
+            get { return policyProduct; }
+            set
+            {
+                policyProduct = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Age;
+
+        public String age
+        {
+            get { return Age; }
+            set
+            {
+                Age = value;
+                OnPropertyChanged();
+            }
+        }
+        private String Cat;
+
+        public String cat
+        {
+            get { return Cat; }
+            set
+            {
+                Cat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Man;
+
+        public String man
+        {
+            get { return Man; }
+            set
+            {
+                Man = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private DateTime MinDate;
+
+        public DateTime minDate
+        {
+            get { return MinDate; }
+            set
+            {
+                MinDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private DateTime MaxDate;
+
+        public DateTime maxDate
+        {
+            get { return MaxDate; }
+            set
+            {
+                MaxDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String MaxAmount;
+
+        public String maxAmount
+        {
+            get { return MaxAmount; }
+            set
+            {
+                MaxAmount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String MinAmount;
+
+        public String minAmount
+        {
+            get { return MinAmount; }
+            set
+            {
+                MinAmount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String Msg;
+
+        public String msg
+        {
+            get { return Msg; }
+            set
+            {
+                Msg = value;
+                OnPropertyChanged();
+            }
+        }
+
+    }
+
+        class ProductDataToAdd : ANotifyPropChange
     {
         private String Pname;
 
@@ -70,6 +181,9 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+
+
+
 
         private String Price;
 

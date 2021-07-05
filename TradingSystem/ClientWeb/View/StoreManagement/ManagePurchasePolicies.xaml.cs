@@ -39,5 +39,10 @@ namespace ClientWeb.View.member
             Store page = new Store(storeName);
             NavigationService.Navigate(page);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

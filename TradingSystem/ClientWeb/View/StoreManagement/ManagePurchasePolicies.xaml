@@ -8,10 +8,14 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ManagePurchasePolicies">
 
-    <Grid Background="LightBlue">
+    <Grid Background="LightBlue" Margin="0,0,-75,-17.4">
         <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
         <DataGrid HorizontalAlignment="Left" Height="100" Margin="461,132,0,0" VerticalAlignment="Top" Width="100"/>
         <Label Content="Policies" HorizontalAlignment="Left" Margin="490,104,0,0" VerticalAlignment="Top"/>
+        <Button Content="Add policy by Age" HorizontalAlignment="Left" Margin="96,116,0,0" VerticalAlignment="Top" Width="116" Height="23" Click="Button_Click"/>
+        <Button Content="Add policy max products" HorizontalAlignment="Left" Margin="98,152,0,0" VerticalAlignment="Top" Width="143" Height="25"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="99,200,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="95,241,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </Page>
