@@ -41,7 +41,11 @@ namespace TradingSystem.DataLayer.ORM
 
         public static void tearDown()
         {
-            context.tearDown();
+            lock (Lock)
+            {
+                context.tearDown();
+                context.SaveChanges();
+            }
         }
        
     }

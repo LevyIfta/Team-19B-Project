@@ -54,7 +54,13 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public ProductData toDataObject(string storeName)
         {
-            return new ProductData(this.info.toDataObject(), this.amount, this.price, storeName, this.id);
+            ProductData ans = DataAccess.getProduct(this.id);
+            if (ans == null)
+                return new ProductData(this.info.toDataObject(), this.amount, this.price, storeName, this.id);
+            ans.amount = this.amount;
+            ans.price = this.price;
+            ans.storeName = storeName;
+            return ans;
         }
         public override bool Equals(object obj)
         {

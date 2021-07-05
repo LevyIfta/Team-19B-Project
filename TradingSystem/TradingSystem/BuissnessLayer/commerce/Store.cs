@@ -10,6 +10,7 @@ using TradingSystem.BuissnessLayer.commerce.Rules;
 using TradingSystem.BuissnessLayer.commerce.Rules.Policy;
 using TradingSystem.BuissnessLayer.User;
 using TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -588,8 +589,8 @@ private void fillOwners()
         {
             List<ReceiptData> receipts = new List<ReceiptData>();
             List<ProductData> products = new List<ProductData>();
-            List<MemberData> members1 = new List<MemberData>();
-            List<MemberData> members2 = new List<MemberData>();
+            List<MemberData> owners = new List<MemberData>();
+            List<MemberData> managers = new List<MemberData>();
             List<MessageData> messages = new List<MessageData>();
             List<iPolicyDiscountData> discountDatas = new List<iPolicyDiscountData>();
             List<iPolicyData> policyDatas = new List<iPolicyData>();
@@ -597,17 +598,27 @@ private void fillOwners()
                 receipts.Add(DataLayer.ORM.DataAccess.getReciept(receipt.receiptId));
             foreach (Product product in this.inventory)
                 products.Add(product.toDataObject(this.name));
-            foreach (Member member in owners)
-                members1.Add(member.toDataObject());
-            foreach (Member member in managers)
-                members2.Add(member.toDataObject());
+            foreach (Member member in this.owners)
+                owners.Add(member.toDataObject());
+            foreach (Member member in this.managers)
+                managers.Add(member.toDataObject());
             foreach (Message message in this.messages)
                 messages.Add(message.toDataObject());
             foreach (iPolicy policy in this.purchasePolicies)
                 policyDatas.Add(null);
             foreach (iPolicyDiscount discount in this.discountPolicies)
                 discountDatas.Add(null);
-            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, messages, discountDatas, policyDatas);
+            StoreData ans = DataAccess.getStore(this.name);
+            if(ans == null)
+                return new StoreData(this.name, this.founder.toDataObject(), receipts, products, owners, managers, messages, discountDatas, policyDatas);
+            ans.receipts = receipts;
+            ans.inventory = products;
+            ans.owners = owners;
+            ans.managers = managers;
+            ans.messages = messages;
+            ans.discountPolicies = discountDatas;
+            ans.purchasePolicies = policyDatas;
+            return ans;
         }
 
         public void removeFromInventory(Product product)

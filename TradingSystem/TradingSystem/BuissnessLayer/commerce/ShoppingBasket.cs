@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -161,7 +162,12 @@ namespace TradingSystem.BuissnessLayer.commerce
             List<ProductData> products = new List<ProductData>();
             foreach (Product product in this.products)
                 products.Add(product.toDataObject(this.store.name));
-            return new BasketInRecipt( products, id);
+            BasketInRecipt ans = DataAccess.getBasket(id);
+            if(ans == null)
+                return new BasketInRecipt( products, id);
+            ans.products = products;
+            return ans;
+                
         }
 
         public BasketInCart toDataObject()
@@ -169,7 +175,11 @@ namespace TradingSystem.BuissnessLayer.commerce
             List<ProductData> products = new List<ProductData>();
             foreach (Product product in this.products)
                 products.Add(product.toDataObject(this.store.name));
-            return new BasketInCart(this.store.toDataObject(), ((Member)this.owner).toDataObject(), products);
+            BasketInCart ans = DataAccess.getBasket(this.owner.getUserName(), this.store.name);
+            if (ans == null)
+                return new BasketInCart(this.store.toDataObject(), ((Member)this.owner).toDataObject(), products);
+            ans.products = products;
+            return ans;
         }// (ICollection<ProductData>)this.products.Select(p => p.toDataObject()),
         /*public BasketInRecipt toDataObject(string notimportent)
         {

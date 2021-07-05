@@ -11,7 +11,7 @@ namespace TradingSystem.DataLayer
     public class MessageData
     {
         //FIELDS
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id { get; set; }
 
@@ -22,13 +22,14 @@ namespace TradingSystem.DataLayer
         public string isNew { get; set; }
 
         //CONSTRUCTORS
-        public MessageData(string sender, StoreData StoreToSend, MemberData UserToSend, string Message, string isNew)
+        public MessageData(string sender, StoreData StoreToSend, MemberData UserToSend, string Message, string isNew, Guid id)
         {
             this.sender = sender;
             this.StoreToSend = StoreToSend;
             this.UserToSend = UserToSend;
             this.Message = Message;
             this.isNew = isNew;
+            this.Id = id;
         }
 
         public MessageData()

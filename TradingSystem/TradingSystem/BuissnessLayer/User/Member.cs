@@ -7,6 +7,7 @@ using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.BuissnessLayer.User;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -384,7 +385,17 @@ namespace TradingSystem.BuissnessLayer
             {
                 messages.Add(item.toDataObject());
             }
-            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages);
+            MemberData ans = DataAccess.getMember(userName);
+            if(ans == null)
+                return new MemberData(userName, password, age, gender, address, baskets, receipts, messages);
+            ans.password = password;
+            ans.age = age;
+            ans.gender = gender;
+            ans.address = address;
+            ans.shopingcart = baskets;
+            ans.receipts = receipts;
+            ans.messages = messages;
+            return ans;
         }
         /*
         public static Member dataToObject(MemberData data)

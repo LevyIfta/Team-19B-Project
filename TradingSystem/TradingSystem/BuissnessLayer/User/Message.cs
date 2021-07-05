@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.DataLayer;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer.User
 {
@@ -16,6 +17,7 @@ namespace TradingSystem.BuissnessLayer.User
         public string UserToSend { get; set; }
         public string Msg { get; set; }
         public bool isNew { get; set; }
+        private Guid id { get; set; }
 
         public Message(string SenderName, string StoreToSend, string UserToSend, string Message, bool isNew)
         {
@@ -24,6 +26,7 @@ namespace TradingSystem.BuissnessLayer.User
             this.UserToSend = UserToSend;
             this.Msg = Message;
             this.isNew = isNew;
+            this.id = Guid.NewGuid();
         }
 
         public Message(MessageData message)
@@ -41,11 +44,18 @@ namespace TradingSystem.BuissnessLayer.User
             this.isNew = false;
             if (message.isNew.Equals("True"))
                 this.isNew = true;
+            this.id = message.Id;
 
         }
 
         public MessageData toDataObject()
         {
+            MessageData ans = DataAccess.getMessage(this.id);
+            if (ans != null)
+            {
+                ans.isNew = this.isNew.ToString();
+                return ans;
+            }
             StoreData store = null;
             MemberData reciver = null;
             if (StoreToSend == null)
@@ -53,7 +63,7 @@ namespace TradingSystem.BuissnessLayer.User
             else
                 store = Stores.searchStore(StoreToSend).toDataObject();
 
-            return new MessageData(SenderName, store, reciver, this.Msg, this.isNew.ToString());
+            return new MessageData(SenderName, store, reciver, this.Msg, this.isNew.ToString(), this.id);
         }
 
         public bool sendMessage(string SenderName, string StoreToSend, string UserToSend, string Message)
