@@ -492,11 +492,11 @@ namespace TradingSystem.ServiceLayer
             userName = user.getUserName();
             return (() => userName);
         }
-        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
+        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg, string storeRecive)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return false;
-            return UserServices.sendMessage(username, userToSend, storeToSend, msg);
+            return UserServices.sendMessage(username, userToSend, storeToSend, msg, storeRecive);
         }
         public static string[] getMessages(string username, string storename)
         {

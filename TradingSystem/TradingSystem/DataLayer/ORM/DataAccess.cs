@@ -234,7 +234,8 @@ namespace TradingSystem.DataLayer.ORM
         {
             lock (Lock)
             {
-                context.products.Remove(product);
+                ProductData temp = DataAccess.getProduct(product.id);
+                context.products.Remove(temp);
                 context.SaveChanges();
             }
         }

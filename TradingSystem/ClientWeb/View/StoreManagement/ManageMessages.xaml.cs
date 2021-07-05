@@ -45,7 +45,7 @@ namespace ClientWeb.View.StoreManagement
             MessageData p = (MessageData)dgMasage.SelectedItem;
 
             //add item to cart ( basket) 
-            bool ans = controler.SendMessage(PageController.username, p.tosend, "", p.messagesend);
+            bool ans = controler.SendMessage(PageController.username, p.tosend, "", p.messagesend, PageController.storeForManager);
             if (ans)
             {
                 p.messagesend = "";
@@ -55,7 +55,17 @@ namespace ClientWeb.View.StoreManagement
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            Store page = new Store(PageController.storeForManager);
+            NavigationService.Navigate(page);
+        }
 
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            var ans = controler.SendMessage(PageController.username, this.usernew1.Text, "", this.messagenew1.Text, PageController.storeForManager);
+            if (ans)
+                this.msgnew.Content = "message is send";
+            else
+                this.msgnew.Content = "somting went worng";
         }
     }
 }

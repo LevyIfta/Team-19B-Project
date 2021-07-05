@@ -606,9 +606,14 @@ namespace ClientWeb
             RemoveManager p = new RemoveManager();
             NavigationService.Navigate(p);
         }
+        private void messages_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new ManageMessages();
+            NavigationService.Navigate(p);
+        }
         private void dgProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-        }
+        }//messages_Click
     }
 }

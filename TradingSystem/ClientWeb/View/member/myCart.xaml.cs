@@ -42,7 +42,7 @@ namespace ClientWeb
  
             List<productView> productToView = new List<productView>();
             
-            for( int i=0; i<a1.Length; i++)
+            for( int i=0; i<a1.GetLength(0); i++)
             {
                 productToView.Add(new productView() { name = a1[i, 0] , price = a1[i, 1], amount = a1[i, 2], storeName = a1[i, 3], manu = a1[i, 4] });
             }

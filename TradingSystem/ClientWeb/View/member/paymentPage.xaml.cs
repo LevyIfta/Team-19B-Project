@@ -24,12 +24,12 @@ namespace ClientWeb
         static Controller controler = Controller.GetController();
         PurchData data = new PurchData();
         UserData user = new UserData();
-        List<string> errors;
+        List<string> errors = new List<string>();
         public paymentPage()
         {
             InitializeComponent();
             this.DataContext = data;
-            data.total = "the total price is: " + controler.CheckPrice(user.username);
+            data.total = "the total price is: " + controler.CheckPrice(PageController.username);
         }
         private void ButtomCheck() // textbox valid check 
         {

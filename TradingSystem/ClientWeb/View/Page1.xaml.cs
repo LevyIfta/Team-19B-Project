@@ -206,7 +206,7 @@ namespace ClientWeb
             productView p = (productView)dgProducts.SelectedItem;
 
             //add item to cart ( basket)
-            bool ans = controler.SaveProduct(PageController.username, p.storeName, p.manu, p.name + "&" + p.amounttoAdd);
+            bool ans = controler.SaveProduct(PageController.username, p.storeName, p.manu, p.name + "$" + p.amounttoAdd);
             if (ans)
             {
                 msg.Content = "the item add to youre cart!";

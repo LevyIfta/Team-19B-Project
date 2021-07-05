@@ -342,6 +342,8 @@ namespace TradingSystem.BuissnessLayer
             aUser temp = getUser(username);
             if (temp == null)
                 return null;
+            if (storename.Length == 0)
+                return getMessages(username);
             var msg = Stores.searchStore(storename).messages;
             string[] ans = new string[msg.Count];
             int i = 0;
@@ -499,12 +501,12 @@ namespace TradingSystem.BuissnessLayer
             else
                 return false;
         }
-        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
+        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg, string storeRecive)
         {
             if (userToSend != null && userToSend.Length > 0)
             {
                 aUser temp = getUser(userToSend);
-                return temp.sendMessage(new Message(username, storeToSend, userToSend, msg, true));
+                return temp.sendMessage(new Message(storeRecive, storeToSend, userToSend, msg, true));
             }
             else if (storeToSend != null && storeToSend.Length > 0)
             {

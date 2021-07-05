@@ -9,11 +9,17 @@
       Title="myReceipts">
 
     <Grid Background="LightBlue">
-        <DataGrid HorizontalAlignment="Left" Height="277" Margin="102,53,0,0" VerticalAlignment="Top" Width="230" SelectionChanged="DataGrid_SelectionChanged"/>
-        <Label Content="Show Reciept button for every reciept in the list " HorizontalAlignment="Left" Margin="407,96,0,0" VerticalAlignment="Top" Width="338"/>
-
-
-
+        <Button Content="main" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
+        <DataGrid Name="dgMasage" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="235" Margin="243,110,0,0" VerticalAlignment="Top" Width="363">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="id" Binding="{Binding id , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="store name" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="products" Binding="{Binding products, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="total amount" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="receipts" HorizontalAlignment="Left" Margin="383,56,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>

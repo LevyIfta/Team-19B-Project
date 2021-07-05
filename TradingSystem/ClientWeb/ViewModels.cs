@@ -162,6 +162,19 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+
+        private String Products;
+
+        public String products
+        {
+            get { return Products; }
+            set
+            {
+                Products = value;
+                OnPropertyChanged();
+            }
+        }
+
     }
 
     class employeeView : ANotifyPropChange
