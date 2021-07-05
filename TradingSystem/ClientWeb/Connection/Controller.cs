@@ -286,7 +286,7 @@ namespace ClientWeb
             // init message fields
             msg.type = msgType.FUNC;
             msg.name = "purchase";
-            msg.param_list = new string[] { username, paymant };
+            msg.param_list = new string[] { username, cradit, validity, paymant };
             // encode and send message
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
@@ -657,12 +657,12 @@ namespace ClientWeb
             return null;
         }
         // send message
-        public bool SendMessage(string username, string userToSend, string storeToSend, string Msg)
+        public bool SendMessage(string username, string userToSend, string storeToSend, string Msg, string storeRecive)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "send message";
-            msg.param_list = new string[] { username, userToSend, storeToSend, Msg };
+            msg.param_list = new string[] { username, userToSend, storeToSend, Msg, storeRecive };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
 

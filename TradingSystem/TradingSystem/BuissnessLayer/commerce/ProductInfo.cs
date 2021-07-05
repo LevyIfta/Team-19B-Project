@@ -138,11 +138,14 @@ namespace TradingSystem.BuissnessLayer.commerce
         public Dictionary<string, string> getAllFeedbacks()
         {
             Dictionary<string, string> allFeedbacks = new Dictionary<string, string>();
-            foreach (string userName in this.feedbacks.Keys)
+            if (feedbacks != null)
             {
-                if (this.feedbacks[userName].CompareTo("") != 0)
+                foreach (string userName in this.feedbacks.Keys)
                 {
-                    allFeedbacks.Add(userName, this.feedbacks[userName]);
+                    if (this.feedbacks[userName].CompareTo("") != 0)
+                    {
+                        allFeedbacks.Add(userName, this.feedbacks[userName]);
+                    }
                 }
             }
             return allFeedbacks;

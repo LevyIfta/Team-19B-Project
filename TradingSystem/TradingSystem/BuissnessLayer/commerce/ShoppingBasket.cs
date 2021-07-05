@@ -156,12 +156,12 @@ namespace TradingSystem.BuissnessLayer.commerce
             return true;
 
         }
-        public BasketInRecipt toDataObjectRecipt()
+        public BasketInRecipt toDataObjectRecipt(int id)
         {
             List<ProductData> products = new List<ProductData>();
             foreach (Product product in this.products)
                 products.Add(product.toDataObject(this.store.name));
-            return new BasketInRecipt( products, null);
+            return new BasketInRecipt( products, id);
         }
 
         public BasketInCart toDataObject()

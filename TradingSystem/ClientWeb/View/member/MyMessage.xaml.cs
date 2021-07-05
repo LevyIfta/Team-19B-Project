@@ -28,11 +28,11 @@ namespace ClientWeb.View.member
             InitializeComponent();
             this.DataContext = message;
 
-            var msgArr = controler.GetStoreMessages(PageController.username, PageController.storeForManager);
+            var msgArr = controler.GetUserMessages(PageController.username);
             for (int i = 0; i < msgArr.Length; i++)
             {
                 string[] info = msgArr[i].Split('$');
-                msgToView.Add(new MessageData() { tosend = info[0], messagerecive = info[3], isnew = info[4] });
+                msgToView.Add(new MessageData() { tosend = info[0], messagerecive = info[3], messagesend = "", isnew = info[4] });
 
             }
 
@@ -45,7 +45,7 @@ namespace ClientWeb.View.member
             MessageData p = (MessageData)dgMasage.SelectedItem;
 
             //add item to cart ( basket) 
-            bool ans = controler.SendMessage(PageController.username, "", p.tosend, p.messagesend);
+            bool ans = controler.SendMessage(PageController.username, "", p.tosend, p.messagesend, "");
             if (ans)
             {
                 p.messagesend = "";
@@ -54,7 +54,7 @@ namespace ClientWeb.View.member
         }//Button_Click_1
         public void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            FirstPage page = new FirstPage();
+            Page page = new Page1();
             NavigationService.Navigate(page);
         }
     }

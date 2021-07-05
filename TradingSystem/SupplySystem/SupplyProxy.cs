@@ -11,9 +11,9 @@ namespace SupplySystem
         private static ICollection<string> StoreList;
         public bool OrderPackage(string storeName, string userName, string address, string orderInfo)
         { // orderInfo -> order_order_order -> product$1
-            if (storeName == null || userName == null || address == null || orderInfo == null)
+            if (storeName == null || userName == null || orderInfo == null)
                 return false;
-            if (storeName.Length == 0 || userName.Length == 0 || address.Length == 0 || orderInfo.Length == 0)
+            if (storeName.Length == 0 || userName.Length == 0 || orderInfo.Length == 0)
                 return false;
             if (!StoreList.Contains(storeName))
                 return false;

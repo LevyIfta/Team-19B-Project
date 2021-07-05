@@ -187,7 +187,7 @@ namespace TradingSystem.ServiceLayer
         } // store1$bamba^10.3^manu1^food^10^almog#what i think_gal#what he think store2$bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
 
         private static string ProductToString(SLproduct pro)
-        { // product name^price^manu^category^amount^feedback
+        { // productName^price^manu^category^amount^feedback
             return pro.productName + "^" + pro.price + "^" + pro.manufacturer + "^" + pro.category + "^" + pro.amount + "^" + feedbackToString(pro.feedbacks);
         } // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
         private static string feedbackToString(Dictionary<string, string> dic) // username : comment
@@ -631,8 +631,8 @@ namespace TradingSystem.ServiceLayer
                         msg_send.name = "string[]";
                         msg_send.param_list = AllProductsToStringArr(ans_gap);
                         break;
-                    case ("send message"): // string username, string userToSend, string storeToSend, string msg
-                        ans = TradingSystem.ServiceLayer.UserController.sendMessage(msg.param_list[0], msg.param_list[1], msg.param_list[2], msg.param_list[3]);
+                    case ("send message"): // string username, string userToSend, string storeToSend, string msg, string storeRecive
+                        ans = TradingSystem.ServiceLayer.UserController.sendMessage(msg.param_list[0], msg.param_list[1], msg.param_list[2], msg.param_list[3], msg.param_list[4]);
                         ans_d = "false";
                         if (ans)
                             ans_d = "true";
@@ -655,7 +655,7 @@ namespace TradingSystem.ServiceLayer
                     case ("close store"): //string username
                         var ans_cs = TradingSystem.ServiceLayer.UserController.closeStore(msg.param_list[0], msg.param_list[1]);
                         ans_d = "false";
-                        if (ans)
+                        if (ans_cs)
                             ans_d = "true";
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "bool";
