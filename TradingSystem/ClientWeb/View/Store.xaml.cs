@@ -37,13 +37,23 @@ namespace ClientWeb
             PageController.storeForManager = storeName;
             this.username = PageController.username;
             this.storeNameLabel.Content = storeName;
-            //initActionsStack();
+
+            initActionsStack();
             initEmployees();
             initProduct();
         }
 
         private void initActionsStack()
         {
+            //infoemployees.Visibility = Visibility.Collapsed;
+            infoEmp(true);
+            addproduct.Visibility = Visibility.Collapsed;
+            removeProduct.Visibility = Visibility.Collapsed;
+            editProduct.Visibility = Visibility.Collapsed;
+            hireemplyee.Visibility = Visibility.Collapsed;
+            fireemplyee.Visibility = Visibility.Collapsed;
+            editemplyee.Visibility = Visibility.Collapsed;
+            receipts.Visibility = Visibility.Collapsed;
             /*
             ICollection<string> permissions = controller.GetPermissions(username, storeName);
             if (permissions == null)
@@ -55,11 +65,28 @@ namespace ClientWeb
             addPermissionButton("AddPolicy");
             */
         }
+        private void infoEmp(bool hide)
+        {
+            if (hide)
+            {
+                for(int i=0; i<2; i++)
+                {
+                    dgEmployees.Columns[i].Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    dgEmployees.Columns[i].Visibility = Visibility.Visible;
+                }
+            }
+        }
         private void initEmployees()
         {
             string storename = PageController.storeForManager;
             var emp = controller.GetInfoEmployees(PageController.username, storename);
-
+            string[] permList = null;
             for (int i = 0; i < emp.Length; i++)
             {
                 string[] info = emp[i].Split('$');
@@ -70,7 +97,7 @@ namespace ClientWeb
                     string[] permInfo = perm[j].Split('^');
                     if (permInfo[0].Equals(storename))
                     {
-                        string[] permList = permInfo[1].Split('#');
+                        permList = permInfo[1].Split('#');
                         for (int h = 0; h < permList.Length; h++)
                         {
                             permFinal += permList[h] + ", ";
@@ -81,6 +108,48 @@ namespace ClientWeb
                     {
                         permFinal = permFinal.Substring(0, permFinal.Length - 2);
                         employee.Add(new employeeView() { employeename = info[0], permissions = permFinal });
+                        if (info[0].Equals(PageController.username))
+                        { // manage buttom action perm
+                            for (int h = 0; h < permList.Length; h++)
+                            {
+                                switch (permList[h])
+                                {
+                                    case "GetInfoEmployees":
+                                        infoEmp(false);
+                                        break;
+                                    case "AddProduct":
+                                        addproduct.Visibility = Visibility.Visible;
+                                        break;
+                                    case "removeProduct":
+                                        removeProduct.Visibility = Visibility.Visible;
+                                        break;
+                                    case "EditProduct":
+                                        editProduct.Visibility = Visibility.Visible;
+                                        break;
+                                    case "HireNewStoreManager":
+                                        hireemplyee.Visibility = Visibility.Visible;
+                                        break;
+                                    case "HireNewStoreOwner":
+                                        hireemplyee.Visibility = Visibility.Visible;
+                                        break;
+                                    case "RemoveManager":
+                                        fireemplyee.Visibility = Visibility.Visible;
+                                        break;
+                                    case "RemoveOwner":
+                                        fireemplyee.Visibility = Visibility.Visible;
+                                        break;
+                                    case "EditManagerPermissions":
+                                        editemplyee.Visibility = Visibility.Visible;
+                                        break;
+                                    case "RemoveProduct":
+                                        removeProduct.Visibility = Visibility.Visible;
+                                        break;
+                                    case "GetPurchaseHistory":
+                                        receipts.Visibility = Visibility.Visible;
+                                        break;
+                                }
+                            }
+                        }
                     }
 
                 }

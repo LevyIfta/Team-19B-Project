@@ -165,7 +165,7 @@ namespace ClientWeb
                 string[] prices = pro[3].Split('$');
                 for (int j = 0; j < stores.Length; j++)
                 {
-                    productToView.Add(new productView() { name = pro[0], price = prices[j], amount = "0", storeName = stores[j], amounttoAdd = "0", cat = pro[1], manu="manu", feedback = controler.getAllFeedbacksSearch(stores[j], pro[0]) });
+                    productToView.Add(new productView() { name = pro[0], price = prices[j], storeName = stores[j], amounttoAdd = "0", cat = pro[1], manu="manu", feedback = controler.getAllFeedbacksSearch(stores[j], pro[0]) });
                 }
 
             }
