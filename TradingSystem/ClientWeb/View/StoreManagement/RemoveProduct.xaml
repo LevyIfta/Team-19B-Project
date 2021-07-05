@@ -18,12 +18,12 @@
         <Label x:Name="label3" Content="manu:" HorizontalAlignment="Left" Margin="124,139,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label5" Content="{Binding msg, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="243,0,0,56" VerticalAlignment="Bottom" RenderTransformOrigin="-0.632,-0.038"/>
         <Button x:Name="button" Content="main" HorizontalAlignment="Right" Margin="0,180,108,0" VerticalAlignment="Top" Width="76" Click="button_Click_2"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="214,180,0,0" TextWrapping="Wrap" Text="{Binding amountToEdit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <!-- <TextBox HorizontalAlignment="Left" Height="23" Margin="214,180,0,0" TextWrapping="Wrap" Text="{Binding amountToEdit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
         <Label x:Name="label3_Copy" Content="amount to remove" HorizontalAlignment="Left" Margin="79,174,0,0" VerticalAlignment="Top"/>
         <Label x:Name="oldamount" Content="{Binding amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="0,190,255,0" VerticalAlignment="Top" RenderTransformOrigin="-0.632,-0.038"/>
         <Label x:Name="label3_Copy1" Content="amount in inventory:" Margin="368,182,306,0" VerticalAlignment="Top"/>
         <Button Content="check amount" Margin="368,94,332,0" VerticalAlignment="Top" Click="Button_Click3" d:LayoutOverrides="VerticalAlignment"/>
-
+        -->
 
 
     </Grid>

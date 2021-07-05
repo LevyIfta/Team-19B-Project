@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="394*"/>
             </Grid.ColumnDefinitions>
 
-            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="20,100,222,61.6" SelectionChanged="dgProducts_SelectionChanged" Grid.ColumnSpan="2">
+            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="20,100,104,62" SelectionChanged="dgProducts_SelectionChanged" Grid.ColumnSpan="2" d:LayoutOverrides="HorizontalAlignment">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />

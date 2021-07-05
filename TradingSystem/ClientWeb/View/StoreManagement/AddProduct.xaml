@@ -10,17 +10,17 @@
 
     <Grid Background="LightBlue">
         <TextBox HorizontalAlignment="Left" Height="23" Margin="214,91,0,0" TextWrapping="Wrap" Text="{Binding pname, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="212,239,0,0" TextWrapping="Wrap" Text="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="214,126,0,0" TextWrapping="Wrap" Text="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120" d:LayoutOverrides="VerticalAlignment"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="212,159,0,0" TextWrapping="Wrap" Text="{Binding amount, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="213,126,0,0" TextWrapping="Wrap" Text="{Binding cat, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="214,194,0,0" TextWrapping="Wrap" Text="{Binding man, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Add to Store" HorizontalAlignment="Left" Margin="234,298,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <TextBox Height="23" Margin="214,202,0,0" TextWrapping="Wrap" Text="{Binding cat, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="214,0,0,181" TextWrapping="Wrap" Text="{Binding man, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Width="120"/>
+        <Button Content="Add to Store" HorizontalAlignment="Left" Margin="243,335,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
         <Label x:Name="label" Content="product name:" HorizontalAlignment="Left" Margin="101,91,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label1" Content="category:" HorizontalAlignment="Left" Margin="115,123,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="category:" HorizontalAlignment="Left" Margin="119,199,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label2" Content="amount:" HorizontalAlignment="Left" Margin="124,154,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3" Content="manu:" HorizontalAlignment="Left" Margin="124,194,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label4" Content="price:" HorizontalAlignment="Left" Margin="124,0,0,185" VerticalAlignment="Bottom"/>
+        <Label x:Name="label3" Content="manu:" HorizontalAlignment="Left" Margin="124,0,0,181" VerticalAlignment="Bottom"/>
+        <Label x:Name="label4" Content="price:" HorizontalAlignment="Left" Margin="128,122,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label5" Content="{Binding msg, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="243,0,0,56" VerticalAlignment="Bottom" RenderTransformOrigin="-0.632,-0.038"/>
         <Button x:Name="button" Content="main" HorizontalAlignment="Right" Margin="0,180,108,0" VerticalAlignment="Top" Width="76" Click="button_Click_2"/>
 

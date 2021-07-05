@@ -146,6 +146,8 @@ namespace TradingSystem.ServiceLayer
 
         private static List<string> StringToList(string str)
         {
+            if (str == null)
+                return new List<string>();
             List<string> list = new List<string>();
             string[] Permissions = str.Split('$');
             foreach (string pre in Permissions)
@@ -159,6 +161,8 @@ namespace TradingSystem.ServiceLayer
 
         private static Dictionary<string, int> StringToDictionary(string str)
         {
+            if (str == null)
+                return new Dictionary<string, int>();
             Dictionary<string, int> dic = new Dictionary<string, int>();
             string[] products = str.Split('&');
             foreach (string product in products)
@@ -170,6 +174,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string[] DictionaryToString(Dictionary<string, SLproduct> dic) // store name : product
         {
+            if (dic == null)
+                return new string[0];
             string[] ans = new string[dic.Count];
             int i = 0;
             foreach (string store in dic.Keys)
@@ -186,6 +192,8 @@ namespace TradingSystem.ServiceLayer
         } // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
         private static string feedbackToString(Dictionary<string, string> dic) // username : comment
         {
+            if (dic == null)
+                return "";
             string ans = "";
             foreach (string user in dic.Keys)
             {
@@ -197,6 +205,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string feedbackToStringSearch(Dictionary<string, string> dic) // username : comment
         {
+            if (dic == null)
+                return "";
             string ans = "";
             foreach (string user in dic.Keys)
             {
@@ -235,6 +245,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string[] CartToStringArray(ICollection<SLbasket> cart)
         {
+            if (cart == null)
+                return new string[0];
             string[] ans = new string[cart.Count];
             int i = 0;
             foreach (SLbasket basket in cart)
@@ -257,6 +269,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string[] ReceiptsToStringArray(ICollection<SLreceipt> receipts)
         {
+            if (receipts == null)
+                return new string[0];
             string[] ans = new string[receipts.Count];
             int i = 0;
             foreach (SLreceipt receipt in receipts)
@@ -270,6 +284,8 @@ namespace TradingSystem.ServiceLayer
         public Dictionary<string, ICollection<string>> permissionsPerStore;*/
         private static string[] UsersToStringArray(ICollection<SLemployee> receipts)
         {
+            if (receipts == null)
+                return new string[0];
             string[] ans = new string[receipts.Count];
             int i = 0;
             foreach (SLemployee em in receipts)
@@ -285,6 +301,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string PermissionsToString(Dictionary<string, ICollection<string>> pers)
         {
+            if (pers == null)
+                return "";
             string ans = "";
             foreach (string store in pers.Keys)
             {
@@ -296,6 +314,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string[] AllProductsToStringArr(Dictionary<SLproduct, List<string[]>> products)
         {
+            if (products == null)
+                return new string[0];
             string[] ans = new string[products.Count];
             int i = 0;
             foreach (SLproduct product in products.Keys)
@@ -322,6 +342,8 @@ namespace TradingSystem.ServiceLayer
         }
         private static string ListToString(ICollection<string> list)
         {
+            if (list == null)
+                return "";
             string ans = "";
             foreach (string str in list)
             {
@@ -394,6 +416,14 @@ namespace TradingSystem.ServiceLayer
                         break;
                     case ("remove product"): // Products : "name1&15$name2&30 ..."
                         ans = TradingSystem.ServiceLayer.UserController.removeProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], StringToDictionary(msg.param_list[3]));
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
+                        break;
+                    case ("delete product"): // string username, string storeName, string productName, string manufacturer
+                        ans = TradingSystem.ServiceLayer.UserController.removeProduct(msg.param_list[0], msg.param_list[1], msg.param_list[2], msg.param_list[3]);
                         if (ans)
                             ans_d = "true";
                         msg_send.type = msgType.OBJ;
