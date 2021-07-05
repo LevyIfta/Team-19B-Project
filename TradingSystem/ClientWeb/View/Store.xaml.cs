@@ -25,7 +25,7 @@ namespace ClientWeb
     public partial class Store : Page
     {
         private static Controller controller = Controller.GetController();
-
+        List<productView> productToView = new List<productView>();
         List<employeeView> employee = new List<employeeView>();
         private string storeName;
         private string username;
@@ -35,13 +35,11 @@ namespace ClientWeb
 
             this.storeName = storeName;
             PageController.storeForManager = storeName;
-            // this.username = user.username;
-            //debuging porpuse
             this.username = PageController.username;
             this.storeNameLabel.Content = storeName;
-            initActionsStack();
-
+            //initActionsStack();
             initEmployees();
+            initProduct();
         }
 
         private void initActionsStack()
@@ -91,7 +89,25 @@ namespace ClientWeb
 
             dgEmployees.ItemsSource = employee;
         }
+        private void initProduct()
+        {
+            var productArr = controller.GetAllProducts();
+            for (int i = 0; i < productArr.Length; i++)
+            {
+                string[] pro = productArr[i].Split('&');
+                string[] stores = pro[3].Split('$');
+                string[] prices = pro[4].Split('$');
+                string[] amounts = pro[5].Split('$');
+                for (int j = 0; j < stores.Length; j++)
+                {
+                    if(stores[j].Equals(storeName))
+                        productToView.Add(new productView() { name = pro[0], price = prices[j], amount = amounts[j], cat = pro[1], manu = pro[2], feedback = controller.getAllFeedbacksSearch(stores[j], pro[0]) });
+                }
 
+            }
+
+            dgProducts.ItemsSource = productToView;
+        }
         private void addPermissionButton(string permission)
         {
             if (!permission.Equals("EditProduct"))
@@ -448,18 +464,27 @@ namespace ClientWeb
 
         private void close_Click(object sender, RoutedEventArgs e)
         {
-
+            var ans = controller.CloseStore(PageController.username, PageController.storeForManager);
+            if (ans)
+                msgStore.Content = "the store is close";
+            else
+                msgStore.Content = "somting went worng";
         }
 
-        private void addproduct_Click(object sender, RoutedEventArgs e)
+        private void removeP_Click_1(object sender, RoutedEventArgs e)
         {
-
+            Page p = new RemoveProduct();
+            NavigationService.Navigate(p);
+        }
+        private void editP_Click_1(object sender, RoutedEventArgs e)
+        {
+            Page p = new EditProduct();
+            NavigationService.Navigate(p);
         }
 
         private void infoemployees_Click(object sender, RoutedEventArgs e)
         {
-            Page p = new MangeManagers();
-            NavigationService.Navigate(p);
+            
         }
 
         private void addproduct_Click_1(object sender, RoutedEventArgs e)
@@ -470,6 +495,11 @@ namespace ClientWeb
         private void hire_Click_1(object sender, RoutedEventArgs e)
         {
             AddManager p = new AddManager();
+            NavigationService.Navigate(p);
+        }
+        private void editempl_Click(object sender, RoutedEventArgs e)
+        {
+            Page p = new EditOwner();
             NavigationService.Navigate(p);
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -506,6 +536,10 @@ namespace ClientWeb
         {
             RemoveManager p = new RemoveManager();
             NavigationService.Navigate(p);
+        }
+        private void dgProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

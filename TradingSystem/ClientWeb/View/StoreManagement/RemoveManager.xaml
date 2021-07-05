@@ -9,12 +9,10 @@
       Title="RemoveManager">
 
     <Grid Background="LightBlue">
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="212,159,0,0" TextWrapping="Wrap" Text="{Binding permissions, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="213,126,0,0" TextWrapping="Wrap" Text="{Binding employeename, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
         <Button Content="save changes" HorizontalAlignment="Left" Margin="234,298,0,0" VerticalAlignment="Top" Width="119" Click="Button_Click"/>
         <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
-        <Label x:Name="label" Content="who you want to edit?" HorizontalAlignment="Left" Margin="63,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.623,0.487"/>
-        <Label x:Name="label1" Content="new permissions:" HorizontalAlignment="Left" Margin="77,156,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label" Content="who you want to fire?" HorizontalAlignment="Left" Margin="63,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.623,0.487"/>
         <Label x:Name="label3" Content="{Binding permenu, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="91,0,0,190" VerticalAlignment="Bottom"/>
         <Label x:Name="label4" Content="{Binding msg, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="361,0,0,83" VerticalAlignment="Bottom"/>
     </Grid>

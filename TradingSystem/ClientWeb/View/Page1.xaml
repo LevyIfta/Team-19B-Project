@@ -38,6 +38,8 @@
                     <DataGridTextColumn Header="Amount" Binding="{Binding amounttoAdd, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Store name" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Manu" Binding="{Binding manu, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Category" Binding="{Binding cat, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="feedback" Binding="{Binding feedback, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

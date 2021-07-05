@@ -21,7 +21,7 @@ namespace ClientWeb.View.StoreManagement
     public partial class AddManager : Page
     {
         employeeStore employee = new employeeStore();
-        List<string> errors;
+        List<string> errors = new List<string>();
         static Controller controler = Controller.GetController();
         public AddManager()
         {

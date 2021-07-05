@@ -95,6 +95,17 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+        private String AmountToEdit;
+
+        public String amountToEdit
+        {
+            get { return AmountToEdit; }
+            set
+            {
+                AmountToEdit = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private String Cat;

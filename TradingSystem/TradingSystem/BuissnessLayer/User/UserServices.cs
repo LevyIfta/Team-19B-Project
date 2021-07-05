@@ -214,7 +214,7 @@ namespace TradingSystem.BuissnessLayer
                 {
                     if (!ans.Keys.Contains(product))
                         ans[product] = new List<string[]>();
-                    ans[product].Add(new string[] { store.name, product.price + "" });
+                    ans[product].Add(new string[] { store.name, product.price + "", product.amount + "" });
                 }
             }
             return ans;

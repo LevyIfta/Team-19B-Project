@@ -10,18 +10,28 @@
 
     <Grid Background="LightBlue">
         <Label x:Name="storeNameLabel" Content="{Binding Path=storename}" Margin="377,24,385,0" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
-        <Grid Name="mainGrid" Margin="203,108,37,23">
-            <Button Content="Discount Policy" HorizontalAlignment="Left" Margin="-164,275,0,0" VerticalAlignment="Top" Width="125" Click="Button_Click"/>
-            <Button Content="Purchase Policy" HorizontalAlignment="Left" Margin="-163,299,0,0" VerticalAlignment="Top" Width="123" Click="Button_Click_2"/>
-            <DataGrid HorizontalAlignment="Left" Height="195" Margin="52,48,0,0" VerticalAlignment="Top" Width="189"/>
+        <Grid Name="mainGrid" Margin="203,108,10,23">
+            <Button Content="Discount Policy" HorizontalAlignment="Left" Margin="-165,236,0,0" VerticalAlignment="Top" Width="125" Click="Button_Click"/>
+            <Button Content="Purchase Policy" HorizontalAlignment="Left" Margin="-163,263,0,0" VerticalAlignment="Top" Width="123" Click="Button_Click_2"/>
+            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="0,58,289,104" SelectionChanged="dgProducts_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="amount" Binding="{Binding amount, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Manu" Binding="{Binding manu, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="category" Binding="{Binding cat, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="feedback" Binding="{Binding feedback, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+
+                </DataGrid.Columns>
+            </DataGrid>
             <Label Content="Products" HorizontalAlignment="Left" Margin="96,27,0,0" VerticalAlignment="Top" Width="100"/>
-            <DataGrid Name="dgEmployees" HorizontalAlignment="Left" Height="190" Margin="276,50,0,0" VerticalAlignment="Top" Width="155">
+            <DataGrid Name="dgEmployees" HorizontalAlignment="Left" Height="190" Margin="318,58,0,0" VerticalAlignment="Top" Width="236">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Employees" Binding="{Binding employeename , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Permissions" Binding="{Binding permissions , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 </DataGrid.Columns>
             </DataGrid>
-            <Label Content="Managers" HorizontalAlignment="Left" Margin="333,26,0,0" VerticalAlignment="Top"/>
+            <Label Content="Managers" HorizontalAlignment="Left" Margin="401,27,0,0" VerticalAlignment="Top"/>
 
         </Grid>
         <Grid HorizontalAlignment="Left" Margin="20,108,0,23" Width="162">
@@ -37,20 +47,21 @@
                         </Style>
                     </StackPanel.Resources>
                     <TextBlock FontWeight="Bold" Margin="0,0,0,10">Actions:</TextBlock>
-                    <Button Name="infoemployees" Click="infoemployees_Click" >employees</Button>
+                    <Button Name="infoemployees" Click="infoemployees_Click" Visibility="Collapsed" >employees</Button>
                     <Button Name="addproduct" Click="addproduct_Click_1" >add product</Button>
-                    <Button Name="removeProduct" >remove product</Button>
-                    <Button Name="editProduct">edit product</Button>
+                    <Button Name="removeProduct" Click="removeP_Click_1">remove product</Button>
+                    <Button Name="editProduct" Click="editP_Click_1">edit product</Button>
                     <Button Name="hireemplyee" Click="hire_Click_1">hire emplyee</Button>
                     <Button Name="fireemplyee" Click="fireemplyee_Click" >fire emplyee</Button>
-                    <Button Name="editemplyee" >editemplyee</Button>
-                    <Button Name="feedback" Click="feedback_Click" >all feedback</Button>
+                    <Button Name="editemplyee" Click="editempl_Click">editemplyee</Button>
+                    <Button Name="feedback" Click="feedback_Click" Visibility="Collapsed">all feedback</Button>
                     <Button Name="receipts" Click="receipts_Click" >all receipts</Button>
                     <Button Name="close" Click="close_Click" >close store</Button>
                 </StackPanel>
             </DockPanel>
         </Grid>
         <Button Content="back to main" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="45,47,0,0" Click="Button_Click_1"/>
+        <Label x:Name="msgStore" Content="{Binding msgStore , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="203,67,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>

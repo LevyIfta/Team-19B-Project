@@ -710,6 +710,23 @@ namespace ClientWeb
             }
             return null;
         }
+        public bool CloseStore(string username, string storeName)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            msg.type = msgType.FUNC;
+            msg.name = "close store";
+            msg.param_list = new string[] { username, storeName };
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            bool ans = false;
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            {
+                ans = ans_d.param_list[0] == "true";
+            }
+            return ans;
+        }
         public string test()
         {
             DecodedMessge msg = new DecodedMessge();    

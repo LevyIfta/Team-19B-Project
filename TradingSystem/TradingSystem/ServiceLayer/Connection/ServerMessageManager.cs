@@ -160,10 +160,10 @@ namespace TradingSystem.ServiceLayer
         private static Dictionary<string, int> StringToDictionary(string str)
         {
             Dictionary<string, int> dic = new Dictionary<string, int>();
-            string[] products = str.Split('$');
+            string[] products = str.Split('&');
             foreach (string product in products)
             {
-                string[] ans = product.Split('&');
+                string[] ans = product.Split('$');
                 dic[ans[0]] = int.Parse(ans[1]);
             }
             return dic;
@@ -302,16 +302,20 @@ namespace TradingSystem.ServiceLayer
             {
                 string temp1 = "";
                 string temp2 = "";
+                string temp3 = "";
                 foreach (string[] arr in products[product])
                 {
                     temp1 += arr[0] + "$";
                     temp2 += arr[1] + "$";
+                    temp3 += arr[2] + "$";
                 }
                 if (temp1.Length > 0)
                     temp1 = temp1.Substring(0, temp1.Length - 1);
                 if (temp2.Length > 0)
                     temp2 = temp2.Substring(0, temp2.Length - 1);
-                ans[i] = product.productName + "&" + product.category + "&" + product.manufacturer + "&" + temp1 + "&" + temp2;
+                if (temp3.Length > 0)
+                    temp3 = temp3.Substring(0, temp3.Length - 1);
+                ans[i] = product.productName + "&" + product.category + "&" + product.manufacturer + "&" + temp1 + "&" + temp2 + "&" + temp3;
                 i++;
             }
             return ans;
@@ -617,6 +621,15 @@ namespace TradingSystem.ServiceLayer
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "string[]";
                         msg_send.param_list = ans_gmmu;
+                        break;
+                    case ("close store"): //string username
+                        var ans_cs = TradingSystem.ServiceLayer.UserController.closeStore(msg.param_list[0], msg.param_list[1]);
+                        ans_d = "false";
+                        if (ans)
+                            ans_d = "true";
+                        msg_send.type = msgType.OBJ;
+                        msg_send.name = "bool";
+                        msg_send.param_list = new string[] { ans_d };
                         break;
 
                 }
