@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.DataLayer
 {
@@ -22,7 +23,9 @@ namespace TradingSystem.DataLayer
         //CONSTRUCTORS
         public ProductData (ProductInfoData productData, int amount, double price, string storeName, Guid id)
         {
-            this.productData = productData;
+
+            this.productData = productData; 
+            
             this.amount = amount;
             this.price = price;
             this.storeName = storeName;
