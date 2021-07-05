@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.DataLayer;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -14,7 +15,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         public string category { get; set; }
         public string manufacturer { get; set; }
         public int id;
-        private static int currentId = -1;
+        private static int currentId = 0;
         private static Object idLocker = new Object();
         public Dictionary<string, string> feedbacks { get; }
 
@@ -42,8 +43,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.category = productInfoData.category;
             this.manufacturer = productInfoData.manufacturer;
             this.id = productInfoData.productID;
+            currentId++;
 
-            // get feedbacks - TODO - DONE
+            // get feedbacks - TODO - DONE  
             foreach (FeedbackData item in DataLayer.ORM.DataAccess.getAllFeedbacksOnProduct(this.id))
             {
                 feedbacks.Add(item.user.userName, item.comment);
@@ -52,7 +54,10 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public ProductInfoData toDataObject()
         {
-            return new ProductInfoData(this.name, this.category, this.manufacturer, this.id);
+            ProductInfoData ans = DataAccess.getProductInfo(this.id);
+            if(ans == null)
+                ans = new ProductInfoData(this.name, this.category, this.manufacturer, this.id);
+            return ans;
         }
 
         override

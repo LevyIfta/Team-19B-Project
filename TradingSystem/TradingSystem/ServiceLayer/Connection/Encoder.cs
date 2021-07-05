@@ -28,11 +28,12 @@ namespace TradingSystem.ServiceLayer
             ans += (char)ETB;
             ans += messge.name;
             ans += (char)ETB;
-            foreach (string param in messge.param_list)
-            {
-                ans += param;
-                ans += (char)ETB;
-            }
+            if(messge.param_list != null)
+                foreach (string param in messge.param_list)
+                {
+                    ans += param;
+                    ans += (char)ETB;
+                }
             ans += (char)EOT;
 
             return Encoding.ASCII.GetBytes(ans);

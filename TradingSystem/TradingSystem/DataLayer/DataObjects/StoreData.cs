@@ -43,6 +43,14 @@ namespace TradingSystem.DataLayer
 
         public StoreData()
         {
+            this.receipts = new ReceiptData[] { };
+            this.inventory = new ProductData[] { };
+            this.owners = new MemberData[] { };
+            this.managers = new MemberData[] { };
+            this.messages = new MessageData[] { };
+            this.discountPolicies = new iPolicyDiscountData[] { };
+            this.purchasePolicies = new iPolicyData[] { };
+
         }
 
         //EQUALS
