@@ -23,7 +23,7 @@ namespace ClientWeb
     /// </summary>
     public partial class Page1 : Page
     {
- 
+
         static Controller controler = Controller.GetController();
 
         List<productView> productToView = new List<productView>();
@@ -35,28 +35,28 @@ namespace ClientWeb
             InitializeComponent();
             username = PageController.username;
             userName.Content = PageController.username;
-              
+
             checkMember();
 
-            string a = controler.SearchStore("Castro");
+            //string a = controler.SearchStore("Castro");
 
             var productArr = controler.GetAllProducts();
-            for (int i=0; i<productArr.Length; i++)
+            for (int i = 0; i < productArr.Length; i++)
             {
                 string[] pro = productArr[i].Split('&');
-                string[] stores = pro[2].Split('$');
-                string[] prices = pro[3].Split('$');
-                for (int j=0; j<stores.Length; j++)
+                string[] stores = pro[3].Split('$');
+                string[] prices = pro[4].Split('$');
+                for (int j = 0; j < stores.Length; j++)
                 {
-                    productToView.Add(new productView() { name = pro[0], price = prices[j], amount = "0", storeName = stores[j], amounttoAdd = "0", cat = pro[1], feedback = controler.getAllFeedbacksSearch(stores[j], pro[0])});
+                    productToView.Add(new productView() { name = pro[0], price = prices[j], amount = "0", storeName = stores[j], amounttoAdd = "0", cat = pro[1], manu=pro[2], feedback = controler.getAllFeedbacksSearch(stores[j], pro[0]) });
                 }
-                
+
             }
 
 
 
             dgProducts.ItemsSource = productToView;
-           
+
         }
 
 
@@ -141,8 +141,6 @@ namespace ClientWeb
 
         private void stores_Click(object sender, RoutedEventArgs e)
         {
-            //   myStores m = new myStores(controler.GetMyStore(userInfo.username), userInfo.username);
-            
             myStores m = new myStores(controler.GetMyStore(PageController.username));
             NavigationService.Navigate(m);
         }
@@ -155,6 +153,29 @@ namespace ClientWeb
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
+
+
+            //string a = controler.SearchStore("Castro");
+
+            var productArr = controler.GetAllProducts();
+            for (int i = 0; i < productArr.Length; i++)
+            {
+                string[] pro = productArr[i].Split('&');
+                string[] stores = pro[2].Split('$');
+                string[] prices = pro[3].Split('$');
+                for (int j = 0; j < stores.Length; j++)
+                {
+                    productToView.Add(new productView() { name = pro[0], price = prices[j], amount = "0", storeName = stores[j], amounttoAdd = "0", cat = pro[1], manu="manu", feedback = controler.getAllFeedbacksSearch(stores[j], pro[0]) });
+                }
+
+            }
+
+
+
+            dgProducts.ItemsSource = productToView;
+
+            checkMember();
+            /*
             //  string product = this.textBox1.Text;
             string product = "";
             string manufacturer = "";
@@ -162,7 +183,7 @@ namespace ClientWeb
             foreach (KeyValuePair<string, SLproduct> item in products)
             {
 
-            }
+            }*/
 
         }
 
@@ -185,11 +206,10 @@ namespace ClientWeb
             productView p = (productView)dgProducts.SelectedItem;
 
             //add item to cart ( basket)
-          bool ans =  controler.SaveProduct(user.Name, p.storeName , "man", p.name + "&" +p.amounttoAdd);
+            bool ans = controler.SaveProduct(PageController.username, p.storeName, p.manu, p.name + "&" + p.amounttoAdd);
             if (ans)
             {
-              //  MessageBox.Show("added to cart");
-              //  MessageBox.Show(ans.ToString());
+                msg.Content = "the item add to youre cart!";
             }
 
         }

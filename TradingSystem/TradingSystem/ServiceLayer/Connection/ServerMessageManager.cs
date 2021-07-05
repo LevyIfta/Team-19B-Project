@@ -311,7 +311,7 @@ namespace TradingSystem.ServiceLayer
                     temp1 = temp1.Substring(0, temp1.Length - 1);
                 if (temp2.Length > 0)
                     temp2 = temp2.Substring(0, temp2.Length - 1);
-                ans[i] = product.productName + "&" + product.category + "&" + temp1 + "&" + temp2;
+                ans[i] = product.productName + "&" + product.category + "&" + product.manufacturer + "&" + temp1 + "&" + temp2;
                 i++;
             }
             return ans;
@@ -569,7 +569,7 @@ namespace TradingSystem.ServiceLayer
                         msg_send.param_list = new string[] { feedbackToString(ans_afb) }; // feedback_feedback -> user#comment.    almog#what i think_gal#what he think
                         break; // feedbackToString
                     case ("get all feedbacks for search"): //string storeName, string productName
-                        var ans_afbs = TradingSystem.ServiceLayer.UserController.getAllFeedbacks(msg.param_list[0], msg.param_list[1], msg.param_list[2]);
+                        var ans_afbs = TradingSystem.ServiceLayer.UserController.getAllFeedbacks(msg.param_list[0], msg.param_list[1]);
                         msg_send.type = msgType.OBJ;
                         msg_send.name = "feedbacks";
                         msg_send.param_list = new string[] { feedbackToStringSearch(ans_afbs) }; // feedback\nfeedback -> user: comment.    almog: what i think\ngal: what he think

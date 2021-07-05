@@ -9,15 +9,16 @@
       Title="myCart">
 
     <Grid Background="LightBlue">
-        
-     
-        <Button Content="Procced To checkout" HorizontalAlignment="Left" Margin="550,249,0,0" VerticalAlignment="Top" Width="150" Height="47" Click="Button_Click"/>
+        <Button Content="Procced To checkout" HorizontalAlignment="Left" Margin="619,23,0,0" VerticalAlignment="Top" Width="150" Height="47" Click="Button_Click" d:LayoutOverrides="VerticalAlignment"/>
+
+
         <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="33,82,310,85.6" SelectionChanged="dgProducts_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding amounttoAdd, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding amount, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="StoreName" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Manu" Binding="{Binding manu, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -27,6 +28,8 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Label x:Name="ama" Content="Final amount:" HorizontalAlignment="Left" Margin="348,34,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label" Content="{Binding total , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="0,34,267,0" VerticalAlignment="Top" Width="64"/>
     </Grid>
-    
+
 </Page>

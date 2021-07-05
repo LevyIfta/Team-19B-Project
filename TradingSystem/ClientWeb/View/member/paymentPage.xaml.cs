@@ -49,7 +49,7 @@ namespace ClientWeb
             }
             else
             {
-                string[] ans = controler.Purchase(user.username, data.cradit, data.validity, (string)data.cvv);
+                string[] ans = controler.Purchase(PageController.username, data.cradit, data.validity, data.cvv);
                 if (ans != null)
                 {
                     if (ans[0].Equals("false"))

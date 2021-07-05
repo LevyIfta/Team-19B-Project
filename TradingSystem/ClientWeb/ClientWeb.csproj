@@ -31,7 +31,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>143</ApplicationRevision>
+    <ApplicationRevision>179</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -94,9 +94,6 @@
     <Compile Include="View\StoreManagement\EditOwner.xaml.cs">
       <DependentUpon>EditOwner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\StoreManagement\RemoveManager.xaml.cs">
-      <DependentUpon>RemoveManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\StoreManagement\ManageDiscountPolicies.xaml.cs">
       <DependentUpon>ManageDiscountPolicies.xaml</DependentUpon>
     </Compile>
@@ -131,6 +128,9 @@
     <Compile Include="View\Store.xaml.cs">
       <DependentUpon>Store.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\StoreManagement\RemoveManager.xaml.cs">
+      <DependentUpon>RemoveManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\StoreManagement\storeMessages.xaml.cs">
       <DependentUpon>storeMessages.xaml</DependentUpon>
     </Compile>
@@ -161,10 +161,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StoreManagement\EditOwner.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\StoreManagement\RemoveManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -237,6 +233,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Store.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StoreManagement\RemoveManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

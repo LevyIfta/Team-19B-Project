@@ -350,7 +350,10 @@ namespace TradingSystem.DataLayer.ORM
         {
             lock (Lock)
             {
-                context.products.Update(product);
+                var p = DataAccess.getProduct(product.id);
+                p.price = product.price;
+                p.amount = product.amount;
+                context.products.Update(p);
                 context.SaveChanges();
             }
         }
@@ -374,7 +377,14 @@ namespace TradingSystem.DataLayer.ORM
         {
             lock (Lock)
             {
-                context.stores.Update(store);
+                StoreData store2 = DataAccess.getStore(store.storeName);
+                store2.inventory = store.inventory;
+                store2.inventory.Clear();
+                foreach (ProductData product in store.inventory)
+                {
+                    store2.inventory.Add(product);
+                }
+                context.stores.Update(store2);
                 context.SaveChanges();
             }
         }

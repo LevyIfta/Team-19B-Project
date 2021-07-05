@@ -201,9 +201,12 @@ private void fillOwners()
                     if (p.info.Equals(productInfo.toDataObject()))
                         return null;
                 // the product doesn't exist, add it
-                this.inventory.Add(new Product(productInfo, 0, 0));
+                var p1 = new Product(productInfo, 0, 0);
+                this.inventory.Add(p1);
                 // update DB
-                DataLayer.ORM.DataAccess.create(productInfo.toDataObject());
+                DataLayer.ORM.DataAccess.create(p1.toDataObject(this.name));
+                //var obj = DataLayer.ORM.DataAccess.getP
+                //DataLayer.ORM.DataAccess.update(this.toDataObject());
                 //ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
             }
             return productInfo;
@@ -233,7 +236,8 @@ private void fillOwners()
                     p.price = newPrice;
 
                     // update DB
-                    p.update(this.name);
+                    // p.update(this.name);
+                    p.update();
                     //DataLayer.ORM.DataAccess.update(new ProductData(p.info.toDataObject(), p.amount, p.price, this.name));
                     //ProductDAL.update();
                     return true;
@@ -255,7 +259,7 @@ private void fillOwners()
                     {
                         p.amount += amount;
                         // update DB
-                        p.update(name);
+                        p.update();
                         //ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                         return true;
                     }
@@ -407,7 +411,7 @@ private void fillOwners()
                     {
                         localProduct.amount -= product.amount;
                         // update amount in DB
-                        localProduct.update(this.name);
+                        localProduct.update();
                         // add the products to receipt
                       //  products.Add(product.toDataObject(this.name));
                         //receipt.products.Add(localProduct.info.id, product.amount);
@@ -749,6 +753,10 @@ private void fillOwners()
         public void addDiscountPolicy(iPolicyDiscount discountPolicy)
         {
             this.discountPolicies.Add(discountPolicy);
+        }
+        public void update()
+        {
+            DataLayer.ORM.DataAccess.update(this.toDataObject());
         }
 
     }

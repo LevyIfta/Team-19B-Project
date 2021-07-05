@@ -280,7 +280,7 @@ namespace ClientWeb
             }
             return null;
         }
-        public string[] Purchase(string username, object cradit, object validity, string paymant)
+        public string[] Purchase(string username, string cradit, string validity, string paymant)
         { // products -> product$product$product -> name&amount 
             DecodedMessge msg = new DecodedMessge();
             // init message fields

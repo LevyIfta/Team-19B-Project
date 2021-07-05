@@ -19,11 +19,7 @@ namespace TradingSystem.ServiceLayer
         static UserController()
         {
 
-         register("almog", "qweE1");
-         login("almog", "qweE1");
-         EstablishStore("almog", "Castro");
-         addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-         logout();
+            //register("admin", "Admin1");
 
         }
         public static void threadInit()
@@ -439,6 +435,10 @@ namespace TradingSystem.ServiceLayer
         public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName, string manufacturer)
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
+        }
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
+        {
+            return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName);
         }
         public static bool closeStore(string username, string storeName)
         {

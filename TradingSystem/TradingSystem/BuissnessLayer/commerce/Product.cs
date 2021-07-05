@@ -69,9 +69,9 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.amount += add;
         }
 
-        public void update(string storeName)
+        public void update()
         {
-            DataLayer.ORM.DataAccess.update(this.toDataObject(storeName));
+            DataAccess.update(this.toDataObject(""));
         }
 
         public void remove(string name)

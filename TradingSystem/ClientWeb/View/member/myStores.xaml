@@ -24,7 +24,7 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Products" Binding="{Binding Path=.}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Store name" Binding="{Binding Path=.}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel HorizontalAlignment="Left" Height="100" Margin="478,170,0,0" VerticalAlignment="Top" Width="100"/>

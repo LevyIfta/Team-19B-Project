@@ -62,31 +62,31 @@ namespace ClientWeb
             string storename = PageController.storeForManager;
             var emp = controller.GetInfoEmployees(PageController.username, storename);
 
-            for (int i=0; i<emp.Length; i++)
+            for (int i = 0; i < emp.Length; i++)
             {
                 string[] info = emp[i].Split('$');
                 string[] perm = info[1].Split('&');
                 string permFinal = "";
-                for (int j=0; j<perm.Length; j++)
+                for (int j = 0; j < perm.Length; j++)
                 {
                     string[] permInfo = perm[j].Split('^');
                     if (permInfo[0].Equals(storename))
                     {
                         string[] permList = permInfo[1].Split('#');
-                        for (int h=0; h<permList.Length; h++)
+                        for (int h = 0; h < permList.Length; h++)
                         {
                             permFinal += permList[h] + ", ";
                         }
-                        
+
                     }
                     if (permFinal.Length > 0)
                     {
                         permFinal = permFinal.Substring(0, permFinal.Length - 2);
                         employee.Add(new employeeView() { employeename = info[0], permissions = permFinal });
                     }
-                        
+
                 }
-                
+
             }
 
             dgEmployees.ItemsSource = employee;
@@ -113,7 +113,7 @@ namespace ClientWeb
                 permissionButtonSupply.Click += (r, e) => act("Supply");
                 this.actionsStack.Children.Add(permissionButtonSupply);
             }
-        }
+        } // hire_Click_1
 
         private void act(string action)
         {
@@ -464,13 +464,18 @@ namespace ClientWeb
 
         private void addproduct_Click_1(object sender, RoutedEventArgs e)
         {
-            Page p = new AddProduct(username,storeName);
+            Page p = new AddProduct();
             NavigationService.Navigate(p);
         }
-
+        private void hire_Click_1(object sender, RoutedEventArgs e)
+        {
+            AddManager p = new AddManager();
+            NavigationService.Navigate(p);
+        }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
+            Page1 page1 = new Page1();
+            NavigationService.Navigate(page1);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -499,7 +504,8 @@ namespace ClientWeb
 
         private void fireemplyee_Click(object sender, RoutedEventArgs e)
         {
-
+            RemoveManager p = new RemoveManager();
+            NavigationService.Navigate(p);
         }
     }
 }

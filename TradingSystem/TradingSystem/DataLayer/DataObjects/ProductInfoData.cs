@@ -15,6 +15,7 @@ namespace TradingSystem.DataLayer
         public string manufacturer { get; set; }
         [Key]
         public int productID { get; set; }
+        public virtual ICollection<ProductData> Products { get; set; }
 
         //CONSTRUCTORS
         public ProductInfoData(string productName, string category, string manufacturer, int productID)
@@ -23,6 +24,15 @@ namespace TradingSystem.DataLayer
             this.category = category;
             this.manufacturer = manufacturer;
             this.productID = productID;
+            this.Products = new List<ProductData>();
+        }
+        public ProductInfoData(string productName, string category, string manufacturer, int productID, List<ProductData> products)
+        {
+            this.productName = productName;
+            this.category = category;
+            this.manufacturer = manufacturer;
+            this.productID = productID;
+            this.Products = products;
         }
 
         public ProductInfoData()

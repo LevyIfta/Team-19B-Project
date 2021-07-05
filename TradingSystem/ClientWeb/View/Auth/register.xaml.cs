@@ -55,12 +55,11 @@ namespace ClientWeb
             //string[] ans = mockData.register();
             if (ans != null && ans[0].Equals("true"))
             {
-                user.usermsg = "Registretion Su";
-                MessageBox.Show("Success!");
+                user.usermsg = "Registretion Success";
+                //MessageBox.Show("Success!");
             }
             else
             {
-                MessageBox.Show("Err");
                 user.usermsg = "Registretion Faild\n" + ans[1];
             }
             /*

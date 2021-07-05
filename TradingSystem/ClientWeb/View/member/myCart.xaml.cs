@@ -25,36 +25,34 @@ namespace ClientWeb
     {
       
         static Controller controler = Controller.GetController();
+        PurchData data = new PurchData();
         public myCart()
         {
             
            
             InitializeComponent();
+            this.DataContext = data;
 
             string[] a = controler.GetCart(PageController.username);
-            MessageBox.Show(a[0]);
-            string[][] a1 = convertToViewObj.Cart(a);
+            //MessageBox.Show(a[0]);
+            string[,] a1 = convertToViewObj.Cart(a);
 
             // {basket, basket}. basket -> username&storename&pros. pros -> -> pro$pro -> proInfo^feedback -> feedback_feedback -> user#comment
 
  
             List<productView> productToView = new List<productView>();
-            /*
+            
             for( int i=0; i<a1.Length; i++)
             {
-                productToView.Add(new productView() { name = a1[i][0] , price = a1[i][1], amount = a1[i][2], storeName = a1[i][3], amounttoAdd = "0" });
+                productToView.Add(new productView() { name = a1[i, 0] , price = a1[i, 1], amount = a1[i, 2], storeName = a1[i, 3], manu = a1[i, 4] });
             }
             
-            */
+            
 
-
-
-            productToView.Add(new productView() { name = "Pro1", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
-            productToView.Add(new productView() { name = "Pro2", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
-            productToView.Add(new productView() { name = "Pro3", price = "15", amount = "12", storeName = "Castro", amounttoAdd = "0" });
 
             dgProducts.ItemsSource = productToView;
 
+            data.total = controler.CheckPrice(PageController.username);
           // string b = a[0].Split('&')[2].Split('$')[1];
           // string storename = a[0].Split('&')[1];
 
@@ -94,7 +92,7 @@ namespace ClientWeb
                     var temp = dgProducts.SelectedItem;
                     
                     //remove product from server
-                    MessageBox.Show(temp.ToString());
+                    //MessageBox.Show(temp.ToString());
                     
 
                 }

@@ -383,7 +383,7 @@ namespace TradingSystem.BuissnessLayer
             return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.leaveFeedback(username, comment);
         }
 
-        public static Dictionary<string, string> getAllFeedbacks (string storeName, string productName, string manufacturer)
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName, string manufacturer)
         {
             return Stores.searchStore(storeName).searchProduct(productName, manufacturer).info.getAllFeedbacks();
         }

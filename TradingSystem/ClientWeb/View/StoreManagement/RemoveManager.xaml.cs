@@ -16,27 +16,26 @@ using System.Windows.Shapes;
 namespace ClientWeb.View.StoreManagement
 {
     /// <summary>
-    /// Interaction logic for EditManager.xaml
+    /// Interaction logic for RemoveManager.xaml
     /// </summary>
-    public partial class EditManager : Page
+    public partial class RemoveManager : Page
     {
         employeeStore employee = new employeeStore();
         static Controller controler = Controller.GetController();
-        public EditManager()
+        public RemoveManager()
         {
             InitializeComponent();
             this.DataContext = employee;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(employee.employeename == null)
+            if (employee.employeename == null)
             {
                 employee.msg = "user name empty";
             }
             else
             {
-               bool ans = controler.RemoveManager(PageController.username, PageController.storeForManager, employee.employeename);
+                bool ans = controler.RemoveManager(PageController.username, PageController.storeForManager, employee.employeename);
 
                 if (ans)
                 {
@@ -48,6 +47,10 @@ namespace ClientWeb.View.StoreManagement
                     employee.msg = "user not fire...";
                 }
             }
+        }
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

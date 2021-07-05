@@ -41,7 +41,7 @@
                     <Button Name="addproduct" Click="addproduct_Click_1" >add product</Button>
                     <Button Name="removeProduct" >remove product</Button>
                     <Button Name="editProduct">edit product</Button>
-                    <Button Name="hireemplyee" >hire emplyee</Button>
+                    <Button Name="hireemplyee" Click="hire_Click_1">hire emplyee</Button>
                     <Button Name="fireemplyee" Click="fireemplyee_Click" >fire emplyee</Button>
                     <Button Name="editemplyee" >editemplyee</Button>
                     <Button Name="feedback" Click="feedback_Click" >all feedback</Button>

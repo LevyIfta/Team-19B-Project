@@ -20,11 +20,13 @@ namespace Tests
         [ClassInitialize]
         public static void classInit(TestContext context)
         {
+            UserServices.register("admin", "adminPass123", 45, "male", "address1");
             /*
             bridge = Driver.getBridge();
             bridge.register("user1", "Password1");
             bridge.register("user2", "Password2");
             */
+            //UserController.register("admin", "Admin1");
         }
 
         [TestMethod]
@@ -144,7 +146,7 @@ namespace Tests
         [TestMethod]
         public void adminTestBad()
         {
-            string username = "admin", pass = "Admin1";
+            string username = "admin", pass = "adminPass123";
             string[] user = UserController.login(username, pass);
             Assert.IsTrue(UserController.getUserName().Equals("admin"));
         }
