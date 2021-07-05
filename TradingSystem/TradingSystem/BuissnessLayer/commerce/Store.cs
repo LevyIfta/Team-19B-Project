@@ -68,43 +68,50 @@ namespace TradingSystem.BuissnessLayer.commerce
             this.founder = (Member)UserServices.getUser(storeData.founder.userName);
 
             this.receipts = new List<Receipt>();
+            if(storeData.receipts != null)
             foreach (ReceiptData item in storeData.receipts)
             {
                 this.receipts.Add(new Receipt(item));
             }
 
             this.inventory = new List<Product>();
+            if(storeData.inventory != null)
             foreach (ProductData item in storeData.inventory)
             {
                 this.inventory.Add(new Product(item));
             }
             this.managers = new List<Member>();
+            if(storeData.managers != null)
             foreach (MemberData item in storeData.managers)
             {
                 this.managers.Add((Member)UserServices.getUser(item.userName)); //i hate this... anyway the only type of user in the list is member
             }
             this.owners = new List<Member>();
+            if(storeData.owners != null)
             foreach (MemberData item in storeData.owners)
             {
                 this.managers.Add((Member)UserServices.getUser(item.userName)); //i hate this... anyway the only type of user in the list is member
             }
 
             this.messages = new List<Message>();
+            if(storeData.messages != null)
             foreach (MessageData msg in storeData.messages)
             {
                 this.messages.Add(new Message(msg));
             }
 
             this.discountPolicies = new List<iPolicyDiscount>();
+            if(storeData.discountPolicies != null)
             foreach (iPolicyDiscountData item in storeData.discountPolicies)
             {
                 this.discountPolicies.Add(null); //todo
             }
 
             this.purchasePolicies = new List<iPolicy>();
+            if(storeData.purchasePolicies != null)
             foreach (iPolicyData item in storeData.purchasePolicies)
             {
-                this.purchasePolicies.Add(null); //todo
+                this.purchasePolicies.Add(item.toObject()); //todo
             }
 
 

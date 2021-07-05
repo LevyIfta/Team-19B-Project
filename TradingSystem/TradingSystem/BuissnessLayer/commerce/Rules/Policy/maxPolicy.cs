@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules.Policy
 {
@@ -26,6 +27,11 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.Policy
         }*/
 
         public override bool isValid(ICollection<Product> products, aUser user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override iPolicyData toDataObject()
         {
             throw new NotImplementedException();
         }

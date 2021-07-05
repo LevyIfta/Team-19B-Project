@@ -27,7 +27,7 @@ namespace TradingSystem.BuissnessLayer.commerce
         public ReceiptData toDataObject()
         {
             BasketInRecipt bask = basket.toDataObjectRecipt();
-            ReceiptData ans = new ReceiptData(this.receiptId, bask, this.store.toDataObject(), this.user.toDataObject(), this.price, this.date, new iPolicyDiscountData(), new iPolicyData());//todo
+            ReceiptData ans = new ReceiptData(this.receiptId, bask, this.store.toDataObject(), this.user.toDataObject(), this.price, this.date, this.discount.toDataObject(), this.purchasePolicy.toDataObject());//todo
             bask.recipt = ans;
             return ans;
         }

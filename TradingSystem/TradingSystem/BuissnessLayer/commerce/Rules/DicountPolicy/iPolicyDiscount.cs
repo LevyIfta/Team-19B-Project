@@ -11,6 +11,7 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy
     {
 
         public List<ConditioningPolicyDiscount> policies = new List<ConditioningPolicyDiscount>();
+        private Guid id { get; set; } = Guid.NewGuid();
 
         public iPolicyDiscount(iPolicyDiscountData ipd)
         {

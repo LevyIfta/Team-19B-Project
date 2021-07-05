@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.BuissnessLayer;
+using TradingSystem.BuissnessLayer.commerce;
 
 namespace TradingSystem.DataLayer.ORM
 {
@@ -34,7 +36,10 @@ namespace TradingSystem.DataLayer.ORM
         public DbSet<BasketInCart> basketsInCarts { get; set; }
         public DbSet<BasketInRecipt> basketsInReceipts { get; set; }
         public DbSet<FeedbackData> feedbacks { get; set; }
-        public DbSet<iPolicyData> policies { get; set; }
+        public DbSet<BasePolicyData> basePolicies { get; set; }
+        public DbSet<AndPolicyData> andPolicies { get; set; }
+        public DbSet<OrPolicyData> orPolicies { get; set; }
+        public DbSet<ConditioningPolicyData> condPolicies { get; set; }
         public DbSet<iPolicyDiscountData> discountPolicies { get; set; }
         public DbSet<MessageData> messages { get; set; }
         public DbSet<ProductData> products { get; set; }
@@ -61,13 +66,40 @@ namespace TradingSystem.DataLayer.ORM
                 u.userName
             });
 
-/*
-            modelBuilder.Entity<ReceiptData>()
-            .HasOne(p => p.discount)
-            .WithMany(b => b.recipts);
-            modelBuilder.Entity<ReceiptData>()
-            .HasOne(p => p.purchasePolicy)
-            .WithMany(b => b.recipts);*/
+            modelBuilder.Entity<BasePolicyData>().HasKey(u => new
+            {
+                u.id,
+                u.storeName
+            });
+            
+
+            modelBuilder.Entity<AndPolicyData>().HasKey(u => new
+            {
+                u.id,
+                u.storeName
+            });
+
+            modelBuilder.Entity<OrPolicyData>().HasKey(u => new
+            {
+                u.id,
+                u.storeName
+            });
+
+            modelBuilder.Entity<ConditioningPolicyData>().HasKey(u => new
+            {
+                u.id,
+                u.storeName
+            });
+            
+
+
+            /*
+                        modelBuilder.Entity<ReceiptData>()
+                        .HasOne(p => p.discount)
+                        .WithMany(b => b.recipts);
+                        modelBuilder.Entity<ReceiptData>()
+                        .HasOne(p => p.purchasePolicy)
+                        .WithMany(b => b.recipts);*/
         }
 
 
@@ -77,7 +109,7 @@ namespace TradingSystem.DataLayer.ORM
             basketsInCarts.RemoveRange(basketsInCarts);
             basketsInReceipts.RemoveRange(basketsInReceipts);
             feedbacks.RemoveRange(feedbacks);
-            policies.RemoveRange(policies);
+            basePolicies.RemoveRange(basePolicies);
             discountPolicies.RemoveRange(discountPolicies);
             messages.RemoveRange(messages);
             products.RemoveRange(products);

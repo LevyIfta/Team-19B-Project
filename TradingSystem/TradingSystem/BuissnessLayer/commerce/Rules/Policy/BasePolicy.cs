@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer;
 
 namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
     public class BasePolicy : iPolicy
     {
 
-        public ProductInfo subject { get; set; }
-        public int amount { get; set; }
+        //public ProductInfo subject { get; set; }
+        //public int amount { get; set; }
         public Func<Product, aUser, bool> predicate { get; set; }
         public Func<Product, bool> isRelevant;
         public bool Default { get; set; }
@@ -29,6 +30,13 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
             this.Default = !isRequired;
         }
 
+        public BasePolicy(BasePolicyData basePolicyData)
+        {
+            this.predicate = basePolicyData.predicate;
+            this.isRelevant = basePolicyData.isRelevant;
+            this.Default = basePolicyData.Default;
+        }
+
         public override bool isValid(ICollection<Product> products, aUser user)
         {
             foreach (Product item in products)
@@ -37,6 +45,16 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
                     return predicate(item, user);
             }
             return this.Default;
+        }
+
+        public override iPolicyData toDataObject()
+        {
+            List<iPolicyData> policiesData = new List<iPolicyData>();
+
+            foreach (iPolicy policy in this.policies)
+                policiesData.Add(policy.toDataObject());
+
+            return new BasePolicyData(this.id, this.predicate, this.isRelevant, this.Default, this.storeName);
         }
     }
 }

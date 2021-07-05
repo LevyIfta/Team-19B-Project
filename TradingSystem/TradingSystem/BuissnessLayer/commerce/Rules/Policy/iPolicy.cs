@@ -9,22 +9,19 @@ namespace TradingSystem.BuissnessLayer.commerce.Rules
 {
     public abstract class iPolicy
     {
+        public string storeName;
         public List<iPolicy> policies = new List<iPolicy>();
         public abstract bool isValid(ICollection<Product> products, aUser user);
+        public Guid id { get; set; } = Guid.NewGuid();
 
-        public iPolicy(iPolicyData policy)
-        {
-            //todo
-        }
+        //public abstract iPolicy getPolicyObject(iPolicyData policyData);
 
         protected iPolicy()
         {
         }
 
-        public iPolicyData toDataObject()
-        {
-            return null; //todo
-        }
+        public abstract iPolicyData toDataObject();
+        
 
 
         public void addPolicy(iPolicy policy)

@@ -25,7 +25,10 @@ namespace TradingSystem.DataLayer.ORM
                     foreach (var item in context.basketsInCarts) ;
                     foreach (var item in context.basketsInReceipts) ;
                     foreach (var item in context.feedbacks) ;
-                    foreach (var item in context.policies) ;
+                    foreach (var item in context.basePolicies) ;
+                    foreach (var item in context.andPolicies) ;
+                    foreach (var item in context.orPolicies) ;
+                    foreach (var item in context.condPolicies) ;
                     foreach (var item in context.discountPolicies) ;
                     foreach (var item in context.messages) ;
                     foreach (var item in context.products) ;
@@ -72,11 +75,35 @@ namespace TradingSystem.DataLayer.ORM
                 context.SaveChanges();
             }
         }
-        public static void create(iPolicyData policy)
+        public static void create(BasePolicyData basePolicy)
         {
             lock (Lock)
             {
-                context.policies.Add(policy);
+                context.basePolicies.Add(basePolicy);
+                context.SaveChanges();
+            }
+        }
+        public static void create(AndPolicyData basePolicy)
+        {
+            lock (Lock)
+            {
+                context.andPolicies.Add(basePolicy);
+                context.SaveChanges();
+            }
+        }
+        public static void create(OrPolicyData basePolicy)
+        {
+            lock (Lock)
+            {
+                context.orPolicies.Add(basePolicy);
+                context.SaveChanges();
+            }
+        }
+        public static void create(ConditioningPolicyData basePolicy)
+        {
+            lock (Lock)
+            {
+                context.condPolicies.Add(basePolicy);
                 context.SaveChanges();
             }
         }
@@ -189,7 +216,39 @@ namespace TradingSystem.DataLayer.ORM
         {
             lock (Lock)
             {
-                context.policies.Remove(policy);
+                //Delete(policy, propogate);
+                //context.SaveChanges();
+            }
+        }
+        public static void Delete(BasePolicyData policy, bool propogate = false)
+        {
+            lock (Lock)
+            {
+                context.basePolicies.Remove(policy);
+                context.SaveChanges();
+            }
+        }
+        public static void Delete(AndPolicyData policy, bool propogate = false)
+        {
+            lock (Lock)
+            {
+                context.andPolicies.Remove(policy);
+                context.SaveChanges();
+            }
+        }
+        public static void Delete(OrPolicyData policy, bool propogate = false)
+        {
+            lock (Lock)
+            {
+                context.orPolicies.Remove(policy);
+                context.SaveChanges();
+            }
+        }
+        public static void Delete(ConditioningPolicyData policy, bool propogate = false)
+        {
+            lock (Lock)
+            {
+                context.condPolicies.Remove(policy);
                 context.SaveChanges();
             }
         }
@@ -312,11 +371,35 @@ namespace TradingSystem.DataLayer.ORM
                 context.SaveChanges();
             }
         }
-        public static void update(iPolicyData policy)
+        public static void update(BasePolicyData policy)
         {
             lock (Lock)
             {
-                context.policies.Update(policy);
+                context.basePolicies.Update(policy);
+                context.SaveChanges();
+            }
+        }
+        public static void update(AndPolicyData policy)
+        {
+            lock (Lock)
+            {
+                context.andPolicies.Update(policy);
+                context.SaveChanges();
+            }
+        }
+        public static void update(OrPolicyData policy)
+        {
+            lock (Lock)
+            {
+                context.orPolicies.Update(policy);
+                context.SaveChanges();
+            }
+        }
+        public static void update(ConditioningPolicyData policy)
+        {
+            lock (Lock)
+            {
+                context.condPolicies.Update(policy);
                 context.SaveChanges();
             }
         }
@@ -437,13 +520,31 @@ namespace TradingSystem.DataLayer.ORM
 
 
 
-        public static iPolicyData getPolicy(/*todo*/)
+        public static ICollection<iPolicyData> getStorePolicies(string storeName)
         {
             lock (Lock)
             {
-                return null;
+                return (ICollection<iPolicyData>)((ICollection<iPolicyData>)context.basePolicies.Where(p => p.storeName != null && p.storeName.Equals(storeName)).ToList())
+                    .Union((ICollection<iPolicyData>)context.andPolicies.Where(p => p.storeName != null && p.storeName.Equals(storeName)).ToList())
+                    .Union((ICollection<iPolicyData>)context.orPolicies.Where(p => p.storeName != null && p.storeName.Equals(storeName)).ToList())
+                    .Union((ICollection<iPolicyData>)context.condPolicies.Where(p => p.storeName != null && p.storeName.Equals(storeName)).ToList());
             }
         }
+
+        public static iPolicyData getPolicyByID(Guid id)
+        {
+            lock (Lock)
+            {
+                ICollection<iPolicyData> policies = (ICollection<iPolicyData>)((ICollection<iPolicyData>)context.basePolicies.Where(p => p.id.Equals(id)).ToList())
+                    .Union((ICollection<iPolicyData>)context.andPolicies.Where(p => p.id.Equals(id)).ToList())
+                    .Union((ICollection<iPolicyData>)context.orPolicies.Where(p => p.id.Equals(id)).ToList())
+                    .Union((ICollection<iPolicyData>)context.condPolicies.Where(p => p.id.Equals(id)).ToList());
+                if (policies == null || policies.Count == 0)
+                    return null;
+                return policies.ToList().First();
+            }
+        }
+
         public static iPolicyDiscountData getDiscountPolicy(/*todo*/)
         {
             lock (Lock)
