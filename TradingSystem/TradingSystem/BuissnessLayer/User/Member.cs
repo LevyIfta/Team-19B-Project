@@ -8,6 +8,7 @@ using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.BuissnessLayer.User;
 using TradingSystem.DataLayer.Permissions;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -386,8 +387,22 @@ namespace TradingSystem.BuissnessLayer
             {
                 messages.Add(item.toDataObject());
             }
+
             ICollection<aPermissionData> premisions = this.permmisions.toDataObject(userName);
-            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages, premisions);
+
+            MemberData ans = DataAccess.getMember(userName);
+            if(ans == null)
+                return new MemberData(userName, password, age, gender, address, baskets, receipts, messages, premisions);
+            ans.password = password;
+            ans.age = age;
+            ans.gender = gender;
+            ans.address = address;
+            ans.shopingcart = baskets;
+            ans.receipts = receipts;
+            ans.messages = messages;
+            ans.permissions = premisions;
+            return ans;
+
         }
         /*
         public static Member dataToObject(MemberData data)
@@ -457,6 +472,23 @@ namespace TradingSystem.BuissnessLayer
                 if (request.id == id)
                     return request.negotiate(price, this);
             return false;
+        }
+        public override ICollection<OfferRequest> getRequests()
+        {
+            return this.requests;
+        }
+
+        public override ICollection<OfferRequest> getRequestsToAnswer()
+        {
+            return this.requestsToAnswer;
+        }
+
+        public override OfferRequest getOfferRequest(int requestID)
+        {
+            foreach (OfferRequest request in this.requests)
+                if (request.id == requestID)
+                    return request;
+            return null;
         }
     }
 }

@@ -20,27 +20,36 @@ namespace ClientWeb
         }
         */
 
-        public static string[][] Cart(string[] arr)
-        {
-            string[][] ans = null;
-            List<string[]> list = new List<string[]>();
+        public static string[,] Cart(string[] arr)
+        {// {basket, basket}. basket -> username&storename&pros. pros -> -> pro$pro -> proInfo^feedback -> feedback_feedback -> user#comment
+            // bamba^10.3^manu1^food^10^almog#what i think_gal#what he think
+            //string[][] ans = null;
+            //int h = 0;  almog&nana&bamb^15^mmm^food^2^
+            int count = 0;
+            for (int h = 0; h < arr.Length; h++)
+            {
+                string[] basket = arr[h].Split('&');
+                string[] pros = basket[2].Split('$');
+                count += pros.Length;
+            }
+            string[,] ans = new string[count, 5];
+            int f = 0;
             for (int i = 0; i < arr.Length; i++)
             {
                 string[] basket = arr[i].Split('&');
                 string[] pros = basket[2].Split('$');
-                for(int j=0; j<pros.Length; j++)
+                for (int j = 0; j < pros.Length; j++)
                 {
                     string[] proInfo = pros[j].Split('^');
-                    string[] ans_i = new string[4];
-                    ans_i[0] = proInfo[0];
-                    ans_i[1] = proInfo[1];
-                    ans_i[2] = proInfo[4];
-                    ans_i[3] = basket[2];
-                    list.Add(ans_i);
+                    ans[f, 0] = proInfo[0];
+                    ans[f, 1] = proInfo[1];
+                    ans[f, 2] = proInfo[4];
+                    ans[f, 3] = basket[1];
+                    ans[f, 4] = proInfo[2];
+                    f++;
                 }
-                
             }
-            return list.ToArray();
+            return ans;
         }
         public static string[,] Product(string[] arr)
         {

@@ -33,8 +33,15 @@ namespace ClientWeb
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-        //MessageBox.Show(store.username + " " +store.storename);
-         controler.OpenStore(PageController.username, store.storename);
+            //MessageBox.Show(store.username + " " +store.storename);
+            bool ans = controler.OpenStore(PageController.username, store.storename);
+            if (ans)
+            {
+                Page1 o = new Page1();
+                NavigationService.Navigate(o);
+            }
+            else
+                store.msg = "store name already exist";
         }
     }
 }

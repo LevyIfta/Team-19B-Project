@@ -19,11 +19,7 @@ namespace TradingSystem.ServiceLayer
         static UserController()
         {
 
-         register("almog", "qweE1");
-         login("almog", "qweE1");
-         EstablishStore("almog", "Castro");
-         addNewProduct("almog", "Castro", "pro", 10.1, 10, "cat", "man");
-         logout();
+            //register("admin", "Admin1");
 
         }
         public static void threadInit()
@@ -440,6 +436,10 @@ namespace TradingSystem.ServiceLayer
         {
             return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName, manufacturer);
         }
+        public static Dictionary<string, string> getAllFeedbacks(string storeName, string productName)
+        {
+            return BuissnessLayer.UserServices.getAllFeedbacks(storeName, productName);
+        }
         public static bool closeStore(string username, string storeName)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
@@ -492,11 +492,11 @@ namespace TradingSystem.ServiceLayer
             userName = user.getUserName();
             return (() => userName);
         }
-        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg)
+        public static bool sendMessage(string username, string userToSend, string storeToSend, string msg, string storeRecive)
         {
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return false;
-            return UserServices.sendMessage(username, userToSend, storeToSend, msg);
+            return UserServices.sendMessage(username, userToSend, storeToSend, msg, storeRecive);
         }
         public static string[] getMessages(string username, string storename)
         {
@@ -509,6 +509,61 @@ namespace TradingSystem.ServiceLayer
             if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
                 return null;
             return UserServices.getMessages(username);
+        }
+
+        public static int placeOffer(string username, string storeName, string productName, string category, string manufacturer, int amount, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return -1;
+            return UserServices.placeOffer(username, storeName, productName, category, manufacturer, amount, price);
+        }
+        public static bool acceptOfferRequest(string acceptor, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(acceptor))
+                return false;
+            return UserServices.acceptOfferRequest(acceptor, requestID);
+        }
+
+        public static bool rejectOfferRequest(string rejector, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(rejector))
+                return false;
+            return UserServices.rejectOfferRequest(rejector, requestID);
+        }
+
+        public static bool negotiateOfferRequest(string negotiator, int requestID, double price)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(negotiator))
+                return false;
+            return UserServices.negotiateOffer(negotiator, requestID, price);
+        }
+
+        public static int[] getOfferRequestsIDs(string username)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequestsIDs(username);
+        }
+
+        public static int[] getOfferRequestsToAnswerIDs(string username)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequestsToAnswerIDs(username);
+        }
+
+        public static string[] getOfferRequest(string username, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequest(username, requestID);
+        }
+
+        public static string[] getOfferRequestToAnswer(string username, int requestID)
+        {
+            if (user.getUserName().Equals("guest") || !user.getUserName().Equals(username))
+                return null;
+            return UserServices.getOfferRequestToAnswer(username, requestID);
         }
     }
 }

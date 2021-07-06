@@ -1,16 +1,16 @@
-﻿<Page x:Class="ClientWeb.View.member.MangeManagers"
+﻿<Page x:Class="ClientWeb.View.StoreManagement.ManageMessages"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ClientWeb.View.member"
+      xmlns:local="clr-namespace:ClientWeb.View.StoreManagement"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="MangeManagers">
+      Title="ManageMessages">
 
     <Grid Background="LightBlue">
         <Button Content="back to store" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="479,374,0,0" Click="Button_Click_1"/>
-        <DataGrid Name="dgMasage" HorizontalAlignment="Left" Height="235" Margin="243,110,0,0" VerticalAlignment="Top" Width="363">
+        <DataGrid Name="dgMasage" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="235" Margin="243,110,0,0" VerticalAlignment="Top" Width="363">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="User" Binding="{Binding tosend , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Message" Binding="{Binding messagerecive, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
@@ -25,7 +25,13 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="new manages" HorizontalAlignment="Left" Margin="383,56,0,0" VerticalAlignment="Top"/>
+        <Label Content="messages" HorizontalAlignment="Left" Margin="383,56,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label" Content="user:" HorizontalAlignment="Left" Margin="21,141,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="message:" HorizontalAlignment="Left" Margin="18,172,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="usernew1" HorizontalAlignment="Left" Height="23" Margin="88,145,0,0" TextWrapping="Wrap" Text="{Binding usernew, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="messagenew1" HorizontalAlignment="Left" Height="23" Margin="88,176,0,0" TextWrapping="Wrap" Text="{Binding messagenew , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="button" Content="send" HorizontalAlignment="Left" Margin="144,0,0,196" VerticalAlignment="Bottom" Width="75" Click="button_Click"/>
+        <Label x:Name="msgnew" Content="{Binding msgnew , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="56,0,0,130" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Page>

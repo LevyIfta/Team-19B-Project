@@ -92,6 +92,17 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+        private String Manu;
+
+        public String manu
+        {
+            get { return Manu; }
+            set
+            {
+                Manu = value;
+                OnPropertyChanged();
+            }
+        }
 
     }
 
@@ -151,6 +162,19 @@ namespace ClientWeb
                 OnPropertyChanged();
             }
         }
+
+        private String Products;
+
+        public String products
+        {
+            get { return Products; }
+            set
+            {
+                Products = value;
+                OnPropertyChanged();
+            }
+        }
+
     }
 
     class employeeView : ANotifyPropChange

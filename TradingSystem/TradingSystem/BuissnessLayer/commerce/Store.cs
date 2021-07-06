@@ -10,6 +10,7 @@ using TradingSystem.BuissnessLayer.commerce.Rules;
 using TradingSystem.BuissnessLayer.commerce.Rules.Policy;
 using TradingSystem.BuissnessLayer.User;
 using TradingSystem.BuissnessLayer.commerce.Rules.DicountPolicy;
+using TradingSystem.DataLayer.ORM;
 
 namespace TradingSystem.BuissnessLayer.commerce
 {
@@ -201,9 +202,12 @@ private void fillOwners()
                     if (p.info.Equals(productInfo.toDataObject()))
                         return null;
                 // the product doesn't exist, add it
-                this.inventory.Add(new Product(productInfo, 0, 0));
+                var p1 = new Product(productInfo, 0, 0);
+                this.inventory.Add(p1);
                 // update DB
-                DataLayer.ORM.DataAccess.create(productInfo.toDataObject());
+                DataLayer.ORM.DataAccess.create(p1.toDataObject(this.name));
+                //var obj = DataLayer.ORM.DataAccess.getP
+                //DataLayer.ORM.DataAccess.update(this.toDataObject());
                 //ProductDAL.addProduct(new ProductData(productInfo.id, 0, 0, this.name));
             }
             return productInfo;
@@ -233,7 +237,8 @@ private void fillOwners()
                     p.price = newPrice;
 
                     // update DB
-                    p.update(this.name);
+                    // p.update(this.name);
+                    p.update();
                     //DataLayer.ORM.DataAccess.update(new ProductData(p.info.toDataObject(), p.amount, p.price, this.name));
                     //ProductDAL.update();
                     return true;
@@ -255,7 +260,7 @@ private void fillOwners()
                     {
                         p.amount += amount;
                         // update DB
-                        p.update(name);
+                        p.update();
                         //ProductDAL.update(new ProductData(p.info.id, p.amount, p.price, this.name));
                         return true;
                     }
@@ -307,9 +312,9 @@ private void fillOwners()
                     return new string[] { "false", policy };
                 if (!checkAmounts(new LinkedList<Product>(new Product[] { product })))
                     return new string[] { "false", "not enough items in stock" };
-                if (!PaymentSystem.Verification.Pay(user.userName, creditNumber, validity, cvv))
+                if (!PaymentSystem.VerificationSystem.paymentSystem.Pay(user.userName, creditNumber, validity, cvv))
                     return new string[] { "false", "payment not approved" };
-                if (!SupplySystem.Supply.OrderPackage(name, user.userName, user.getAddress(), ProductToString(product)))
+                if (!SupplySystem.SupplySystem.supplySystem.OrderPackage(name, user.userName, user.getAddress(), ProductToString(product)))
                     return new string[] { "false", "supply not approved" };
 
                 // create a temp basket for purchase
@@ -352,9 +357,9 @@ private void fillOwners()
                     return new string[] { "false", policy };
                 if (!checkAmounts(products))
                     return new string[] { "false", "not enough items in stock" };
-                if(!PaymentSystem.Verification.Pay(basket.owner.userName, creditNumber, validity, cvv))
+                if(!PaymentSystem.VerificationSystem.paymentSystem.Pay(basket.owner.userName, creditNumber, validity, cvv))
                     return new string[] { "false", "payment not approved" };
-                if(!SupplySystem.Supply.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), BasketToStringArray(basket)))
+                if(!SupplySystem.SupplySystem.supplySystem.OrderPackage(name, basket.owner.userName, basket.owner.getAddress(), BasketToStringArray(basket)))
                     return new string[] { "false", "supply not approved" };
                 receipt = validPurchase(basket);
                 if (!basket.owner.userName.Equals("guest"))
@@ -407,7 +412,7 @@ private void fillOwners()
                     {
                         localProduct.amount -= product.amount;
                         // update amount in DB
-                        localProduct.update(this.name);
+                        localProduct.update();
                         // add the products to receipt
                       //  products.Add(product.toDataObject(this.name));
                         //receipt.products.Add(localProduct.info.id, product.amount);
@@ -584,8 +589,8 @@ private void fillOwners()
         {
             List<ReceiptData> receipts = new List<ReceiptData>();
             List<ProductData> products = new List<ProductData>();
-            List<MemberData> members1 = new List<MemberData>();
-            List<MemberData> members2 = new List<MemberData>();
+            List<MemberData> owners = new List<MemberData>();
+            List<MemberData> managers = new List<MemberData>();
             List<MessageData> messages = new List<MessageData>();
             List<iPolicyDiscountData> discountDatas = new List<iPolicyDiscountData>();
             List<iPolicyData> policyDatas = new List<iPolicyData>();
@@ -593,17 +598,27 @@ private void fillOwners()
                 receipts.Add(DataLayer.ORM.DataAccess.getReciept(receipt.receiptId));
             foreach (Product product in this.inventory)
                 products.Add(product.toDataObject(this.name));
-            foreach (Member member in owners)
-                members1.Add(member.toDataObject());
-            foreach (Member member in managers)
-                members2.Add(member.toDataObject());
+            foreach (Member member in this.owners)
+                owners.Add(member.toDataObject());
+            foreach (Member member in this.managers)
+                managers.Add(member.toDataObject());
             foreach (Message message in this.messages)
                 messages.Add(message.toDataObject());
             foreach (iPolicy policy in this.purchasePolicies)
                 policyDatas.Add(null);
             foreach (iPolicyDiscount discount in this.discountPolicies)
                 discountDatas.Add(null);
-            return new StoreData(this.name, this.founder.toDataObject(), receipts, products, members1, members2, messages, discountDatas, policyDatas);
+            StoreData ans = DataAccess.getStore(this.name);
+            if(ans == null)
+                return new StoreData(this.name, this.founder.toDataObject(), receipts, products, owners, managers, messages, discountDatas, policyDatas);
+            ans.receipts = receipts;
+            ans.inventory = products;
+            ans.owners = owners;
+            ans.managers = managers;
+            ans.messages = messages;
+            ans.discountPolicies = discountDatas;
+            ans.purchasePolicies = policyDatas;
+            return ans;
         }
 
         public void removeFromInventory(Product product)
@@ -749,6 +764,10 @@ private void fillOwners()
         public void addDiscountPolicy(iPolicyDiscount discountPolicy)
         {
             this.discountPolicies.Add(discountPolicy);
+        }
+        public void update()
+        {
+            DataLayer.ORM.DataAccess.update(this.toDataObject());
         }
 
     }

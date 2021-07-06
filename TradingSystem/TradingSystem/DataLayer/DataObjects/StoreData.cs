@@ -17,7 +17,7 @@ namespace TradingSystem.DataLayer
         public string storeName { get; set; }
         public virtual MemberData founder { get; set; }
         public virtual ICollection<ReceiptData> receipts { get; set; }
-        public virtual ICollection<ProductData> inventory { get; private set; }
+        public virtual ICollection<ProductData> inventory { get; set; }
         public virtual ICollection<MemberData> owners { get;  set; }
         public virtual ICollection< MemberData> managers { get;  set; }
         public virtual ICollection<MessageData> messages { get; set; }
@@ -43,6 +43,14 @@ namespace TradingSystem.DataLayer
 
         public StoreData()
         {
+            this.receipts = new ReceiptData[] { };
+            this.inventory = new ProductData[] { };
+            this.owners = new MemberData[] { };
+            this.managers = new MemberData[] { };
+            this.messages = new MessageData[] { };
+            this.discountPolicies = new iPolicyDiscountData[] { };
+            this.purchasePolicies = new iPolicyData[] { };
+
         }
 
         //EQUALS

@@ -26,10 +26,22 @@ namespace TradingSystem.BuissnessLayer.commerce
 
         public ReceiptData toDataObject()
         {
-            BasketInRecipt bask = basket.toDataObjectRecipt();
-            ReceiptData ans = new ReceiptData(this.receiptId, bask, this.store.toDataObject(), this.user.toDataObject(), this.price, this.date, new iPolicyDiscountData(), new iPolicyData());//todo
-            bask.recipt = ans;
+            BasketInRecipt bask = basket.toDataObjectRecipt(this.receiptId);
+
+            ReceiptData ans = DataAccess.getReciept(this.receiptId); //= new ReceiptData(this.receiptId, bask, this.store.toDataObject(), this.user.toDataObject(), this.price, this.date, new iPolicyDiscountData(), new iPolicyData());//todo
+            if (ans == null)
+            {
+                bask.recipt = ans;
+
+                return ans;
+            }
+            ans.price = this.price;
+            ans.date = this.date;
+            ans.purchasePolicy = this.purchasePolicy.toDataObject();
+            ans.discount = this.discount.toDataObject();
             return ans;
+            
+                
         }
 
         public Receipt(ReceiptData receiptData)

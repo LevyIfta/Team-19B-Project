@@ -29,13 +29,11 @@ namespace ClientWeb.View.components
         {
             InitializeComponent();
             this.DataContext = product;
+            username = PageController.username;
+            storeName = PageController.storeForManager;
         }
 
-        public AddProduct(string username, string storeName)
-        {
-            this.username = username;
-            this.storeName = storeName;
-        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -43,15 +41,24 @@ namespace ClientWeb.View.components
             bool ans = controler.AddNewProduct(username, storeName, product.pname, product.price, product.amount, product.cat, product.man);
             if (ans)
             {
-                //MessageBox.Show("Product Added succesfully");
 
+                //MessageBox.Show("Product Added succesfully");
+                product.msg = "Product Added succesfully";
             }
+            else
+                product.msg = "Product not Added";
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Store page = new Store(storeName);
             NavigationService.Navigate(page);
+        }
+
+        private void button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Page1 p = new Page1();
+            NavigationService.Navigate(p);
         }
     }
 }

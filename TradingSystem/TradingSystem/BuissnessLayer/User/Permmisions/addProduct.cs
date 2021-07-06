@@ -34,7 +34,7 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
         {//string storeName 0,string productName 1, double price 2, int amount 3, string category 4, string manufacturer 5
             if (func == PersmissionsTypes.AddProduct && this.store.Equals((string)args[0]))
             {
-                if(Stores.searchStore((string)args[0]).isProductExist((string)args[1], (string)args[5]))
+                if (Stores.searchStore((string)args[0]).isProductExist((string)args[1], (string)args[5]))
                 {
                     Stores.searchStore((string)args[0]).supply((string)args[1], (string)args[5], (int)args[3]);
                 }
@@ -44,6 +44,7 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
                     Stores.searchStore((string)args[0]).supply((string)args[1], (string)args[5], (int)args[3]);
                 }
                 Stores.searchStore((string)args[0]).editPrice((string)args[1], (string)args[5], (double)args[2]);
+                Stores.searchStore((string)args[0]).update();
                 return true;
             }
             return base.todo(func, args);

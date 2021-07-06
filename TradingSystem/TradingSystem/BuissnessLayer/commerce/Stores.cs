@@ -24,7 +24,7 @@ namespace TradingSystem.BuissnessLayer.commerce
             stores.Add(storeName, newStore);
             // add the new store to DB
             DataLayer.ORM.DataAccess.create(newStore.toDataObject());
-            SupplySystem.Supply.InformStore(storeName);
+            SupplySystem.SupplySystem.supplySystem.InformStore(storeName);
             return true;
         }
 

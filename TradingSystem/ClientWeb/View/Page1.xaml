@@ -31,12 +31,15 @@
                 <ColumnDefinition Width="394*"/>
             </Grid.ColumnDefinitions>
 
-            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="20,100,222,61.6" SelectionChanged="dgProducts_SelectionChanged" Grid.ColumnSpan="2">
+            <DataGrid Name="dgProducts" AutoGenerateColumns="False" Margin="20,100,104,62" SelectionChanged="dgProducts_SelectionChanged" Grid.ColumnSpan="2" d:LayoutOverrides="HorizontalAlignment">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding name , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Price" Binding="{Binding price, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Amount" Binding="{Binding amounttoAdd, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="StoreName" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Store name" Binding="{Binding storeName, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Manu" Binding="{Binding manu, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Category" Binding="{Binding cat, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="feedback" Binding="{Binding feedback, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -47,6 +50,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <TextBox  x:Name="textBox21" HorizontalAlignment="Left" Height="23" Margin="89,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" KeyUp="textBox1_KeyUp" TextChanged="textBox21_TextChanged" Grid.ColumnSpan="2" />
+            <Label x:Name="msg" Content="{Binding msg , Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" HorizontalAlignment="Right" Margin="0,51,42,0" VerticalAlignment="Top"/>
         </Grid>
         <Grid HorizontalAlignment="Right" Margin="0,115,21,10" Width="244">
             <DockPanel Margin="10">
@@ -63,11 +67,10 @@
                     <Button Name="openStore" Click="openStore_Click" >open store</Button>
                     <Button Name="myCart" Click="myCart_Click" >my cart</Button>
                     <Button Name="Receipts" Click="Receipts_Click" >my receipts</Button>
-                    <Button Name="user" >edit profile</Button>
+                    <Button Name="user" Visibility="Collapsed">edit profile</Button>
                     <Button Name="stores" Click="stores_Click" >my stores</Button>
                     <Button Name="mymessages" Click="msg_Click" >my messages</Button>
                     <Button x:Name="browse" Click="browse_Click" Content="browse" />
-                    <Button Content="Store Castro" Margin="0" Width="202" Click="Button_Click"/>
                 </StackPanel>
             </DockPanel>
         </Grid>

@@ -31,7 +31,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>143</ApplicationRevision>
+    <ApplicationRevision>224</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -85,6 +85,18 @@
     <Compile Include="View\member\MyMessage.xaml.cs">
       <DependentUpon>MyMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\policyPage\AddpolicyByAge.xaml.cs">
+      <DependentUpon>AddpolicyByAge.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\policyPage\AddPolicyByDate.xaml.cs">
+      <DependentUpon>AddPolicyByDate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\policyPage\AddPolicyMaxAmount.xaml.cs">
+      <DependentUpon>AddPolicyMaxAmount.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\policyPage\AddpolicyMinAmount.xaml.cs">
+      <DependentUpon>AddpolicyMinAmount.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\StoreManagement\AddManager.xaml.cs">
       <DependentUpon>AddManager.xaml</DependentUpon>
     </Compile>
@@ -94,8 +106,8 @@
     <Compile Include="View\StoreManagement\EditOwner.xaml.cs">
       <DependentUpon>EditOwner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\StoreManagement\RemoveManager.xaml.cs">
-      <DependentUpon>RemoveManager.xaml</DependentUpon>
+    <Compile Include="View\StoreManagement\EditProduct.xaml.cs">
+      <DependentUpon>EditProduct.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StoreManagement\ManageDiscountPolicies.xaml.cs">
       <DependentUpon>ManageDiscountPolicies.xaml</DependentUpon>
@@ -103,11 +115,11 @@
     <Compile Include="View\StoreManagement\ManageFeedBacks.xaml.cs">
       <DependentUpon>ManageFeedBacks.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\StoreManagement\ManageMessages.xaml.cs">
+      <DependentUpon>ManageMessages.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\StoreManagement\ManagePurchasePolicies.xaml.cs">
       <DependentUpon>ManagePurchasePolicies.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\StoreManagement\MangeManagers.xaml.cs">
-      <DependentUpon>MangeManagers.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\member\myCart.xaml.cs">
       <DependentUpon>myCart.xaml</DependentUpon>
@@ -131,8 +143,11 @@
     <Compile Include="View\Store.xaml.cs">
       <DependentUpon>Store.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\StoreManagement\storeMessages.xaml.cs">
-      <DependentUpon>storeMessages.xaml</DependentUpon>
+    <Compile Include="View\StoreManagement\RemoveManager.xaml.cs">
+      <DependentUpon>RemoveManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StoreManagement\RemoveProduct.xaml.cs">
+      <DependentUpon>RemoveProduct.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StoreManagement\StoreReciepts.xaml.cs">
       <DependentUpon>StoreReciepts.xaml</DependentUpon>
@@ -152,6 +167,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\policyPage\AddpolicyByAge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\policyPage\AddPolicyByDate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\policyPage\AddPolicyMaxAmount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\policyPage\AddpolicyMinAmount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\StoreManagement\AddManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,7 +195,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\StoreManagement\RemoveManager.xaml">
+    <Page Include="View\StoreManagement\EditProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -176,11 +207,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\StoreManagement\ManagePurchasePolicies.xaml">
+    <Page Include="View\StoreManagement\ManageMessages.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\StoreManagement\MangeManagers.xaml">
+    <Page Include="View\StoreManagement\ManagePurchasePolicies.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,7 +271,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\StoreManagement\storeMessages.xaml">
+    <Page Include="View\StoreManagement\RemoveManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StoreManagement\RemoveProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -292,6 +327,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <StartArguments />
   </PropertyGroup>

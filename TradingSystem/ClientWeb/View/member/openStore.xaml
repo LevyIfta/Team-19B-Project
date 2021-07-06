@@ -12,7 +12,7 @@
         <Label Content="Open Store" HorizontalAlignment="Left" Margin="356,64,0,0" VerticalAlignment="Top"/>
         <Button Content="Open" HorizontalAlignment="Left" Margin="356,169,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="340,125,0,0"  TextWrapping="Wrap" Text="{Binding storename, Mode=TwoWay,   UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <Label Content="User" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="693,64,0,0"/>
+        <Label Content="{Binding Path=username}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="693,64,0,0"/>
 
     </Grid>
 </Page>

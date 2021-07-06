@@ -225,7 +225,7 @@ namespace ClientWeb
             }
             return ans;
         }
-        public bool RemoveProducts(string username, string storeName, string manu, string products)
+        public bool RemoveProductsBasket(string username, string storeName, string manu, string products)
         { // products -> product$product$product -> name&amount 
             DecodedMessge msg = new DecodedMessge();
             // init message fields
@@ -280,13 +280,13 @@ namespace ClientWeb
             }
             return null;
         }
-        public string[] Purchase(string username, object cradit, object validity, string paymant)
+        public string[] Purchase(string username, string cradit, string validity, string paymant)
         { // products -> product$product$product -> name&amount 
             DecodedMessge msg = new DecodedMessge();
             // init message fields
             msg.type = msgType.FUNC;
             msg.name = "purchase";
-            msg.param_list = new string[] { username, paymant };
+            msg.param_list = new string[] { username, cradit, validity, paymant };
             // encode and send message
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
@@ -657,12 +657,12 @@ namespace ClientWeb
             return null;
         }
         // send message
-        public bool SendMessage(string username, string userToSend, string storeToSend, string Msg)
+        public bool SendMessage(string username, string userToSend, string storeToSend, string Msg, string storeRecive)
         {
             DecodedMessge msg = new DecodedMessge();
             msg.type = msgType.FUNC;
             msg.name = "send message";
-            msg.param_list = new string[] { username, userToSend, storeToSend, Msg };
+            msg.param_list = new string[] { username, userToSend, storeToSend, Msg, storeRecive };
             byte[] enc = Connection.Encoder.encode(msg);
             Connection.ConnectionManager.sendMessage(enc);
 
@@ -709,6 +709,40 @@ namespace ClientWeb
                 return ans_d.param_list;
             }
             return null;
+        }
+        public bool CloseStore(string username, string storeName)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            msg.type = msgType.FUNC;
+            msg.name = "close store";
+            msg.param_list = new string[] { username, storeName };
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            bool ans = false;
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            {
+                ans = ans_d.param_list[0] == "true";
+            }
+            return ans;
+        } // delete product
+        public bool RemoveProductStore(string username, string storeName, string productName, string manufacturer)
+        {
+            DecodedMessge msg = new DecodedMessge();
+            msg.type = msgType.FUNC;
+            msg.name = "delete product";
+            msg.param_list = new string[] { username, storeName, productName, manufacturer };
+            byte[] enc = Connection.Encoder.encode(msg);
+            Connection.ConnectionManager.sendMessage(enc);
+
+            DecodedMessge ans_d = readMessage();
+            bool ans = false;
+            if (ans_d.type == msgType.OBJ && ans_d.name == "bool")
+            {
+                ans = ans_d.param_list[0] == "true";
+            }
+            return ans;
         }
         public string test()
         {

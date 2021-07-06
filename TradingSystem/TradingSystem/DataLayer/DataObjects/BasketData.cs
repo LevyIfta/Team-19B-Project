@@ -89,10 +89,10 @@ namespace TradingSystem.DataLayer
         public virtual int reciptID { get; set; }
 
 
-        public BasketInRecipt(ICollection<ProductData> products, ReceiptData recipt) : base(products)
+        public BasketInRecipt(ICollection<ProductData> products, int id) : base(products)
         {
-            this.recipt = recipt;
-            this.reciptID = recipt.receiptID;
+            this.recipt = new ReceiptData();
+            this.reciptID = id;
         }
 
         public BasketInRecipt() :base()
