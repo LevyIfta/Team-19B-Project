@@ -66,6 +66,7 @@ namespace TradingSystem.BuissnessLayer
             {
                 this.messages.Add(new Message(msg));
             }
+            this.permmisions = aPermission.toObject(member.permissions);
 
         }
 
@@ -385,7 +386,8 @@ namespace TradingSystem.BuissnessLayer
             {
                 messages.Add(item.toDataObject());
             }
-            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages, new List<aPermissionData>());
+            ICollection<aPermissionData> premisions = this.permmisions.toDataObject(userName);
+            return new MemberData(userName, password, age, gender, address, baskets, receipts, messages, premisions);
         }
         /*
         public static Member dataToObject(MemberData data)

@@ -37,7 +37,7 @@ namespace TradingSystem.DataLayer
         {
             this.userName = "guest";
         }
-        public MemberData(string userName, string password, double age, string gender, string address, ICollection<BasketInCart> shopingcart, ICollection<ReceiptData> receipts, ICollection<MessageData> messages, ICollection<aPermissionData> permissions = null )
+        public MemberData(string userName, string password, double age, string gender, string address, ICollection<BasketInCart> shopingcart, ICollection<ReceiptData> receipts, ICollection<MessageData> messages, ICollection<aPermissionData> permissions  )
         {
             this.userName = userName;
             this.password = password;

@@ -11,9 +11,9 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
     {
         public basePermmision(string storeName, string sponser) : base(storeName, sponser) { }
 
-        public override ICollection<aPermissionData> toDataObject()
+        public override ICollection<aPermissionData> toDataObject(string owner = "")
         {
-            return next.toDataObject();
+            return next.toDataObject(owner);
         }
     }
 }

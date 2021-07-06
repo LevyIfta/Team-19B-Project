@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingSystem.BuissnessLayer.commerce;
+using TradingSystem.DataLayer.ORM;
 using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.BuissnessLayer.User.Permmisions
@@ -11,14 +12,16 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
     public class editProduct : aPermission
     {
         public editProduct(string storeName, string sponser) : base(storeName, sponser) { }
-        public override ICollection<aPermissionData> toDataObject()
+        public override ICollection<aPermissionData> toDataObject(string owner = "")
         {
-            aPermissionData me = new editProductPermissionData(store, sponser);
+            aPermissionData me = DataAccess.getPremmisionEP(owner, this.store);
+            if (me == null)
+                me = new editProductPermissionData(store, sponser);
             if (next == null)
                 return new List<aPermissionData> { me };
             else
             {
-                ICollection<aPermissionData> ans = next.toDataObject();
+                ICollection<aPermissionData> ans = next.toDataObject(owner);
                 ans.Add(me);
                 return ans;
             }

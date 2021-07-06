@@ -47,7 +47,7 @@ namespace TradingSystem.DataLayer.ORM
         public DbSet<addProductPermissionData> addProductPermissions { get; set; }
         public DbSet<editManagerPermissionsData> editManagerPermissions{ get; set; }
         public DbSet<editProductPermissionData> editProductPermissions { get; set; }
-        public DbSet<editManagerPermissionsData> getInfoEmployeesPermissions { get; set; }
+        public DbSet<getInfoEmployeesPermissionData> getInfoEmployeesPermissions { get; set; }
         public DbSet<getPurchaseHistoryPermissionData> getPurchaseHistoryPermissions { get; set; }
         public DbSet<hireNewStoreManagerPermissionData> hireNewStoreManagerPermissions { get; set; }
         public DbSet<hireNewStoreOwnerPermissionData> hireNewStoreOwnerPermissions { get; set; }
@@ -113,6 +113,8 @@ namespace TradingSystem.DataLayer.ORM
             removeManagerPermissions.RemoveRange(removeManagerPermissions);
             removeProductPermissions.RemoveRange(removeProductPermissions);
             removeOwnerPermissions.RemoveRange(removeOwnerPermissions);
+
+
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.DataLayer.ORM
 {
@@ -562,6 +563,76 @@ namespace TradingSystem.DataLayer.ORM
             lock (Lock)
             {
                 return context.stores.Any((StoreData x) => x.storeName.Equals(storeName));
+            }
+        }
+
+       public static addProductPermissionData getPremmisionAP(string ownername, string storeName )
+        {
+            lock(Lock){
+                return context.addProductPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static editManagerPermissionsData getPremmisionEM(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.editManagerPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static editProductPermissionData getPremmisionEP(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.editProductPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static getInfoEmployeesPermissionData getPremmisionGIE(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.getInfoEmployeesPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static getPurchaseHistoryPermissionData getPremmisionGPH(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.getPurchaseHistoryPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static hireNewStoreManagerPermissionData getPremmisionHNM(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.hireNewStoreManagerPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static hireNewStoreOwnerPermissionData getPremmisionHNO(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.hireNewStoreOwnerPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static removeManagerPermissionData getPremmisionRM(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.removeManagerPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static removeOwnerPermissionData getPremmisionRO(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.removeOwnerPermissions.Find(new object[] { ownername, storeName });
+            }
+        }
+        public static removeProductPermissionData getPremmisionRP(string ownername, string storeName)
+        {
+            lock (Lock)
+            {
+                return context.removeProductPermissions.Find(new object[] { ownername, storeName });
             }
         }
     }

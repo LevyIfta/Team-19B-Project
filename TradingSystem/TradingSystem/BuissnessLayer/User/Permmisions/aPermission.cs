@@ -103,10 +103,10 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
             return PersmissionsTypes.AddProduct;
         }
 
-        public abstract ICollection<aPermissionData> toDataObject();
+        public abstract ICollection<aPermissionData> toDataObject(string owner = "");
 
 
-        public aPermission toObject(ICollection<aPermissionData> data)
+        public static basePermmision toObject(ICollection<aPermissionData> data)
         {
             basePermmision ans = new basePermmision("", null);
             aPermission pointer = ans;
@@ -118,57 +118,57 @@ namespace TradingSystem.BuissnessLayer.User.Permmisions
             return ans;
         }
 
-        public aPermission toObject(aPermissionData data)
-        {
-            throw new Exception("override failed");
-        }
 
 
 
-
-        public aPermission toObject(addProductPermissionData data)
+        public static aPermission toObject(addProductPermissionData data)
         {
             return new addProduct(data.store, data.sponser);
         }
 
-        public aPermission toObject(editManagerPermissionsData data)
+        public static aPermission toObject(editManagerPermissionsData data)
         {
             return new editManagerPermissions(data.store, data.sponser);
         }
-        public aPermission toObject(editProductPermissionData data)
+        public static aPermission toObject(editProductPermissionData data)
         {
             return new editProduct(data.store, data.sponser);
         }
-        public aPermission toObject(getInfoEmployeesPermissionData data)
+        public static aPermission toObject(getInfoEmployeesPermissionData data)
         {
             return new getInfoEmployees(data.store, data.sponser);
         }
-        public aPermission toObject(getPurchaseHistoryPermissionData data)
+        public static aPermission toObject(getPurchaseHistoryPermissionData data)
         {
             return new getPurchaseHistory(data.store, data.sponser);
         }
-         public aPermission toObject(hireNewStoreManagerPermissionData data)
+         public static aPermission toObject(hireNewStoreManagerPermissionData data)
         {
             return new hireNewStoreManager(data.store, data.sponser);
         }
-        public aPermission toObject(hireNewStoreOwnerPermissionData data)
+        public static aPermission toObject(hireNewStoreOwnerPermissionData data)
         {
             return new hireNewStoreOwner(data.store, data.sponser);
         }
-        public aPermission toObject(removeManagerPermissionData data)
+        public static aPermission toObject(removeManagerPermissionData data)
         {
             return new removeManager(data.store, data.sponser);
         }
-        public aPermission toObject(removeOwnerPermissionData data)
+        public static aPermission toObject(removeOwnerPermissionData data)
         {
             return new removeOwner(data.store, data.sponser);
         }
 
-        public aPermission toObject(removeProductPermissionData data)
+        public static aPermission toObject(removeProductPermissionData data)
         {
             return new removeProduct(data.store, data.sponser);
         }
 
+
+        public static aPermission toObject(aPermissionData data)
+        {
+            throw new Exception("override failed");
+        }
 
 
     }

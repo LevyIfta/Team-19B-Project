@@ -207,7 +207,7 @@ namespace TradingSystem.BuissnessLayer
         public virtual MemberData toDataObject()
         {
 
-            return new MemberData("guest", null, 0, null, null, null, null, null);
+            return new MemberData("guest", null, 0, null, null, null, null, null, null);
         }
 
         public virtual void addAlarm(string title, string description)

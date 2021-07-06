@@ -7,6 +7,7 @@ using TradingSystem.DataLayer;
 using TradingSystem.BuissnessLayer.commerce;
 using TradingSystem.BuissnessLayer.User.Permmisions;
 using TradingSystem.BuissnessLayer.User;
+using TradingSystem.DataLayer.Permissions;
 
 namespace TradingSystem.BuissnessLayer
 {
@@ -87,7 +88,7 @@ namespace TradingSystem.BuissnessLayer
             fullans[0] = "false";
             if(fullans[1].Length < 3)
             {
-                DataLayer.ORM.DataAccess.create(new MemberData(username, password, age, gender, address, new List<BasketInCart>(), new List<ReceiptData>(), new List<MessageData>()));
+                DataLayer.ORM.DataAccess.create(new MemberData(username, password, age, gender, address, new List<BasketInCart>(), new List<ReceiptData>(), new List<MessageData>(), new List<aPermissionData>()));
                 if (username.Equals("admin"))
                     Users.Add(new Admin(username, password));
                 else
