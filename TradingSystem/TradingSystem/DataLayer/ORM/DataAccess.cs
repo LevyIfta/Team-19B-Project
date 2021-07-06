@@ -402,9 +402,9 @@ namespace TradingSystem.DataLayer.ORM
         {
             lock (Lock)
             {
-                MemberData member = getMember(userName);
-                StoreData store = getStore(storeName);
-                return context.basketsInCarts.Find(new object[] { store, member });
+                //MemberData member = getMember(userName);
+                //StoreData store = getStore(storeName);
+                return context.basketsInCarts.Find(new object[] { storeName, userName });
             }
         }
         public static BasketInRecipt getBasket(int reciptID)
@@ -412,6 +412,8 @@ namespace TradingSystem.DataLayer.ORM
             lock (Lock)
             {
                 ReceiptData receipt = getReciept(reciptID);
+                if (receipt == null)
+                    return null;
                 return receipt.basket;
             }
         }

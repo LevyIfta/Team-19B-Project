@@ -91,7 +91,7 @@ namespace TradingSystem.DataLayer
 
         public BasketInRecipt(ICollection<ProductData> products, int id) : base(products)
         {
-            this.recipt = new ReceiptData();
+            //this.recipt = new ReceiptData();
             this.reciptID = id;
         }
 
@@ -101,7 +101,7 @@ namespace TradingSystem.DataLayer
 
         public BasketInRecipt(ReceiptData recipt, int reciptID, ICollection<ProductData> products) : base(products)
         {
-            this.recipt = recipt ?? throw new ArgumentNullException(nameof(recipt));
+            this.recipt = recipt;// ?? throw new ArgumentNullException(nameof(recipt));
             this.reciptID = reciptID;
         }
 

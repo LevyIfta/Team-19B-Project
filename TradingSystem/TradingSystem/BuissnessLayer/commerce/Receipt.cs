@@ -28,11 +28,11 @@ namespace TradingSystem.BuissnessLayer.commerce
         {
             BasketInRecipt bask = basket.toDataObjectRecipt(this.receiptId);
 
-            ReceiptData ans = DataAccess.getReciept(this.receiptId); //= new ReceiptData(this.receiptId, bask, this.store.toDataObject(), this.user.toDataObject(), this.price, this.date, new iPolicyDiscountData(), new iPolicyData());//todo
+            ReceiptData ans = DataAccess.getReciept(this.receiptId); ////todo
             if (ans == null)
             {
+                ans = new ReceiptData(this.receiptId, bask, this.store.toDataObject(), this.user.toDataObject(), this.price, this.date, new iPolicyDiscountData(), new iPolicyData());
                 bask.recipt = ans;
-
                 return ans;
             }
             ans.price = this.price;
@@ -40,8 +40,8 @@ namespace TradingSystem.BuissnessLayer.commerce
             ans.purchasePolicy = this.purchasePolicy.toDataObject();
             ans.discount = this.discount.toDataObject();
             return ans;
-            
-                
+
+
         }
 
         public Receipt(ReceiptData receiptData)
